@@ -28,6 +28,7 @@ int row[] = {
 
 
 
+
 int col[] = {
 //                        5,  7,  9, 11, 13, 15,
 //                        4,  6,  8, 10, 12, 14, 16,
@@ -117,14 +118,11 @@ QPointF positionOfIndex(int index)
 {
   int r = rowOfIndex(index);
   int c = columnOfIndex(index);
+
   qreal x = LOCATION_GAME_BOARD_ITEM_X_FROM +
-            c * (LOCATION_GAME_BOARD_ITEM_X_TO -
-                 LOCATION_GAME_BOARD_ITEM_X_FROM)
-              / COLUMN_NUMBER;
+            c * LOCATION_GAME_BOARD_ITEM_X_INTERVAL;
   qreal y = LOCATION_GAME_BOARD_ITEM_Y_FROM +
-            r * (LOCATION_GAME_BOARD_ITEM_Y_TO -
-                 LOCATION_GAME_BOARD_ITEM_Y_FROM)
-              / ROW_NUMBER;
+            r * LOCATION_GAME_BOARD_ITEM_Y_INTERVAL;
   return QPointF(x, y);
 }
 
@@ -225,6 +223,11 @@ int indexOfPosition(QPointF position)
   if (c < 0 || c >= COLUMN_NUMBER || r < 0 || r > ROW_NUMBER)
     return -1;
   return positionToIndex[r * COLUMN_NUMBER + c];
+}
+
+int indexOfPosition(int row, int column)
+{
+  return positionToIndex[row * COLUMN_NUMBER + column];
 }
 
 qreal distanceOfTwoPoints(QPointF p1, QPointF p2)
@@ -469,14 +472,102 @@ QVector<int> chainAroundIndex(int from,
   return counterclockwiseResult;
 }
 
+int indexToFirstLeftUpIndex[] = {
+            0,  1,  2,  3,  4,
+          5,  0,  1,  2,  3,  4,
+       11,  5,  0,  1,  2,  3,  4,
+     18, 11,  5,  0,  1,  2,  3,  4,
+   26, 18, 11,  5,  0,  1,  2,  3,  4,
+     26, 18, 11,  5,  0,  1,  2,  3,
+       26, 18, 11,  5,  0,  1,  2,
+         26, 18, 11,  5,  0,  1,
+           26, 18, 11,  5,  0
+};
+
+int indexToLastLeftUpIndex[] = {
+           60, 55, 49, 42, 34,
+         59, 60, 55, 49, 42, 34,
+       58, 59, 60, 55, 49, 42, 34,
+     57, 58, 59, 60, 55, 49, 42, 34,
+   56, 57, 58, 59, 60, 55, 49, 42, 34,
+     56, 57, 58, 59, 60, 55, 49, 42,
+       56, 57, 58, 59, 60, 55, 49,
+         56, 57, 58, 59, 60, 55,
+           56, 57, 58, 59, 60
+};
+
+int indexToFirstLeftDownIndex[] = {
+           26, 35, 43, 50, 56,
+         26, 35, 43, 50, 56, 57,
+       26, 35, 43, 50, 56, 57, 58,
+     26, 35, 43, 50, 56, 57, 58, 59,
+   26, 35, 43, 50, 56, 57, 58, 59, 60,
+     35, 43, 50, 56, 57, 58, 59, 60,
+       43, 50, 56, 57, 58, 59, 60,
+         50, 56, 57, 58, 59, 60,
+           56, 57, 58, 59, 60
+};
 
 
+int indexToLastLeftDownIndex[] = {
+            0,  1,  2,  3,  4,
+          0,  1,  2,  3,  4, 10,
+        0,  1,  2,  3,  4, 10, 17,
+      0,  1,  2,  3,  4, 10, 17, 25,
+    0,  1,  2,  3,  4, 10, 17, 25, 34,
+      1,  2,  3,  4, 10, 17, 25, 34,
+        2,  3,  4, 10, 17, 25, 34,
+          3,  4, 10, 17, 25, 34,
+            4, 10, 17, 25, 34
+};
 
+int rowToFirstIndex[] = {
+  0,  5, 11, 18, 26, 35, 43, 50, 56
+};
 
+int rowToLastIndex[] = {
+  4, 10, 17, 25, 34, 42, 49, 55, 60
+};
 
+int firstOfRow(int row)
+{
+  if (row < 0 && row >= ROW_NUMBER)
+    return -1;
+  return rowToFirstIndex[row];
+}
 
+int lastOfRow(int row)
+{
+  if (row < 0 && row >= ROW_NUMBER)
+    return -1;
+  return rowToLastIndex[row];
+}
 
+int firstOfLeftUp(int index)
+{
+  if (index < 0 || index >= TOTAL_ITEM_NUMBER)
+    return -1;
+  return indexToFirstLeftUpIndex[index];
+}
 
+int firstOfLeftDown(int index)
+{
+  if (index < 0 || index >= TOTAL_ITEM_NUMBER)
+    return -1;
+  return indexToFirstLeftDownIndex[index];
+}
 
+int lastOfLeftUp(int index)
+{
+  if (index < 0 || index >= TOTAL_ITEM_NUMBER)
+    return -1;
+  return indexToLastLeftUpIndex[index];
+}
 
+int lastOfLeftDown(int index)
+{
+  if (index < 0 || index >= TOTAL_ITEM_NUMBER)
+    return -1;
+  return indexToLastLeftDownIndex[index];
+}
 

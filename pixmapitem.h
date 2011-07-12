@@ -47,10 +47,17 @@ public:
                        PixmapItem::STATE state,
                        int steps = 20,
                        bool append = true); //旋转到
-  void translateTo(int finalIndex,
+  void translateTo(QPointF finalPos,
                    PixmapItem::STATE state,
                    int steps = 20,
-                   bool plain = true); //平移到
+                   bool plain = true,
+                   bool append = true); //平移到
+  void slideBackTo(QPointF fromPos,
+                   QPointF toPos,
+                   QPointF oneJointPos,
+                   QPointF aontherJointPos,
+                   PixmapItem::STATE state,
+                   int steps = 20); // 从Slide的手势划回
   void disappearWithoutMove(int msec = 500);
 
   int leftAnimSteps()

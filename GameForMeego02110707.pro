@@ -16,12 +16,14 @@ SOURCES += main.cpp\
         mainwindow.cpp \
     gamelocation.cpp \
     gameviewwidget.cpp \
-    pixmapitem.cpp
+    pixmapitem.cpp \
+    gamegraphicsview.cpp
 
 HEADERS  += mainwindow.h \
     gamelocation.h \
     gameviewwidget.h \
-    pixmapitem.h
+    pixmapitem.h \
+    gamegraphicsview.h
 
 FORMS    += mainwindow.ui
 

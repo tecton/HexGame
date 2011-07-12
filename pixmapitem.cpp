@@ -187,14 +187,14 @@ void PixmapItem::rotateWithChain(const QVector<int>& chain,
 //  }
 }
 
-void PixmapItem::translateTo(int finalIndex,
+void PixmapItem::translateTo(QPointF finalPos,
                              PixmapItem::STATE state,
                              int steps,
-                             bool plain)
+                             bool plain,
+                             bool append)
 {
-  _stop_positions.clear();
+  QVector<QPointF> tmp;
   QPointF currentPos = pos();
-  QPointF finalPos = positionOfIndex(finalIndex);
 
   qreal top = distanceOfTwoPoints(currentPos, finalPos);
   int j = steps;
@@ -204,9 +204,71 @@ void PixmapItem::translateTo(int finalIndex,
     qreal tmpY = currentPos.y() + (finalPos.y() - currentPos.y()) * j / steps;
     if (!plain)
       tmpY -= bridgeY(j * 1.0 / steps) * top;
-    _stop_positions.push_back(QPointF(tmpX, tmpY));
+    tmp.push_back(QPointF(tmpX, tmpY));
   }
   _state = state;
+
+  if (append)
+    for (int i = 0;i < _stop_positions.size();++i)
+      tmp.push_back(_stop_positions[i]);
+  _stop_positions = tmp;
+}
+
+
+void PixmapItem::slideBackTo(QPointF fromPos,
+                             QPointF toPos,
+                             QPointF oneJointPos,
+                             QPointF anotherJointPos,
+                             PixmapItem::STATE state,
+                             int steps)
+{
+  _stop_positions.clear();
+  qreal distanceDirect = distanceOfTwoPoints(fromPos, toPos);
+  qreal distanceOneJoint = distanceOfTwoPoints(fromPos, oneJointPos) +
+                           distanceOfTwoPoints(anotherJointPos, toPos);
+  qreal distanceAnotherJoint = distanceOfTwoPoints(fromPos, anotherJointPos) +
+                               distanceOfTwoPoints(oneJointPos, toPos);
+  int choice = 0;
+  if (distanceOneJoint <= distanceDirect && distanceOneJoint <= distanceAnotherJoint)
+    choice = 1;
+  else if (distanceAnotherJoint <= distanceDirect && distanceAnotherJoint <= distanceAnotherJoint)
+    choice = 2;
+  if (choice == 0)
+    translateTo(toPos, state, steps);
+  else
+  {
+    QPointF j1 = choice == 1 ? oneJointPos : anotherJointPos;
+    QPointF j2 = choice == 2 ? oneJointPos : anotherJointPos;
+
+    qreal firstStepDis = distanceOfTwoPoints(fromPos, j1);
+    qreal secondStepDis = distanceOfTwoPoints(j2, toPos);
+
+    int firstStepSteps = qMax(1.0, steps * firstStepDis / (firstStepDis + secondStepDis));
+    int secondStepSteps = qMax(1, steps - firstStepSteps);
+
+    QVector<QPointF> tmp;
+
+    QPointF currentPos = j2;
+    QPointF finalPos = toPos;
+    int j = secondStepSteps;
+    for (int i = 0; i <= secondStepSteps; ++i,--j)
+    {
+      qreal tmpX = currentPos.x() + (finalPos.x() - currentPos.x()) * j / secondStepSteps;
+      qreal tmpY = currentPos.y() + (finalPos.y() - currentPos.y()) * j / secondStepSteps;
+      tmp.push_back(QPointF(tmpX, tmpY));
+    }
+
+    currentPos = fromPos;
+    finalPos = j1;
+    j = firstStepSteps;
+    for (int i = 0; i <= firstStepSteps; ++i,--j)
+    {
+      qreal tmpX = currentPos.x() + (finalPos.x() - currentPos.x()) * j / firstStepSteps;
+      qreal tmpY = currentPos.y() + (finalPos.y() - currentPos.y()) * j / firstStepSteps;
+      tmp.push_back(QPointF(tmpX, tmpY));
+    }
+    _stop_positions = tmp;
+  }
 
 }
 
