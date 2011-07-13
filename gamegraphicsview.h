@@ -1,3 +1,12 @@
+/*
+** A class inherit from
+**   QGraphicsView(in order to be a QGraphicsView-.-)
+**
+** GameGraphicsView emits 3 kinds of signals of the mouse events to deal with
+** a bug(maybe a bug, maybe it's that I haven't find the correct way) in Qt
+**
+*/
+
 #ifndef GAMEGRAPHICSVIEW_H
 #define GAMEGRAPHICSVIEW_H
 

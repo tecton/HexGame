@@ -207,10 +207,6 @@ QVector<int> chainOfIndex(int from,
   return counterclockwiseResult;
 }
 
-QVector<int> chain(int chainIndex)
-{
-
-}
 
 int indexOfPosition(QPointF position)
 {
@@ -222,12 +218,22 @@ int indexOfPosition(QPointF position)
           (LOCATION_GAME_BOARD_ITEM_Y_TO - LOCATION_GAME_BOARD_ITEM_Y_FROM);
   if (c < 0 || c >= COLUMN_NUMBER || r < 0 || r > ROW_NUMBER)
     return -1;
-  return positionToIndex[r * COLUMN_NUMBER + c];
+  int index = positionToIndex[r * COLUMN_NUMBER + c];
+  if (distanceOfTwoPoints(position, positionOfIndex(index)) > LOCATION_GAME_BOARD_ITEM_X_INTERVAL)
+    return -1;
+  return index;
 }
 
 int indexOfPosition(int row, int column)
 {
   return positionToIndex[row * COLUMN_NUMBER + column];
+}
+
+int indexOfMousePosition(QPointF position)
+{
+  position.setX(position.x() - ITEM_WIDTH / 2);
+  position.setY(position.y() - ITEM_HEIGHT / 2);
+  return indexOfPosition(position);
 }
 
 qreal distanceOfTwoPoints(QPointF p1, QPointF p2)
@@ -240,9 +246,9 @@ qreal angle(QPointF point, QPointF origin)
   qreal dx = point.x() - origin.x();
   qreal dy = origin.y() - point.y();
   qreal result = qAtan(qAbs(dy / dx));
-  if (dx < 0 && dy > 0)
+  if (dx < 0 && dy >= 0)
     return PI - result;
-  if (dx < 0 && dy < 0)
+  if (dx <= 0 && dy < 0)
     return PI + result;
   if (dx > 0 && dy < 0)
     return 2 * PI - result;
@@ -403,15 +409,27 @@ int indexHasAround[] = {
 
 QVector<int> chainAroundIndex(int index)
 {
-  if (index < 0 || index >= TOTAL_ITEM_NUMBER || (!indexHasAround[index]))
+  if (index < 0 || index >= TOTAL_ITEM_NUMBER)
     return QVector<int>();
   QVector<int> result;
-  result.push_back(indexToLeft[index]);
-  result.push_back(indexToLeftUp[index]);
-  result.push_back(indexToRightUp[index]);
-  result.push_back(indexToRight[index]);
-  result.push_back(indexToRightDown[index]);
-  result.push_back(indexToLeftDown[index]);
+  int tmp = leftUpIndex(index);
+  if (tmp >= 0)
+    result.push_back(tmp);
+  tmp = rightUpIndex(index);
+  if (tmp >= 0)
+    result.push_back(tmp);
+  tmp = rightIndex(index);
+  if (tmp >= 0)
+    result.push_back(tmp);
+  tmp = rightDownIndex(index);
+  if (tmp >= 0)
+    result.push_back(tmp);
+  tmp = leftDownIndex(index);
+  if (tmp >= 0)
+    result.push_back(tmp);
+  tmp = leftIndex(index);
+  if (tmp >= 0)
+    result.push_back(tmp);
   return result;
 }
 
@@ -424,52 +442,71 @@ QVector<int> doubleChain(const QVector<int>& v)
   return result;
 }
 
-QVector<int> chainAroundIndex(int from,
-                              int to,
-                              int center,
-                              bool counterclockwise)
+//QVector<int> chainAroundIndex(int from,
+//                              int to,
+//                              int center,
+//                              bool counterclockwise)
+//{
+//  if (from < 0 || from >= TOTAL_ITEM_NUMBER)
+//    return QVector<int>();
+//  if (to < 0 || to >= TOTAL_ITEM_NUMBER)
+//    return QVector<int>();
+//  if (center < 0 || center >= TOTAL_ITEM_NUMBER)
+//    return QVector<int>();
+//  QVector<int> originalChain = doubleChain(chainAroundIndex(center));
+//  QVector<int> counterclockwiseResult;
+//  int size = originalChain.size() / 2;
+
+//  int fromPos = -1;
+//  for (int i = 0;i < size;++i)
+//    if (originalChain[i] == from)
+//    {
+//      fromPos = i;
+//      break;
+//    }
+//  if (fromPos == -1)
+//    return QVector<int>();
+
+//  int toPos = -1;
+//  for (int i = fromPos;i < 2 * size;++i)
+//  {
+//    counterclockwiseResult.push_back(originalChain[i]);
+//    if (originalChain[i] == to)
+//    {
+//      toPos = i;
+//      break;
+//    }
+//  }
+//  if (toPos == -1)
+//    return QVector<int>();
+
+//  if (!counterclockwise)
+//  {
+//    QVector<int> result(counterclockwiseResult.size());
+//    for (int i = 0;i < counterclockwiseResult.size();++i)
+//      result[i] = counterclockwiseResult[counterclockwiseResult.size() - 1 - i];
+//    return result;
+//  }
+//  return counterclockwiseResult;
+//}
+
+int indexToCanBeRotateCenter[] = {
+            0,  0,  0,  0,  0,
+          0,  1,  1,  1,  1,  0,
+        0,  1,  1,  1,  1,  1,  0,
+      0,  1,  1,  1,  1,  1,  1,  0,
+    0,  1,  1,  1,  1,  1,  1,  1,  0,
+      0,  1,  1,  1,  1,  1,  1,  0,
+        0,  1,  1,  1,  1,  1,  0,
+          0,  1,  1,  1,  1,  0,
+            0,  0,  0,  0,  0
+};
+
+bool canBeRotateCenter(int index)
 {
-  if (from < 0 || from >= TOTAL_ITEM_NUMBER)
-    return QVector<int>();
-  if (to < 0 || to >= TOTAL_ITEM_NUMBER)
-    return QVector<int>();
-  if (center < 0 || center >= TOTAL_ITEM_NUMBER)
-    return QVector<int>();
-  QVector<int> originalChain = doubleChain(chainAroundIndex(center));
-  QVector<int> counterclockwiseResult;
-  int size = originalChain.size() / 2;
-
-  int fromPos = -1;
-  for (int i = 0;i < size;++i)
-    if (originalChain[i] == from)
-    {
-      fromPos = i;
-      break;
-    }
-  if (fromPos == -1)
-    return QVector<int>();
-
-  int toPos = -1;
-  for (int i = fromPos;i < 2 * size;++i)
-  {
-    counterclockwiseResult.push_back(originalChain[i]);
-    if (originalChain[i] == to)
-    {
-      toPos = i;
-      break;
-    }
-  }
-  if (toPos == -1)
-    return QVector<int>();
-
-  if (!counterclockwise)
-  {
-    QVector<int> result(counterclockwiseResult.size());
-    for (int i = 0;i < counterclockwiseResult.size();++i)
-      result[i] = counterclockwiseResult[counterclockwiseResult.size() - 1 - i];
-    return result;
-  }
-  return counterclockwiseResult;
+  if (index < 0 || index >= TOTAL_ITEM_NUMBER)
+    return false;
+  return indexToCanBeRotateCenter[index] == 1;
 }
 
 int indexToFirstLeftUpIndex[] = {
@@ -571,3 +608,13 @@ int lastOfLeftDown(int index)
   return indexToLastLeftDownIndex[index];
 }
 
+qreal distanceFromTheCenterWithTheAngle(qreal angle)
+{
+  while (angle < 0)
+    angle += PI / 3;
+  while (angle >= PI / 3)
+    angle -= PI / 3;
+  return LOCATION_GAME_BOARD_ITEM_X_INTERVAL * 2 *
+         qSin(PI / 3) /
+         qSin(2 * PI / 3 - angle);
+}

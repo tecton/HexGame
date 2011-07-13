@@ -23,12 +23,9 @@ HEADERS  += mainwindow.h \
     gamelocation.h \
     gameviewwidget.h \
     pixmapitem.h \
-    gamegraphicsview.h \
-    git_test_from_vincent.h
+    gamegraphicsview.h
 
 FORMS    += mainwindow.ui
 
 RESOURCES += \
     resource.qrc
-
-OTHER_FILES +=

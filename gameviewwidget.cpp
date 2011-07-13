@@ -12,7 +12,7 @@
 //       _gesture_influenced_indexes,
 //       _gesture_influenced_indexes_original_pos改为正确值
 //     需要时将_gesture_rotate_center_pos改为正确值
-
+// TODO: 暂时只算了整个场面平静时的状况，应该把手势格子和影响到的格子是否处于稳定状态也判断一下
 bool GameViewWidget::testGesture()
 {
   if (_gesture_state == CHOOSE_GESTURE)
@@ -85,6 +85,44 @@ bool GameViewWidget::testGesture()
           return true;
         }
       }
+      {  // 旋转
+        int connectedCount[TOTAL_ITEM_NUMBER];
+        for (int i = 0;i < TOTAL_ITEM_NUMBER;++i)
+          connectedCount[i] = 0;
+        QVector<int> roundIndexes = chainAroundIndex(_gesture_indexes[0]);
+        for (int i = 0;i < roundIndexes.size();++i)
+          ++connectedCount[roundIndexes[i]];
+        roundIndexes = chainAroundIndex(_gesture_indexes[1]);
+        for (int i = 0;i < roundIndexes.size();++i)
+          ++connectedCount[roundIndexes[i]];
+        roundIndexes = chainAroundIndex(_gesture_indexes[2]);
+        for (int i = 0;i < roundIndexes.size();++i)
+          ++connectedCount[roundIndexes[i]];
+        int center = -1;
+        for (int i = 0;i < TOTAL_ITEM_NUMBER;++i)
+          if (connectedCount[i] == 3)
+          {
+            center = i;
+            break;
+          }
+        if (center >= 0 && canBeRotateCenter(center))
+        {
+          _gesture_state = LOCATE_GESTURE;
+          _gesture = ROTATE;
+
+          _gesture_influenced_indexes = chainAroundIndex(center);
+          _gesture_influenced_indexes_original_pos.clear();
+          for (int i = 0;i < _gesture_influenced_indexes.size();++i)
+            _gesture_influenced_indexes_original_pos.push_back(
+                positionOfIndex(_gesture_influenced_indexes[i]));
+          QPointF centerP = positionOfIndex(center);
+          centerP.setX(centerP.x() + SCENE_TO_MOUSE_DX);
+          centerP.setY(centerP.y() + SCENE_TO_MOUSE_DY);
+          _gesture_rotate_center_pos = centerP;
+          _gesture_rotate_center_index = center;
+          return true;
+        }
+      }
     }
 
   }
@@ -134,7 +172,7 @@ QVector<QPointF> GameViewWidget::newposUnderPos(QPointF mousePos)
     dx = maxX - minX;
     dy = maxY - minY;
 
-    for (int i = 0;i < _gesture_influenced_indexes_original_pos.size();++i)
+    for (int i = 0;i < _gesture_influenced_indexes.size();++i)
     {
       QPointF original = result[i];
       QPointF current = original;
@@ -151,23 +189,87 @@ QVector<QPointF> GameViewWidget::newposUnderPos(QPointF mousePos)
         current.setY(current.y() - (dy));
       }
       result[i] = current;
-      qreal movedX = current.x() - original.x();
-      int movedColumns = movedX * COLUMN_NUMBER / dx;
-      int movedRows = 0;
-      if (_gesture_direction == LEFT_RIGHT)
-        movedRows = 0;
-      else if (_gesture_direction == LEFT_UP_RIGHT_DOWN)
-        movedRows = movedColumns/2;
-      else if (_gesture_direction == LEFT_DOWN_RIGHT_UP)
-        movedRows = -movedColumns/2;
-      int c = columnOfIndex(_gesture_influenced_indexes[i]);
-      int r = rowOfIndex(_gesture_influenced_indexes[i]);
-      c += movedColumns;
-      r += movedRows;
-      int index = indexOfPosition(r, c);
-      ballsOriginalIndexToCurrentIndex[_gesture_influenced_indexes[i]] = index;
-      ballsCurrentIndexToOriginalIndex[index] = _gesture_influenced_indexes[i];
+
+//      qreal movedX = current.x() - original.x();
+//      int movedColumns = movedX * COLUMN_NUMBER / dx;
+//      int movedRows = 0;
+//      if (_gesture_direction == LEFT_RIGHT)
+//        movedRows = 0;
+//      else if (_gesture_direction == LEFT_UP_RIGHT_DOWN)
+//        movedRows = movedColumns/2;
+//      else if (_gesture_direction == LEFT_DOWN_RIGHT_UP)
+//        movedRows = -movedColumns/2;
+//      int c = columnOfIndex(_gesture_influenced_indexes[i]);
+//      int r = rowOfIndex(_gesture_influenced_indexes[i]);
+//      c += movedColumns;
+//      r += movedRows;
+//      int index = indexOfPosition(r, c);
+//      ballsOriginalIndexToCurrentIndex[_gesture_influenced_indexes[i]] = index;
+//      ballsCurrentIndexToOriginalIndex[index] = _gesture_influenced_indexes[i];
     }
+
+    // 维护ballsOriginalIndexToCurrentIndex和ballsCurrentIndexToOriginalIndex
+    int offset = 0;
+    qreal minDis = 100000; // 这个值瞎写写的，写大点就好
+    for (int i = 0;i < _gesture_influenced_indexes.size();++i)
+    {
+      qreal currentDis = distanceOfTwoPoints
+                         (result[0],
+                          positionOfIndex(_gesture_influenced_indexes[i]));
+      if (currentDis < minDis)
+      {
+        minDis = currentDis;
+        offset = i;
+      }
+    }
+
+    for (int i = 0;i < _gesture_influenced_indexes.size();++i)
+    {
+      int o = _gesture_influenced_indexes[i];
+      int c = _gesture_influenced_indexes[(i + offset) %
+                                          _gesture_influenced_indexes.size()];
+      ballsOriginalIndexToCurrentIndex[o] = c;
+      ballsCurrentIndexToOriginalIndex[c] = o;
+    }
+
+  }
+  else if (_gesture == ROTATE)
+  {
+    QPointF centerPos = positionOfIndex(_gesture_rotate_center_index);
+    qreal mouseOriginalA = angle(_gesture_confirm_pos, _gesture_rotate_center_pos);
+    qreal mouseCurrentA = angle(mousePos, _gesture_rotate_center_pos);
+    qreal dA = mouseCurrentA - mouseOriginalA;
+
+    for (int i = 0;i < _gesture_influenced_indexes_original_pos.size();++i)
+    {
+      qreal currentA = angle(result[i], centerPos) + dA;
+      qreal r = distanceFromTheCenterWithTheAngle(currentA);
+      result[i] = calculatePosition(currentA, r, centerPos);
+    }
+    // 维护ballsOriginalIndexToCurrentIndex和ballsCurrentIndexToOriginalIndex
+    int offset = 0;
+    qreal minDis = 100000; // 这个值瞎写写的，写大点就好
+    for (int i = 0;i < _gesture_influenced_indexes.size();++i)
+    {
+      qreal currentDis = distanceOfTwoPoints
+                         (result[0],
+                          positionOfIndex(_gesture_influenced_indexes[i]));
+      if (currentDis < minDis)
+      {
+        minDis = currentDis;
+        offset = i;
+      }
+    }
+
+    for (int i = 0;i < _gesture_influenced_indexes.size();++i)
+    {
+      int o = _gesture_influenced_indexes[i];
+      int c = _gesture_influenced_indexes[(i + offset) %
+                                          _gesture_influenced_indexes.size()];
+      ballsOriginalIndexToCurrentIndex[o] = c;
+      ballsCurrentIndexToOriginalIndex[c] = o;
+    }
+
   }
   return result;
 }
@@ -189,7 +291,6 @@ GameViewWidget::GameViewWidget(QWidget *parent) :
   layout->addWidget(view);
   setLayout(layout);
 
-  balls = new PixmapItem*[TOTAL_ITEM_NUMBER];
   for (int i = 0;i < TOTAL_ITEM_NUMBER;++i)
   {
     balls[i] = NULL;
@@ -242,7 +343,7 @@ void GameViewWidget::dealMoved(QMouseEvent *event)
   QPointF p = view->mapToScene(event->pos());
   if (_gesture_state == CHOOSE_GESTURE)
   {
-    int index = indexOfPosition(p);
+    int index = indexOfMousePosition(p);
     if (index >= 0)
     {
 //      _gesture_indexes.clear();
@@ -257,7 +358,7 @@ void GameViewWidget::dealMoved(QMouseEvent *event)
   if (_gesture_state == LOCATE_GESTURE)
   {
     //int
-    if (_gesture == SLIDE)
+    if (_gesture == SLIDE || _gesture == ROTATE)
     {
       QVector<QPointF> newPos = newposUnderPos(p);
       for (int i = 0;i < newPos.size();++i)
@@ -304,15 +405,12 @@ void GameViewWidget::dealPressed(QMouseEvent *event)
 //  {
 //    fillAllBlanks();
 //  }
-  _gesture_state = NO_GESTURE;
+  _gesture_state = CHOOSE_GESTURE;
+  _gesture_indexes.clear();
   QPointF p = view->mapToScene(event->pos());
-  int index = indexOfPosition(p);
+  int index = indexOfMousePosition(p);
   if (index >= 0)
-  {
-    _gesture_state = CHOOSE_GESTURE;
-    _gesture_indexes.clear();
     _gesture_indexes.push_back(index);
-  }
 }
 
 void GameViewWidget::dealReleased(QMouseEvent *event)
@@ -328,26 +426,25 @@ void GameViewWidget::dealReleased(QMouseEvent *event)
     {
       if (_gesture == SLIDE)
       {
-        for (int i = 0;i < _gesture_influenced_indexes.size();++i)
-        {// 要优化！！！
-          int currentIndex = _gesture_influenced_indexes[i];
+        if (false) // 如果不成功则回滚
+        {
           int jointIndex1 = 0;
           int jointIndex2 = 0;
           QPointF j1;
           QPointF j2;
           if (_gesture_direction == LEFT_UP_RIGHT_DOWN)
           {
-            jointIndex1 = firstOfLeftUp(currentIndex);
-            jointIndex2 = lastOfLeftUp(currentIndex);
+            jointIndex1 = firstOfLeftUp(_gesture_influenced_indexes[0]);
+            jointIndex2 = lastOfLeftUp(_gesture_influenced_indexes[0]);
           }
           else if (_gesture_direction == LEFT_DOWN_RIGHT_UP)
           {
-            jointIndex1 = firstOfLeftDown(currentIndex);
-            jointIndex2 = lastOfLeftDown(currentIndex);
+            jointIndex1 = firstOfLeftDown(_gesture_influenced_indexes[0]);
+            jointIndex2 = lastOfLeftDown(_gesture_influenced_indexes[0]);
           }
           else if (_gesture_direction == LEFT_RIGHT)
           {
-            int r = rowOfIndex(currentIndex);
+            int r = rowOfIndex(_gesture_influenced_indexes[0]);
             jointIndex1 = firstOfRow(r);
             jointIndex2 = lastOfRow(r);
           }
@@ -373,20 +470,88 @@ void GameViewWidget::dealReleased(QMouseEvent *event)
             j2.setX(j2.x() + LOCATION_GAME_BOARD_ITEM_X_INTERVAL);
           }
 
-          balls[currentIndex]->slideBackTo(balls[currentIndex]->pos(),
-                                           positionOfIndex(currentIndex),
-                                           j1,
-                                           j2,
-                                           PixmapItem::SYSTEM_MOVING,
-                                           10);
+          for (int i = 0;i < _gesture_influenced_indexes.size();++i)
+          {
+            int currentIndex = _gesture_influenced_indexes[i];
 
-//          balls[_gesture_influenced_indexes[i]]->translateTo
-//              (positionOfIndex(_gesture_influenced_indexes[i]),
-//               PixmapItem::SYSTEM_MOVING,
-//               10);
+            balls[currentIndex]->slideBackTo(balls[currentIndex]->pos(),
+                                             positionOfIndex(currentIndex),
+                                             j1,
+                                             j2,
+                                             PixmapItem::SYSTEM_MOVING,
+                                             10);
+
+  //          balls[_gesture_influenced_indexes[i]]->translateTo
+  //              (positionOfIndex(_gesture_influenced_indexes[i]),
+  //               PixmapItem::SYSTEM_MOVING,
+  //               10);
+          }
+          return;
         }
-        _gesture_state = NO_GESTURE;
-        return;
+        else // 移动到新的位置（这个可以合成一个函数，不用总是重复写）
+        {
+          for (int i = 0;i < _gesture_influenced_indexes.size();++i)
+          {
+            int originalIndex = _gesture_influenced_indexes[i];
+            int currentIndex = ballsOriginalIndexToCurrentIndex[originalIndex];
+            balls[originalIndex]->translateTo(positionOfIndex(currentIndex),
+                                              PixmapItem::SYSTEM_MOVING,
+                                              2,
+                                              true);
+          }
+          PixmapItem *tmp[TOTAL_ITEM_NUMBER];
+          for (int i = 0;i < TOTAL_ITEM_NUMBER;++i)
+          {
+            tmp[i] = balls[ballsCurrentIndexToOriginalIndex[i]];
+            ballsOriginalIndexToCurrentIndex[i] = i;
+            ballsCurrentIndexToOriginalIndex[i] = i;
+          }
+          for (int i = 0;i < TOTAL_ITEM_NUMBER;++i)
+            balls[i] = tmp[i];
+          delete [] tmp;
+
+        }
+
+      }
+      else if (_gesture == ROTATE)
+      {
+        if (false) // 如果不成功则回滚
+        {
+          for (int i = 0;i < _gesture_influenced_indexes.size();++i)
+          {
+            int currentIndex = _gesture_influenced_indexes[i];
+            balls[currentIndex]->rotateBackTo(balls[currentIndex]->pos(),
+                                              positionOfIndex(currentIndex),
+                                              positionOfIndex(_gesture_rotate_center_index),
+                                              PixmapItem::SYSTEM_MOVING,
+                                              10);
+
+          }
+          return;
+        }
+        else // 移动到新的位置
+        {
+          for (int i = 0;i < _gesture_influenced_indexes.size();++i)
+          {
+            int originalIndex = _gesture_influenced_indexes[i];
+            int currentIndex = ballsOriginalIndexToCurrentIndex[originalIndex];
+            balls[originalIndex]->translateTo(positionOfIndex(currentIndex),
+                                              PixmapItem::SYSTEM_MOVING,
+                                              2,
+                                              true);
+          }
+          PixmapItem *tmp[TOTAL_ITEM_NUMBER];
+          for (int i = 0;i < TOTAL_ITEM_NUMBER;++i)
+          {
+            tmp[i] = balls[ballsCurrentIndexToOriginalIndex[i]];
+            ballsOriginalIndexToCurrentIndex[i] = i;
+            ballsCurrentIndexToOriginalIndex[i] = i;
+          }
+          for (int i = 0;i < TOTAL_ITEM_NUMBER;++i)
+            balls[i] = tmp[i];
+          delete [] tmp;
+
+        }
 
       }
     }
@@ -439,6 +604,11 @@ void GameViewWidget::fillAllBlanks(bool allowMoreMove,
 
   autoRotate();
 
+  for (int i = 0;i < TOTAL_ITEM_NUMBER;++i)
+  {
+    ballsOriginalIndexToCurrentIndex[i] = i;
+    ballsCurrentIndexToOriginalIndex[i] = i;
+  }
 }
 
 void GameViewWidget::autoRotate()

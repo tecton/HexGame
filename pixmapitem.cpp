@@ -7,6 +7,7 @@
 
 #define TOTAL_RECYCLE_STEPS 20
 
+// The paths of the pixmaps of different colors
 const static char * COLOR_PATHS[] = {":/images/balls/red*.png",
                                      ":/images/balls/blue*.png",
                                      ":/images/balls/green*.png",
@@ -31,34 +32,42 @@ PixmapItem::PixmapItem(PixmapItem::BALL_COLOR color,
 //  timer->setFrameRange(0, 100);
 //  anim->setItem(this);
 //  anim->setTimeLine(timer);
+
+  // Load pixmaps
+  loadPixmaps();
+}
+
+void PixmapItem::loadPixmaps()
+{
+  // Clear the frames
+  _frames.clear();
+  // Get the path of pixmaps
   QString path(COLOR_PATHS[_color]);
   QFileInfo fi(path);
+  // For each file of the color
   foreach (QString entry, QDir(fi.path(), fi.fileName()).entryList())
   {
+    // Get the pixmap of the path
     QPixmap currentPixmap = QPixmap(fi.path() + "/" + entry);
+
+    // Set the Frame of the pixmap
     Frame currentframe;
     currentframe.pixmap = currentPixmap;
     currentframe.shape = QPainterPath();
     currentframe.boundingRect = currentPixmap.rect();
+
+    // Record the Frame
     _frames << currentframe;
   }
 }
 
 void PixmapItem::setColor(PixmapItem::BALL_COLOR color)
 {
-  _frames.clear();
+  // Change the _color property
   _color = color;
-  QString path(COLOR_PATHS[_color]);
-  QFileInfo fi(path);
-  foreach (QString entry, QDir(fi.path(), fi.fileName()).entryList())
-  {
-    QPixmap currentPixmap = QPixmap(fi.path() + "/" + entry);
-    Frame currentframe;
-    currentframe.pixmap = currentPixmap;
-    currentframe.shape = QPainterPath();
-    currentframe.boundingRect = currentPixmap.rect();
-    _frames << currentframe;
-  }
+
+  // Load pixmaps
+  loadPixmaps();
 }
 
 QRectF PixmapItem::boundingRect() const
@@ -70,6 +79,8 @@ QRectF PixmapItem::boundingRect() const
 QPainterPath PixmapItem::shape() const
 {
   const Frame &f = _frames.at(_current_frame);
+
+  // Init if neccessary
   if (f.shape.isEmpty()) {
     QPainterPath path;
     path.addRegion(f.pixmap.createHeuristicMask());
@@ -95,15 +106,23 @@ void PixmapItem::advance(int phase)
 {
   if (phase == 1)
   {
+    // If the ball has animation
     if (!_stop_positions.isEmpty())
     {
+      // Set the position and pop the position
       setPos(_stop_positions.at(_stop_positions.size() - 1));
       _stop_positions.pop_back();
-      if (_stop_positions.isEmpty()) // 若是为了流畅度，这里可以变成_stop_positions.size() < 某个数
+
+      // If it's the end of the animation, set the _state to STABLE
+      // (If you want the game to be smooth, here can be something like
+      //  "_stop_positions.size() < 5")
+      if (_stop_positions.isEmpty())
         _state = STABLE;
     }
+    // If the ball is recycled
     if (_recycled)
     {
+      // Fade out
       setOpacity(_recycle_count * 1.0 / TOTAL_RECYCLE_STEPS);
       --_recycle_count;
       if (_recycle_count == 0)
@@ -243,15 +262,16 @@ void PixmapItem::slideBackTo(QPointF fromPos,
     qreal firstStepDis = distanceOfTwoPoints(fromPos, j1);
     qreal secondStepDis = distanceOfTwoPoints(j2, toPos);
 
-    int firstStepSteps = qMax(1.0, steps * firstStepDis / (firstStepDis + secondStepDis));
-    int secondStepSteps = qMax(1, steps - firstStepSteps);
+    int firstStepSteps = qMin(steps - 2.0, qMax(1.0, steps * firstStepDis / (firstStepDis + secondStepDis)));
+    int secondStepSteps = steps - firstStepSteps;
 
     QVector<QPointF> tmp;
+    tmp.push_back(toPos);
 
     QPointF currentPos = j2;
     QPointF finalPos = toPos;
-    int j = secondStepSteps;
-    for (int i = 0; i <= secondStepSteps; ++i,--j)
+    int j = secondStepSteps - 1;
+    for (int i = 0; i < secondStepSteps; ++i,--j)
     {
       qreal tmpX = currentPos.x() + (finalPos.x() - currentPos.x()) * j / secondStepSteps;
       qreal tmpY = currentPos.y() + (finalPos.y() - currentPos.y()) * j / secondStepSteps;
@@ -260,15 +280,51 @@ void PixmapItem::slideBackTo(QPointF fromPos,
 
     currentPos = fromPos;
     finalPos = j1;
-    j = firstStepSteps;
-    for (int i = 0; i <= firstStepSteps; ++i,--j)
+    j = firstStepSteps - 1;
+    for (int i = 0; i < firstStepSteps; ++i,--j)
     {
       qreal tmpX = currentPos.x() + (finalPos.x() - currentPos.x()) * j / firstStepSteps;
       qreal tmpY = currentPos.y() + (finalPos.y() - currentPos.y()) * j / firstStepSteps;
       tmp.push_back(QPointF(tmpX, tmpY));
     }
     _stop_positions = tmp;
+    _state = state;
   }
+}
+
+
+void PixmapItem::rotateBackTo(QPointF fromPos,
+                              QPointF toPos,
+                              QPointF centerPos,
+                              PixmapItem::STATE state,
+                              int steps)
+{
+  _stop_positions.clear();
+  qreal currentA = angle(fromPos, centerPos);
+  qreal finalA = angle(toPos, centerPos);
+
+  qreal tmp = currentA + PI;
+  if (tmp > 2 * PI)
+    tmp -= 2 * PI;
+
+  qreal clockwiseAngleDis = currentA - finalA;
+  if (clockwiseAngleDis < 0)
+    clockwiseAngleDis += 2 * PI;
+
+  bool clockwise = clockwiseAngleDis < PI;
+
+  qreal& angleDis = clockwiseAngleDis;
+  angleDis = clockwise ? clockwiseAngleDis : 2 * PI - clockwiseAngleDis;
+
+  _stop_positions.push_back(toPos);
+  int j = steps;
+  for (int i = 0;i < steps;++i,--j)
+  {
+    qreal tmpA = currentA + (angleDis * j / steps) * (clockwise ? -1 : 1);
+    qreal tmpR = distanceFromTheCenterWithTheAngle(tmpA);
+    _stop_positions.push_back(calculatePosition(tmpA, tmpR, centerPos));
+  }
+  _state = state;
 
 }
 
