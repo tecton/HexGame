@@ -144,6 +144,8 @@ QVector<QPointF> GameViewWidget::newposUnderPos(QPointF mousePos)
     int minY = firstPos.y();
     int maxX = lastPos.x();
     int maxY = lastPos.y();
+    qreal k = (lastPos.y() - firstPos.y()) / (lastPos.x() - firstPos.x());
+    qreal c = firstPos.y() - k * firstPos.x();
 
     qreal dx = 0;
     qreal dy = 0;
@@ -169,25 +171,25 @@ QVector<QPointF> GameViewWidget::newposUnderPos(QPointF mousePos)
     minY -= dy;
     maxX += dx;
     maxY += dy;
-    dx = maxX - minX;
-    dy = maxY - minY;
+    qreal dX = maxX - minX;
+    qreal dY = maxY - minY;
+
+    while (mouseMovedX > dX)
+      mouseMovedX -= dX;
+    while (mouseMovedX < -dX)
+      mouseMovedX += dX;
 
     for (int i = 0;i < _gesture_influenced_indexes.size();++i)
     {
       QPointF original = result[i];
       QPointF current = original;
-      current.setX(original.x() + mouseMovedX);
-      current.setY(original.y() + mouseMovedX * yRate);
-      while (current.x() < minX)
-      {
-        current.setX(current.x() + (dx));
-        current.setY(current.y() + (dy));
-      }
-      while (current.x() > maxX)
-      {
-        current.setX(current.x() - (dx));
-        current.setY(current.y() - (dy));
-      }
+      qreal tmpX = original.x() + mouseMovedX;
+      while (tmpX < minX)
+        tmpX += dX;
+      while (tmpX > maxX)
+        tmpX -= dX;
+      current.setX(tmpX);
+      current.setY(k * tmpX + c);
       result[i] = current;
 
 //      qreal movedX = current.x() - original.x();
@@ -405,7 +407,7 @@ void GameViewWidget::dealPressed(QMouseEvent *event)
 //  {
 //    fillAllBlanks();
 //  }
-  if ((event->buttons() & Qt::LeftButton) != Qt::LeftButton)
+  if (event->button() == Qt::RightButton)
     return;
   _gesture_state = CHOOSE_GESTURE;
   _gesture_indexes.clear();
@@ -418,7 +420,7 @@ void GameViewWidget::dealPressed(QMouseEvent *event)
 void GameViewWidget::dealReleased(QMouseEvent *event)
 {
 //  QMessageBox::critical(0,"","");
-  if ((event->buttons() & Qt::LeftButton) != Qt::LeftButton)
+  if (event->button() == Qt::RightButton)
     return;
   if (false) // ÄÜÏûÈ¥
   {
