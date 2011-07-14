@@ -102,13 +102,15 @@ QPointF positionOfIndex(int index);
 // The chains to reload items(from inner to outter(我这个是不是拼错了-.-))
 const QVector<QVector<int> >& chains();
 
+// ABANDONED!!!
 // The chain of the item with the index to reload items
-QVector<int> chainOfIndex(int index, bool full = false);
+//QVector<int> chainOfIndex(int index, bool full = false);
 
+// ABANDONED!!!
 // The chain of the item with the index to rotate items
-QVector<int> chainOfIndex(int from,
-                          int to,
-                          bool counterclockwise = false);
+//QVector<int> chainOfIndex(int from,
+//                          int to,
+//                          bool counterclockwise = false);
 
 // Index of the near by position in 6 directions
 int leftIndex(int index);

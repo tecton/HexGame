@@ -114,23 +114,34 @@ int rowOfIndex(int index)
   return row[index];
 }
 
+QVector<QPointF> _positionOfIndex;
 QPointF positionOfIndex(int index)
 {
-  int r = rowOfIndex(index);
-  int c = columnOfIndex(index);
+  if (_positionOfIndex.isEmpty())
+  {
+    for (int i = 0;i < TOTAL_ITEM_NUMBER;++i)
+    {
+      int r = rowOfIndex(i);
+      int c = columnOfIndex(i);
 
-  qreal x = LOCATION_GAME_BOARD_ITEM_X_FROM +
-            c * LOCATION_GAME_BOARD_ITEM_X_INTERVAL;
-  qreal y = LOCATION_GAME_BOARD_ITEM_Y_FROM +
-            r * LOCATION_GAME_BOARD_ITEM_Y_INTERVAL;
-  return QPointF(x, y);
+      qreal x = LOCATION_GAME_BOARD_ITEM_X_FROM +
+                c * LOCATION_GAME_BOARD_ITEM_X_INTERVAL;
+      qreal y = LOCATION_GAME_BOARD_ITEM_Y_FROM +
+                r * LOCATION_GAME_BOARD_ITEM_Y_INTERVAL;
+      _positionOfIndex.push_back(QPointF(x, y));
+    }
+
+  }
+  if (index < 0 || index >= TOTAL_ITEM_NUMBER)
+    return QPointF(LOCATION_GAME_BOARD_ITEM_X_FROM,
+                   LOCATION_GAME_BOARD_ITEM_Y_FROM);
+  return _positionOfIndex[index];
 }
 
-QVector<QVector<int> > chainsFromCenter;
-
+QVector<QVector<int> > _chains;
 const QVector<QVector<int> >& chains()
 {
-  if (chainsFromCenter.isEmpty())
+  if (_chains.isEmpty())
   {
     int currentIndexInOriginalChain = 0;
     for (int i = 0;i < CHAIN_NUMBER;++i)
@@ -138,74 +149,82 @@ const QVector<QVector<int> >& chains()
       QVector<int> currentChain;
       for (int j = 0;j < itemCountInAChain[i];++j)
         currentChain.push_back(originalChain[currentIndexInOriginalChain++]);
-      chainsFromCenter.push_back(currentChain);
+      _chains.push_back(currentChain);
     }
   }
-  return chainsFromCenter;
+  return _chains;
 }
 
-QVector<int> chainOfIndex(int index, bool full)
-{
-  if (index < 0 || index >= TOTAL_ITEM_NUMBER)
-    return QVector<int>();
-  const QVector<QVector<int> >& allChains = chains();
-  const QVector<int>& fullChain = allChains.at(itemBelongsToChain[index]);
-  QVector<int> result;
-  for (int i = 0;i < fullChain.size();++i)
-  {
-    result.push_back(fullChain.at(i));
-    if ((!full) && fullChain.at(i) == index)
-      break;
-  }
-  return result;
-}
+//QVector<QVector<int> > _chainOfIndex;
+//QVector<int> chainOfIndex(int index, bool full)
+//{
+//  if (index < 0 || index >= TOTAL_ITEM_NUMBER)
+//    return QVector<int>();
+//  if (_chainOfIndex.isEmpty())
+//    for (int i = 0;i < TOTAL_ITEM_NUMBER;++i)
+//      _chainOfIndex.push_back(QVector<int>());
+//  if (_chainOfIndex[index].isEmpty())
+//  {
+//    const QVector<QVector<int> >& allChains = chains();
+//    const QVector<int>& fullChain = allChains.at(itemBelongsToChain[index]);
+//    QVector<int> result;
+//    for (int i = 0;i < fullChain.size();++i)
+//    {
+//      result.push_back(fullChain.at(i));
+//      if ((!full) && fullChain.at(i) == index)
+//        break;
+//    }
+//    _chainOfIndex[index] = result;
+//  }
+//  return _chainOfIndex[index];
+//}
 
 
-QVector<int> chainOfIndex(int from,
-                          int to,
-                          bool counterclockwise)
-{
-  if (from < 0 || from >= TOTAL_ITEM_NUMBER)
-    return QVector<int>();
-  if (to < 0 || to >= TOTAL_ITEM_NUMBER)
-    return QVector<int>();
+//QVector<int> chainOfIndex(int from,
+//                          int to,
+//                          bool counterclockwise)
+//{
+//  if (from < 0 || from >= TOTAL_ITEM_NUMBER)
+//    return QVector<int>();
+//  if (to < 0 || to >= TOTAL_ITEM_NUMBER)
+//    return QVector<int>();
 
-  const QVector<QVector<int> >& allChains = chains();
-  const QVector<int>& fullChain = allChains.at(itemBelongsToChain[from]);
-  QVector<int> counterclockwiseResult;
+//  const QVector<QVector<int> >& allChains = chains();
+//  const QVector<int>& fullChain = allChains.at(itemBelongsToChain[from]);
+//  QVector<int> counterclockwiseResult;
 
-  int pos = fullChain.indexOf(from, 0);
-  bool resultFound = false;
-  for (int i = pos;i < fullChain.size();++i)
-  {
-    counterclockwiseResult.push_back(fullChain.at(i));
-    if (fullChain.at(i) == to)
-    {
-      resultFound = true;
-      break;
-    }
-  }
-  if (!resultFound)
-  {
-    for (int i = 0;i < pos;++i)
-    {
-      counterclockwiseResult.push_back(fullChain.at(i));
-      if (fullChain.at(i) == to)
-        resultFound = true;
-        break;
-    }
-  }
+//  int pos = fullChain.indexOf(from, 0);
+//  bool resultFound = false;
+//  for (int i = pos;i < fullChain.size();++i)
+//  {
+//    counterclockwiseResult.push_back(fullChain.at(i));
+//    if (fullChain.at(i) == to)
+//    {
+//      resultFound = true;
+//      break;
+//    }
+//  }
+//  if (!resultFound)
+//  {
+//    for (int i = 0;i < pos;++i)
+//    {
+//      counterclockwiseResult.push_back(fullChain.at(i));
+//      if (fullChain.at(i) == to)
+//        resultFound = true;
+//        break;
+//    }
+//  }
 
-  if (counterclockwiseResult.size() > fullChain.size() / 2 &&
-      !counterclockwise)
-  {
-    QVector<int> result(counterclockwiseResult.size());
-    for (int i = 0;i < counterclockwiseResult.size();++i)
-      result[i] = counterclockwiseResult[counterclockwiseResult.size() - 1 - i];
-    return result;
-  }
-  return counterclockwiseResult;
-}
+//  if (counterclockwiseResult.size() > fullChain.size() / 2 &&
+//      !counterclockwise)
+//  {
+//    QVector<int> result(counterclockwiseResult.size());
+//    for (int i = 0;i < counterclockwiseResult.size();++i)
+//      result[i] = counterclockwiseResult[counterclockwiseResult.size() - 1 - i];
+//    return result;
+//  }
+//  return counterclockwiseResult;
+//}
 
 
 int indexOfPosition(QPointF position)
@@ -252,6 +271,8 @@ qreal angle(QPointF point, QPointF origin)
     return PI + result;
   if (dx > 0 && dy < 0)
     return 2 * PI - result;
+  if (result != result) // NaN !!!
+    return 0;
   return result;
 }
 
@@ -328,7 +349,7 @@ int indexToRight[] = {
      36, 37, 38, 39, 40, 41, 42, -1,
        44, 45, 46, 47, 48, 49, -1,
          51, 52, 53, 54, 55, -1,
-           57, 58, 59, 60 -1,
+           57, 58, 59, 60, -1
 };
 
 int rightIndex(int index)
@@ -407,30 +428,38 @@ int indexHasAround[] = {
             0,  0,  0,  0,  0,
 };
 
+QVector<QVector<int> > _chainAroundIndex;
 QVector<int> chainAroundIndex(int index)
 {
   if (index < 0 || index >= TOTAL_ITEM_NUMBER)
     return QVector<int>();
-  QVector<int> result;
-  int tmp = leftUpIndex(index);
-  if (tmp >= 0)
-    result.push_back(tmp);
-  tmp = rightUpIndex(index);
-  if (tmp >= 0)
-    result.push_back(tmp);
-  tmp = rightIndex(index);
-  if (tmp >= 0)
-    result.push_back(tmp);
-  tmp = rightDownIndex(index);
-  if (tmp >= 0)
-    result.push_back(tmp);
-  tmp = leftDownIndex(index);
-  if (tmp >= 0)
-    result.push_back(tmp);
-  tmp = leftIndex(index);
-  if (tmp >= 0)
-    result.push_back(tmp);
-  return result;
+  if (_chainAroundIndex.isEmpty())
+    for (int i = 0;i < TOTAL_ITEM_NUMBER;++i)
+      _chainAroundIndex.push_back(QVector<int>());
+  if (_chainAroundIndex[index].isEmpty())
+  {
+    QVector<int> result;
+    int tmp = leftUpIndex(index);
+    if (tmp >= 0)
+      result.push_back(tmp);
+    tmp = rightUpIndex(index);
+    if (tmp >= 0)
+      result.push_back(tmp);
+    tmp = rightIndex(index);
+    if (tmp >= 0)
+      result.push_back(tmp);
+    tmp = rightDownIndex(index);
+    if (tmp >= 0)
+      result.push_back(tmp);
+    tmp = leftDownIndex(index);
+    if (tmp >= 0)
+      result.push_back(tmp);
+    tmp = leftIndex(index);
+    if (tmp >= 0)
+      result.push_back(tmp);
+    _chainAroundIndex[index] = result;
+  }
+  return _chainAroundIndex[index];
 }
 
 QVector<int> doubleChain(const QVector<int>& v)

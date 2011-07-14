@@ -156,13 +156,13 @@ QVector<QPointF> GameViewWidget::newposUnderPos(QPointF mousePos)
     }
     else if (_gesture_direction == LEFT_UP_RIGHT_DOWN)
     {
-      dx = LOCATION_GAME_BOARD_ITEM_X_INTERVAL / 2;
-      dy = LOCATION_GAME_BOARD_ITEM_Y_INTERVAL / 2;
+      dx = LOCATION_GAME_BOARD_ITEM_X_INTERVAL / 2.0;
+      dy = LOCATION_GAME_BOARD_ITEM_Y_INTERVAL / 2.0;
     }
     else if (_gesture_direction == LEFT_DOWN_RIGHT_UP)
     {
-      dx = LOCATION_GAME_BOARD_ITEM_X_INTERVAL / 2;
-      dy = - (LOCATION_GAME_BOARD_ITEM_Y_INTERVAL / 2);
+      dx = LOCATION_GAME_BOARD_ITEM_X_INTERVAL / 2.0;
+      dy = - (LOCATION_GAME_BOARD_ITEM_Y_INTERVAL / 2.0);
     }
     yRate = dy / dx;
     minX -= dx;
@@ -347,9 +347,9 @@ void GameViewWidget::dealMoved(QMouseEvent *event)
     if (index >= 0)
     {
 //      _gesture_indexes.clear();
-      if ((_gesture_indexes.size() > 0 &&
-           _gesture_indexes[_gesture_indexes.size() - 1] != index) ||
-          _gesture_indexes.size() == 0)
+      if (_gesture_indexes.size() == 0 ||
+          (_gesture_indexes.size() > 0 &&
+           _gesture_indexes[_gesture_indexes.size() - 1] != index))
         _gesture_indexes.push_back(index);
     }
     if (testGesture())
@@ -405,6 +405,8 @@ void GameViewWidget::dealPressed(QMouseEvent *event)
 //  {
 //    fillAllBlanks();
 //  }
+  if ((event->buttons() & Qt::LeftButton) != Qt::LeftButton)
+    return;
   _gesture_state = CHOOSE_GESTURE;
   _gesture_indexes.clear();
   QPointF p = view->mapToScene(event->pos());
