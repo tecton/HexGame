@@ -418,6 +418,8 @@ void GameViewWidget::dealPressed(QMouseEvent *event)
 void GameViewWidget::dealReleased(QMouseEvent *event)
 {
 //  QMessageBox::critical(0,"","");
+  if ((event->buttons() & Qt::LeftButton) != Qt::LeftButton)
+    return;
   if (false) // 能消去
   {
     // 消去要做的事
