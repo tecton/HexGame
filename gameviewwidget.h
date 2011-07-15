@@ -85,6 +85,12 @@ private:
   //   _gesture_rotate_center_pos
   bool testGesture();
 
+
+  bool testEliminate();
+
+  void dealWithTestEliminateResult(QVector<QVector<int> *>& connections,
+                                   QVector<int> *connectionsOfIndex[TOTAL_ITEM_NUMBER][3]);
+
   // The new positions the balls influenced should be under the given mouse
   // position
   QVector<QPointF> newposUnderPos(QPointF mousePos);
@@ -96,6 +102,14 @@ private:
 
   // Rotate the gameboard automatically
   void autoRotate();
+
+  // Move to the new position after a valid gesture
+  void moveToNewPos();
+
+  // Maintain ballsCurrentIndexToOriginalIndex and
+  //          ballsOriginalIndexToCurrentIndex
+  // after calculate new position of the balls influenced
+  void maintainCToOAndOToC(QPointF firstPos);
 
 signals:
 

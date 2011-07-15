@@ -39,6 +39,9 @@ qreal bridgeY(qreal bridgeX);
 // The height of the item
 #define ITEM_HEIGHT                             20
 
+// The width of the item in a gesture
+#define ITEM_GESTURE_R                          35
+
 // The absolute position of game(I must draw a picture~~~)
 #define LOCATION_GAME_VIEW_X_FROM               0
 #define LOCATION_GAME_VIEW_Y_FROM               0
@@ -98,6 +101,9 @@ int rowOfIndex(int index);
 
 // Left Top of the item with the index
 QPointF positionOfIndex(int index);
+
+// Center of the item with the index
+QPointF centerPositionOfIndex(int index);
 
 // The chains to reload items(from inner to outter(我这个是不是拼错了-.-))
 const QVector<QVector<int> >& chains();

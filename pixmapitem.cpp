@@ -13,7 +13,9 @@ const static char * COLOR_PATHS[] = {":/images/balls/red*.png",
                                      ":/images/balls/green*.png",
                                      ":/images/balls/yellow*.png",
                                      ":/images/balls/purple*.png",
-                                     ":/images/balls/white*.png"};
+                                     ":/images/balls/white*.png",
+                                     ":/images/balls/oringe*.png",
+                                     ":/images/balls/brown*.png"};
 
 PixmapItem::PixmapItem(PixmapItem::BALL_COLOR color,
                        QGraphicsScene *scene):
@@ -116,6 +118,8 @@ void PixmapItem::advance(int phase)
       // If it's the end of the animation, set the _state to STABLE
       // (If you want the game to be smooth, here can be something like
       //  "_stop_positions.size() < 5")
+      if (_stop_positions.size() < 5)
+        _state = ALMOST_STABLE;
       if (_stop_positions.isEmpty())
         _state = STABLE;
     }

@@ -25,6 +25,7 @@
 #include <QGraphicsItem>
 #include <QPixmap>
 #include <QVector>
+
 //#include <QGraphicsItemAnimation>
 //#include <QTimeLine>
 //#include <QTimer>
@@ -36,7 +37,7 @@ class PixmapItem : public QObject, public QGraphicsItem
 public:
 
   // Ball colors(must start from 0, because we will use the value as index)
-  enum BALL_COLOR{RED = 0, BLUE, GREEN, YELLOW, PURPLE, WHITE};
+  enum BALL_COLOR{RED = 0, BLUE, GREEN, YELLOW, PURPLE, WHITE, ORINGE, BROWN};
 
   // Ball states
   //   STABLE:
@@ -47,7 +48,7 @@ public:
   //     Ball is moved by the system.
   //   JUST_CREATED:
   //     Ball has just been created wating for additional operations.
-  enum STATE{STABLE, USER_MOVING, SYSTEM_MOVING, JUST_CREATED};
+  enum STATE{STABLE, ALMOST_STABLE, USER_MOVING, SYSTEM_MOVING, JUST_CREATED};
 
   // Constructor, will call loadPixmaps()
   PixmapItem(PixmapItem::BALL_COLOR color = PixmapItem::RED,

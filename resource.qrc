@@ -6,5 +6,7 @@
         <file>balls/red01.png</file>
         <file>balls/white01.png</file>
         <file>balls/yellow01.png</file>
+        <file>balls/brown01.png</file>
+        <file>balls/oringe01.png</file>
     </qresource>
 </RCC>

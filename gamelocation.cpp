@@ -226,6 +226,13 @@ const QVector<QVector<int> >& chains()
 //  return counterclockwiseResult;
 //}
 
+QPointF centerPositionOfIndex(int index)
+{
+  QPointF result = positionOfIndex(index);
+  result.setX(result.x() + ITEM_WIDTH / 2);
+  result.setY(result.y() + ITEM_HEIGHT / 2);
+  return result;
+}
 
 int indexOfPosition(QPointF position)
 {
@@ -238,7 +245,7 @@ int indexOfPosition(QPointF position)
   if (c < 0 || c >= COLUMN_NUMBER || r < 0 || r > ROW_NUMBER)
     return -1;
   int index = positionToIndex[r * COLUMN_NUMBER + c];
-  if (distanceOfTwoPoints(position, positionOfIndex(index)) > LOCATION_GAME_BOARD_ITEM_X_INTERVAL)
+  if (distanceOfTwoPoints(position, centerPositionOfIndex(index)) > ITEM_GESTURE_R)
     return -1;
   return index;
 }
@@ -250,8 +257,8 @@ int indexOfPosition(int row, int column)
 
 int indexOfMousePosition(QPointF position)
 {
-  position.setX(position.x() - ITEM_WIDTH / 2);
-  position.setY(position.y() - ITEM_HEIGHT / 2);
+  position.setX(position.x() + (ITEM_GESTURE_R - ITEM_WIDTH) / 2);
+  position.setY(position.y() + (ITEM_GESTURE_R - ITEM_HEIGHT) / 2);
   return indexOfPosition(position);
 }
 
