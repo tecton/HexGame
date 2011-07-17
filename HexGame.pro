@@ -1,6 +1,6 @@
 QT       += core gui
 
-TARGET = GameForMeego02110707
+TARGET = HexGame
 TEMPLATE = app
 
 SOURCES += main.cpp\
