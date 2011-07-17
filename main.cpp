@@ -1,6 +1,5 @@
 #include <QtGui/QApplication>
 #include <time.h>
-#include "mainwindow.h"
 #include "gameviewwidget.h"
 
 int main(int argc, char *argv[])
