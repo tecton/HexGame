@@ -9,8 +9,7 @@ SOURCES += main.cpp\
     pixmapitem.cpp \
     gamegraphicsview.cpp
 
-HEADERS  += mainwindow.h \
-    gamelocation.h \
+HEADERS  += gamelocation.h \
     gameviewwidget.h \
     pixmapitem.h \
     gamegraphicsview.h
