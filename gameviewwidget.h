@@ -75,6 +75,10 @@ private:
   // The original position of the balls influenced
   QVector <QPointF> _gesture_influenced_indexes_original_pos;
 
+
+  bool _should_roll_back;
+  bool _should_eliminate;
+
   // Whether the gesture is valid
   // Should maintain:
   //   _gesture_state,
@@ -89,7 +93,7 @@ private:
   bool testEliminate();
 
   void dealWithTestEliminateResult(QVector<QVector<int> *>& connections,
-                                   QVector<int> *connectionsOfIndex[TOTAL_ITEM_NUMBER][3]);
+                                   QVector<int> *connectionsOfIndex[TOTAL_ITEM_NUMBER][7]);
 
   // The new positions the balls influenced should be under the given mouse
   // position

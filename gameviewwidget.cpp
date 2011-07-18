@@ -7,11 +7,20 @@
 
 bool GameViewWidget::testEliminate()
 {
+  if (!_should_eliminate)
+    return false;
   bool result = false;
-  QVector<int> * connectionsOfIndex[TOTAL_ITEM_NUMBER][3];
+  // 0: left down
+  // 1: right down
+  // 2: right
+  // 3: center
+  // 4: left up or right up of the center
+  // 5: right or right down of the center
+  // 6: left down or left up of the center
+  QVector<int> * connectionsOfIndex[TOTAL_ITEM_NUMBER][7];
   QVector<QVector<int> *> connections;
   for (int i = 0;i < TOTAL_ITEM_NUMBER;++i)
-    for (int j = 0;j < 3;++j)
+    for (int j = 0;j < 7;++j)
       connectionsOfIndex[i][j] = NULL;
 
   //connections.fill(NULL, TOTAL_ITEM_NUMBER);
@@ -25,6 +34,8 @@ bool GameViewWidget::testEliminate()
   {
     if (!balls[i])
       continue;
+
+    // Test 3 in a line
     PixmapItem::BALL_COLOR color = balls[i]->color();
     for (int j = 0;j < 3;++j)
     {
@@ -52,6 +63,36 @@ bool GameViewWidget::testEliminate()
           connectionsOfIndex[currentConnection->at(k)][j] = currentConnection;
       }
     }
+
+    // Test 6 in a circle
+    if (canBeRotateCenter(i))
+    {
+      bool chainCanBeEliminated = true;
+      QVector<int> chain = chainAroundIndex(i);
+      if (chain.size() == 6)
+      {
+        PixmapItem::BALL_COLOR firstColor = balls[chain[0]]->color();
+        for (int j = 0;j < 6;++j)
+        {
+          if (balls[chain[j]]->color() != firstColor)
+          {
+            chainCanBeEliminated = false;
+            break;
+          }
+        }
+      }
+      else
+        chainCanBeEliminated = false;
+      if (chainCanBeEliminated)
+      {
+        result = true;
+        QVector<int> *currentConnection = new QVector<int>(chain);
+        connectionsOfIndex[i][3] = currentConnection;
+        for (int j = 0;j < 6;++j)
+          connectionsOfIndex[chain[j]][4+j/2] = currentConnection;
+        connections.push_back(currentConnection);
+      }
+    }
   }
 
   int tmp = 1;
@@ -63,13 +104,27 @@ bool GameViewWidget::testEliminate()
 
 void GameViewWidget::dealWithTestEliminateResult
     (QVector<QVector<int> *>& connections,
-     QVector<int> *connectionsOfIndex[TOTAL_ITEM_NUMBER][3])
+     QVector<int> *connectionsOfIndex[TOTAL_ITEM_NUMBER][7])
 {
   for (int i = 0;i < TOTAL_ITEM_NUMBER;++i)
   {
     if (!balls[i])
       continue;
     for (int j = 0;j < 3;++j)
+    {
+      if (!balls[i])
+        break;
+      if (connectionsOfIndex[i][j])
+      {
+        balls[i]->recycle();
+        delete balls[i];
+        balls[i] = NULL;
+      }
+    }
+
+    if (!balls[i])
+      continue;
+    for (int j = 4;j < 7;++j)
     {
       if (!balls[i])
         break;
@@ -356,7 +411,9 @@ void GameViewWidget::maintainCToOAndOToC(QPointF firstPos)
 
 GameViewWidget::GameViewWidget(QWidget *parent) :
     QWidget(parent),
-    _gesture_state(NO_GESTURE)
+    _gesture_state(NO_GESTURE),
+    _should_roll_back(true),
+    _should_eliminate(true)
 {
   scene = new QGraphicsScene();
   scene->setSceneRect(LOCATION_GAME_VIEW_X_FROM,
@@ -479,10 +536,12 @@ void GameViewWidget::dealPressed(QMouseEvent *event)
 //      balls[index] = NULL;
 //    }
 //  }
-//  if (event->button() == Qt::RightButton)
-//  {
-//    fillAllBlanks();
-//  }
+  if (event->button() == Qt::RightButton)
+  {
+    _should_roll_back = !_should_roll_back;
+  }
+  if (event->button() == Qt::MidButton)
+    _should_eliminate = !_should_eliminate;
   QPointF p = view->mapToScene(event->pos());
 //  if (event->button() == Qt::RightButton)
 //  {
@@ -505,7 +564,9 @@ void GameViewWidget::dealReleased(QMouseEvent *event)
 {
 //  QMessageBox::critical(0,"","");
   if (event->button() == Qt::RightButton)
+  {
     return;
+  }
 
   PixmapItem *tmp[TOTAL_ITEM_NUMBER];
   for (int i = 0;i < _gesture_influenced_indexes.size();++i)
@@ -522,7 +583,7 @@ void GameViewWidget::dealReleased(QMouseEvent *event)
     moveToNewPos();
     // 消去要做的事
   }
-  else
+  else if (_should_roll_back)
   {
     PixmapItem *tmp[TOTAL_ITEM_NUMBER];
     for (int i = 0;i < TOTAL_ITEM_NUMBER;++i)
@@ -629,6 +690,22 @@ void GameViewWidget::dealReleased(QMouseEvent *event)
       }
     }
   }
+  else
+  {
+    for (int i = 0;i < _gesture_influenced_indexes.size();++i)
+    {
+      int originalIndex = _gesture_influenced_indexes[i];
+      int currentIndex = ballsOriginalIndexToCurrentIndex[originalIndex];
+      if (balls[currentIndex])
+        balls[currentIndex]->translateTo(positionOfIndex(currentIndex),
+                                         PixmapItem::SYSTEM_MOVING,
+                                         3);
+                            /*translateTo(positionOfIndex(currentIndex),
+                                          PixmapItem::SYSTEM_MOVING,
+                                          2,
+                                          true);*/
+    }
+  }
   // 复位
   for (int i = 0;i < TOTAL_ITEM_NUMBER;++i)
   {
@@ -683,9 +760,9 @@ void GameViewWidget::fillAllBlanks(bool allowMoreMove,
          ++itr)
     {
       if (!balls[*itr])
-        balls[*itr] = new PixmapItem((PixmapItem::BALL_COLOR)(0));//rand() % 8));
+        balls[*itr] = new PixmapItem((PixmapItem::BALL_COLOR)(rand() % 8));//0));//rand() % 8));
       else
-        balls[*itr]->setColor((PixmapItem::BALL_COLOR)(0));//rand() % 8));
+        balls[*itr]->setColor((PixmapItem::BALL_COLOR)(rand() % 8));//0))//rand() % 8));
 //      balls[*itr]->hide();
 
     }
