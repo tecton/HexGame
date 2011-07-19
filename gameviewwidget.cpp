@@ -144,15 +144,15 @@ void GameViewWidget::dealWithTestEliminateResult
     fillAllBlanks();
 }
 
-// ²âÊÔ´ËÊÖÊÆ£º
-//   ÕıÈ·ÊÖÊÆ£º
-//     ½«_gesture_state´ÓCHOOSE_GESTURE¸ÄÎªLOCATE_GESTURE
-//     ½«_gesture,
+// æµ‹è¯•æ­¤æ‰‹åŠ¿ï¼š
+//   æ­£ç¡®æ‰‹åŠ¿ï¼š
+//     å°†_gesture_stateä»CHOOSE_GESTUREæ”¹ä¸ºLOCATE_GESTURE
+//     å°†_gesture,
 //       _gesture_direction,
 //       _gesture_influenced_indexes,
-//       _gesture_influenced_indexes_original_pos¸ÄÎªÕıÈ·Öµ
-//     ĞèÒªÊ±½«_gesture_rotate_center_pos¸ÄÎªÕıÈ·Öµ
-// TODO: ÔİÊ±Ö»ËãÁËÕû¸ö³¡ÃæÆ½¾²Ê±µÄ×´¿ö£¬Ó¦¸Ã°ÑÊÖÊÆ¸ñ×ÓºÍÓ°Ïìµ½µÄ¸ñ×ÓÊÇ·ñ´¦ÓÚÎÈ¶¨×´Ì¬Ò²ÅĞ¶ÏÒ»ÏÂ
+//       _gesture_influenced_indexes_original_posæ”¹ä¸ºæ­£ç¡®å€¼
+//     éœ€è¦æ—¶å°†_gesture_rotate_center_posæ”¹ä¸ºæ­£ç¡®å€¼
+// TODO: æš‚æ—¶åªç®—äº†æ•´ä¸ªåœºé¢å¹³é™æ—¶çš„çŠ¶å†µï¼Œåº”è¯¥æŠŠæ‰‹åŠ¿æ ¼å­å’Œå½±å“åˆ°çš„æ ¼å­æ˜¯å¦å¤„äºç¨³å®šçŠ¶æ€ä¹Ÿåˆ¤æ–­ä¸€ä¸‹
 bool GameViewWidget::testGesture()
 {
   if (_gesture_state == CHOOSE_GESTURE)
@@ -337,9 +337,9 @@ QVector<QPointF> GameViewWidget::newposUnderPos(QPointF mousePos)
 //      ballsCurrentIndexToOriginalIndex[index] = _gesture_influenced_indexes[i];
     }
 
-    // Î¬»¤ballsOriginalIndexToCurrentIndexºÍballsCurrentIndexToOriginalIndex
+    // ç»´æŠ¤ballsOriginalIndexToCurrentIndexå’ŒballsCurrentIndexToOriginalIndex
     int offset = 0;
-    qreal minDis = 100000; // Õâ¸öÖµÏ¹Ğ´Ğ´µÄ£¬Ğ´´óµã¾ÍºÃ
+    qreal minDis = 100000; // è¿™ä¸ªå€¼çå†™å†™çš„ï¼Œå†™å¤§ç‚¹å°±å¥½
     for (int i = 0;i < _gesture_influenced_indexes.size();++i)
     {
       qreal currentDis = distanceOfTwoPoints
@@ -376,7 +376,7 @@ QVector<QPointF> GameViewWidget::newposUnderPos(QPointF mousePos)
       qreal r = distanceFromTheCenterWithTheAngle(currentA);
       result[i] = calculatePosition(currentA, r, centerPos);
     }
-    // Î¬»¤ballsOriginalIndexToCurrentIndexºÍballsCurrentIndexToOriginalIndex
+    // ç»´æŠ¤ballsOriginalIndexToCurrentIndexå’ŒballsCurrentIndexToOriginalIndex
 
   }
   maintainCToOAndOToC(result[0]);
@@ -386,7 +386,7 @@ QVector<QPointF> GameViewWidget::newposUnderPos(QPointF mousePos)
 void GameViewWidget::maintainCToOAndOToC(QPointF firstPos)
 {
   int offset = 0;
-  qreal minDis = 100000; // Õâ¸öÖµÏ¹Ğ´Ğ´µÄ£¬Ğ´´óµã¾ÍºÃ
+  qreal minDis = 100000; // è¿™ä¸ªå€¼çå†™å†™çš„ï¼Œå†™å¤§ç‚¹å°±å¥½
   for (int i = 0;i < _gesture_influenced_indexes.size();++i)
   {
     qreal currentDis = distanceOfTwoPoints
@@ -500,7 +500,7 @@ void GameViewWidget::dealMoved(QMouseEvent *event)
       QVector<QPointF> newPos = newposUnderPos(p);
       for (int i = 0;i < newPos.size();++i)
         balls[_gesture_influenced_indexes[i]]->setPos(newPos[i]);
-      // TODO: ¿ÉĞĞÊ±µÄÌáÊ¾
+      // TODO: å¯è¡Œæ—¶çš„æç¤º
     }
   }
 }
@@ -578,10 +578,10 @@ void GameViewWidget::dealReleased(QMouseEvent *event)
     tmp[i] = balls[ballsCurrentIndexToOriginalIndex[i]];
   for (int i = 0;i < TOTAL_ITEM_NUMBER;++i)
     balls[i] = tmp[i];
-  if (testEliminate()) // ÄÜÏûÈ¥
+  if (testEliminate()) // èƒ½æ¶ˆå»
   {
     moveToNewPos();
-    // ÏûÈ¥Òª×öµÄÊÂ
+    // æ¶ˆå»è¦åšçš„äº‹
   }
   else if (_should_roll_back)
   {
@@ -594,7 +594,7 @@ void GameViewWidget::dealReleased(QMouseEvent *event)
     {
       if (_gesture == SLIDE)
       {
-        //if (false) // Èç¹û²»³É¹¦Ôò»Ø¹ö
+        //if (false) // å¦‚æœä¸æˆåŠŸåˆ™å›æ»š
         {
           int jointIndex1 = 0;
           int jointIndex2 = 0;
@@ -666,7 +666,7 @@ void GameViewWidget::dealReleased(QMouseEvent *event)
       }
       else if (_gesture == ROTATE)
       {
-//        if (false) // Èç¹û²»³É¹¦Ôò»Ø¹ö
+//        if (false) // å¦‚æœä¸æˆåŠŸåˆ™å›æ»š
         {
           for (int i = 0;i < _gesture_influenced_indexes.size();++i)
           {
@@ -681,7 +681,7 @@ void GameViewWidget::dealReleased(QMouseEvent *event)
 //          testEliminate();
 //          return;
         }
-//        else // ÒÆ¶¯µ½ĞÂµÄÎ»ÖÃ
+//        else // ç§»åŠ¨åˆ°æ–°çš„ä½ç½®
 //        {
 //          moveToNewPos();
 //          //testEliminate();
@@ -706,7 +706,7 @@ void GameViewWidget::dealReleased(QMouseEvent *event)
                                           true);*/
     }
   }
-  // ¸´Î»
+  // å¤ä½
   for (int i = 0;i < TOTAL_ITEM_NUMBER;++i)
   {
     ballsOriginalIndexToCurrentIndex[i] = i;
@@ -766,7 +766,7 @@ void GameViewWidget::fillAllBlanks(bool allowMoreMove,
 //      balls[*itr]->hide();
 
     }
-  } while (withoutDirectElimination /* && ÒÑÓĞ¿ÉÏûÈ¥*/); // ÕâÀïÃæµÄÒªºÃºÃÏëÏë
+  } while (withoutDirectElimination /* && å·²æœ‰å¯æ¶ˆå»*/); // è¿™é‡Œé¢çš„è¦å¥½å¥½æƒ³æƒ³
 
   for (QList <int>::Iterator itr = blankIndexes.begin();
        itr != blankIndexes.end();
@@ -798,20 +798,20 @@ void GameViewWidget::autoRotate()
     for (int j = currentFillPos;j >= 0;--j)
     {
       PixmapItem *ball = balls[originalChain.at(j)];
-      if (!ball) // ´Ë¸ñÕæÃ»Çò
+      if (!ball) // æ­¤æ ¼çœŸæ²¡çƒ
       {
         ++needRotateCount;
         continue;
       }
-//      if (ball->state() == PixmapItem::JUST_CREATED) // ´Ë¸ñ»¹Ã»ÌîÉÏÀ´
+//      if (ball->state() == PixmapItem::JUST_CREATED) // æ­¤æ ¼è¿˜æ²¡å¡«ä¸Šæ¥
 //        ++needRotateCount;
       switch (ball->state())
       {
       case PixmapItem::USER_MOVING:
-        // TODO ´ò¶ÏÓÃ»§µÄ²Ù×÷
-      case PixmapItem::STABLE: // ÓĞÎÈ¶¨µÄÇò
+        // TODO æ‰“æ–­ç”¨æˆ·çš„æ“ä½œ
+      case PixmapItem::STABLE: // æœ‰ç¨³å®šçš„çƒ
       case PixmapItem::ALMOST_STABLE:
-      case PixmapItem::SYSTEM_MOVING: // ÓĞÕıÔÚ×ªµÄÇò
+      case PixmapItem::SYSTEM_MOVING: // æœ‰æ­£åœ¨è½¬çš„çƒ
         if (needRotateCount != 0)
         {
           int current = originalChain.at(j);

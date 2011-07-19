@@ -112,7 +112,7 @@ public:
                        int toIndex,
                        PixmapItem::STATE state,
                        int steps = 20,
-                       bool append = true); //Ðý×ªµ½
+                       bool append = true); //æ—‹è½¬åˆ°
 
   // Translate to a position, you can choose the path is ^ or -.
   //

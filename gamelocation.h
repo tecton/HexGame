@@ -88,7 +88,7 @@ enum GESTURE_DIRECTION {NO_DIRECTION,
                         LEFT_DOWN_RIGHT_UP};
 
 // The state of the gesture
-enum GESTURE_STATE {NO_GESTURE, CHOOSE_GESTURE, LOCATE_GESTURE, BAD_GESTURE}; // TODO:BAD_GESTUREÒªÕûºÏ½øÈ¥
+enum GESTURE_STATE {NO_GESTURE, CHOOSE_GESTURE, LOCATE_GESTURE, BAD_GESTURE}; // TODO:BAD_GESTUREè¦æ•´åˆè¿›å»
 
 // Distance of two points
 qreal distanceOfTwoPoints(QPointF p1, QPointF p2);
@@ -105,7 +105,7 @@ QPointF positionOfIndex(int index);
 // Center of the item with the index
 QPointF centerPositionOfIndex(int index);
 
-// The chains to reload items(from inner to outter(ÎÒÕâ¸öÊÇ²»ÊÇÆ´´íÁË-.-))
+// The chains to reload items(from inner to outter(æˆ‘è¿™ä¸ªæ˜¯ä¸æ˜¯æ‹¼é”™äº†-.-))
 const QVector<QVector<int> >& chains();
 
 // ABANDONED!!!
