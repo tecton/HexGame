@@ -1,12 +1,13 @@
 <RCC>
     <qresource prefix="/images">
         <file>balls/blue01.png</file>
+        <file>balls/brown01.png</file>
         <file>balls/green01.png</file>
+        <file>balls/oringe01.png</file>
         <file>balls/purple01.png</file>
         <file>balls/red01.png</file>
         <file>balls/white01.png</file>
         <file>balls/yellow01.png</file>
-        <file>balls/brown01.png</file>
-        <file>balls/oringe01.png</file>
+        <file>mainmenuitems/swapclassicgame01.png</file>
     </qresource>
 </RCC>
