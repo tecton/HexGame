@@ -22,8 +22,9 @@ SOURCES += main.cpp\
     swapclassicgame.cpp \
     effectpainter.cpp \
     mainwidget.cpp \
-    mainmenu.cpp \
-    mainmenuitems.cpp
+    mainmenuitems.cpp \
+    rotatepuzzlegame.cpp \
+    mainmenuwidget.cpp
 
 HEADERS  += mainwindow.h \
     ball.h \
@@ -41,9 +42,10 @@ HEADERS  += mainwindow.h \
     swapclassicgame.h \
     effectpainter.h \
     mainwidget.h \
-    mainmenu.h \
     abstractitem.h \
-    mainmenuitems.h
+    mainmenuitems.h \
+    rotatepuzzlegame.h \
+    mainmenuwidget.h
 
 FORMS    += mainwindow.ui
 

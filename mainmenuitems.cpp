@@ -8,8 +8,9 @@
 
 #include <QMessageBox>
 
-const static int kTotalItems = 1;
-const static char * kItemPaths[] = {":/images/mainmenuitems/swapclassicgame*.png"};
+const static int kTotalItems = 2;
+const static char * kItemPaths[] = {":/images/mainmenuitems/swapclassicgame*.png",
+                                   ":/images/mainmenuitems/swapclassicgame*.png"};
 
 
 QVector<QVector<QPixmap> > mainMenuItemPixmaps;
@@ -46,18 +47,37 @@ const QPixmap& AbstractMainMenuItem::pixmap(ItemType type,
   return mainMenuItemPixmaps[type][frame % mainMenuItemFrameCounts[type]];
 }
 
-MainMenuSwapClassicGameItem::MainMenuSwapClassicGameItem()
+MainMenuSwapClassicItem::MainMenuSwapClassicItem()
 {
   setPos(QPointF(0, 0));
 }
 
-void MainMenuSwapClassicGameItem::paint(QPainter *painter,
+void MainMenuSwapClassicItem::paint(QPainter *painter,
                                         int width,
                                         int height,
                                         int frame)
 {
   const QPixmap& pixmap = AbstractMainMenuItem::pixmap(
-                            AbstractMainMenuItem::SwapClassicGameItem,
+                            AbstractMainMenuItem::SwapClassicItem,
+                            frame);
+  double x = getPos().x() * width;
+  double y = getPos().y() * height;
+  painter->drawPixmap(QPointF(x, y), pixmap);
+//  QMessageBox::critical(0,"","Painted one item");
+}
+
+MainMenuRotatePuzzleItem::MainMenuRotatePuzzleItem()
+{
+  setPos(QPointF(0, 0));
+}
+
+void MainMenuRotatePuzzleItem::paint(QPainter *painter,
+                                        int width,
+                                        int height,
+                                        int frame)
+{
+  const QPixmap& pixmap = AbstractMainMenuItem::pixmap(
+                            AbstractMainMenuItem::RotatePuzzleItem,
                             frame);
   double x = getPos().x() * width;
   double y = getPos().y() * height;

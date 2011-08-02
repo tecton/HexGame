@@ -14,7 +14,7 @@
 
 SwapClassicGame::SwapClassicGame()
 {
-  rule = new RotateClassicGameRule();//SwapClassicGameRule();
+  rule = new SwapClassicGameRule();//SwapClassicGameRule();
   gameboardInfo = new SixtyOneGameBoardInfo();
   //SwapClassicGameSavedInfo savedInfo = readSaved();
   // 拿到其中的balls给下面那个的第三个参数，然后还有各种别的地方的值的改动

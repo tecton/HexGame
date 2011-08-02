@@ -7,14 +7,14 @@
 #include <QPainter>
 #include <QPaintEvent>
 #include "abstractpixmapwidget.h"
-#include "mainmenu.h"
+#include "mainmenuwidget.h"
 
 #include <QMessageBox>
 
 MainWidget::MainWidget(QWidget *parent) :
     QWidget(parent)
 {
-  MainMenu *mainMenu = new MainMenu();
+  MainMenuWidget *mainMenu = new MainMenuWidget();
   widgets.push_back(mainMenu);
   connect(mainMenu,
           SIGNAL(giveControlTo(AbstractPixmapWidget*,bool)),

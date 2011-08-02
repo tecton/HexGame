@@ -431,13 +431,14 @@ void CoreController::advance()
   for (int i = 0;i < ballCount;++i)
     if (balls[i])
       balls[i]->advance();
-
-//  for (int i = 0;i < recyclingBalls[0]->size();++i)
-//    delete recyclingBalls[0]->at(i);
-//  delete recyclingBalls[0];
-//  for (int i = 0;i < RECYCLE_STEPS - 1;++i)
-//    recyclingBalls[i] = recyclingBalls[i + 1];
-//  recyclingBalls[RECYCLE_STEPS - 1] = new QVector<Ball *>();
+  if (rule->gameStepAllowed(AbstractRule::Eliminate) == false)
+    return;
+  //  for (int i = 0;i < recyclingBalls[0]->size();++i)
+  //    delete recyclingBalls[0]->at(i);
+  //  delete recyclingBalls[0];
+  //  for (int i = 0;i < RECYCLE_STEPS - 1;++i)
+  //    recyclingBalls[i] = recyclingBalls[i + 1];
+  //  recyclingBalls[RECYCLE_STEPS - 1] = new QVector<Ball *>();
 
   Connections connections = testStableEliminate();
   QVector <int> toEliminate;
