@@ -9,12 +9,12 @@ class QTimer;
 class AbstractItem;
 class AbstractMainMenuItem;
 
-class MainMenu : public AbstractPixmapWidget
+class MainMenuWidget : public AbstractPixmapWidget
 {
   Q_OBJECT
 public:
-  MainMenu();
-  ~MainMenu();
+  MainMenuWidget();
+  ~MainMenuWidget();
 
   virtual void makePixmap(QPixmap& pixmap, int width, int height);
   virtual void makeBasicPixmap(QPixmap& pixmap, int width, int height);
@@ -27,6 +27,7 @@ public:
 private:
   QTimer *t;
   AbstractMainMenuItem *swapClassicItem;
+  AbstractMainMenuItem *rotatePuzzleItem;
   QVector <AbstractItem *> myItems;
   int frameCount;
 
