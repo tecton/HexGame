@@ -7,12 +7,12 @@
 #include "gamemath.h"
 #include "mainmenuitems.h"
 #include "swapclassicgame.h"
-#include "rotatepuzzlegame.h"
+#include "puzzlemenuwidget.h"
 
 #include <QMessageBox>
 
-#define MAIN_MENU_LOGICL_WIDTH  800
-#define MAIN_MENU_LOGICL_HEIGHT 500
+#define MAIN_MENU_LOGICAL_WIDTH  800
+#define MAIN_MENU_LOGICAL_HEIGHT 500
 
 
 MainMenuWidget::MainMenuWidget() :
@@ -21,11 +21,11 @@ MainMenuWidget::MainMenuWidget() :
   swapClassicItem = new MainMenuSwapClassicItem();
   swapClassicItem->setPos(QPointF(0.3, 0.5));
 
-  rotatePuzzleItem = new MainMenuRotatePuzzleItem();
-  rotatePuzzleItem->setPos(QPointF(0.7,0.5));
+  puzzleMenuItem = new MainMenuRotatePuzzleItem();
+  puzzleMenuItem->setPos(QPointF(0.7, 0.5));
 
   myItems.push_back(swapClassicItem);
-  myItems.push_back(rotatePuzzleItem);
+  myItems.push_back(puzzleMenuItem);
 
   t = new QTimer();
   t->setInterval(75);
@@ -64,8 +64,8 @@ void MainMenuWidget::addEffect(QPixmap& pixmap, int width, int height)
 
 QPointF MainMenuWidget::toScene(double xRate, double yRate)
 {
-  return QPointF(xRate * MAIN_MENU_LOGICL_WIDTH,
-                 yRate * MAIN_MENU_LOGICL_HEIGHT);
+  return QPointF(xRate * MAIN_MENU_LOGICAL_WIDTH,
+                 yRate * MAIN_MENU_LOGICAL_HEIGHT);
 }
 
 void MainMenuWidget::dealPressed(QPointF mousePos, Qt::MouseButton button)
@@ -77,29 +77,31 @@ void MainMenuWidget::dealPressed(QPointF mousePos, Qt::MouseButton button)
     return;
   }
   if (distanceOfTwoPoints(mousePos,
-                          QPointF(0.3 * MAIN_MENU_LOGICL_WIDTH,
-                                  0.5 * MAIN_MENU_LOGICL_HEIGHT)) < 50)
+                          QPointF(0.3 * MAIN_MENU_LOGICAL_WIDTH,
+                                  0.5 * MAIN_MENU_LOGICAL_HEIGHT)) < 50)
   {
     SwapClassicGame *swapGame = new SwapClassicGame();
     emit giveControlTo(swapGame, false);
   }
   if (distanceOfTwoPoints(mousePos,
-                          QPointF(0.7 * MAIN_MENU_LOGICL_WIDTH,
-                                  0.5 * MAIN_MENU_LOGICL_HEIGHT)) < 50)
+                          QPointF(0.7 * MAIN_MENU_LOGICAL_WIDTH,
+                                  0.5 * MAIN_MENU_LOGICAL_HEIGHT)) < 50)
   {
-    int ballIndex[] = {
-              0,  0,  0,  0,  0,
-            0,  0,  0,  0,  0,  0,
-          0,  0,  3,  2,  0,  0,  0,
-        0,  0,  2,  1,  2,  2,  0,  0,
-      0,  0,  0,  2,  2,  1,  3,  0,  0,
-        0,  0,  2,  1,  2,  2,  0,  0,
-          0,  0,  3,  2,  0,  0,  0,
-            0,  0,  0,  0,  0,  0,
-              0,  0,  0,  0,  0
-    };
-    RotatePuzzleGame *puzzleGame = new RotatePuzzleGame(ballIndex);
-    emit giveControlTo(puzzleGame, false);
+//    int ballIndex[] = {
+//              0,  0,  0,  0,  0,
+//            0,  0,  0,  0,  0,  0,
+//          0,  0,  3,  2,  0,  0,  0,
+//        0,  0,  2,  1,  2,  2,  0,  0,
+//      0,  0,  0,  2,  2,  1,  3,  0,  0,
+//        0,  0,  2,  1,  2,  2,  0,  0,
+//          0,  0,  3,  2,  0,  0,  0,
+//            0,  0,  0,  0,  0,  0,
+//              0,  0,  0,  0,  0
+//    };
+//    RotatePuzzleGame *puzzleGame = new RotatePuzzleGame(ballIndex);
+//    emit giveControlTo(puzzleGame, false);
+    puzzleMenu = new PuzzleMenuWidget();
+    emit giveControlTo(puzzleMenu, false);
   }
 }
 
@@ -125,5 +127,6 @@ MainMenuWidget::~MainMenuWidget()
   t->stop();
   delete t;
   delete swapClassicItem;
-  delete rotatePuzzleItem;
+  delete puzzleMenuItem;
+  delete puzzleMenu;
 }

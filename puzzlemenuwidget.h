@@ -1,5 +1,5 @@
-#ifndef MAINMENU_H
-#define MAINMENU_H
+#ifndef PUZZLEMENUWIDGET_H
+#define PUZZLEMENUWIDGET_H
 
 #include "abstractpixmapwidget.h"
 
@@ -7,14 +7,14 @@
 
 class QTimer;
 class AbstractItem;
-class AbstractMainMenuItem;
+class AbstractPuzzleMenuItem;
 
-class MainMenuWidget : public AbstractPixmapWidget
+class PuzzleMenuWidget : public AbstractPixmapWidget
 {
   Q_OBJECT
 public:
-  MainMenuWidget();
-  ~MainMenuWidget();
+  PuzzleMenuWidget();
+  ~PuzzleMenuWidget();
 
   virtual void makePixmap(QPixmap& pixmap, int width, int height);
   virtual void makeBasicPixmap(QPixmap& pixmap, int width, int height);
@@ -26,9 +26,8 @@ public:
 
 private:
   QTimer *t;
-  AbstractMainMenuItem *swapClassicItem;
-  AbstractMainMenuItem *puzzleMenuItem;
-  AbstractPixmapWidget *puzzleMenu;
+  AbstractPuzzleMenuItem *exchangeItem;
+  AbstractPuzzleMenuItem *uniteItem;
   QVector <AbstractItem *> myItems;
   int frameCount;
 
@@ -36,4 +35,4 @@ private slots:
   void advance();
 };
 
-#endif // MAINMENU_H
+#endif // PUZZLEMENUWIDGET_H

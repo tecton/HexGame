@@ -21,22 +21,6 @@ public:
 
   // A function returns the pixmap of an item
   static const QPixmap& pixmap(ItemType type, int frame);
-
-  // Set the position of the item
-  // (The position is relative one, NOT absolute one!)
-  void setPos(QPointF pos)
-  {position = pos;}
-
-
-  // Get the position of the item
-  // (The position is relative one, NOT absolute one!)
-  QPointF getPos()
-  {return position;}
-
-private:
-  // The position of the item
-  // (The position is relative one, NOT absolute one!)
-  QPointF position;
 };
 
 

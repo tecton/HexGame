@@ -6,6 +6,8 @@
 #ifndef ABSTRACTITEM_H
 #define ABSTRACTITEM_H
 
+#include <QPointF>
+
 class QPainter;
 
 class AbstractItem
@@ -27,6 +29,22 @@ public:
                      int width,
                      int height,
                      int frame)=0;
+
+  // Set the position of the item
+  // (The position is relative one, NOT absolute one!)
+  void setPos(QPointF pos)
+  {position = pos;}
+
+
+  // Get the position of the item
+  // (The position is relative one, NOT absolute one!)
+  QPointF getPos()
+  {return position;}
+
+private:
+  // The position of the item
+  // (The position is relative one, NOT absolute one!)
+  QPointF position;
 };
 
 #endif // ABSTRACTITEM_H

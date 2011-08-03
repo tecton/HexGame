@@ -1,0 +1,231 @@
+#include "stagemenuwidget.h"
+
+#include <QTimer>
+#include <QPixmap>
+#include <QPainter>
+#include "basicpainter.h"
+#include "gamemath.h"
+#include "stagemenuitems.h"
+#include "rotatepuzzlegame.h"
+
+#include <QMessageBox>
+
+#define MAIN_MENU_LOGICAL_WIDTH  800
+#define MAIN_MENU_LOGICAL_HEIGHT 500
+
+
+void ExchangeStageMenuWidget::makePixmap(QPixmap& pixmap, int width, int height)
+{
+  makeBasicPixmap(pixmap, width, height);
+//  QMessageBox::critical(0,"","Basic made");
+  addEffect(pixmap, width, height);
+}
+
+void ExchangeStageMenuWidget::makeBasicPixmap(QPixmap& pixmap, int width, int height)
+{
+  pixmap = QPixmap(width, height);
+  pixmap.fill(Qt::black);
+  QPainter *painter = new QPainter(&pixmap);
+  //QMessageBox::critical(0,"","Try to paint items");
+  BasicPainter::paintItems(painter,
+                           myItems,
+                           width,
+                           height,
+                           frameCount);
+
+//  QMessageBox::critical(0,"","Items painted");
+  painter->end();
+  delete painter;
+}
+
+void ExchangeStageMenuWidget::addEffect(QPixmap& pixmap, int width, int height)
+{
+
+}
+
+QPointF ExchangeStageMenuWidget::toScene(double xRate, double yRate)
+{
+  return QPointF(xRate * MAIN_MENU_LOGICAL_WIDTH,
+                 yRate * MAIN_MENU_LOGICAL_HEIGHT);
+}
+
+ExchangeStageMenuWidget::ExchangeStageMenuWidget() :
+    frameCount(0)
+{
+  stageItem = new StageMenuItem *[10];
+  for (int i = 0; i < 10; ++i)
+  {
+    stageItem[i] = new StageMenuItem(":/images/mainmenuitems/swapclassicgame*.png",
+                                     1);
+    stageItem[i]->setPos(QPointF(0.2 * (i % 5), 0.3 + 0.5 * (i / 5)));
+    myItems.push_back(stageItem[i]);
+  }
+
+  t = new QTimer();
+  t->setInterval(75);
+  connect(t, SIGNAL(timeout()), this, SLOT(advance()));
+  t->start();
+}
+void ExchangeStageMenuWidget::dealPressed(QPointF mousePos, Qt::MouseButton button)
+{
+  if (button == Qt::RightButton)
+  {
+    emit giveControlTo(NULL, true);
+    delete this;
+    return;
+  }
+  if (distanceOfTwoPoints(mousePos,
+                          QPointF(0.1 * MAIN_MENU_LOGICAL_WIDTH,
+                                  0.3 * MAIN_MENU_LOGICAL_HEIGHT)) < 50)
+  {
+    int ballIndex[] = {
+              0,  0,  0,  0,  0,
+            0,  0,  0,  0,  0,  0,
+          0,  0,  3,  2,  0,  0,  0,
+        0,  0,  2,  1,  2,  2,  0,  0,
+      0,  0,  0,  2,  2,  1,  3,  0,  0,
+        0,  0,  2,  1,  2,  2,  0,  0,
+          0,  0,  3,  2,  0,  0,  0,
+            0,  0,  0,  0,  0,  0,
+              0,  0,  0,  0,  0
+    };
+    RotatePuzzleGame *puzzleGame = new RotatePuzzleGame(ballIndex);
+    emit giveControlTo(puzzleGame, false);
+  }
+}
+
+void ExchangeStageMenuWidget::dealMoved(QPointF mousePos, Qt::MouseButton button)
+{
+
+}
+
+void ExchangeStageMenuWidget::dealReleased(QPointF mousePos, Qt::MouseButton button)
+{
+
+}
+
+void ExchangeStageMenuWidget::advance()
+{
+  ++frameCount;
+  frameCount = frameCount % 32;
+  //effectPainter->advance();
+}
+
+ExchangeStageMenuWidget::~ExchangeStageMenuWidget()
+{
+  t->stop();
+  delete t;
+  delete stageItem;
+  for (QVector<AbstractItem *>::Iterator itr = myItems.begin();
+       itr != myItems.end(); ++itr)
+    delete *itr;
+}
+
+/////////////////////////////////////////////////////////////////////////////////
+
+UniteStageMenuWidget::UniteStageMenuWidget() :
+    frameCount(0)
+{
+  stageItem = new StageMenuItem *[10];
+  for (int i = 0; i < 10; ++i)
+  {
+    stageItem[i] = new StageMenuItem(":/images/mainmenuitems/swapclassicgame*.png",
+                                     1);
+    stageItem[i]->setPos(QPointF(0.2 * (i % 5), 0.3 + 0.5 * (i / 5)));
+    myItems.push_back(stageItem[i]);
+  }
+
+  t = new QTimer();
+  t->setInterval(75);
+  connect(t, SIGNAL(timeout()), this, SLOT(advance()));
+  t->start();
+}
+void UniteStageMenuWidget::dealPressed(QPointF mousePos, Qt::MouseButton button)
+{
+  if (button == Qt::RightButton)
+  {
+    emit giveControlTo(NULL, true);
+    delete this;
+    return;
+  }
+  if (distanceOfTwoPoints(mousePos,
+                          QPointF(0.1 * MAIN_MENU_LOGICAL_WIDTH,
+                                  0.3 * MAIN_MENU_LOGICAL_HEIGHT)) < 50)
+  {
+    int ballIndex[] = {
+              0,  0,  0,  0,  0,
+            0,  0,  0,  0,  0,  0,
+          0,  0,  3,  2,  0,  0,  0,
+        0,  0,  2,  1,  2,  2,  0,  0,
+      0,  0,  0,  2,  2,  1,  3,  0,  0,
+        0,  0,  2,  1,  2,  2,  0,  0,
+          0,  0,  3,  2,  0,  0,  0,
+            0,  0,  0,  0,  0,  0,
+              0,  0,  0,  0,  0
+    };
+    RotatePuzzleGame *puzzleGame = new RotatePuzzleGame(ballIndex);
+    emit giveControlTo(puzzleGame, false);
+  }
+}
+
+void UniteStageMenuWidget::dealMoved(QPointF mousePos, Qt::MouseButton button)
+{
+
+}
+
+void UniteStageMenuWidget::dealReleased(QPointF mousePos, Qt::MouseButton button)
+{
+
+}
+
+void UniteStageMenuWidget::advance()
+{
+  ++frameCount;
+  frameCount = frameCount % 32;
+  //effectPainter->advance();
+}
+
+UniteStageMenuWidget::~UniteStageMenuWidget()
+{
+  t->stop();
+  delete t;
+  delete stageItem;
+  for (QVector<AbstractItem *>::Iterator itr = myItems.begin();
+       itr != myItems.end(); ++itr)
+    delete *itr;
+}
+
+void UniteStageMenuWidget::makePixmap(QPixmap& pixmap, int width, int height)
+{
+  makeBasicPixmap(pixmap, width, height);
+//  QMessageBox::critical(0,"","Basic made");
+  addEffect(pixmap, width, height);
+}
+
+void UniteStageMenuWidget::makeBasicPixmap(QPixmap& pixmap, int width, int height)
+{
+  pixmap = QPixmap(width, height);
+  pixmap.fill(Qt::black);
+  QPainter *painter = new QPainter(&pixmap);
+  //QMessageBox::critical(0,"","Try to paint items");
+  BasicPainter::paintItems(painter,
+                           myItems,
+                           width,
+                           height,
+                           frameCount);
+
+//  QMessageBox::critical(0,"","Items painted");
+  painter->end();
+  delete painter;
+}
+
+void UniteStageMenuWidget::addEffect(QPixmap& pixmap, int width, int height)
+{
+
+}
+
+QPointF UniteStageMenuWidget::toScene(double xRate, double yRate)
+{
+  return QPointF(xRate * MAIN_MENU_LOGICAL_WIDTH,
+                 yRate * MAIN_MENU_LOGICAL_HEIGHT);
+}

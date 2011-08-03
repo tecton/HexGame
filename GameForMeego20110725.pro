@@ -24,7 +24,11 @@ SOURCES += main.cpp\
     mainwidget.cpp \
     mainmenuitems.cpp \
     rotatepuzzlegame.cpp \
-    mainmenuwidget.cpp
+    mainmenuwidget.cpp \
+    puzzlemenuitems.cpp \
+    puzzlemenuwidget.cpp \
+    stagemenuwidget.cpp \
+    stagemenuitems.cpp
 
 HEADERS  += mainwindow.h \
     ball.h \
@@ -45,7 +49,11 @@ HEADERS  += mainwindow.h \
     abstractitem.h \
     mainmenuitems.h \
     rotatepuzzlegame.h \
-    mainmenuwidget.h
+    mainmenuwidget.h \
+    puzzlemenuitems.h \
+    puzzlemenuwidget.h \
+    stagemenuwidget.h \
+    stagemenuitems.h
 
 FORMS    += mainwindow.ui
 

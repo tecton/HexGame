@@ -178,9 +178,9 @@ void CoreController::maintainCToOAndOToC(QPointF firstPos)
   for (int i = 0;i < gestureInfluencedIndexs.size();++i)
   {
     qreal currentDis = distanceOfTwoPoints
-                       (firstPos,
-                        gameBoardInfo->positionOfIndex(
-                            gestureInfluencedIndexs[i]));
+        (firstPos,
+         gameBoardInfo->positionOfIndex(
+           gestureInfluencedIndexs[i]));
     if (currentDis < minDis)
     {
       minDis = currentDis;
@@ -193,7 +193,7 @@ void CoreController::maintainCToOAndOToC(QPointF firstPos)
   {
     int o = gestureInfluencedIndexs[i];
     int c = gestureInfluencedIndexs[(i + offset) %
-                                    gestureInfluencedIndexs.size()];
+        gestureInfluencedIndexs.size()];
     ballsOriginalIndexToCurrentIndex[o] = c;
     ballsCurrentIndexToOriginalIndex[c] = o;
   }
@@ -232,7 +232,7 @@ void CoreController::rotateBegin(int theCenterIndex,
   {
     balls[gestureInfluencedIndexs[i]]->setState(Ball::UserMoving);
     gestureInfluencedIndexsOriginalPos.push_back(
-        gameBoardInfo->positionOfIndex(gestureInfluencedIndexs[i]));
+          gameBoardInfo->positionOfIndex(gestureInfluencedIndexs[i]));
   }
 }
 
@@ -262,7 +262,7 @@ void CoreController::rotateEnd()
     balls[i] = tmp[i];
 
   Connections connections = testStableEliminate();
-  bool rotateSuccessful = false;
+  bool rotateSuccessful = false || !rule->gameStepAllowed(AbstractRule::Eliminate);
   for (int i = 0;i < gestureInfluencedIndexs.size();++i)
     if (connections.isInAChain(gestureInfluencedIndexs[i]))
     {
@@ -271,12 +271,15 @@ void CoreController::rotateEnd()
     }
   if (rotateSuccessful)
   {
-    QVector <int> toEliminate;
-    for (int i = 0;i < gameBoardInfo->totalBallCounts();++i)
-      if (balls[i])
-        if (connections.isInAChain(i))
-          toEliminate.push_back(i);
-    eliminate(toEliminate);
+    if (rule->gameStepAllowed(AbstractRule::Eliminate))
+    {
+      QVector <int> toEliminate;
+      for (int i = 0;i < gameBoardInfo->totalBallCounts();++i)
+        if (balls[i])
+          if (connections.isInAChain(i))
+            toEliminate.push_back(i);
+      eliminate(toEliminate);
+    }
     for (int i = 0;i < gestureInfluencedIndexs.size();++i)
     {
       int index = gestureInfluencedIndexs[i];
@@ -347,7 +350,7 @@ void CoreController::fillAllBlanks()
         balls[*itr] = new Ball((Ball::Color)(rand() % 8));//0));//rand() % 8));
       else
         balls[*itr]->setColor((Ball::Color)(rand() % 8));//0))//rand() % 8));
-//      balls[*itr]->hide();
+      //      balls[*itr]->hide();
     }
   } while (false); // 这里面的要好好想想
 
@@ -355,7 +358,7 @@ void CoreController::fillAllBlanks()
        itr != blankIndexes.end();
        ++itr)
     balls[*itr]->setPos(gameBoardInfo->positionOfIndex(*itr));
-//    balls[*itr]->show();
+  //    balls[*itr]->show();
 
 
   for (int i = 0;i < gameBoardInfo->totalBallCounts();++i)
@@ -384,8 +387,8 @@ void CoreController::autoRotate()
         ++needRotateCount;
         continue;
       }
-//      if (ball->state() == PixmapItem::JUST_CREATED) // 此格还没填上来
-//        ++needRotateCount;
+      //      if (ball->state() == PixmapItem::JUST_CREATED) // 此格还没填上来
+      //        ++needRotateCount;
       switch (ball->getState())
       {
       case Ball::UserMoving:
@@ -460,7 +463,7 @@ void CoreController::moveToNewPos()
     {
       translateABallTo(balls[originalIndex],
                        gameBoardInfo->positionOfIndex(
-                           ballsOriginalIndexToCurrentIndex[originalIndex]),
+                         ballsOriginalIndexToCurrentIndex[originalIndex]),
                        3,
                        true);
       balls[gestureInfluencedIndexs[i]]->setState(Ball::SystemMoving);
@@ -511,21 +514,21 @@ void CoreController::swapRollBack(int from, int to)
   {
     if (balls[from])
       balls[from]->stopPositions.push_back(
-          QPointF((fromX * (halfSteps - i) + toX * i) / halfSteps,
-                  (fromY * (halfSteps - i) + toY * i) / halfSteps));
+            QPointF((fromX * (halfSteps - i) + toX * i) / halfSteps,
+                    (fromY * (halfSteps - i) + toY * i) / halfSteps));
     if (balls[to])
       balls[to]->stopPositions.push_back(
-          QPointF((toX * (halfSteps - i) + fromX * i) / halfSteps,
-                  (toY * (halfSteps - i) + fromY * i) / halfSteps));
+            QPointF((toX * (halfSteps - i) + fromX * i) / halfSteps,
+                    (toY * (halfSteps - i) + fromY * i) / halfSteps));
   }
   for (int i = 1;i < halfSteps;++i)
   {
     if (balls[from])
       balls[from]->stopPositions.push_back(
-          balls[from]->stopPositions[halfSteps - i]);
+            balls[from]->stopPositions[halfSteps - i]);
     if (balls[to])
       balls[to]->stopPositions.push_back(
-          balls[to]->stopPositions[halfSteps - i]);
+            balls[to]->stopPositions[halfSteps - i]);
   }
   resetCToOAndOToC();
   gestureCoolDown = halfSteps * 2;
@@ -547,8 +550,8 @@ void CoreController::translateABallTo(Ball *ball,
 
   for (int i = 0;i < steps;++i)
     ball->stopPositions.push_back(
-        QPointF((fromX * i + toX * (steps - i)) / steps,
-                (fromY * i + toY * (steps - i)) / steps));
+          QPointF((fromX * i + toX * (steps - i)) / steps,
+                  (fromY * i + toY * (steps - i)) / steps));
 }
 
 
@@ -562,11 +565,11 @@ void CoreController::rotateABallTo(Ball *ball,
   if (!ball)
     return;
 
-//  QPointF lastPos = ball->pos();
-//  if (!ball->stopPositions.isEmpty())
-//    lastPos = ball->stopPositions[0];
-//  if (distanceOfTwoPoints(lastPos, toPos) < 3)
-//    return;
+  //  QPointF lastPos = ball->pos();
+  //  if (!ball->stopPositions.isEmpty())
+  //    lastPos = ball->stopPositions[0];
+  //  if (distanceOfTwoPoints(lastPos, toPos) < 3)
+  //    return;
 
 
   double maxR = gameBoardInfo->intervalBetweenTwoLayers();
