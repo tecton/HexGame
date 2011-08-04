@@ -22,8 +22,8 @@
 CoreController::CoreController(AbstractRule *theRule,
                                AbstractGameBoardInfo *theGameBoardInfo,
                                Ball **theBalls) :
-  gameBoardInfo(theGameBoardInfo),
   balls(theBalls),
+  gameBoardInfo(theGameBoardInfo),
   rule(theRule),
   ballCount(theGameBoardInfo->totalBallCounts()),
   gestureCoolDown(0)
