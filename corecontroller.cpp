@@ -23,8 +23,8 @@ CoreController::CoreController(AbstractRule *theRule,
                                AbstractGameBoardInfo *theGameBoardInfo,
                                Ball **theBalls) :
   gameBoardInfo(theGameBoardInfo),
-  rule(theRule),
   balls(theBalls),
+  rule(theRule),
   ballCount(theGameBoardInfo->totalBallCounts()),
   gestureCoolDown(0)
 {
@@ -77,7 +77,7 @@ Connections CoreController::testEliminate(bool includingUserMoving)
       continue;
 
     // Test 3 in a line
-    Ball::Color color = ballAt(i, includingUserMoving)->getColor();
+    Ball *firstBall = ballAt(i, includingUserMoving);
     for (int j = 0;j < 3;++j)
     {
       if (result.connectionsOfIndex[i][j] != NULL)
@@ -86,7 +86,7 @@ Connections CoreController::testEliminate(bool includingUserMoving)
       int currentIndex = i;
       while (currentIndex != -1 &&
              ballAt(currentIndex, includingUserMoving) &&
-             ballAt(currentIndex, includingUserMoving)->getColor() == color &&
+             firstBall->sameColor(ballAt(currentIndex, includingUserMoving)) &&
              (ballAt(currentIndex, includingUserMoving)->getState() == Ball::Stable ||
               ballAt(currentIndex, includingUserMoving)->getState() == Ball::AlmostStable ||
               ballAt(currentIndex, includingUserMoving)->getState() == Ball::UserReleased ||
@@ -117,10 +117,11 @@ Connections CoreController::testEliminate(bool includingUserMoving)
       {
         if (balls[chain[0]])
         {
-          Ball::Color firstColor = balls[chain[0]]->getColor();
+          Ball *firstBall = balls[chain[0]];
           for (int j = 0;j < 6;++j)
           {
-            if (!balls[chain[j]] || balls[chain[j]]->getColor() != firstColor)
+            if (!balls[chain[j]] ||
+                !firstBall->sameColor(balls[chain[j]]))
             {
               chainCanBeEliminated = false;
               break;
@@ -215,8 +216,7 @@ void CoreController::eliminate(const QVector<int>& indexs)
 void CoreController::rotateBegin(int theCenterIndex,
                                  QPointF theMousePosition)
 {
-  if (gesture == AbstractRule::BadGesture ||
-      !rule->gestureAllowed(AbstractRule::Rotate) ||
+  if (!rule->gestureAllowed(AbstractRule::Rotate) ||
       !gameBoardInfo->canBeRotateCenter(theCenterIndex) ||
       gestureCoolDown != 0)
   {
@@ -228,6 +228,14 @@ void CoreController::rotateBegin(int theCenterIndex,
   gesture = AbstractRule::Rotate;
   gestureInfluencedIndexs = gameBoardInfo->chainAroundIndex(rotateCenterIndex);
   gestureInfluencedIndexsOriginalPos.clear();
+  for (int i = 0;i < gestureInfluencedIndexs.size();++i)
+    if ((!balls[gestureInfluencedIndexs[i]]) ||
+        (balls[gestureInfluencedIndexs[i]]->getLocked()))
+    {
+      gesture =  AbstractRule::BadGesture;
+      gestureInfluencedIndexs.clear();
+      return;
+    }
   for (int i = 0;i < gestureInfluencedIndexs.size();++i)
   {
     balls[gestureInfluencedIndexs[i]]->setState(Ball::UserMoving);
@@ -250,6 +258,8 @@ void CoreController::rotateTransition(QPointF theMousePosition)
 
 void CoreController::rotateEnd()
 {
+  if (gesture == AbstractRule::BadGesture)
+    return;
   maintainCToOAndOToC(balls[gestureInfluencedIndexs[0]]->pos());
 
   for (int i = 0;i < gestureInfluencedIndexs.size();++i)
@@ -320,8 +330,8 @@ void CoreController::swap(int from, int to)
   gestureInfluencedIndexs.push_back(from);
   gestureInfluencedIndexs.push_back(to);
 
-  balls[from]->setState(Ball::UserReleased);
-  balls[to]->setState(Ball::UserReleased);
+  balls[from]->setState(Ball::UserMoving);
+  balls[to]->setState(Ball::UserMoving);
 
   Connections connections = testUserMovingEliminate();
   bool swapSuccessful = false;
@@ -352,9 +362,9 @@ void CoreController::fillAllBlanks()
          ++itr)
     {
       if (!balls[*itr])
-        balls[*itr] = new Ball((Ball::Color)(rand() % 8));//0));//rand() % 8));
+        balls[*itr] = new Ball((Ball::Color)(rand() % 6));//0));//rand() % 8));
       else
-        balls[*itr]->setColor((Ball::Color)(rand() % 8));//0))//rand() % 8));
+        balls[*itr]->setColor((Ball::Color)(rand() % 6));//0))//rand() % 8));
       //      balls[*itr]->hide();
     }
   } while (false); // 这里面的要好好想想

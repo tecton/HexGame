@@ -1,5 +1,5 @@
-#ifndef MAINMENU_H
-#define MAINMENU_H
+#ifndef MAINMENUWIDGET_H
+#define MAINMENUWIDGET_H
 
 #include "abstractpixmapwidget.h"
 
@@ -36,4 +36,4 @@ private slots:
   void advance();
 };
 
-#endif // MAINMENU_H
+#endif // MAINMENUWIDGET_H

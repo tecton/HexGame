@@ -15,7 +15,7 @@ class Ball
   friend class CoreController;
 public:
   // Item colors(must start from 0, because we will use the value as index)
-  enum Color{Red = 0, Blue, Green, Yellow, Purple, White, Orange, Brown};
+  enum Color{Red = 0, Blue, Green, Yellow, Purple, White, Orange, Brown, BadColor};
 
   // Item states
   //   STABLE:
@@ -46,6 +46,14 @@ public:
   inline Ball::State getState()
   {return state;}
 
+  // Set whether it's locked
+  inline void setLocked(bool isLocked)
+  {locked = isLocked;}
+
+  // Get whether it's locked
+  inline bool getLocked()
+  {return locked;}
+
   // Set the position
   inline void setPos(QPointF pos)
   {position = pos;}
@@ -56,9 +64,16 @@ public:
 
   void advance();
 
+  // Whether two balls have same color
+  bool sameColor(Ball* anotherBall)
+  {return color != BadColor &&
+          anotherBall &&
+          color == anotherBall->color;}
+
 private:
   Color color;
   State state;
+  bool locked;
   QPointF position;
   QVector<QPointF> stopPositions;
 };

@@ -1,7 +1,7 @@
 #include <QtGui/QApplication>
 #include <time.h>
 //#include <QDebug>
-#include "mainwindow.h"
+//#include "mainwindow.h"
 #include "sixtyonegameboardinfo.h"
 #include "rules.h"
 #include "mainwidget.h"

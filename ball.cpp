@@ -3,7 +3,8 @@
 
 Ball::Ball(Ball::Color theColor) :
            color(theColor),
-           state(JustCreated)
+           state(JustCreated),
+           locked(false)
 {}
 
 
@@ -14,8 +15,8 @@ void Ball::advance()
     state = SystemMoving;
     position = stopPositions[stopPositions.size() - 1];
     stopPositions.pop_back();
-      if (stopPositions.size() < 4)
-        state = AlmostStable;
+//      if (stopPositions.size() < 4)
+//        state = AlmostStable;
     if (stopPositions.size() == 0)
       state = Stable;
   }
