@@ -12,8 +12,10 @@
 #include "corecontroller.h"
 #include "gesturecontroller.h"
 #include "basicpainter.h"
+#include "puzzlegameinit.h"
 
-RotatePuzzleGame::RotatePuzzleGame(int ballIndex[], int toBeIndex[])
+RotatePuzzleGame::RotatePuzzleGame(int ballIndex[], int toBeIndex[],
+                                   int gameIndex, int gameType)
 {
     rule = new RotatePuzzleGameRule();
     gameboardInfo = new SixtyOneGameBoardInfo();
@@ -33,6 +35,9 @@ RotatePuzzleGame::RotatePuzzleGame(int ballIndex[], int toBeIndex[])
     completeIndex = new int[gameboardInfo->totalBallCounts()];
     for (int i = 0; i < gameboardInfo->totalBallCounts(); ++i)
       completeIndex[i] = toBeIndex[i];
+
+    index = gameIndex;
+    type = gameType;
 
     controller = new CoreController(rule, gameboardInfo, balls);
     gestureController = new GestureController(rule, gameboardInfo, controller);
@@ -62,9 +67,6 @@ RotatePuzzleGame::~RotatePuzzleGame()
     delete effectPainter;
 }
 
-//void RotatePuzzleGame::init() // 可能不需要饿
-//{
-//}
 
 void RotatePuzzleGame::makeBasicPixmap(QPixmap& pixmap, int width, int height)
 {
@@ -143,6 +145,11 @@ void RotatePuzzleGame::advance()
         break;
     }
     if (i == gameboardInfo->totalBallCounts())
-      i = 1;
+    {
+      RotatePuzzleGame* nextStage = PuzzleGameInit::initRotatePuzzleGame(index + 1,
+                                                                         type);
+      emit giveControlTo(nextStage, true);
+      delete this;
+    }
     //  effectPainter->advance();
 }

@@ -15,5 +15,8 @@
         <file>stages/exchange2</file>
         <file>stages/exchange3</file>
         <file>stages/exchange4</file>
+        <file>stages/exchange_plus1</file>
+        <file>stages/exchange_plus2</file>
+        <file>stages/exchange_plus3</file>
     </qresource>
 </RCC>

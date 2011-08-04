@@ -18,7 +18,8 @@ class RotatePuzzleGame : public AbstractPixmapWidget
 {
   Q_OBJECT
 public:
-  RotatePuzzleGame(int ballIndex[], int tobeIndex[]);
+  RotatePuzzleGame(int ballIndex[], int tobeIndex[],
+                   int gameIndex, int gameType);
   ~RotatePuzzleGame();
 
   // Functions most overloaded
