@@ -28,7 +28,8 @@ SOURCES += main.cpp\
     puzzlemenuitems.cpp \
     puzzlemenuwidget.cpp \
     stagemenuwidget.cpp \
-    stagemenuitems.cpp
+    stagemenuitems.cpp \
+    puzzlegameinit.cpp
 
 HEADERS  += mainwindow.h \
     ball.h \
@@ -53,7 +54,8 @@ HEADERS  += mainwindow.h \
     puzzlemenuitems.h \
     puzzlemenuwidget.h \
     stagemenuwidget.h \
-    stagemenuitems.h
+    stagemenuitems.h \
+    puzzlegameinit.h
 
 FORMS    += mainwindow.ui
 

@@ -3,16 +3,51 @@
 #include <QTimer>
 #include <QPixmap>
 #include <QPainter>
+#include <QFileInfo>
+#include <QTextStream>
 #include "basicpainter.h"
 #include "gamemath.h"
 #include "stagemenuitems.h"
 #include "rotatepuzzlegame.h"
+#include "puzzlegameinit.h"
 
 #include <QMessageBox>
+#include <QDebug>
 
 #define MAIN_MENU_LOGICAL_WIDTH  800
 #define MAIN_MENU_LOGICAL_HEIGHT 500
 
+int errrrr[] = {
+          0,  0,  0,  0,  0,
+        0,  0,  0,  0,  0,  0,
+      0,  0,  4,  0,  0,  0,  0,
+    0,  0,  0,  2,  3,  0,  0,  0,
+  0,  0,  0,  3,  1,  2,  4,  0,  0,
+    0,  0,  0,  2,  3,  0,  0,  0,
+      0,  0,  4,  0,  0,  0,  0,
+        0,  0,  0,  0,  0,  0,
+          0,  0,  0,  0,  0
+};
+
+void getStageBallIndex(int *ballIndex,int *toBeIndex, int index, int type)
+{
+  QString filename;
+  if (type == 0)
+    filename = ":/stages/exchange";
+  filename = QObject::tr("%1%2").arg(filename).arg(index + 1);
+  QFile file(filename);
+  if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
+    return;
+  QTextStream in(&file);
+  for (int i = 0; i < 61; ++i)
+  {
+    in >> ballIndex[i];
+  }
+  for (int i = 0; i < 61; ++i)
+  {
+    in >> toBeIndex[i];
+  }
+}
 
 void ExchangeStageMenuWidget::makePixmap(QPixmap& pixmap, int width, int height)
 {
@@ -57,7 +92,7 @@ ExchangeStageMenuWidget::ExchangeStageMenuWidget() :
   {
     stageItem[i] = new StageMenuItem(":/images/mainmenuitems/swapclassicgame*.png",
                                      1);
-    stageItem[i]->setPos(QPointF(0.2 * (i % 5), 0.3 + 0.5 * (i / 5)));
+    stageItem[i]->setPos(QPointF(0.1 + 0.2 * (i % 5), 0.3 + 0.5 * (i / 5)));
     myItems.push_back(stageItem[i]);
   }
 
@@ -74,23 +109,19 @@ void ExchangeStageMenuWidget::dealPressed(QPointF mousePos, Qt::MouseButton butt
     delete this;
     return;
   }
-  if (distanceOfTwoPoints(mousePos,
-                          QPointF(0.1 * MAIN_MENU_LOGICAL_WIDTH,
-                                  0.3 * MAIN_MENU_LOGICAL_HEIGHT)) < 50)
+  for (int i = 0; i < 10; ++i)
   {
-    int ballIndex[] = {
-              0,  0,  0,  0,  0,
-            0,  0,  0,  0,  0,  0,
-          0,  0,  3,  2,  0,  0,  0,
-        0,  0,  2,  1,  2,  2,  0,  0,
-      0,  0,  0,  2,  2,  1,  3,  0,  0,
-        0,  0,  2,  1,  2,  2,  0,  0,
-          0,  0,  3,  2,  0,  0,  0,
-            0,  0,  0,  0,  0,  0,
-              0,  0,  0,  0,  0
-    };
-    RotatePuzzleGame *puzzleGame = new RotatePuzzleGame(ballIndex);
-    emit giveControlTo(puzzleGame, false);
+    if (distanceOfTwoPoints(mousePos,
+                            QPointF((0.1 + 0.2 * (i % 5)) * MAIN_MENU_LOGICAL_WIDTH,
+                                    (0.3 + 0.5 * (i / 5)) * MAIN_MENU_LOGICAL_HEIGHT)) < 50)
+    {
+//      int *ballIndex = new int [61];
+//      int *toBeIndex = new int [61];
+//      getStageBallIndex(ballIndex, toBeIndex, i, 0);
+//      RotatePuzzleGame *puzzleGame = new RotatePuzzleGame(ballIndex, toBeIndex);
+      RotatePuzzleGame *puzzleGame = PuzzleGameInit::initRotatePuzzleGame(i, 0);
+      emit giveControlTo(puzzleGame, false);
+    }
   }
 }
 
@@ -148,24 +179,24 @@ void UniteStageMenuWidget::dealPressed(QPointF mousePos, Qt::MouseButton button)
     delete this;
     return;
   }
-  if (distanceOfTwoPoints(mousePos,
-                          QPointF(0.1 * MAIN_MENU_LOGICAL_WIDTH,
-                                  0.3 * MAIN_MENU_LOGICAL_HEIGHT)) < 50)
-  {
-    int ballIndex[] = {
-              0,  0,  0,  0,  0,
-            0,  0,  0,  0,  0,  0,
-          0,  0,  3,  2,  0,  0,  0,
-        0,  0,  2,  1,  2,  2,  0,  0,
-      0,  0,  0,  2,  2,  1,  3,  0,  0,
-        0,  0,  2,  1,  2,  2,  0,  0,
-          0,  0,  3,  2,  0,  0,  0,
-            0,  0,  0,  0,  0,  0,
-              0,  0,  0,  0,  0
-    };
-    RotatePuzzleGame *puzzleGame = new RotatePuzzleGame(ballIndex);
-    emit giveControlTo(puzzleGame, false);
-  }
+//  if (distanceOfTwoPoints(mousePos,
+//                          QPointF(0.1 * MAIN_MENU_LOGICAL_WIDTH,
+//                                  0.3 * MAIN_MENU_LOGICAL_HEIGHT)) < 50)
+//  {
+//    int ballIndex[] = {
+//              0,  0,  0,  0,  0,
+//            0,  0,  0,  0,  0,  0,
+//          0,  0,  3,  2,  0,  0,  0,
+//        0,  0,  2,  1,  2,  2,  0,  0,
+//      0,  0,  0,  2,  2,  1,  3,  0,  0,
+//        0,  0,  2,  1,  2,  2,  0,  0,
+//          0,  0,  3,  2,  0,  0,  0,
+//            0,  0,  0,  0,  0,  0,
+//              0,  0,  0,  0,  0
+//    };
+//    RotatePuzzleGame *puzzleGame = new RotatePuzzleGame(ballIndex);
+//    emit giveControlTo(puzzleGame, false);
+//  }
 }
 
 void UniteStageMenuWidget::dealMoved(QPointF mousePos, Qt::MouseButton button)

@@ -10,4 +10,10 @@
         <file>balls/yellow01.png</file>
         <file>mainmenuitems/swapclassicgame01.png</file>
     </qresource>
+    <qresource prefix="/">
+        <file>stages/exchange1</file>
+        <file>stages/exchange2</file>
+        <file>stages/exchange3</file>
+        <file>stages/exchange4</file>
+    </qresource>
 </RCC>

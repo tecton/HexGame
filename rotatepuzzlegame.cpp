@@ -13,7 +13,7 @@
 #include "gesturecontroller.h"
 #include "basicpainter.h"
 
-RotatePuzzleGame::RotatePuzzleGame(int ballIndex[])
+RotatePuzzleGame::RotatePuzzleGame(int ballIndex[], int toBeIndex[])
 {
     rule = new RotatePuzzleGameRule();
     gameboardInfo = new SixtyOneGameBoardInfo();
@@ -30,8 +30,11 @@ RotatePuzzleGame::RotatePuzzleGame(int ballIndex[])
       else
         balls[i] = NULL;
     }
+    completeIndex = new int[gameboardInfo->totalBallCounts()];
+    for (int i = 0; i < gameboardInfo->totalBallCounts(); ++i)
+      completeIndex[i] = toBeIndex[i];
+
     controller = new CoreController(rule, gameboardInfo, balls);
-    //controller->fillAllBlanks();
     gestureController = new GestureController(rule, gameboardInfo, controller);
 
     effectPainter = new EffectPainter(gameboardInfo);
@@ -130,5 +133,16 @@ void RotatePuzzleGame::advance()
     ++frameCount;
     frameCount = frameCount % 32;
     controller->advance();
+    Ball **balls = controller->balls;
+//    delete balls;
+    int i;
+    for (i = 0; i < gameboardInfo->totalBallCounts(); ++i)
+    {
+      if (!((balls[i] == NULL && completeIndex[i] == 0)
+         || balls[i]->getColor() == (Ball::Color)completeIndex[i]))
+        break;
+    }
+    if (i == gameboardInfo->totalBallCounts())
+      i = 1;
     //  effectPainter->advance();
 }

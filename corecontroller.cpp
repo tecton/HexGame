@@ -298,7 +298,12 @@ void CoreController::rotateEnd()
       balls[i] = tmp[i];
     rotateRollBack();
   }
-
+  for (int i = 0;i < gestureInfluencedIndexs.size();++i)
+  {
+    int index = gestureInfluencedIndexs[i];
+    ballsCurrentIndexToOriginalIndex[index] = index;
+    ballsOriginalIndexToCurrentIndex[index] = index;
+  }
   delete [] tmp;
   gestureInfluencedIndexs.clear();
 }

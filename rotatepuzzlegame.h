@@ -18,7 +18,7 @@ class RotatePuzzleGame : public AbstractPixmapWidget
 {
   Q_OBJECT
 public:
-  RotatePuzzleGame(int ballIndex[]);
+  RotatePuzzleGame(int ballIndex[], int tobeIndex[]);
   ~RotatePuzzleGame();
 
   // Functions most overloaded
@@ -41,6 +41,9 @@ private:
   EffectPainter *effectPainter;
   QTimer *t;
   int frameCount;
+  int *completeIndex;
+  int type;
+  int index;
   // TODO:分数、奖励之类的东西
 
   void quitGame();
