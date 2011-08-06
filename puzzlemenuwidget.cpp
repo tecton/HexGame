@@ -21,10 +21,14 @@ PuzzleMenuWidget::PuzzleMenuWidget() :
   exchangeItem->setPos(QPointF(0.3, 0.3));
 
   uniteItem = new PuzzleMenuUniteItem();
-  uniteItem->setPos(QPointF(0.7,0.3));
+  uniteItem->setPos(QPointF(0.5, 0.3));
+
+  lockItem = new PuzzleMenuLockItem();
+  lockItem->setPos(QPointF(0.7, 0.3));
 
   myItems.push_back(exchangeItem);
   myItems.push_back(uniteItem);
+  myItems.push_back(lockItem);
 
   t = new QTimer();
   t->setInterval(75);
@@ -83,11 +87,18 @@ void PuzzleMenuWidget::dealPressed(QPointF mousePos, Qt::MouseButton button)
     emit giveControlTo(exchangeMenu, false);
   }
   if (distanceOfTwoPoints(mousePos,
-                          QPointF(0.7 * MAIN_MENU_LOGICAL_WIDTH,
+                          QPointF(0.5 * MAIN_MENU_LOGICAL_WIDTH,
                                   0.3 * MAIN_MENU_LOGICAL_HEIGHT)) < 50)
   {
     AbstractStageMenuWidget *uniteMenu = new UniteStageMenuWidget();
     emit giveControlTo(uniteMenu, false);
+  }
+  if (distanceOfTwoPoints(mousePos,
+                          QPointF(0.7 * MAIN_MENU_LOGICAL_WIDTH,
+                                  0.3 * MAIN_MENU_LOGICAL_HEIGHT)) < 50)
+  {
+    AbstractStageMenuWidget *lockMenu = new LockStageMenuWidget();
+    emit giveControlTo(lockMenu, false);
   }
 }
 

@@ -14,7 +14,7 @@ class AbstractPuzzleMenuItem : public AbstractItem
 {
 public:
   // Type of the items(not finished yet)
-  enum ItemType{ExchangeItem=0, UniteItem};
+  enum ItemType{ExchangeItem=0, UniteItem, LockItem};
 
   // The pure virtual function to be overloaded
   virtual void paint(QPainter *painter, int width, int height, int frame)=0;
@@ -39,6 +39,13 @@ class PuzzleMenuUniteItem : public AbstractPuzzleMenuItem
 {
 public:
   PuzzleMenuUniteItem();
+  virtual void paint(QPainter *painter, int width, int height, int frame);
+};
+
+class PuzzleMenuLockItem : public AbstractPuzzleMenuItem
+{
+public:
+  PuzzleMenuLockItem();
   virtual void paint(QPainter *painter, int width, int height, int frame);
 };
 

@@ -12,7 +12,11 @@ RotatePuzzleGame* PuzzleGameInit::initRotatePuzzleGame(int index,
   int *toBeIndex = new int [61];
   QString filename;
   if (type == 0)
-    filename = ":/stages/exchange_plus";
+    filename = ":/abcde/exchange";
+  if (type == 1)
+    filename = ":/abcde/unite";
+  if (type == 2)
+    filename = ":/abcde/lock_plus";
   filename = QObject::tr("%1%2").arg(filename).arg(index + 1);
   QFile file(filename);
   if (!file.open(QIODevice::ReadOnly | QIODevice::Text))

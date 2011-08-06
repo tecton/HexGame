@@ -24,7 +24,13 @@ RotatePuzzleGame::RotatePuzzleGame(int ballIndex[], int toBeIndex[],
     Ball **balls = new Ball *[gameboardInfo->totalBallCounts()];
     for (int i = 0; i < gameboardInfo->totalBallCounts(); ++i)
     {
-      if (ballIndex[i] != 0)
+      if (ballIndex[i] == -1)
+      {
+        balls[i] = new Ball((Ball::Color)6);
+        balls[i]->setPos(gameboardInfo->positionOfIndex(i));
+        balls[i]->setLocked(true);
+      }
+      else if (ballIndex[i] != 0)
       {
         balls[i] = new Ball((Ball::Color)ballIndex[i]);
         balls[i]->setPos(gameboardInfo->positionOfIndex(i));
@@ -141,14 +147,20 @@ void RotatePuzzleGame::advance()
     for (i = 0; i < gameboardInfo->totalBallCounts(); ++i)
     {
       if (!((balls[i] == NULL && completeIndex[i] == 0)
-         || balls[i]->getColor() == (Ball::Color)completeIndex[i]))
+            || balls[i]->getColor() == (Ball::Color)completeIndex[i]
+            || (balls[i]->getLocked() && (completeIndex[i] == -1))))
         break;
     }
     if (i == gameboardInfo->totalBallCounts())
     {
-      RotatePuzzleGame* nextStage = PuzzleGameInit::initRotatePuzzleGame(index + 1,
-                                                                         type);
-      emit giveControlTo(nextStage, true);
+      if (index != 5)
+      {
+        RotatePuzzleGame* nextStage = PuzzleGameInit::initRotatePuzzleGame(index + 1,
+                                                                           type);
+        emit giveControlTo(nextStage, true);
+      }
+      else if (index == 5)
+        emit giveControlTo(NULL, true);
       delete this;
     }
     //  effectPainter->advance();

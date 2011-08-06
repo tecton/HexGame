@@ -8,8 +8,9 @@
 
 #include <QMessageBox>
 
-const static int kTotalItems = 2;
+const static int kTotalItems = 3;
 const static char * kItemPaths[] = {":/images/mainmenuitems/swapclassicgame*.png",
+                                   ":/images/mainmenuitems/swapclassicgame*.png",
                                    ":/images/mainmenuitems/swapclassicgame*.png"};
 
 
@@ -78,6 +79,25 @@ void PuzzleMenuUniteItem::paint(QPainter *painter,
 {
   const QPixmap& pixmap = AbstractPuzzleMenuItem::pixmap(
                             AbstractPuzzleMenuItem::UniteItem,
+                            frame);
+  double x = getPos().x() * width;
+  double y = getPos().y() * height;
+  painter->drawPixmap(QPointF(x, y), pixmap);
+//  QMessageBox::critical(0,"","Painted one item");
+}
+
+PuzzleMenuLockItem::PuzzleMenuLockItem()
+{
+  setPos(QPointF(0, 0));
+}
+
+void PuzzleMenuLockItem::paint(QPainter *painter,
+                                        int width,
+                                        int height,
+                                        int frame)
+{
+  const QPixmap& pixmap = AbstractPuzzleMenuItem::pixmap(
+                            AbstractPuzzleMenuItem::LockItem,
                             frame);
   double x = getPos().x() * width;
   double y = getPos().y() * height;
