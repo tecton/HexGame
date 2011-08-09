@@ -11,7 +11,7 @@
 const static int kTotalItems = 3;
 const static char * kItemPaths[] = {":/images/mainmenuitems/swapclassicgame*.png",
                                    ":/images/mainmenuitems/swapclassicgame*.png",
-                                   ":/images/mainmenuitems/swapclassicgame*.png"};
+                                   ":/images/mainmenuitems/lock_theme*.png"};
 
 
 QVector<QVector<QPixmap> > puzzleMenuItemPixmaps;

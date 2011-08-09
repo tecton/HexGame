@@ -86,6 +86,13 @@ void RotatePuzzleGame::makeBasicPixmap(QPixmap& pixmap, int width, int height)
                                   width * 1.0 / gameboardInfo->width(),
                                   height * 1.0 / gameboardInfo->height(),
                                   frameCount);
+    BasicPainter::paintPuzzleGameBalls(balls,
+                                       completeIndex,
+                                       gameboardInfo->totalBallCounts(),
+                                       painter,
+                                       width * 0.4 / gameboardInfo->width(),
+                                       height * 0.4 / gameboardInfo->height(),
+                                       frameCount);
     painter->end();
     delete painter;
 }

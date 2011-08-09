@@ -265,13 +265,19 @@ LockStageMenuWidget::LockStageMenuWidget() :
     frameCount(0)
 {
   stageItem = new StageMenuItem *[10];
-  for (int i = 0; i < 10; ++i)
-  {
-    stageItem[i] = new StageMenuItem(":/images/mainmenuitems/swapclassicgame*.png",
-                                     1);
-    stageItem[i]->setPos(QPointF(0.1 + 0.2 * (i % 5), 0.3 + 0.5 * (i / 5)));
-    myItems.push_back(stageItem[i]);
-  }
+
+  //test 10 stage in one png
+  stageItem[0] = new StageMenuItem(":/images/mainmenuitems/lock_stage*.png", 1);
+  stageItem[0]->setPos(QPointF(0.05, 0.05));
+  myItems.push_back(stageItem[0]);
+
+//  for (int i = 0; i < 10; ++i)
+//  {
+//    stageItem[i] = new StageMenuItem(":/images/mainmenuitems/lock_stage*.png",
+//                                     1);
+//    stageItem[i]->setPos(QPointF(0.1 + 0.2 * (i % 5), 0.3 + 0.5 * (i / 5)));
+//    myItems.push_back(stageItem[i]);
+//  }
 
   t = new QTimer();
   t->setInterval(75);

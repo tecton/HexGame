@@ -9,6 +9,8 @@
         <file>balls/white01.png</file>
         <file>balls/yellow01.png</file>
         <file>mainmenuitems/swapclassicgame01.png</file>
+        <file>mainmenuitems/lock_theme.png</file>
+        <file>mainmenuitems/lock_stage.png</file>
     </qresource>
     <qresource prefix="/">
         <file>abcde/exchange_plus1</file>
@@ -48,5 +50,6 @@
         <file>abcde/unite2</file>
         <file>abcde/unite3</file>
         <file>abcde/unite4</file>
+        <file>mainmenuitems/lock_stage.png</file>
     </qresource>
 </RCC>
