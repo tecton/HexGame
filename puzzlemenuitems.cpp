@@ -9,8 +9,8 @@
 #include <QMessageBox>
 
 const static int kTotalItems = 3;
-const static char * kItemPaths[] = {":/images/mainmenuitems/swapclassicgame*.png",
-                                   ":/images/mainmenuitems/swapclassicgame*.png",
+const static char * kItemPaths[] = {":/images/mainmenuitems/exchange_theme*.png",
+                                   ":/images/mainmenuitems/unite_theme*.png",
                                    ":/images/mainmenuitems/lock_theme*.png"};
 
 

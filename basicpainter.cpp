@@ -93,11 +93,13 @@ void BasicPainter::paintPuzzleGameBalls(Ball **balls,
   {
     if (balls[i])
     {
+      if (colorIndex[i] == -1)
+        colorIndex[i] = 6;
       QPointF pos = balls[i]->pos();
       pos.setX(pos.x() * xRate);
       pos.setY(pos.y() * yRate);
       painter->drawPixmap(
-          pos,
+            pos,
             pixmaps[colorIndex[i]][frame % frameCounts[colorIndex[i]]]);
 //      painter->drawText(pos, QObject::tr("%1").arg(i));
     }
