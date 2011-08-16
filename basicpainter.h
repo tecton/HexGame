@@ -25,6 +25,15 @@ public:
                               double yRate,
                               int frame);
 
+  // A function to paint small balls for puzzle game target shape
+  static void paintPuzzleGameBalls(Ball **balls,
+                                   int *colorIndex,
+                                   int totalCount,
+                                   QPainter *painter,
+                                   double xRate,
+                                   double yRate,
+                                   int frame);
+
   // A function to paint items inherit from AbstractItem
   static void paintItems(QPainter *painter,
                          QVector<AbstractItem *> items,

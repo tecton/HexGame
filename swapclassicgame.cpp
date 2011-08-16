@@ -19,7 +19,6 @@ SwapClassicGame::SwapClassicGame()
   rule = new SwapClassicGameRule();//SwapClassicGameRule();
   gameboardInfo = new ThirtySevenGameBoardInfo();
   //SwapClassicGameSavedInfo savedInfo = readSaved();
-  // 拿到其中的balls给下面那个的第三个参数，然后还有各种别的地方的值的改动
   controller = new CoreController(rule, gameboardInfo, NULL);
   controller->fillAllBlanks();
   gestureController = new GestureController(rule, gameboardInfo, controller);
@@ -62,8 +61,7 @@ SwapClassicGame::~SwapClassicGame()
   delete effectPainter;
 }
 
-//void SwapClassicGame::init() // 可能不需要饿
-//{
+//void SwapClassicGame::init() //
 //}
 
 void SwapClassicGame::makeBasicPixmap(QPixmap& pixmap, int width, int height)
@@ -163,7 +161,7 @@ void SwapClassicGame::dealStableEliminate(Connections connections)
     {
       effectPainter->highlightAt(i);
 
-      // TODO:BLABLABLA 各种奖励，各种特效
+      // TODO:BLABLABLA
 
     }
     if (connectionCountOfThePosition > 0)
@@ -178,7 +176,7 @@ void SwapClassicGame::dealUserMovingEliminate(Connections connections)
   {
     for (int j = 0;j < connections.connections[i]->size();++j)
       effectPainter->eliminationHintAt(j);
-    // TODO:BLABLABLA 提示
+    // TODO:BLABLABLA
   }
 }
 

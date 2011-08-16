@@ -76,6 +76,36 @@ void BasicPainter::paintBasicBalls(Ball **balls,
   }
 }
 
+void BasicPainter::paintPuzzleGameBalls(Ball **balls,
+                                        int *colorIndex,
+                                        int totalCount,
+                                        QPainter *painter,
+                                        double xRate,
+                                        double yRate,
+                                        int frame)
+{
+  if (pixmaps.isEmpty())
+    initPixmaps();
+
+  painter->setPen(QColor(255,255,255,255));
+
+  for (int i = 0;i < totalCount;++i)
+  {
+    if (balls[i])
+    {
+      if (colorIndex[i] == -1)
+        colorIndex[i] = 6;
+      QPointF pos = balls[i]->pos();
+      pos.setX(pos.x() * xRate);
+      pos.setY(pos.y() * yRate);
+      painter->drawPixmap(
+            pos,
+            pixmaps[colorIndex[i]][frame % frameCounts[colorIndex[i]]]);
+//      painter->drawText(pos, QObject::tr("%1").arg(i));
+    }
+  }
+}
+
 void BasicPainter::paintItems(QPainter *painter,
                               QVector<AbstractItem *> items,
                               int width,

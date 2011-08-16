@@ -9,14 +9,65 @@
         <file>balls/white01.png</file>
         <file>balls/yellow01.png</file>
         <file>mainmenuitems/swapclassicgame01.png</file>
+        <file>mainmenuitems/lock_theme.png</file>
+        <file>mainmenuitems/lock_stage.png</file>
+        <file>mainmenuitems/stage_img0105.png</file>
+        <file>mainmenuitems/stage_img0120.png</file>
+        <file>mainmenuitems/stage_img0140.png</file>
+        <file>mainmenuitems/stage_img0160.png</file>
+        <file>mainmenuitems/stage_img0180.png</file>
+        <file>mainmenuitems/stage_img0195.png</file>
+        <file>mainmenuitems/stage_img0220.png</file>
+        <file>mainmenuitems/stage_img0320.png</file>
+        <file>mainmenuitems/stage_img0420.png</file>
+        <file>mainmenuitems/stage_img0520.png</file>
+        <file>mainmenuitems/stage_img0620.png</file>
+        <file>mainmenuitems/stage_img0720.png</file>
+        <file>mainmenuitems/stage_img0820.png</file>
+        <file>mainmenuitems/stage_img0920.png</file>
+        <file>mainmenuitems/stage_img1020.png</file>
+        <file>mainmenuitems/exchange_theme.png</file>
+        <file>mainmenuitems/unite_theme.png</file>
+        <file>mainmenuitems/button_advanced.png</file>
+        <file>mainmenuitems/button_normal.png</file>
     </qresource>
     <qresource prefix="/">
-        <file>stages/exchange1</file>
-        <file>stages/exchange2</file>
-        <file>stages/exchange3</file>
-        <file>stages/exchange4</file>
-        <file>stages/exchange_plus1</file>
-        <file>stages/exchange_plus2</file>
-        <file>stages/exchange_plus3</file>
+        <file>abcde/lock_plus1</file>
+        <file>abcde/lock_plus2</file>
+        <file>abcde/lock_plus3</file>
+        <file>abcde/lock_plus4</file>
+        <file>abcde/lock_plus5</file>
+        <file>abcde/lock_plus6</file>
+        <file>abcde/lock_plus7</file>
+        <file>abcde/lock_plus8</file>
+        <file>abcde/lock_plus10</file>
+        <file>abcde/lock1</file>
+        <file>abcde/lock2</file>
+        <file>abcde/lock3</file>
+        <file>abcde/lock4</file>
+        <file>abcde/lock5</file>
+        <file>abcde/lock6</file>
+        <file>abcde/lock7</file>
+        <file>abcde/lock8</file>
+        <file>abcde/lock9</file>
+        <file>abcde/lock10</file>
+        <file>abcde/exchange_plus1</file>
+        <file>abcde/exchange_plus2</file>
+        <file>abcde/exchange_plus3</file>
+        <file>abcde/exchange_plus4</file>
+        <file>abcde/exchange1</file>
+        <file>abcde/exchange2</file>
+        <file>abcde/exchange3</file>
+        <file>abcde/exchange4</file>
+        <file>abcde/unite_plus1</file>
+        <file>abcde/unite_plus2</file>
+        <file>abcde/unite_plus3</file>
+        <file>abcde/unite_plus4</file>
+        <file>abcde/unite_plus5</file>
+        <file>abcde/unite1</file>
+        <file>abcde/unite2</file>
+        <file>abcde/unite3</file>
+        <file>abcde/unite4</file>
+        <file>abcde/unite5</file>
     </qresource>
 </RCC>

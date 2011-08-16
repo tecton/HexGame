@@ -44,7 +44,10 @@ private:
   EffectPainter *effectPainter;
   QTimer *t;
   int frameCount;
-  // TODO:分数、奖励之类的东西
+  // TODO:
+
+  AbstractProgressBarItem *progressBar;
+  QVector <AbstractItem *> myItems;
 
   AbstractProgressBarItem *progressBar;
   QVector <AbstractItem *> myItems;

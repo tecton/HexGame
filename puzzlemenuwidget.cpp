@@ -18,13 +18,17 @@ PuzzleMenuWidget::PuzzleMenuWidget() :
     frameCount(0)
 {
   exchangeItem = new PuzzleMenuExchangeItem();
-  exchangeItem->setPos(QPointF(0.3, 0.3));
+  exchangeItem->setPos(QPointF(0.01, 0.2));
 
   uniteItem = new PuzzleMenuUniteItem();
-  uniteItem->setPos(QPointF(0.7,0.3));
+  uniteItem->setPos(QPointF(0.3, 0.2));
+
+  lockItem = new PuzzleMenuLockItem();
+  lockItem->setPos(QPointF(0.6, 0.2));
 
   myItems.push_back(exchangeItem);
   myItems.push_back(uniteItem);
+  myItems.push_back(lockItem);
 
   t = new QTimer();
   t->setInterval(75);
@@ -76,18 +80,25 @@ void PuzzleMenuWidget::dealPressed(QPointF mousePos, Qt::MouseButton button)
     return;
   }
   if (distanceOfTwoPoints(mousePos,
-                          QPointF(0.3 * MAIN_MENU_LOGICAL_WIDTH,
-                                  0.3 * MAIN_MENU_LOGICAL_HEIGHT)) < 50)
+                          QPointF(0.15 * MAIN_MENU_LOGICAL_WIDTH,
+                                  0.35 * MAIN_MENU_LOGICAL_HEIGHT)) < 80)
   {
-    AbstractStageMenuWidget *exchangeMenu = new ExchangeStageMenuWidget();
+    AbstractStageMenuWidget *exchangeMenu = new ExchangeStageMenuWidget(0);
     emit giveControlTo(exchangeMenu, false);
   }
   if (distanceOfTwoPoints(mousePos,
-                          QPointF(0.7 * MAIN_MENU_LOGICAL_WIDTH,
-                                  0.3 * MAIN_MENU_LOGICAL_HEIGHT)) < 50)
+                          QPointF(0.45 * MAIN_MENU_LOGICAL_WIDTH,
+                                  0.35 * MAIN_MENU_LOGICAL_HEIGHT)) < 80)
   {
-    AbstractStageMenuWidget *uniteMenu = new UniteStageMenuWidget();
+    AbstractStageMenuWidget *uniteMenu = new UniteStageMenuWidget(0);
     emit giveControlTo(uniteMenu, false);
+  }
+  if (distanceOfTwoPoints(mousePos,
+                          QPointF(0.75 * MAIN_MENU_LOGICAL_WIDTH,
+                                  0.35 * MAIN_MENU_LOGICAL_HEIGHT)) < 80)
+  {
+    AbstractStageMenuWidget *lockMenu = new LockStageMenuWidget(0);
+    emit giveControlTo(lockMenu, false);
   }
 }
 
