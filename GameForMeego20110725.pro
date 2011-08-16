@@ -11,7 +11,6 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp\
-        mainwindow.cpp \
     ball.cpp \
     corecontroller.cpp \
     rules.cpp \
@@ -29,10 +28,11 @@ SOURCES += main.cpp\
     puzzlemenuwidget.cpp \
     stagemenuwidget.cpp \
     stagemenuitems.cpp \
-    puzzlegameinit.cpp
+    puzzlegameinit.cpp \
+    thirtysevengameboardinfo.cpp \
+    gamecommonitems.cpp
 
-HEADERS  += mainwindow.h \
-    ball.h \
+HEADERS  += ball.h \
     corecontroller.h \
     abstractrule.h \
     rules.h \
@@ -55,9 +55,8 @@ HEADERS  += mainwindow.h \
     puzzlemenuwidget.h \
     stagemenuwidget.h \
     stagemenuitems.h \
-    puzzlegameinit.h
-
-FORMS    += mainwindow.ui
+    puzzlegameinit.h \
+    thirtysevengameboardinfo.h
 
 RESOURCES += \
     resource.qrc

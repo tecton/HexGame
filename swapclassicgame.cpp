@@ -11,11 +11,13 @@
 #include "corecontroller.h"
 #include "gesturecontroller.h"
 #include "basicpainter.h"
+#include "gamecommonitems.h"
+#include "thirtysevengameboardinfo.h"
 
 SwapClassicGame::SwapClassicGame()
 {
   rule = new SwapClassicGameRule();//SwapClassicGameRule();
-  gameboardInfo = new SixtyOneGameBoardInfo();
+  gameboardInfo = new ThirtySevenGameBoardInfo();
   //SwapClassicGameSavedInfo savedInfo = readSaved();
   // 拿到其中的balls给下面那个的第三个参数，然后还有各种别的地方的值的改动
   controller = new CoreController(rule, gameboardInfo, NULL);
@@ -23,6 +25,10 @@ SwapClassicGame::SwapClassicGame()
   gestureController = new GestureController(rule, gameboardInfo, controller);
 
   effectPainter = new EffectPainter(gameboardInfo);
+
+  progressBar = new VerticalProgressBarItem();
+  progressBar->setPos(QPointF(0.1, 0.1));
+  myItems.push_back(progressBar);
 
   connect(controller,
           SIGNAL(stableEliminateTested(Connections)),
@@ -72,6 +78,11 @@ void SwapClassicGame::makeBasicPixmap(QPixmap& pixmap, int width, int height)
                                 width * 1.0 / gameboardInfo->width(),
                                 height * 1.0 / gameboardInfo->height(),
                                 frameCount);
+  BasicPainter::paintItems(painter,
+                           myItems,
+                           width,
+                           height,
+                           frameCount);
   painter->end();
   delete painter;
 }
@@ -124,6 +135,11 @@ void SwapClassicGame::dealReleased(QPointF mousePos, Qt::MouseButton button)
 
 void SwapClassicGame::advance()
 {
+  if (progressBar->getCurrent() >= progressBar->getMax())
+  {
+    nextStage();
+    return;
+  }
   ++frameCount;
   frameCount = frameCount % 32;
   controller->advance();
@@ -132,13 +148,14 @@ void SwapClassicGame::advance()
 
 void SwapClassicGame::dealStableEliminate(Connections connections)
 {
+  int pointsToAdd = 0;
   for (int i = 0;i < gameboardInfo->totalBallCounts();++i)
   {
     QVector<QVector<int> *>& connect = connections.connectionsOfIndex[i];
     int connectionCountOfThePosition = 0;
-    for (int i = 0;i < 10;++i)
+    for (int j = 0;j < 10;++j)
     {
-      if (i == 3 || connect[i] == NULL)
+      if (j == 3 || connect[j] == NULL)
         continue;
       ++connectionCountOfThePosition;
     }
@@ -149,7 +166,10 @@ void SwapClassicGame::dealStableEliminate(Connections connections)
       // TODO:BLABLABLA 各种奖励，各种特效
 
     }
+    if (connectionCountOfThePosition > 0)
+      ++pointsToAdd;
   }
+  progressBar->setCurrent(progressBar->getCurrent() + pointsToAdd);
 }
 
 void SwapClassicGame::dealUserMovingEliminate(Connections connections)
@@ -162,3 +182,12 @@ void SwapClassicGame::dealUserMovingEliminate(Connections connections)
   }
 }
 
+void SwapClassicGame::nextStage()
+{
+  SwapClassicGame *nextStage = new SwapClassicGame();
+  nextStage->progressBar->setMin(progressBar->getMax());
+  nextStage->progressBar->setMax(progressBar->getMax() * 2);
+  nextStage->progressBar->setCurrent(progressBar->getCurrent());
+  emit giveControlTo(nextStage, true);
+  delete this;
+}

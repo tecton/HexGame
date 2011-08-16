@@ -28,7 +28,6 @@ private:
   QTimer *t;
   AbstractMainMenuItem *swapClassicItem;
   AbstractMainMenuItem *puzzleMenuItem;
-  AbstractPixmapWidget *puzzleMenu;
   QVector <AbstractItem *> myItems;
   int frameCount;
 

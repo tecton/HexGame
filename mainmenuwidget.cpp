@@ -87,20 +87,7 @@ void MainMenuWidget::dealPressed(QPointF mousePos, Qt::MouseButton button)
                           QPointF(0.7 * MAIN_MENU_LOGICAL_WIDTH,
                                   0.5 * MAIN_MENU_LOGICAL_HEIGHT)) < 50)
   {
-//    int ballIndex[] = {
-//              0,  0,  0,  0,  0,
-//            0,  0,  0,  0,  0,  0,
-//          0,  0,  3,  2,  0,  0,  0,
-//        0,  0,  2,  1,  2,  2,  0,  0,
-//      0,  0,  0,  2,  2,  1,  3,  0,  0,
-//        0,  0,  2,  1,  2,  2,  0,  0,
-//          0,  0,  3,  2,  0,  0,  0,
-//            0,  0,  0,  0,  0,  0,
-//              0,  0,  0,  0,  0
-//    };
-//    RotatePuzzleGame *puzzleGame = new RotatePuzzleGame(ballIndex);
-//    emit giveControlTo(puzzleGame, false);
-    puzzleMenu = new PuzzleMenuWidget();
+    AbstractPixmapWidget *puzzleMenu = new PuzzleMenuWidget();
     emit giveControlTo(puzzleMenu, false);
   }
 }
@@ -128,5 +115,4 @@ MainMenuWidget::~MainMenuWidget()
   delete t;
   delete swapClassicItem;
   delete puzzleMenuItem;
-  delete puzzleMenu;
 }

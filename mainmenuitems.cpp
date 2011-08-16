@@ -10,7 +10,7 @@
 
 const static int kTotalItems = 2;
 const static char * kItemPaths[] = {":/images/mainmenuitems/swapclassicgame*.png",
-                                   ":/images/mainmenuitems/swapclassicgame*.png"};
+                                    ":/images/mainmenuitems/puzzlegame*.png"};
 
 
 QVector<QVector<QPixmap> > mainMenuItemPixmaps;

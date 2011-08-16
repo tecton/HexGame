@@ -10,8 +10,10 @@ class Ball;
 class CoreController;
 class EffectPainter;
 class GestureController;
-class SixtyOneGameBoardInfo;
+class AbstractGameBoardInfo;
+class AbstractProgressBarItem;
 class AbstractRule;
+class AbstractItem;
 class SwapClassicGameRule;
 class SwapClassicGameSavedInfo;
 
@@ -36,7 +38,7 @@ public:
 
 private:
   AbstractRule *rule;
-  SixtyOneGameBoardInfo *gameboardInfo;
+  AbstractGameBoardInfo *gameboardInfo;
   CoreController *controller;
   GestureController *gestureController;
   EffectPainter *effectPainter;
@@ -44,7 +46,11 @@ private:
   int frameCount;
   // TODO:分数、奖励之类的东西
 
+  AbstractProgressBarItem *progressBar;
+  QVector <AbstractItem *> myItems;
+
   void quitGame();
+  void nextStage();
 
 private slots:
   void advance();
