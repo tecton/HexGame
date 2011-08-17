@@ -47,6 +47,7 @@ public:
   void advance();
 
   Ball **balls;
+  Ball **toBeShapeBalls;
 
 private:
   AbstractGameBoardInfo *gameBoardInfo;

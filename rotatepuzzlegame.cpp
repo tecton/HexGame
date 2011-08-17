@@ -22,18 +22,23 @@ RotatePuzzleGame::RotatePuzzleGame(int ballIndex[], int toBeIndex[],
     //RotatePuzzleGameSavedInfo savedInfo = readSaved();
     // 拿到其中的balls给下面那个的第三个参数，然后还有各种别的地方的值的改动
     Ball **balls = new Ball *[gameboardInfo->totalBallCounts()];
+    Ball **toBeShapeBalls = new Ball *[gameboardInfo->totalBallCounts()];
     for (int i = 0; i < gameboardInfo->totalBallCounts(); ++i)
     {
       if (ballIndex[i] == -1)
       {
         balls[i] = new Ball((Ball::Color)6);
+        toBeShapeBalls[i] = new Ball((Ball::Color)6);
         balls[i]->setPos(gameboardInfo->positionOfIndex(i));
+        toBeShapeBalls[i]->setPos(gameboardInfo->positionOfIndex(i));
         balls[i]->setLocked(true);
       }
       else if (ballIndex[i] != 0)
       {
         balls[i] = new Ball((Ball::Color)ballIndex[i]);
         balls[i]->setPos(gameboardInfo->positionOfIndex(i));
+        toBeShapeBalls[i] = new Ball((Ball::Color)toBeIndex[i]);
+        toBeShapeBalls[i]->setPos(gameboardInfo->positionOfIndex(i));
       }
       else
         balls[i] = NULL;
@@ -80,13 +85,14 @@ void RotatePuzzleGame::makeBasicPixmap(QPixmap& pixmap, int width, int height)
     pixmap.fill(Qt::black);
     QPainter *painter = new QPainter(&pixmap);
     Ball **balls = controller->balls;
+    Ball **targetBalls = controller->toBeShapeBalls;
     BasicPainter::paintBasicBalls(balls,
                                   gameboardInfo->totalBallCounts(),
                                   painter,
                                   width * 1.0 / gameboardInfo->width(),
                                   height * 1.0 / gameboardInfo->height(),
                                   frameCount);
-    BasicPainter::paintPuzzleGameBalls(balls,
+    BasicPainter::paintPuzzleGameBalls(targetBalls,
                                        completeIndex,
                                        gameboardInfo->totalBallCounts(),
                                        painter,
