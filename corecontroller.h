@@ -37,6 +37,9 @@ public:
 
   void swap(int from, int to);
 
+  void flameAt(int index);
+  void starAt(int index);
+
   // A function to fill all blanks
   // (currently, the checks doesn't have any effect)
   void fillAllBlanks();

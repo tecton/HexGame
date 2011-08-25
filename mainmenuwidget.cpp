@@ -11,8 +11,8 @@
 
 #include <QMessageBox>
 
-#define MAIN_MENU_LOGICAL_WIDTH  800
-#define MAIN_MENU_LOGICAL_HEIGHT 500
+#define LOGICAL_WIDTH  800
+#define LOGICAL_HEIGHT 500
 
 
 MainMenuWidget::MainMenuWidget() :
@@ -64,8 +64,8 @@ void MainMenuWidget::addEffect(QPixmap& pixmap, int width, int height)
 
 QPointF MainMenuWidget::toScene(double xRate, double yRate)
 {
-  return QPointF(xRate * MAIN_MENU_LOGICAL_WIDTH,
-                 yRate * MAIN_MENU_LOGICAL_HEIGHT);
+  return QPointF(xRate * LOGICAL_WIDTH,
+                 yRate * LOGICAL_HEIGHT);
 }
 
 void MainMenuWidget::dealPressed(QPointF mousePos, Qt::MouseButton button)
@@ -77,15 +77,15 @@ void MainMenuWidget::dealPressed(QPointF mousePos, Qt::MouseButton button)
     return;
   }
   if (distanceOfTwoPoints(mousePos,
-                          QPointF(0.3 * MAIN_MENU_LOGICAL_WIDTH,
-                                  0.5 * MAIN_MENU_LOGICAL_HEIGHT)) < 50)
+                          QPointF(0.3 * LOGICAL_WIDTH,
+                                  0.5 * LOGICAL_HEIGHT)) < 50)
   {
     SwapClassicGame *swapGame = new SwapClassicGame();
     emit giveControlTo(swapGame, false);
   }
   if (distanceOfTwoPoints(mousePos,
-                          QPointF(0.7 * MAIN_MENU_LOGICAL_WIDTH,
-                                  0.5 * MAIN_MENU_LOGICAL_HEIGHT)) < 50)
+                          QPointF(0.7 * LOGICAL_WIDTH,
+                                  0.5 * LOGICAL_HEIGHT)) < 50)
   {
     AbstractPixmapWidget *puzzleMenu = new PuzzleMenuWidget();
     emit giveControlTo(puzzleMenu, false);

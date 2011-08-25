@@ -85,6 +85,8 @@ void GestureController::dealPressed(const QPointF& pos)
   int index = gameboardInfo->indexOfMousePosition(pos);
   if (index >= 0)
     gestureIndexes.push_back(index);
+  else
+    gestureState = NoGesture;
 }
 
 void GestureController::dealMoved(const QPointF& pos)

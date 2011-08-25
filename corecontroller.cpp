@@ -356,6 +356,30 @@ void CoreController::swap(int from, int to)
     swapRollBack(from, to);
 }
 
+
+void CoreController::flameAt(int index)
+{
+  QVector <int> influencedIndexs = gameBoardInfo->chainAroundIndex(index);
+  influencedIndexs.push_back(index);
+  eliminate(influencedIndexs);
+}
+
+void CoreController::starAt(int index)
+{
+  QVector <int> influencedIndexs;
+  influencedIndexs.push_back(index);
+  for (int i = 0;i < 6;++i)
+  {
+    int current = gameBoardInfo->nearbyIndex(index, i);
+    while (current != -1)
+    {
+      influencedIndexs.push_back(current);
+      current = gameBoardInfo->nearbyIndex(current, i);
+    }
+  }
+  eliminate(influencedIndexs);
+}
+
 void CoreController::fillAllBlanks()
 {
   if (!rule->gameStepAllowed(AbstractRule::AutoRotate))

@@ -12,7 +12,11 @@
 #include "gesturecontroller.h"
 #include "basicpainter.h"
 #include "gamecommonitems.h"
+#include "gamemath.h"
 #include "thirtysevengameboardinfo.h"
+
+#define LOGICAL_WIDTH  800
+#define LOGICAL_HEIGHT 500
 
 SwapClassicGame::SwapClassicGame()
 {
@@ -28,6 +32,16 @@ SwapClassicGame::SwapClassicGame()
   progressBar = new VerticalProgressBarItem();
   progressBar->setPos(QPointF(0.1, 0.1));
   myItems.push_back(progressBar);
+
+  flame = new FlameItem();
+  flame->setPos(QPointF(0.1, 0.3));
+  myItems.push_back(flame);
+
+  star = new StarItem();
+  star->setPos(QPointF(0.1, 0.5));
+  myItems.push_back(star);
+
+  itemAtPressPos = NULL;
 
   connect(controller,
           SIGNAL(stableEliminateTested(Connections)),
@@ -54,6 +68,8 @@ SwapClassicGame::~SwapClassicGame()
 {
   t->stop();
   delete t;
+  for (int i = 0;i < myItems.size();++i)
+    delete myItems[i];
   delete controller;
   delete gameboardInfo;
   delete rule;
@@ -91,6 +107,35 @@ void SwapClassicGame::addEffect(QPixmap& pixmap, int width, int height)
   effectPainter->paint(painter,
                        width * 1.0 / gameboardInfo->width(),
                        height * 1.0 / gameboardInfo->height());
+
+  QPointF pos = currentPos;
+  pos.setX(currentPos.x() * width / gameboardInfo->width());
+  pos.setY(currentPos.y() * height / gameboardInfo->height());
+
+  if (itemAtPressPos != NULL)
+  {
+    if (itemAtPressPos == flame && flame->notEmpty())
+    {
+      flame->paintLocatingIcon(painter, pos, frameCount);
+
+    }
+    else if (itemAtPressPos == star && star->notEmpty())
+    {
+      star->paintLocatingIcon(painter, pos, frameCount);
+//      int index = gameboardInfo->indexOfMousePosition(mousePos);
+//      if (index != -1)
+//      {
+//        controller->starAt(index);
+//        QVector <int> directions;
+//        for (int i = 0;i < 6;++i)
+//          directions.push_back(i);
+//        effectPainter->lightningAt(index, directions);
+//        star->minusOne();
+//      }
+    }
+  }
+
+
   painter->end();
   delete painter;
 }
@@ -113,6 +158,19 @@ void SwapClassicGame::quitGame()
 
 void SwapClassicGame::dealPressed(QPointF mousePos, Qt::MouseButton button)
 {
+  currentPos = mousePos;
+  if (distanceOfTwoPoints(mousePos,
+                          QPointF(0.1 * LOGICAL_WIDTH,
+                                  0.3 * LOGICAL_HEIGHT)) < 50)
+    itemAtPressPos = flame;
+  else if (distanceOfTwoPoints(mousePos,
+                          QPointF(0.1 * LOGICAL_WIDTH,
+                                  0.5 * LOGICAL_HEIGHT)) < 50)
+    itemAtPressPos = star;
+  else
+    itemAtPressPos = NULL;
+
+
   if (button == Qt::RightButton)
   {
     quitGame();
@@ -123,11 +181,41 @@ void SwapClassicGame::dealPressed(QPointF mousePos, Qt::MouseButton button)
 
 void SwapClassicGame::dealMoved(QPointF mousePos, Qt::MouseButton button)
 {
+  currentPos = mousePos;
+
   gestureController->dealMoved(mousePos);
 }
 
 void SwapClassicGame::dealReleased(QPointF mousePos, Qt::MouseButton button)
 {
+  if (itemAtPressPos != NULL)
+  {
+    if (itemAtPressPos == flame && flame->notEmpty())
+    {
+      int index = gameboardInfo->indexOfMousePosition(mousePos);
+      if (index != -1)
+      {
+        controller->flameAt(index);
+        effectPainter->explodeAt(index);
+        flame->minusOne();
+      }
+    }
+    else if (itemAtPressPos == star && star->notEmpty())
+    {
+      int index = gameboardInfo->indexOfMousePosition(mousePos);
+      if (index != -1)
+      {
+        controller->starAt(index);
+        QVector <int> directions;
+        for (int i = 0;i < 6;++i)
+          directions.push_back(i);
+        effectPainter->lightningAt(index, directions);
+        star->minusOne();
+      }
+    }
+  }
+
+  itemAtPressPos = NULL;
   gestureController->dealReleased(mousePos);
 }
 
@@ -160,12 +248,22 @@ void SwapClassicGame::dealStableEliminate(Connections connections)
     if (connectionCountOfThePosition > 1)
     {
       effectPainter->highlightAt(i);
-
+      if (connectionCountOfThePosition == 2)
+        flame->addOne();
+      if (connectionCountOfThePosition >= 3)
+        star->addOne();
       // TODO:BLABLABLA
 
     }
     if (connectionCountOfThePosition > 0)
       ++pointsToAdd;
+  }
+  for (int i = 0;i < connections.connections.size();++i)
+  {
+    if (connections.connections[i]->size() == 4)
+      flame->addOne();
+    if (connections.connections[i]->size() >= 5)
+      star->addOne();
   }
   progressBar->setCurrent(progressBar->getCurrent() + pointsToAdd);
 }

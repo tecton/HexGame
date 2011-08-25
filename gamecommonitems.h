@@ -3,6 +3,9 @@
 
 #include "abstractitem.h"
 
+class AbstractGameBoardInfo;
+class EffectPainter;
+
 class AbstractProgressBarItem : public AbstractItem
 {
 public:
@@ -47,5 +50,103 @@ public:
                      int frame);
 
 };
+
+class AbstractBonusItem : public AbstractItem
+{
+public:
+  inline void setCurrent(int v)
+  {
+    if (v <= max && v >= 0)
+      count = v;
+  }
+
+  inline int getCurrent()
+  {return count;}
+
+  inline void setMax(int v)
+  {
+    if (v >= 0)
+      max = v;
+    if (count > max)
+      count = max;
+  }
+
+  inline int getMax()
+  {return max;}
+
+  inline void addOne()
+  {
+    if (count < max)
+      ++count;
+  }
+
+  inline void minusOne()
+  {
+    if (count > 0)
+      --count;
+  }
+
+  inline bool notEmpty()
+  {return count != 0;}
+
+  virtual void paint(QPainter *painter,
+                     int width,
+                     int height,
+                     int frame)=0;
+
+  virtual void paintLocatingIcon(QPainter *painter,
+                                 QPointF pos,
+                                 int frame)=0;
+
+  virtual void paintInfluencedArea(int index,
+                                   AbstractGameBoardInfo *gameBoard,
+                                   EffectPainter *effectPainter,
+                                   int frame)=0;
+
+private:
+  int max;
+  int count;
+};
+
+class FlameItem : public AbstractBonusItem
+{
+public:
+  FlameItem();
+
+  virtual void paint(QPainter *painter,
+                     int width,
+                     int height,
+                     int frame);
+
+  virtual void paintLocatingIcon(QPainter *painter,
+                                 QPointF pos,
+                                 int frame);
+
+  virtual void paintInfluencedArea(int index,
+                                   AbstractGameBoardInfo *gameBoard,
+                                   EffectPainter *effectPainter,
+                                   int frame);
+};
+
+class StarItem : public AbstractBonusItem
+{
+public:
+  StarItem();
+
+  virtual void paint(QPainter *painter,
+                     int width,
+                     int height,
+                     int frame);
+
+  virtual void paintLocatingIcon(QPainter *painter,
+                                 QPointF pos,
+                                 int frame);
+
+  virtual void paintInfluencedArea(int index,
+                                   AbstractGameBoardInfo *gameBoard,
+                                   EffectPainter *effectPainter,
+                                   int frame);
+};
+
 
 #endif // GAMECOMMONITEMS_H

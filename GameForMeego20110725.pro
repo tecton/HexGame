@@ -56,7 +56,8 @@ HEADERS  += ball.h \
     stagemenuwidget.h \
     stagemenuitems.h \
     puzzlegameinit.h \
-    thirtysevengameboardinfo.h
+    thirtysevengameboardinfo.h \
+    gamecommonitems.h
 
 RESOURCES += \
     resource.qrc

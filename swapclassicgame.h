@@ -4,6 +4,8 @@
 #include "abstractpixmapwidget.h"
 #include "connections.h"
 
+#include <QPointF>
+
 class QPainter;
 class QTimer;
 class Ball;
@@ -14,6 +16,7 @@ class AbstractGameBoardInfo;
 class AbstractProgressBarItem;
 class AbstractRule;
 class AbstractItem;
+class AbstractBonusItem;
 class SwapClassicGameRule;
 class SwapClassicGameSavedInfo;
 
@@ -47,10 +50,13 @@ private:
   // TODO:
 
   AbstractProgressBarItem *progressBar;
+  AbstractBonusItem *flame;
+  AbstractBonusItem *star;
+
   QVector <AbstractItem *> myItems;
 
-  AbstractProgressBarItem *progressBar;
-  QVector <AbstractItem *> myItems;
+  AbstractItem *itemAtPressPos;
+  QPointF currentPos;
 
   void quitGame();
   void nextStage();
