@@ -25,7 +25,9 @@ protected:
 private:
   QTimer *refreshTimer;
   QPixmap pixmap;
+  QPixmap lastPixmap;
   QVector<AbstractPixmapWidget *> widgets;
+  int coolDown;
 
   QPointF toScene(QPointF mousePosition);
 signals:

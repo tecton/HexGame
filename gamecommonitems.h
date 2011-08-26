@@ -148,5 +148,14 @@ public:
                                    int frame);
 };
 
+class ExitToMainMenuItem : public AbstractItem
+{
+public:
+  virtual void paint(QPainter *painter,
+                     int width,
+                     int height,
+                     int frame);
+};
+
 
 #endif // GAMECOMMONITEMS_H

@@ -6,7 +6,7 @@
 #include <QTimer>
 #include "effectpainter.h"
 #include "rules.h"
-#include "sixtyonegameboardinfo.h"
+//#include "sixtyonegameboardinfo.h"
 #include "connections.h"
 #include "corecontroller.h"
 #include "gesturecontroller.h"
@@ -40,6 +40,10 @@ SwapClassicGame::SwapClassicGame()
   star = new StarItem();
   star->setPos(QPointF(0.1, 0.5));
   myItems.push_back(star);
+
+  exitToMainMenu = new ExitToMainMenuItem();
+  exitToMainMenu->setPos(QPointF(0.1, 0.7));
+  myItems.push_back(exitToMainMenu);
 
   itemAtPressPos = NULL;
 
@@ -104,36 +108,30 @@ void SwapClassicGame::makeBasicPixmap(QPixmap& pixmap, int width, int height)
 void SwapClassicGame::addEffect(QPixmap& pixmap, int width, int height)
 {
   QPainter *painter = new QPainter(&pixmap);
-  effectPainter->paint(painter,
-                       width * 1.0 / gameboardInfo->width(),
-                       height * 1.0 / gameboardInfo->height());
-
   QPointF pos = currentPos;
   pos.setX(currentPos.x() * width / gameboardInfo->width());
   pos.setY(currentPos.y() * height / gameboardInfo->height());
 
+  effectPainter->clearBonusEliminationHints();
   if (itemAtPressPos != NULL)
   {
     if (itemAtPressPos == flame && flame->notEmpty())
     {
       flame->paintLocatingIcon(painter, pos, frameCount);
-
+      int index = gameboardInfo->indexOfMousePosition(currentPos);
+      flame->paintInfluencedArea(index, gameboardInfo, effectPainter, frameCount);
     }
     else if (itemAtPressPos == star && star->notEmpty())
     {
       star->paintLocatingIcon(painter, pos, frameCount);
-//      int index = gameboardInfo->indexOfMousePosition(mousePos);
-//      if (index != -1)
-//      {
-//        controller->starAt(index);
-//        QVector <int> directions;
-//        for (int i = 0;i < 6;++i)
-//          directions.push_back(i);
-//        effectPainter->lightningAt(index, directions);
-//        star->minusOne();
-//      }
+      int index = gameboardInfo->indexOfMousePosition(currentPos);
+      star->paintInfluencedArea(index, gameboardInfo, effectPainter, frameCount);
     }
   }
+
+  effectPainter->paint(painter,
+                       width * 1.0 / gameboardInfo->width(),
+                       height * 1.0 / gameboardInfo->height());
 
 
   painter->end();
@@ -164,9 +162,13 @@ void SwapClassicGame::dealPressed(QPointF mousePos, Qt::MouseButton button)
                                   0.3 * LOGICAL_HEIGHT)) < 50)
     itemAtPressPos = flame;
   else if (distanceOfTwoPoints(mousePos,
-                          QPointF(0.1 * LOGICAL_WIDTH,
-                                  0.5 * LOGICAL_HEIGHT)) < 50)
+                               QPointF(0.1 * LOGICAL_WIDTH,
+                                       0.5 * LOGICAL_HEIGHT)) < 50)
     itemAtPressPos = star;
+  else if (distanceOfTwoPoints(mousePos,
+                               QPointF(0.1 * LOGICAL_WIDTH,
+                                       0.7 * LOGICAL_HEIGHT)) < 50)
+    itemAtPressPos = exitToMainMenu;
   else
     itemAtPressPos = NULL;
 
@@ -206,15 +208,15 @@ void SwapClassicGame::dealReleased(QPointF mousePos, Qt::MouseButton button)
       if (index != -1)
       {
         controller->starAt(index);
-        QVector <int> directions;
-        for (int i = 0;i < 6;++i)
-          directions.push_back(i);
-        effectPainter->lightningAt(index, directions);
+        effectPainter->lightningAt(index/*, directions*/);
         star->minusOne();
       }
     }
+    else if (itemAtPressPos == exitToMainMenu)
+      quitGame();
   }
 
+  effectPainter->clearUserMovingEliminationHints();
   itemAtPressPos = NULL;
   gestureController->dealReleased(mousePos);
 }
@@ -270,10 +272,11 @@ void SwapClassicGame::dealStableEliminate(Connections connections)
 
 void SwapClassicGame::dealUserMovingEliminate(Connections connections)
 {
+  effectPainter->clearUserMovingEliminationHints();
   for (int i = 0;i < connections.connections.size();++i)
   {
     for (int j = 0;j < connections.connections[i]->size();++j)
-      effectPainter->eliminationHintAt(j);
+      effectPainter->userMovingEliminationHintAt(connections.connections[i]->at(j));
     // TODO:BLABLABLA
   }
 }

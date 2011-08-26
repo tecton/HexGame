@@ -266,6 +266,8 @@ void CoreController::rotateTransition(QPointF theMousePosition)
   QVector<QPointF> newPos = newposUnderPos(theMousePosition);
   for (int i = 0;i < gestureInfluencedIndexs.size();++i)
     balls[gestureInfluencedIndexs[i]]->setPos(newPos[i]);
+
+  testUserMovingEliminate();
 }
 
 void CoreController::rotateEnd()
@@ -342,8 +344,8 @@ void CoreController::swap(int from, int to)
   gestureInfluencedIndexs.push_back(from);
   gestureInfluencedIndexs.push_back(to);
 
-  balls[from]->setState(Ball::UserMoving);
-  balls[to]->setState(Ball::UserMoving);
+  balls[from]->setState(Ball::UserReleased);
+  balls[to]->setState(Ball::UserReleased);
 
   Connections connections = testUserMovingEliminate();
   bool swapSuccessful = false;

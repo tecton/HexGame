@@ -52,6 +52,7 @@ private:
   AbstractProgressBarItem *progressBar;
   AbstractBonusItem *flame;
   AbstractBonusItem *star;
+  AbstractItem *exitToMainMenu;
 
   QVector <AbstractItem *> myItems;
 

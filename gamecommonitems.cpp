@@ -11,7 +11,6 @@ VerticalProgressBarItem::VerticalProgressBarItem()
   setCurrent(0);
 }
 
-
 void VerticalProgressBarItem::paint(QPainter *painter,
                                     int width,
                                     int height,
@@ -61,13 +60,12 @@ void FlameItem::paintInfluencedArea(int index,
                                     EffectPainter *effectPainter,
                                     int frame)
 {
-  effectPainter->clearEliminationHints();
   if (index == -1)
     return;
-  effectPainter->eliminationHintAt(index);
+  effectPainter->bonusEliminationHintAt(index);
   QVector<int> chainAroundIndex = gameBoard->chainAroundIndex(index);
   for (int i = 0;i < chainAroundIndex.size();++i)
-    effectPainter->eliminationHintAt(index);
+    effectPainter->bonusEliminationHintAt(chainAroundIndex[i]);
 }
 
 StarItem::StarItem()
@@ -103,17 +101,27 @@ void StarItem::paintInfluencedArea(int index,
                                    EffectPainter *effectPainter,
                                    int frame)
 {
-  effectPainter->clearEliminationHints();
   if (index == -1)
     return;
-  effectPainter->eliminationHintAt(index);
+  effectPainter->bonusEliminationHintAt(index);
   for (int i = 0;i < 6;++i)
   {
     int current = gameBoard->nearbyIndex(index, i);
     while (current != -1)
     {
-      effectPainter->eliminationHintAt(current);
+      effectPainter->bonusEliminationHintAt(current);
       current = gameBoard->nearbyIndex(current, i);
     }
   }
+}
+
+void ExitToMainMenuItem::paint(QPainter *painter,
+                               int width,
+                               int height,
+                               int frame)
+{
+  painter->setPen(QColor(255,255,255,255));
+  double x = getPos().x() * width;
+  double y = getPos().y() * height;
+  painter->drawText(QPointF(x, y), "Exit");
 }

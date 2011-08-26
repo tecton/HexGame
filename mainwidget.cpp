@@ -12,7 +12,8 @@
 #include <QMessageBox>
 
 MainWidget::MainWidget(QWidget *parent) :
-    QWidget(parent)
+    QWidget(parent),
+    coolDown(0)
 {
   MainMenuWidget *mainMenu = new MainMenuWidget();
   widgets.push_back(mainMenu);
@@ -29,10 +30,18 @@ MainWidget::MainWidget(QWidget *parent) :
 
 void MainWidget::paintEvent(QPaintEvent *event)
 {
+  if (coolDown > 0)
+    --coolDown;
   widgets[widgets.size() - 1]->makePixmap(pixmap, width(), height());
 //  QMessageBox::critical(0,"","MainWidget pixmap made");
   QPainter *painter = new QPainter(this);
-  painter->drawPixmap(0,0/*,width(), height()*/, pixmap);
+  if (coolDown > 0)
+  {
+    painter->drawPixmap(0,0,width(), height(), lastPixmap);
+    painter->drawPixmap(0,-coolDown * height() / 20,width(), height(), pixmap);
+  }
+  else
+    painter->drawPixmap(0,0/*,width(), height()*/, pixmap);
 //  paint(painter);
   painter->end();
   delete painter;
@@ -49,18 +58,24 @@ QPointF MainWidget::toScene(QPointF mousePosition)
 
 void MainWidget::mousePressEvent(QMouseEvent *event)
 {
+  if (coolDown > 0)
+    return;
   QPointF pos = toScene(event->posF());
   widgets[widgets.size() - 1]->dealPressed(pos, event->button());
 }
 
 void MainWidget::mouseMoveEvent(QMouseEvent *event)
 {
+  if (coolDown > 0)
+    return;
   QPointF pos = toScene(event->posF());
   widgets[widgets.size() - 1]->dealMoved(pos, event->button());
 }
 
 void MainWidget::mouseReleaseEvent(QMouseEvent *event)
 {
+  if (coolDown > 0)
+    return;
   QPointF pos = toScene(event->posF());
   widgets[widgets.size() - 1]->dealReleased(pos, event->button());
 }
@@ -68,6 +83,8 @@ void MainWidget::mouseReleaseEvent(QMouseEvent *event)
 void MainWidget::changeControl(AbstractPixmapWidget *target,
                                bool deleteMySelf)
 {
+  widgets[widgets.size() - 1]->makePixmap(lastPixmap, width(), height());
+  coolDown = 20;
   if (deleteMySelf)
     widgets.pop_back();
   if (target)

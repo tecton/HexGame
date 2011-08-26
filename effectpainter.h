@@ -1,7 +1,7 @@
 #ifndef EFFECTPAINTER_H
 #define EFFECTPAINTER_H
 
-#include <QVector>
+//#include <QVector>
 #include <QList>
 #include <QPointF>
 #include <QRectF>
@@ -9,62 +9,25 @@
 class QPainter;
 class AbstractGameBoardInfo;
 
-struct EliminationHint
-{
-  int age;
-  QPointF pos;
-  bool operator==(const EliminationHint& another)
-  {
-    return pos == another.pos && age == another.age;
-  }
-};
-
-struct ExplodeInfo
-{
-  int age;
-  QPointF pos;
-  bool operator==(const ExplodeInfo& another)
-  {
-    return pos == another.pos && age == another.age;
-  }
-};
-
-struct LightningInfo
-{
-  int age;
-  QPointF pos;
-  QVector<int> directions;
-  bool operator==(const LightningInfo& another)
-  {
-    return pos == another.pos &&
-           age == another.age &&
-           directions == another.directions;
-  }
-};
-
-struct HighlightInfo
-{
-  int age;
-  QRectF area;
-  bool operator==(const HighlightInfo& another)
-  {
-    return area == another.area && age == another.age;
-  }
-};
+class AbstractEffect;
+class AbstractAgingEffect;
+typedef AbstractEffect AbstractLongLastingEffect;
 
 class EffectPainter
 {
 public:
   EffectPainter(AbstractGameBoardInfo *theGameboardInfo);
 
-  void eliminationHintAt(int index);
-  void clearEliminationHints();
+  void bonusEliminationHintAt(int index);
+  void clearBonusEliminationHints();
+  void userMovingEliminationHintAt(int index);
+  void clearUserMovingEliminationHints();
 
   void explodeAt(int index);
-  void lightningAt(int index, QVector<int> directions);
+  void lightningAt(int index/*, QVector<int> directions*/);
   void highlightAt(int index);
 //  void highlightGameboard();
-  void highlightAll();
+//  void highlightAll();
   //BLABLABLA
 
   void clearEffects();
@@ -78,10 +41,9 @@ public:
 private:
   AbstractGameBoardInfo *gameboardInfo;
 
-  QList<EliminationHint> eliminationHints;
-  QList<ExplodeInfo> explodeInfos;
-  QList<LightningInfo> lightningInfos;
-  QList<HighlightInfo> highlightInfos;
+  QList<AbstractAgingEffect *> agingEffects;
+  QList<AbstractLongLastingEffect *> bonusEliminateEffects;
+  QList<AbstractLongLastingEffect *> userMovingEliminateEffects;
 };
 
 #endif // EFFECTPAINTER_H
