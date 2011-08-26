@@ -6,7 +6,7 @@
 
 QT       += core gui
 
-TARGET = GameForMeego20110725
+TARGET = HexGame
 TEMPLATE = app
 
 

@@ -292,7 +292,7 @@ int ThirtySevenGameBoardInfo::nearbyIndex(int index, int direction)
   }
 }
 
-// The chains to reload items(from inner to outter(ÎÒÕâ¸öÊÇ²»ÊÇÆ´´íÁË-.-))
+// The chains to reload items(from inner to outter(æˆ‘è¿™ä¸ªæ˜¯ä¸æ˜¯æ‹¼é”™äº†-.-))
 QVector<QVector<int> > _chains37;
 const QVector<QVector<int> >& ThirtySevenGameBoardInfo::chains()
 {

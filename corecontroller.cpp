@@ -405,7 +405,7 @@ void CoreController::fillAllBlanks()
         balls[*itr]->setColor((Ball::Color)(rand() % 6));//0))//rand() % 8));
       //      balls[*itr]->hide();
     }
-  } while (false); // ÕâÀïÃæµÄÒªºÃºÃÏëÏë
+  } while (false); // è¿™é‡Œé¢çš„è¦å¥½å¥½æƒ³æƒ³
 
   for (QList <int>::Iterator itr = blankIndexes.begin();
        itr != blankIndexes.end();
@@ -435,21 +435,21 @@ void CoreController::autoRotate()
     for (int j = currentFillPos;j >= 0;--j)
     {
       Ball *ball = balls[originalChain.at(j)];
-      if (!ball) // ´Ë¸ñÕæÃ»Çò
+      if (!ball) // æ­¤æ ¼çœŸæ²¡çƒ
       {
         ++needRotateCount;
         continue;
       }
-      //      if (ball->state() == PixmapItem::JUST_CREATED) // ´Ë¸ñ»¹Ã»ÌîÉÏÀ´
+      //      if (ball->state() == PixmapItem::JUST_CREATED) // æ­¤æ ¼è¿˜æ²¡å¡«ä¸Šæ¥
       //        ++needRotateCount;
       switch (ball->getState())
       {
       case Ball::UserMoving:
       case Ball::UserReleased:
-        // TODO ´ò¶ÏÓÃ»§µÄ²Ù×÷
-      case Ball::Stable: // ÓĞÎÈ¶¨µÄÇò
+        // TODO æ‰“æ–­ç”¨æˆ·çš„æ“ä½œ
+      case Ball::Stable: // æœ‰ç¨³å®šçš„çƒ
       case Ball::AlmostStable:
-      case Ball::SystemMoving: // ÓĞÕıÔÚ×ªµÄÇò
+      case Ball::SystemMoving: // æœ‰æ­£åœ¨è½¬çš„çƒ
         if (needRotateCount != 0)
         {
           int current = originalChain.at(j);
