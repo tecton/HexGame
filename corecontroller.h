@@ -105,6 +105,8 @@ private:
 signals:
   void stableEliminateTested(Connections connections);
   void userMovingEliminateTested(Connections connections);
+  void goodMove();
+  void badMove();
 };
 
 #endif // CORECONTROLLER_H

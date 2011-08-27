@@ -313,6 +313,7 @@ void CoreController::rotateEnd()
                          2,
                          false);
     }
+    emit goodMove();
   }
   else
   {
@@ -321,6 +322,7 @@ void CoreController::rotateEnd()
     for (int i = 0;i < gameBoardInfo->totalBallCounts();++i)
       balls[i] = tmp[i];
     rotateRollBack();
+    emit badMove();
   }
   for (int i = 0;i < gestureInfluencedIndexs.size();++i)
   {
@@ -353,9 +355,15 @@ void CoreController::swap(int from, int to)
     swapSuccessful = true;
 
   if (swapSuccessful)
+  {
     moveToNewPos();
+    emit goodMove();
+  }
   else
+  {
     swapRollBack(from, to);
+    emit badMove();
+  }
 }
 
 

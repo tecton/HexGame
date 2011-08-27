@@ -58,3 +58,8 @@ qreal distanceFromTheCenterWithTheAngle(qreal angle, qreal maxR)
          qSin(PI / 3) /
          qSin(2 * PI / 3 - angle);
 }
+
+QPointF scale(QPointF originalPos, double xRate, double yRate)
+{
+  return QPointF(xRate * originalPos.x(), yRate * originalPos.y());
+}

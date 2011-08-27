@@ -136,6 +136,7 @@ void SwapClassicGame::addEffect(QPixmap& pixmap, int width, int height)
 
   painter->end();
   delete painter;
+  effectPainter->advance();
 }
 
 QPointF SwapClassicGame::toScene(double xRate, double yRate)

@@ -34,4 +34,7 @@ qreal distanceOfTwoPoints(QPointF p1, QPointF p2);
 // from the center and locate the balls on the hexagon
 qreal distanceFromTheCenterWithTheAngle(qreal angle, qreal maxR);
 
+
+QPointF scale(QPointF originalPos, double xRate, double yRate);
+
 #endif // GAMEMATH_H

@@ -4,11 +4,15 @@
 #include <QPointF>
 #include <QRectF>
 #include <QPolygonF>
+#include <QRadialGradient>
+#include <QLinearGradient>
 #include "abstractgameboardinfo.h"
+#include "gamemath.h"
 
 #define EFFECT_LAST_TIME  15
 
-
+double kkx[3] = {-0.5, 0.5, 1};
+double kky[3] = {-0.866, -0.866, 0};
 
 class AbstractEffect
 {
@@ -42,7 +46,7 @@ public:
   inline int getLimit()
   {return ageLimit;}
 
-  inline int setLimit(int v)
+  inline void setLimit(int v)
   {ageLimit = v;}
 
 private:
@@ -87,7 +91,6 @@ public:
     QPolygonF poly(points);
 
     painter->drawPolygon(poly);
-    //BLABLABLA
   }
 
 private:
@@ -101,7 +104,7 @@ public:
       pos(position)
   {
     setAge(0);
-    setLimit(20);
+    setLimit(5);
   }
 
   inline void setPos(QPointF position)
@@ -115,7 +118,16 @@ public:
                      double xRate,
                      double yRate)
   {
-    //BLABLABLA
+    double r = 3 * theGameboardInfo->intervalBetweenTwoLayers() *
+               getAge() /
+               getLimit();
+    QPointF pos2 = scale(pos, xRate, yRate);
+    QRadialGradient gradient = QRadialGradient(pos2, r, pos2);
+    gradient.setColorAt(0, QColor(255,255,255,255));
+    gradient.setColorAt(1, QColor(255,255,255,100));
+    painter->setBrush(QBrush(gradient));
+
+    painter->drawEllipse(pos2, r, r);
   }
 
 private:
@@ -129,11 +141,17 @@ public:
       pos(position)
   {
     setAge(0);
-    setLimit(20);
+    setLimit(5);
   }
 
   inline void setPos(QPointF position)
-  {pos = position;}
+  {
+    pos = position;
+    linearPoints[0] = QPointF(pos.x() - 7.5 * 1.732, pos.y() + 7.5);
+    linearPoints[1] = QPointF(pos.x() + 7.5 * 1.732, pos.y() + 7.5);
+    linearPoints[2] = QPointF(pos.x(), pos.y() + 15);
+
+  }
 
   inline QPointF getPos()
   {return pos;}
@@ -143,11 +161,30 @@ public:
                      double xRate,
                      double yRate)
   {
+    QPointF pos2 = scale(pos, xRate, yRate);
+    double r = distanceOfTwoPoints(QPointF(0, 0),
+                                   QPointF(theGameboardInfo->width(), theGameboardInfo->height())) *
+               getAge() /
+               getLimit() /
+               2;
+    for (int i = 0;i < 3;++i)
+    {
+      QLinearGradient gradient = QLinearGradient(pos2, scale(linearPoints[i], xRate, yRate));
+      gradient.setColorAt(0, QColor(255,255,255,255));
+      gradient.setColorAt(1, QColor(255,255,255,100));
+      gradient.setSpread(QGradient::ReflectSpread);
+      QPen pen = QPen(QBrush(gradient), 30);
+      painter->setPen(pen);
+      QPointF posA =QPointF(pos2.x() + kkx[i] * r, pos2.y() + kky[i] * r);
+      QPointF posB =QPointF(pos2.x() - kkx[i] * r, pos2.y() - kky[i] * r);
+      painter->drawLine(posA, posB);
+    }
     //BLABLABLA
   }
 
 private:
   QPointF pos; // Center of the lightning
+  QPointF linearPoints[3];
   // QVector<int> directions;
 };
 
