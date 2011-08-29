@@ -27,6 +27,7 @@ public:
 private:
   QTimer *t;
   AbstractMainMenuItem *swapClassicItem;
+  AbstractMainMenuItem *rotateClassicItem;
   AbstractMainMenuItem *puzzleMenuItem;
   QVector <AbstractItem *> myItems;
   int frameCount;

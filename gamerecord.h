@@ -10,6 +10,7 @@ public:
 
   bool createFile(const QString &filename, int intCount);
   bool resizeFile(const QString &filename, int intCount);
+
   bool exists(const QString &filename);
   bool remove(const QString &filename);
   int size(const QString &filename);

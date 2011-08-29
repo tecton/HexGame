@@ -3,8 +3,6 @@
 
 #include <QVector>
 #include <QPixmap>
-#include <QFileInfo>
-#include <QDir>
 #include <QPainter>
 #include <QColor>
 #include <QBrush>
@@ -12,6 +10,7 @@
 
 #include "abstractitem.h"
 #include "ball.h"
+#include "pixmapinit.h"
 
 const static int kTotalColors = 8;
 const static char * kColorPaths[] = {":/images/balls/red*.png",
@@ -28,24 +27,10 @@ QVector<QVector<QPixmap> > pixmaps;
 QVector<int> frameCounts;
 void initPixmaps()
 {
-  pixmaps.reserve(kTotalColors);
-  frameCounts.reserve(kTotalColors);
-  for (int i = 0;i < kTotalColors;++i)
-  {
-    int count = 0;
-    QVector<QPixmap> current;
-    QString path(kColorPaths[i]);
-    QFileInfo fi(path);
-    // For each file of the color
-    foreach (QString entry, QDir(fi.path(), fi.fileName()).entryList())
-    {
-      // Get the pixmap of the path
-      current << QPixmap(fi.path() + "/" + entry);
-      ++count;
-    }
-    pixmaps << current;
-    frameCounts << count;
-  }
+  initPixmaps(kTotalColors,
+              kColorPaths,
+              pixmaps,
+              frameCounts);
 }
 
 void BasicPainter::paintBasicBalls(Ball **balls,

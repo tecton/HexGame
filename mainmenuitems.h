@@ -14,7 +14,7 @@ class AbstractMainMenuItem : public AbstractItem
 {
 public:
   // Type of the items(not finished yet)
-  enum ItemType{SwapClassicItem=0, RotatePuzzleItem};
+  enum ItemType{SwapClassicItem=0, RotateClassicItem, RotatePuzzleItem};
 
   // The pure virtual function to be overloaded
   virtual void paint(QPainter *painter, int width, int height, int frame)=0;
@@ -28,6 +28,13 @@ class MainMenuSwapClassicItem : public AbstractMainMenuItem
 {
 public:
   MainMenuSwapClassicItem();
+  virtual void paint(QPainter *painter, int width, int height, int frame);
+};
+
+class MainMenuRotateClassicItem : public AbstractMainMenuItem
+{
+public:
+  MainMenuRotateClassicItem();
   virtual void paint(QPainter *painter, int width, int height, int frame);
 };
 
