@@ -31,6 +31,8 @@ SOURCES += main.cpp\
     puzzlegameinit.cpp \
     thirtysevengameboardinfo.cpp \
     gamecommonitems.cpp \
+    rotateclassicgame.cpp \
+    initpixmaps.cpp \
     gamerecord.cpp
 
 HEADERS  += ball.h \
@@ -59,6 +61,8 @@ HEADERS  += ball.h \
     puzzlegameinit.h \
     thirtysevengameboardinfo.h \
     gamecommonitems.h \
+    rotateclassicgame.h \
+    initpixmaps.h \
     gamerecord.h
 
 RESOURCES += \

@@ -10,7 +10,7 @@ class QPixmap;
 class StageMenuItem : public AbstractItem
 {
 public:
-  StageMenuItem(QString path, int number);
+  StageMenuItem(QString path);
 
   // The pure virtual function to be overloaded
   virtual void paint(QPainter *painter, int width, int height, int frame);

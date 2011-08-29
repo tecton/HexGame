@@ -29,6 +29,7 @@ bool GameRecord::resizeFile(const QString &filename, int intCount)
   return recordFile.resize(intCount * 4);
 }
 
+<<<<<<< HEAD
 bool GameRecord::exists(const QString &filename)
 {
   return QFile::exists(recordPath + filename);
@@ -45,6 +46,8 @@ int GameRecord::size(const QString &filename)
   return recordFile.size() / sizeof(int);
 }
 
+=======
+>>>>>>> 519221cf00496a29df0f0e8e7498d0891561c94a
 bool GameRecord::writeData(const QString &filename, int pos, int data)
 {
   //TODO

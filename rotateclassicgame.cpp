@@ -1,4 +1,4 @@
-#include "swapclassicgame.h"
+#include "rotateclassicgame.h"
 
 #include <QPainter>
 #include <QPixmap>
@@ -18,13 +18,13 @@
 #define LOGICAL_WIDTH  800
 #define LOGICAL_HEIGHT 500
 
-SwapClassicGame::SwapClassicGame() :
+RotateClassicGame::RotateClassicGame() :
     frameCount(0),
     noSolutionCount(0)
 {
-  rule = new SwapClassicGameRule();//SwapClassicGameRule();
+  rule = new RotateClassicGameRule();//RotateClassicGameRule();
   gameboardInfo = new ThirtySevenGameBoardInfo();
-  //SwapClassicGameSavedInfo savedInfo = readSaved();
+  //RotateClassicGameSavedInfo savedInfo = readSaved();
   controller = new CoreController(rule, gameboardInfo, NULL);
   controller->fillAllBlanks();
   gestureController = new GestureController(rule, gameboardInfo, controller);
@@ -68,13 +68,13 @@ SwapClassicGame::SwapClassicGame() :
   t->start();
 }
 
-void SwapClassicGame::makePixmap(QPixmap& pixmap, int width, int height)
+void RotateClassicGame::makePixmap(QPixmap& pixmap, int width, int height)
 {
   makeBasicPixmap(pixmap, width, height);
   addEffect(pixmap, width, height);
 }
 
-SwapClassicGame::~SwapClassicGame()
+RotateClassicGame::~RotateClassicGame()
 {
   t->stop();
   delete t;
@@ -87,10 +87,10 @@ SwapClassicGame::~SwapClassicGame()
   delete effectPainter;
 }
 
-//void SwapClassicGame::init() //
+//void RotateClassicGame::init() //
 //}
 
-void SwapClassicGame::makeBasicPixmap(QPixmap& pixmap, int width, int height)
+void RotateClassicGame::makeBasicPixmap(QPixmap& pixmap, int width, int height)
 {
   pixmap = QPixmap(width, height);
   pixmap.fill(Qt::black);
@@ -111,7 +111,7 @@ void SwapClassicGame::makeBasicPixmap(QPixmap& pixmap, int width, int height)
   delete painter;
 }
 
-void SwapClassicGame::addEffect(QPixmap& pixmap, int width, int height)
+void RotateClassicGame::addEffect(QPixmap& pixmap, int width, int height)
 {
   QPainter *painter = new QPainter(&pixmap);
   QPointF pos = currentPos;
@@ -145,18 +145,18 @@ void SwapClassicGame::addEffect(QPixmap& pixmap, int width, int height)
   effectPainter->advance();
 }
 
-QPointF SwapClassicGame::toScene(double xRate, double yRate)
+QPointF RotateClassicGame::toScene(double xRate, double yRate)
 {
   return QPointF(xRate * gameboardInfo->width(),
                  yRate * gameboardInfo->height());
 }
 
-//SwapClassicGameSavedInfo SwapClassicGame::readSaved()
+//RotateClassicGameSavedInfo RotateClassicGame::readSaved()
 //{
 
 //}
 
-void SwapClassicGame::showHint()
+void RotateClassicGame::showHint()
 {
   int hintOnBoard = controller->hint();
   if (hintOnBoard >= 0)
@@ -172,18 +172,18 @@ void SwapClassicGame::showHint()
     gameOver();
 }
 
-void SwapClassicGame::gameOver()
+void RotateClassicGame::gameOver()
 {
   quitGame();
 }
 
-void SwapClassicGame::quitGame()
+void RotateClassicGame::quitGame()
 {
   emit giveControlTo(NULL, true);
   delete this;
 }
 
-void SwapClassicGame::dealPressed(QPointF mousePos, Qt::MouseButton button)
+void RotateClassicGame::dealPressed(QPointF mousePos, Qt::MouseButton button)
 {
   currentPos = mousePos;
   if (distanceOfTwoPoints(mousePos,
@@ -214,14 +214,14 @@ void SwapClassicGame::dealPressed(QPointF mousePos, Qt::MouseButton button)
   gestureController->dealPressed(mousePos);
 }
 
-void SwapClassicGame::dealMoved(QPointF mousePos, Qt::MouseButton button)
+void RotateClassicGame::dealMoved(QPointF mousePos, Qt::MouseButton button)
 {
   currentPos = mousePos;
-//  effectPainter->clearUserMovingEliminationHints();
+  effectPainter->clearUserMovingEliminationHints();
   gestureController->dealMoved(mousePos);
 }
 
-void SwapClassicGame::dealReleased(QPointF mousePos, Qt::MouseButton button)
+void RotateClassicGame::dealReleased(QPointF mousePos, Qt::MouseButton button)
 {
   if (itemAtPressPos != NULL)
   {
@@ -263,12 +263,12 @@ void SwapClassicGame::dealReleased(QPointF mousePos, Qt::MouseButton button)
       quitGame();
   }
 
-//  effectPainter->clearUserMovingEliminationHints();
+  effectPainter->clearUserMovingEliminationHints();
   itemAtPressPos = NULL;
   gestureController->dealReleased(mousePos);
 }
 
-void SwapClassicGame::advance()
+void RotateClassicGame::advance()
 {
   if (progressBar->getCurrent() >= progressBar->getMax())
   {
@@ -289,7 +289,7 @@ void SwapClassicGame::advance()
 //  effectPainter->advance();
 }
 
-void SwapClassicGame::dealStableEliminate(Connections connections)
+void RotateClassicGame::dealStableEliminate(Connections connections)
 {
   int pointsToAdd = 0;
   for (int i = 0;i < gameboardInfo->totalBallCounts();++i)
@@ -337,20 +337,20 @@ void SwapClassicGame::dealStableEliminate(Connections connections)
   progressBar->setCurrent(progressBar->getCurrent() + pointsToAdd);
 }
 
-void SwapClassicGame::dealUserMovingEliminate(Connections connections)
+void RotateClassicGame::dealUserMovingEliminate(Connections connections)
 {
-//  effectPainter->clearUserMovingEliminationHints();
-//  for (int i = 0;i < connections.connections.size();++i)
-//  {
-//    for (int j = 0;j < connections.connections[i]->size();++j)
-//      effectPainter->userMovingEliminationHintAt(connections.connections[i]->at(j));
-//    // TODO:BLABLABLA
-//  }
+  effectPainter->clearUserMovingEliminationHints();
+  for (int i = 0;i < connections.connections.size();++i)
+  {
+    for (int j = 0;j < connections.connections[i]->size();++j)
+      effectPainter->userMovingEliminationHintAt(connections.connections[i]->at(j));
+    // TODO:BLABLABLA
+  }
 }
 
-void SwapClassicGame::nextStage()
+void RotateClassicGame::nextStage()
 {
-  SwapClassicGame *nextStage = new SwapClassicGame();
+  RotateClassicGame *nextStage = new RotateClassicGame();
   nextStage->progressBar->setMin(progressBar->getMax());
   nextStage->progressBar->setMax(progressBar->getMax() * 2);
   nextStage->progressBar->setCurrent(progressBar->getCurrent());

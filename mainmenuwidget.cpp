@@ -7,6 +7,7 @@
 #include "gamemath.h"
 #include "mainmenuitems.h"
 #include "swapclassicgame.h"
+#include "rotateclassicgame.h"
 #include "puzzlemenuwidget.h"
 
 #include <QMessageBox>
@@ -21,10 +22,14 @@ MainMenuWidget::MainMenuWidget() :
   swapClassicItem = new MainMenuSwapClassicItem();
   swapClassicItem->setPos(QPointF(0.3, 0.5));
 
+  rotateClassicItem = new MainMenuRotateClassicItem();
+  rotateClassicItem->setPos(QPointF(0.5, 0.5));
+
   puzzleMenuItem = new MainMenuRotatePuzzleItem();
   puzzleMenuItem->setPos(QPointF(0.7, 0.5));
 
   myItems.push_back(swapClassicItem);
+  myItems.push_back(rotateClassicItem);
   myItems.push_back(puzzleMenuItem);
 
   t = new QTimer();
@@ -77,15 +82,22 @@ void MainMenuWidget::dealPressed(QPointF mousePos, Qt::MouseButton button)
     return;
   }
   if (distanceOfTwoPoints(mousePos,
-                          QPointF(0.3 * LOGICAL_WIDTH,
-                                  0.5 * LOGICAL_HEIGHT)) < 50)
+                          toScene(swapClassicItem->getPos().x(),
+                                  swapClassicItem->getPos().y())) < 50)
   {
     SwapClassicGame *swapGame = new SwapClassicGame();
     emit giveControlTo(swapGame, false);
   }
-  if (distanceOfTwoPoints(mousePos,
-                          QPointF(0.7 * LOGICAL_WIDTH,
-                                  0.5 * LOGICAL_HEIGHT)) < 50)
+  else if (distanceOfTwoPoints(mousePos,
+                          toScene(rotateClassicItem->getPos().x(),
+                                  rotateClassicItem->getPos().y())) < 50)
+  {
+    AbstractPixmapWidget *rotateGame = new RotateClassicGame();
+    emit giveControlTo(rotateGame, false);
+  }
+  else if (distanceOfTwoPoints(mousePos,
+                          toScene(puzzleMenuItem->getPos().x(),
+                                  puzzleMenuItem->getPos().y())) < 50)
   {
     AbstractPixmapWidget *puzzleMenu = new PuzzleMenuWidget();
     emit giveControlTo(puzzleMenu, false);

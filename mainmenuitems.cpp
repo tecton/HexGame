@@ -5,11 +5,12 @@
 #include <QFileInfo>
 #include <QDir>
 #include <QPainter>
+#include "initpixmaps.h"
 
-#include <QMessageBox>
 
-const static int kTotalItems = 2;
+const static int kTotalItems = 3;
 const static char * kItemPaths[] = {":/images/mainmenuitems/swapclassicgame*.png",
+                                    ":/images/mainmenuitems/rotateclassicgame*.png",
                                     ":/images/mainmenuitems/puzzlegame*.png"};
 
 
@@ -17,26 +18,10 @@ QVector<QVector<QPixmap> > mainMenuItemPixmaps;
 QVector<int> mainMenuItemFrameCounts;
 void initMainMenuItemPixmaps()
 {
-  mainMenuItemPixmaps.reserve(kTotalItems);
-  mainMenuItemFrameCounts.reserve(kTotalItems);
-  for (int i = 0;i < kTotalItems;++i)
-  {
-    int count = 0;
-    QVector<QPixmap> current;
-    QString path(kItemPaths[i]);
-    QFileInfo fi(path);
-    // For each file of the color
-    foreach (QString entry, QDir(fi.path(), fi.fileName()).entryList())
-    {
-      // Get the pixmap of the path
-      current << QPixmap(fi.path() + "/" + entry);
-      ++count;
-    }
-//    QMessageBox::critical(0,"","init pixmaps");
-    mainMenuItemPixmaps << current;
-    mainMenuItemFrameCounts << count;
-  }
-//  QMessageBox::critical(0,"","init pixmaps");
+  initPixmaps(kTotalItems,
+              kItemPaths,
+              mainMenuItemPixmaps,
+              mainMenuItemFrameCounts);
 }
 
 const QPixmap& AbstractMainMenuItem::pixmap(ItemType type,
@@ -53,9 +38,9 @@ MainMenuSwapClassicItem::MainMenuSwapClassicItem()
 }
 
 void MainMenuSwapClassicItem::paint(QPainter *painter,
-                                        int width,
-                                        int height,
-                                        int frame)
+                                    int width,
+                                    int height,
+                                    int frame)
 {
   const QPixmap& pixmap = AbstractMainMenuItem::pixmap(
                             AbstractMainMenuItem::SwapClassicItem,
@@ -63,7 +48,24 @@ void MainMenuSwapClassicItem::paint(QPainter *painter,
   double x = getPos().x() * width;
   double y = getPos().y() * height;
   painter->drawPixmap(QPointF(x, y), pixmap);
-//  QMessageBox::critical(0,"","Painted one item");
+}
+
+MainMenuRotateClassicItem::MainMenuRotateClassicItem()
+{
+  setPos(QPointF(0, 0));
+}
+
+void MainMenuRotateClassicItem::paint(QPainter *painter,
+                                      int width,
+                                      int height,
+                                      int frame)
+{
+  const QPixmap& pixmap = AbstractMainMenuItem::pixmap(
+                            AbstractMainMenuItem::RotateClassicItem,
+                            frame);
+  double x = getPos().x() * width;
+  double y = getPos().y() * height;
+  painter->drawPixmap(QPointF(x, y), pixmap);
 }
 
 MainMenuRotatePuzzleItem::MainMenuRotatePuzzleItem()
@@ -82,5 +84,4 @@ void MainMenuRotatePuzzleItem::paint(QPainter *painter,
   double x = getPos().x() * width;
   double y = getPos().y() * height;
   painter->drawPixmap(QPointF(x, y), pixmap);
-//  QMessageBox::critical(0,"","Painted one item");
 }

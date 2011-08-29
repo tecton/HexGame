@@ -6,22 +6,11 @@
 #include <QFileInfo>
 #include <QDir>
 #include <QPainter>
+#include "initpixmaps.h"
 
-#include <QMessageBox>
-
-StageMenuItem::StageMenuItem(QString path, int number)
+StageMenuItem::StageMenuItem(QString path)
 {
-  pixmaps.reserve(number);
-  count = number;
-  for (int i = 0; i < number; ++i)
-  {
-    QFileInfo fi(path);
-    foreach (QString entry, QDir(fi.path(), fi.fileName()).entryList())
-    {
-      // Get the pixmap of the path
-      pixmaps << QPixmap(fi.path() + "/" + entry);
-    }
-  }
+  initPixmaps(path, pixmaps, count);
   setPos(QPointF(0, 0));
 }
 
@@ -33,5 +22,4 @@ void StageMenuItem::paint(QPainter *painter,
   double x = getPos().x() * width;
   double y = getPos().y() * height;
   painter->drawPixmap(QPointF(x, y), pixmaps[frame % count]);
-  //  QMessageBox::critical(0,"","Painted one item");
 }
