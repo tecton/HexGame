@@ -33,5 +33,5 @@ int main(int argc, char *argv[])
   w.setGeometry(QRect(100,100,1024,600));
   w.show();
 
-    return a.exec();
+  return a.exec();
 }
