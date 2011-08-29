@@ -47,11 +47,13 @@ private:
   EffectPainter *effectPainter;
   QTimer *t;
   int frameCount;
+  int noSolutionCount;
   // TODO:
 
   AbstractProgressBarItem *progressBar;
   AbstractBonusItem *flame;
   AbstractBonusItem *star;
+  AbstractItem *hint;
   AbstractItem *exitToMainMenu;
 
   QVector <AbstractItem *> myItems;
@@ -59,6 +61,8 @@ private:
   AbstractItem *itemAtPressPos;
   QPointF currentPos;
 
+  void showHint();
+  void gameOver();
   void quitGame();
   void nextStage();
 

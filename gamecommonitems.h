@@ -148,6 +148,15 @@ public:
                                    int frame);
 };
 
+class HintItem : public AbstractItem
+{
+public:
+  virtual void paint(QPainter *painter,
+                     int width,
+                     int height,
+                     int frame);
+};
+
 class ExitToMainMenuItem : public AbstractItem
 {
 public:

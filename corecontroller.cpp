@@ -9,6 +9,8 @@
 #include "connections.h"
 #include "gamemath.h"
 
+#include <QDebug>
+
 //AbstractGameBoardInfo *gameBoardInfo;
 //AbstractRule *rule;
 //Ball *balls;
@@ -338,6 +340,10 @@ void CoreController::swap(int from, int to)
 {
   if (gestureCoolDown != 0)
     return;
+  if ((!balls[from]) || balls[from]->getLocked())
+    return;
+  if ((!balls[to]) || balls[to]->getLocked())
+    return;
   ballsCurrentIndexToOriginalIndex[from] = to;
   ballsCurrentIndexToOriginalIndex[to] = from;
   ballsOriginalIndexToCurrentIndex[from] = to;
@@ -401,8 +407,19 @@ void CoreController::fillAllBlanks()
   for (int i = 0;i < gameBoardInfo->totalBallCounts();++i)
     if (!balls[i])
       blankIndexes.push_back(i);
+
+  QList <int> lockedIndexes;
+
   do
   {
+    for (QList <int>::Iterator itr = lockedIndexes.begin();
+         itr != lockedIndexes.end();
+         ++itr)
+      if (!balls[*itr])
+        balls[*itr]->setLocked(false);
+
+    lockedIndexes.clear();
+
     for (QList <int>::Iterator itr = blankIndexes.begin();
          itr != blankIndexes.end();
          ++itr)
@@ -411,15 +428,20 @@ void CoreController::fillAllBlanks()
         balls[*itr] = new Ball((Ball::Color)(rand() % 6));//0));//rand() % 8));
       else
         balls[*itr]->setColor((Ball::Color)(rand() % 6));//0))//rand() % 8));
-      //      balls[*itr]->hide();
+      if (!rule->endlessFill())
+      {
+        bool setToLock = lockedIndexes.size() < 2 && ((rand() % 100) > 5);
+        balls[*itr]->setLocked(setToLock);
+        if (setToLock)
+          lockedIndexes.push_back(*itr);
+      }
     }
-  } while (false); // 这里面的要好好想想
+  } while (rule->endlessFill() && hint() >= 0);
 
   for (QList <int>::Iterator itr = blankIndexes.begin();
        itr != blankIndexes.end();
        ++itr)
     balls[*itr]->setPos(gameBoardInfo->positionOfIndex(*itr));
-  //    balls[*itr]->show();
 
 
   for (int i = 0;i < gameBoardInfo->totalBallCounts();++i)
@@ -699,7 +721,7 @@ int CoreController::hint()
       bool allOccupied = true;
       for (int j = 0;j < 6;++j)
       {
-        if ( copiedBalls[chain[j]] == NULL )
+        if (copiedBalls[chain[j]] == NULL || copiedBalls[chain[j]]->getLocked())
         {
           allOccupied = false;
           break;
@@ -717,13 +739,18 @@ int CoreController::hint()
           copiedBalls[chain[5]] = ball1;
           if ( j != 6 )
             for (int k = 0;k < 6;++k)
-              if ( check(copiedBalls, chain[k]) )
+              if (check(copiedBalls, chain[k]))
+              {
+                delete [] copiedBalls;
                 return tryingIndex;
+              }
         }
       }
     }
 
-    if ( rule->gestureAllowed(AbstractRule::Swap) && copiedBalls[tryingIndex] != NULL )
+    if ( rule->gestureAllowed(AbstractRule::Swap) &&
+         copiedBalls[tryingIndex] != NULL &&
+         (!copiedBalls[tryingIndex]->getLocked()))
     {
       int swapping[3];
       swapping[0] = gameBoardInfo->leftDownIndex(tryingIndex);
@@ -731,15 +758,23 @@ int CoreController::hint()
       swapping[2] = gameBoardInfo->rightIndex(tryingIndex);
       for (int k = 0;k < 3;++k)
       {
-        if ( swapping[k] != -1 && copiedBalls[swapping[k]] != NULL )
+        if ( swapping[k] != -1 &&
+             copiedBalls[swapping[k]] != NULL &&
+             (!copiedBalls[swapping[k]]->getLocked()))
         {
           Ball* t = copiedBalls[tryingIndex];
           copiedBalls[tryingIndex] = copiedBalls[swapping[k]];
           copiedBalls[swapping[k]] = t;
           if ( check(copiedBalls, tryingIndex) )
+          {
+            delete [] copiedBalls;
             return tryingIndex;
+          }
           if ( check(copiedBalls, swapping[k]) )
+          {
+            delete [] copiedBalls;
             return swapping[k];
+          }
           t = copiedBalls[tryingIndex];
           copiedBalls[tryingIndex] = copiedBalls[swapping[k]];
           copiedBalls[swapping[k]] = t;
@@ -747,11 +782,13 @@ int CoreController::hint()
       }
     }
   }
+
+  delete [] copiedBalls;
+  return -1;
 }
 
 bool CoreController::check(Ball** copiedBalls, int tryingIndex)
 {
-  Ball::Color currentColor = copiedBalls[tryingIndex]->getColor();
   for (int i = 0;i < 3;++i)
   {
     int lenOfChain = 1;
@@ -761,9 +798,9 @@ bool CoreController::check(Ball** copiedBalls, int tryingIndex)
       while (1)
       {
         int nextIndex = gameBoardInfo->nearbyIndex(movingIndex, i + 3 * j);
-        if ( nextIndex == -1 ||
-          copiedBalls[nextIndex] == NULL ||
-          copiedBalls[nextIndex]->getColor() != currentColor )
+        if (nextIndex == -1 ||
+            copiedBalls[nextIndex] == NULL ||
+            (!copiedBalls[tryingIndex]->sameColor(copiedBalls[nextIndex])))
           break;
         ++lenOfChain;
         movingIndex = nextIndex;
@@ -783,12 +820,11 @@ bool CoreController::check(Ball** copiedBalls, int tryingIndex)
       int firstNearbyIndex = gameBoardInfo->nearbyIndex(centers[i],0);
       if ( copiedBalls[firstNearbyIndex] != NULL )
       {
-        Ball::Color chainColor = copiedBalls[firstNearbyIndex]->getColor();
         for (int j = 1;j < 6;++j)
         {
           int nearbyIndex = gameBoardInfo->nearbyIndex((centers[i]), j);
           if ( copiedBalls[nearbyIndex] == NULL ||
-             copiedBalls[nearbyIndex]->getColor() != chainColor )
+               (!copiedBalls[nearbyIndex]->sameColor(copiedBalls[firstNearbyIndex])))
           {
             result = false;
             break;

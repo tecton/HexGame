@@ -71,7 +71,8 @@ void BasicPainter::paintBasicBalls(Ball **balls,
       painter->drawPixmap(
           pos,
           pixmaps[colorIndex][frame % frameCounts[colorIndex]]);
-//      painter->drawText(pos, QObject::tr("%1").arg(i));
+      if (balls[i]->getLocked())
+        painter->drawText(pos, "L");
     }
   }
 }

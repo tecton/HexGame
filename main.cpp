@@ -1,4 +1,5 @@
 #include <QtGui/QApplication>
+#include <QTextCodec>
 #include <time.h>
 //#include <QDebug>
 //#include "mainwindow.h"
@@ -9,6 +10,10 @@
 int main(int argc, char *argv[])
 {
   srand ( time(NULL) );
+  QTextCodec *codec = QTextCodec::codecForName("utf8");
+  QTextCodec::setCodecForLocale(codec);
+  QTextCodec::setCodecForCStrings(codec);
+  QTextCodec::setCodecForTr(codec);
   QApplication a(argc, argv);
 
 //  AbstractRule *rule = new SwapClassicGameRule();

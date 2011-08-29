@@ -49,6 +49,8 @@ public:
 
   void advance();
 
+  int hint();
+
   Ball **balls;
   Ball **toBeShapeBalls;
 
@@ -102,7 +104,6 @@ private:
            balls[index];
   }
 
-  int hint();
   bool check(Ball** copiedBalls, int tryingIndex);
 
 signals:

@@ -18,7 +18,9 @@
 #define LOGICAL_WIDTH  800
 #define LOGICAL_HEIGHT 500
 
-SwapClassicGame::SwapClassicGame()
+SwapClassicGame::SwapClassicGame() :
+    frameCount(0),
+    noSolutionCount(0)
 {
   rule = new SwapClassicGameRule();//SwapClassicGameRule();
   gameboardInfo = new ThirtySevenGameBoardInfo();
@@ -42,8 +44,12 @@ SwapClassicGame::SwapClassicGame()
   myItems.push_back(star);
 
   exitToMainMenu = new ExitToMainMenuItem();
-  exitToMainMenu->setPos(QPointF(0.1, 0.7));
+  exitToMainMenu->setPos(QPointF(0.1, 0.9));
   myItems.push_back(exitToMainMenu);
+
+  hint = new HintItem();
+  hint->setPos(QPointF(0.1, 0.7));
+  myItems.push_back(hint);
 
   itemAtPressPos = NULL;
 
@@ -149,6 +155,28 @@ QPointF SwapClassicGame::toScene(double xRate, double yRate)
 //{
 
 //}
+
+void SwapClassicGame::showHint()
+{
+  int hintOnBoard = controller->hint();
+  if (hintOnBoard >= 0)
+    effectPainter->hintAt(gameboardInfo->positionOfIndex(hintOnBoard),
+                          rule->gestureAllowed(AbstractRule::Rotate));
+  else if (flame->getCurrent() > 0)
+    effectPainter->hintAt(toScene(flame->getPos().x(),
+                                  flame->getPos().y()), false);
+  else if (star->getCurrent() > 0)
+    effectPainter->hintAt(toScene(star->getPos().x(),
+                                  star->getPos().y()), false);
+  else
+    gameOver();
+}
+
+void SwapClassicGame::gameOver()
+{
+  quitGame();
+}
+
 void SwapClassicGame::quitGame()
 {
   emit giveControlTo(NULL, true);
@@ -159,16 +187,20 @@ void SwapClassicGame::dealPressed(QPointF mousePos, Qt::MouseButton button)
 {
   currentPos = mousePos;
   if (distanceOfTwoPoints(mousePos,
-                          QPointF(0.1 * LOGICAL_WIDTH,
-                                  0.3 * LOGICAL_HEIGHT)) < 50)
+                          toScene(flame->getPos().x(),
+                                  flame->getPos().y())) < 50)
     itemAtPressPos = flame;
   else if (distanceOfTwoPoints(mousePos,
-                               QPointF(0.1 * LOGICAL_WIDTH,
-                                       0.5 * LOGICAL_HEIGHT)) < 50)
+                               toScene(star->getPos().x(),
+                                       star->getPos().y())) < 50)
     itemAtPressPos = star;
   else if (distanceOfTwoPoints(mousePos,
-                               QPointF(0.1 * LOGICAL_WIDTH,
-                                       0.7 * LOGICAL_HEIGHT)) < 50)
+                               toScene(hint->getPos().x(),
+                                       hint->getPos().y())) < 50)
+    itemAtPressPos = hint;
+  else if (distanceOfTwoPoints(mousePos,
+                               toScene(exitToMainMenu->getPos().x(),
+                                       exitToMainMenu->getPos().y())) < 50)
     itemAtPressPos = exitToMainMenu;
   else
     itemAtPressPos = NULL;
@@ -200,6 +232,7 @@ void SwapClassicGame::dealReleased(QPointF mousePos, Qt::MouseButton button)
       {
         controller->flameAt(index);
         effectPainter->explodeAt(index);
+        effectPainter->flash();
         flame->minusOne();
       }
     }
@@ -210,10 +243,19 @@ void SwapClassicGame::dealReleased(QPointF mousePos, Qt::MouseButton button)
       {
         controller->starAt(index);
         effectPainter->lightningAt(index/*, directions*/);
+        effectPainter->flash();
         star->minusOne();
       }
     }
-    else if (itemAtPressPos == exitToMainMenu)
+    else if (itemAtPressPos == hint &&
+             distanceOfTwoPoints(mousePos,
+                                 toScene(hint->getPos().x(),
+                                         hint->getPos().y())) < 50)
+      showHint();
+    else if (itemAtPressPos == exitToMainMenu &&
+             distanceOfTwoPoints(mousePos,
+                                 toScene(exitToMainMenu->getPos().x(),
+                                         exitToMainMenu->getPos().y())) < 50)
       quitGame();
   }
 
@@ -231,6 +273,14 @@ void SwapClassicGame::advance()
   }
   ++frameCount;
   frameCount = frameCount % 32;
+  if (flame->getCurrent() > 0 ||
+      star->getCurrent() > 0 ||
+      controller->hint() >= 0)
+    noSolutionCount = 0;
+  else
+    ++noSolutionCount;
+  if (noSolutionCount > 100)
+    gameOver();
   controller->advance();
 //  effectPainter->advance();
 }
@@ -300,6 +350,8 @@ void SwapClassicGame::nextStage()
   nextStage->progressBar->setMin(progressBar->getMax());
   nextStage->progressBar->setMax(progressBar->getMax() * 2);
   nextStage->progressBar->setCurrent(progressBar->getCurrent());
+  nextStage->flame->setCurrent(flame->getCurrent());
+  nextStage->star->setCurrent(star->getCurrent());
   emit giveControlTo(nextStage, true);
   delete this;
 }

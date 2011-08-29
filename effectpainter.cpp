@@ -212,11 +212,6 @@ public:
                      double yRate)
   {
     QColor color = QColor(255,255,255,100 + 50 * getAge() / getLimit());
-//    QPointF posTL = pos.topLeft();
-//    QPointF posBR = pos.bottomRight();
-//    QPointF center = pos.center();
-//    posTL = scale(posTL, xRate, yRate);
-//    posBR = scale(posBR, xRate, yRate);
     QPointF pos2 = scale(pos, xRate, yRate);
 
     double r = theGameboardInfo->intervalBetweenTwoLayers() *
@@ -272,13 +267,62 @@ private:
   QFont f;
 };
 
+class HintInfo : public AbstractAgingEffect
+{
+public:
+  HintInfo(QPointF position, bool rotate) :
+      pos(position),
+      r(rotate)
+  {
+    setAge(0);
+    setLimit(20);
+  }
+
+  inline void setPos(QPointF position)
+  {pos = position;}
+
+  inline QPointF getPos()
+  {return pos;}
+
+  virtual void paint(AbstractGameBoardInfo *theGameboardInfo,
+                     QPainter *painter,
+                     double xRate,
+                     double yRate)
+  {
+    QPointF pos2 = pos;
+    double dy;
+    double percentage = 1.0 * getAge() / getLimit();
+    if (percentage < 0.25)
+      dy = 10 - 40 * percentage;
+    else if (percentage >= 0.25 && percentage < 0.5)
+      dy = 40 * (percentage - 0.25);
+    else if (percentage >= 0.5 && percentage < 0.75)
+      dy = 10 - 40 * (percentage - 0.5);
+    else if (percentage >= 0.75 && percentage < 1)
+      dy = 40 * (percentage - 0.75);
+    else
+      dy = 10;
+    pos2.setY(pos2.y() - dy);
+    pos2 = scale(pos2, xRate, yRate);
+    QFont f("Times",12,QFont::Normal,false);
+    f.setPixelSize(20);
+    painter->setFont(f);
+    painter->setPen(QColor(255,255,255,255));;
+    painter->drawText(pos2, QObject::tr("↓"));
+  }
+
+private:
+  QPointF pos;
+  bool r;
+};
+
 class FlashInfo : public AbstractAgingEffect
 {
 public:
   FlashInfo()
   {
     setAge(0);
-    setLimit(15);
+    setLimit(12);
   }
 
   virtual void paint(AbstractGameBoardInfo *theGameboardInfo,
@@ -286,7 +330,7 @@ public:
                      double xRate,
                      double yRate)
   {
-    QColor color(255, 255, 255, getAge() % 5 * 10);
+    QColor color(255, 255, 255, getAge() % 4 * 30);
     painter->setPen(color);
     painter->setBrush(color);
     painter->drawRect(0,
@@ -375,6 +419,12 @@ void EffectPainter::wordsAt(QPointF pos, QString str, double size)
 void EffectPainter::flash()
 {
   FlashInfo *info = new FlashInfo();
+  agingEffects.push_back(info);
+}
+
+void EffectPainter::hintAt(QPointF pos, bool rotate)
+{
+  HintInfo *info = new HintInfo(pos, rotate);
   agingEffects.push_back(info);
 }
 

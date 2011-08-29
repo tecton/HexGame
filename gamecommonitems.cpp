@@ -30,7 +30,7 @@ void VerticalProgressBarItem::paint(QPainter *painter,
 FlameItem::FlameItem()
 {
   setMax(99);
-  setCurrent(2);
+  setCurrent(0);
 }
 
 
@@ -71,7 +71,7 @@ void FlameItem::paintInfluencedArea(int index,
 StarItem::StarItem()
 {
   setMax(99);
-  setCurrent(2);
+  setCurrent(0);
 }
 
 
@@ -113,6 +113,17 @@ void StarItem::paintInfluencedArea(int index,
       current = gameBoard->nearbyIndex(current, i);
     }
   }
+}
+
+void HintItem::paint(QPainter *painter,
+                     int width,
+                     int height,
+                     int frame)
+{
+  painter->setPen(QColor(255,255,255,255));
+  double x = getPos().x() * width;
+  double y = getPos().y() * height;
+  painter->drawText(QPointF(x, y), "Hint");
 }
 
 void ExitToMainMenuItem::paint(QPainter *painter,

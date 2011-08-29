@@ -31,6 +31,8 @@ public:
 
   void flash();
 
+  void hintAt(QPointF pos, bool rotate);
+
 //  void highlightGameboard();
 //  void highlightAll();
   //BLABLABLA
