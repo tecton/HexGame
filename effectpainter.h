@@ -26,6 +26,11 @@ public:
   void explodeAt(int index);
   void lightningAt(int index/*, QVector<int> directions*/);
   void highlightAt(int index);
+
+  void wordsAt(QPointF pos, QString str, double size);
+
+  void flash();
+
 //  void highlightGameboard();
 //  void highlightAll();
   //BLABLABLA

@@ -123,8 +123,8 @@ public:
                getLimit();
     QPointF pos2 = scale(pos, xRate, yRate);
     QRadialGradient gradient = QRadialGradient(pos2, r, pos2);
-    gradient.setColorAt(0, QColor(255,255,255,255));
-    gradient.setColorAt(1, QColor(255,255,255,100));
+    gradient.setColorAt(0, QColor(255,255,255,200));
+    gradient.setColorAt(1, QColor(255,255,255,50));
     painter->setBrush(QBrush(gradient));
 
     painter->drawEllipse(pos2, r, r);
@@ -140,6 +140,9 @@ public:
   LightningInfo(QPointF position) :
       pos(position)
   {
+    linearPoints[0] = QPointF(pos.x() - 7.5 * 1.732, pos.y() + 7.5);
+    linearPoints[1] = QPointF(pos.x() + 7.5 * 1.732, pos.y() + 7.5);
+    linearPoints[2] = QPointF(pos.x(), pos.y() + 15);
     setAge(0);
     setLimit(5);
   }
@@ -179,7 +182,6 @@ public:
       QPointF posB =QPointF(pos2.x() - kkx[i] * r, pos2.y() - kky[i] * r);
       painter->drawLine(posA, posB);
     }
-    //BLABLABLA
   }
 
 private:
@@ -191,17 +193,17 @@ private:
 class HighlightInfo : public AbstractAgingEffect
 {
 public:
-  HighlightInfo(QRectF position) :
+  HighlightInfo(QPointF position) :
       pos(position)
   {
     setAge(0);
-    setLimit(20);
+    setLimit(10);
   }
 
-  inline void setPos(QRectF position)
+  inline void setPos(QPointF position)
   {pos = position;}
 
-  inline QRectF getPos()
+  inline QPointF getPos()
   {return pos;}
 
   virtual void paint(AbstractGameBoardInfo *theGameboardInfo,
@@ -209,11 +211,89 @@ public:
                      double xRate,
                      double yRate)
   {
-    //BLABLABLA
+    QColor color = QColor(255,255,255,100 + 50 * getAge() / getLimit());
+//    QPointF posTL = pos.topLeft();
+//    QPointF posBR = pos.bottomRight();
+//    QPointF center = pos.center();
+//    posTL = scale(posTL, xRate, yRate);
+//    posBR = scale(posBR, xRate, yRate);
+    QPointF pos2 = scale(pos, xRate, yRate);
+
+    double r = theGameboardInfo->intervalBetweenTwoLayers() *
+               getAge() /
+               getLimit();
+    QRadialGradient gradient = QRadialGradient(pos2, r, pos2);
+    gradient.setColorAt(0, color);
+    gradient.setColorAt(1, QColor(255, 255, 255, 50));
+
+    painter->setPen(QColor(255, 255, 255, 0));
+    painter->setBrush(QBrush(gradient));
+    painter->drawEllipse(pos2, r, r);
   }
 
 private:
-  QRectF pos;
+  QPointF pos;
+};
+
+class WordsInfo : public AbstractAgingEffect
+{
+public:
+  WordsInfo(QString str, QPointF position, double size) :
+      string(str),
+      pos(position)
+  {
+    f.setPointSize(size * 8);
+    setAge(0);
+    setLimit(20);
+  }
+
+  inline void setPos(QPointF position)
+  {pos = position;}
+
+  inline QPointF getPos()
+  {return pos;}
+
+  virtual void paint(AbstractGameBoardInfo *theGameboardInfo,
+                     QPainter *painter,
+                     double xRate,
+                     double yRate)
+  {
+    QPointF pos2 = pos;
+    pos2.setY(pos2.y() - getAge());
+    pos2 = scale(pos2, xRate, yRate);
+    painter->setPen(QColor(255, 255, 255, 100 + 50 * getAge() / getLimit()));
+    painter->setFont(f);
+    painter->drawText(pos2, string);
+  }
+
+private:
+  QString string;
+  QPointF pos;
+  QFont f;
+};
+
+class FlashInfo : public AbstractAgingEffect
+{
+public:
+  FlashInfo()
+  {
+    setAge(0);
+    setLimit(15);
+  }
+
+  virtual void paint(AbstractGameBoardInfo *theGameboardInfo,
+                     QPainter *painter,
+                     double xRate,
+                     double yRate)
+  {
+    QColor color(255, 255, 255, getAge() % 5 * 10);
+    painter->setPen(color);
+    painter->setBrush(color);
+    painter->drawRect(0,
+                      0,
+                      theGameboardInfo->width() * xRate,
+                      theGameboardInfo->height() * yRate);
+  }
 };
 
 EffectPainter::EffectPainter(
@@ -277,15 +357,26 @@ void EffectPainter::lightningAt(int index/*, QVector<int> directions*/)
 void EffectPainter::highlightAt(int index)
 {
   QPointF center = gameboardInfo->centerPositionOfIndex(index);
-  QPointF leftTop = QPointF(center.x() - gameboardInfo->intervalBetweenTwoLayers(),
-                            center.y() - 0.866 * gameboardInfo->intervalBetweenTwoLayers());
-  QPointF rightBottom = QPointF(center.x() + gameboardInfo->intervalBetweenTwoLayers(),
-                                center.y() + 0.866 * gameboardInfo->intervalBetweenTwoLayers());
-  QRectF rect = QRectF(leftTop, rightBottom);
-  HighlightInfo *info = new HighlightInfo(rect);
+//  QPointF leftTop = QPointF(center.x() - gameboardInfo->intervalBetweenTwoLayers(),
+//                            center.y() - 0.866 * gameboardInfo->intervalBetweenTwoLayers());
+//  QPointF rightBottom = QPointF(center.x() + gameboardInfo->intervalBetweenTwoLayers(),
+//                                center.y() + 0.866 * gameboardInfo->intervalBetweenTwoLayers());
+//  QRectF rect = QRectF(leftTop, rightBottom);
+  HighlightInfo *info = new HighlightInfo(center);
   agingEffects.push_back(info);
 }
 
+void EffectPainter::wordsAt(QPointF pos, QString str, double size)
+{
+  WordsInfo *info = new WordsInfo(str, pos, size);
+  agingEffects.push_back(info);
+}
+
+void EffectPainter::flash()
+{
+  FlashInfo *info = new FlashInfo();
+  agingEffects.push_back(info);
+}
 
 //void EffectPainter::highlightAll()
 //{

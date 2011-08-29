@@ -185,7 +185,7 @@ void SwapClassicGame::dealPressed(QPointF mousePos, Qt::MouseButton button)
 void SwapClassicGame::dealMoved(QPointF mousePos, Qt::MouseButton button)
 {
   currentPos = mousePos;
-
+  effectPainter->clearUserMovingEliminationHints();
   gestureController->dealMoved(mousePos);
 }
 
@@ -248,9 +248,12 @@ void SwapClassicGame::dealStableEliminate(Connections connections)
         continue;
       ++connectionCountOfThePosition;
     }
+    if (connectionCountOfThePosition > 0)
+      effectPainter->highlightAt(i);
     if (connectionCountOfThePosition > 1)
     {
-      effectPainter->highlightAt(i);
+      if (connectionCountOfThePosition >= 2)
+        effectPainter->flash();
       if (connectionCountOfThePosition == 2)
         flame->addOne();
       if (connectionCountOfThePosition >= 3)
@@ -263,9 +266,18 @@ void SwapClassicGame::dealStableEliminate(Connections connections)
   }
   for (int i = 0;i < connections.connections.size();++i)
   {
-    if (connections.connections[i]->size() == 4)
+    int size = connections.connections[i]->size();
+    QPointF pos1(gameboardInfo->positionOfIndex(connections.connections[i]->at(0)));
+    QPointF pos2(gameboardInfo->positionOfIndex(connections.connections[i]->at(size - 1)));
+    effectPainter->wordsAt(QPointF((pos1.x() + pos2.x()) / 2,
+                                   (pos1.y() + pos2.y()) / 2),
+                           tr("%1").arg(size),
+                           size);
+    if (size >= 4)
+      effectPainter->flash();
+    if (size == 4)
       flame->addOne();
-    if (connections.connections[i]->size() >= 5)
+    if (size >= 5)
       star->addOne();
   }
   progressBar->setCurrent(progressBar->getCurrent() + pointsToAdd);
