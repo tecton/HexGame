@@ -8,8 +8,6 @@
 #include "puzzlemenuitems.h"
 #include "stagemenuwidget.h"
 
-#include <QMessageBox>
-
 #define MAIN_MENU_LOGICAL_WIDTH  800
 #define MAIN_MENU_LOGICAL_HEIGHT 500
 
@@ -39,7 +37,6 @@ PuzzleMenuWidget::PuzzleMenuWidget() :
 void PuzzleMenuWidget::makePixmap(QPixmap& pixmap, int width, int height)
 {
   makeBasicPixmap(pixmap, width, height);
-//  QMessageBox::critical(0,"","Basic made");
   addEffect(pixmap, width, height);
 }
 
@@ -48,14 +45,12 @@ void PuzzleMenuWidget::makeBasicPixmap(QPixmap& pixmap, int width, int height)
   pixmap = QPixmap(width, height);
   pixmap.fill(Qt::black);
   QPainter *painter = new QPainter(&pixmap);
-  //QMessageBox::critical(0,"","Try to paint items");
   BasicPainter::paintItems(painter,
                            myItems,
                            width,
                            height,
                            frameCount);
 
-//  QMessageBox::critical(0,"","Items painted");
   painter->end();
   delete painter;
 }

@@ -10,8 +10,6 @@
 #include "rotateclassicgame.h"
 #include "puzzlemenuwidget.h"
 
-#include <QMessageBox>
-
 #define LOGICAL_WIDTH  800
 #define LOGICAL_HEIGHT 500
 
@@ -41,7 +39,6 @@ MainMenuWidget::MainMenuWidget() :
 void MainMenuWidget::makePixmap(QPixmap& pixmap, int width, int height)
 {
   makeBasicPixmap(pixmap, width, height);
-//  QMessageBox::critical(0,"","Basic made");
   addEffect(pixmap, width, height);
 }
 
@@ -50,14 +47,12 @@ void MainMenuWidget::makeBasicPixmap(QPixmap& pixmap, int width, int height)
   pixmap = QPixmap(width, height);
   pixmap.fill(Qt::black);
   QPainter *painter = new QPainter(&pixmap);
-  //QMessageBox::critical(0,"","Try to paint items");
   BasicPainter::paintItems(painter,
                            myItems,
                            width,
                            height,
                            frameCount);
 
-//  QMessageBox::critical(0,"","Items painted");
   painter->end();
   delete painter;
 }

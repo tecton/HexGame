@@ -8,9 +8,9 @@
 #include "initpixmaps.h"
 
 const static int kTotalItems = 3;
-const static char * kItemPaths[] = {":/images/mainmenuitems/exchange_theme*.png",
-                                   ":/images/mainmenuitems/unite_theme*.png",
-                                   ":/images/mainmenuitems/lock_theme*.png"};
+const static char * kItemPaths[] = {":/images/puzzlemenuitems/exchange_theme*.png",
+                                    ":/images/puzzlemenuitems/unite_theme*.png",
+                                    ":/images/puzzlemenuitems/lock_theme*.png"};
 
 
 QVector<QVector<QPixmap> > puzzleMenuItemPixmaps;
@@ -24,7 +24,7 @@ void initPuzzleMenuItemPixmaps()
 }
 
 const QPixmap& AbstractPuzzleMenuItem::pixmap(ItemType type,
-                                            int frame)
+                                              int frame)
 {
   if (puzzleMenuItemPixmaps.isEmpty())
     initPuzzleMenuItemPixmaps();
@@ -37,9 +37,9 @@ PuzzleMenuExchangeItem::PuzzleMenuExchangeItem()
 }
 
 void PuzzleMenuExchangeItem::paint(QPainter *painter,
-                                        int width,
-                                        int height,
-                                        int frame)
+                                   int width,
+                                   int height,
+                                   int frame)
 {
   const QPixmap& pixmap = AbstractPuzzleMenuItem::pixmap(
                             AbstractPuzzleMenuItem::ExchangeItem,
@@ -55,9 +55,9 @@ PuzzleMenuUniteItem::PuzzleMenuUniteItem()
 }
 
 void PuzzleMenuUniteItem::paint(QPainter *painter,
-                                        int width,
-                                        int height,
-                                        int frame)
+                                int width,
+                                int height,
+                                int frame)
 {
   const QPixmap& pixmap = AbstractPuzzleMenuItem::pixmap(
                             AbstractPuzzleMenuItem::UniteItem,
@@ -73,9 +73,9 @@ PuzzleMenuLockItem::PuzzleMenuLockItem()
 }
 
 void PuzzleMenuLockItem::paint(QPainter *painter,
-                                        int width,
-                                        int height,
-                                        int frame)
+                               int width,
+                               int height,
+                               int frame)
 {
   const QPixmap& pixmap = AbstractPuzzleMenuItem::pixmap(
                             AbstractPuzzleMenuItem::LockItem,

@@ -9,8 +9,6 @@
 #include "abstractpixmapwidget.h"
 #include "mainmenuwidget.h"
 
-#include <QMessageBox>
-
 MainWidget::MainWidget(QWidget *parent) :
     QWidget(parent),
     coolDown(0)
@@ -25,7 +23,6 @@ MainWidget::MainWidget(QWidget *parent) :
   refreshTimer->setInterval(30);
   connect(refreshTimer, SIGNAL(timeout()),this, SLOT(update()));
   refreshTimer->start();
-//  QMessageBox::critical(0,"","MainWidget created");
 }
 
 void MainWidget::paintEvent(QPaintEvent *event)
@@ -33,7 +30,6 @@ void MainWidget::paintEvent(QPaintEvent *event)
   if (coolDown > 0)
     --coolDown;
   widgets[widgets.size() - 1]->makePixmap(pixmap, width(), height());
-//  QMessageBox::critical(0,"","MainWidget pixmap made");
   QPainter *painter = new QPainter(this);
   if (coolDown > 0)
   {
@@ -45,7 +41,6 @@ void MainWidget::paintEvent(QPaintEvent *event)
 //  paint(painter);
   painter->end();
   delete painter;
-//  QMessageBox::critical(0,"","MainWidget painted");
 }
 
 

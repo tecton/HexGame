@@ -63,14 +63,12 @@ void ExchangeStageMenuWidget::makeBasicPixmap(QPixmap& pixmap, int width, int he
   pixmap = QPixmap(width, height);
   pixmap.fill(Qt::black);
   QPainter *painter = new QPainter(&pixmap);
-  //QMessageBox::critical(0,"","Try to paint items");
   BasicPainter::paintItems(painter,
                            myItems,
                            width,
                            height,
                            frameCount);
 
-//  QMessageBox::critical(0,"","Items painted");
   painter->end();
   delete painter;
 }
@@ -91,7 +89,7 @@ ExchangeStageMenuWidget::ExchangeStageMenuWidget(int stageType) :
 {
   type = stageType;
   stageItem = new StageMenuItem *[5];
-  prefix = ":/images/mainmenuitems/stage_img";
+  prefix = ":/images/stageitems/stage_img";
   suffix = "*.png";
   imageName = "";
   QString name[] = {"01", "02", "03", "04"};
@@ -111,9 +109,9 @@ ExchangeStageMenuWidget::ExchangeStageMenuWidget(int stageType) :
   }
 
   if (type == 0)
-    stageItem[4] = new StageMenuItem(":/images/mainmenuitems/button_advance*.png");
+    stageItem[4] = new StageMenuItem(":/images/stageitems/button_advance*.png");
   else
-    stageItem[4] = new StageMenuItem(":/images/mainmenuitems/button_normal*.png");
+    stageItem[4] = new StageMenuItem(":/images/stageitems/button_normal*.png");
   stageItem[4]->setPos(position[4]);
   myItems.push_back(stageItem[4]);
 
@@ -186,7 +184,7 @@ UniteStageMenuWidget::UniteStageMenuWidget(int stageType) :
 {
   type = stageType;
   stageItem = new StageMenuItem *[6];
-  prefix = ":/images/mainmenuitems/stage_img";
+  prefix = ":/images/stageitems/stage_img";
   suffix = "*.png";
   imageName = "";
   QString name[] = {"01", "02", "03", "04", "05"};
@@ -207,9 +205,9 @@ UniteStageMenuWidget::UniteStageMenuWidget(int stageType) :
   }
 
   if (type == 0)
-    stageItem[5] = new StageMenuItem(":/images/mainmenuitems/button_advance*.png");
+    stageItem[5] = new StageMenuItem(":/images/stageitems/button_advance*.png");
   else
-    stageItem[5] = new StageMenuItem(":/images/mainmenuitems/button_normal*.png");
+    stageItem[5] = new StageMenuItem(":/images/stageitems/button_normal*.png");
   stageItem[5]->setPos(position[5]);
   myItems.push_back(stageItem[5]);
 
@@ -280,7 +278,6 @@ UniteStageMenuWidget::~UniteStageMenuWidget()
 void UniteStageMenuWidget::makePixmap(QPixmap& pixmap, int width, int height)
 {
   makeBasicPixmap(pixmap, width, height);
-//  QMessageBox::critical(0,"","Basic made");
   addEffect(pixmap, width, height);
 }
 
@@ -289,14 +286,12 @@ void UniteStageMenuWidget::makeBasicPixmap(QPixmap& pixmap, int width, int heigh
   pixmap = QPixmap(width, height);
   pixmap.fill(Qt::black);
   QPainter *painter = new QPainter(&pixmap);
-  //QMessageBox::critical(0,"","Try to paint items");
   BasicPainter::paintItems(painter,
                            myItems,
                            width,
                            height,
                            frameCount);
 
-//  QMessageBox::critical(0,"","Items painted");
   painter->end();
   delete painter;
 }
@@ -320,7 +315,7 @@ LockStageMenuWidget::LockStageMenuWidget(int stageType) :
   type = stageType;
   stageItem = new StageMenuItem *[11];
 
-  QString prefix = ":/images/mainmenuitems/stage_img";
+  QString prefix = ":/images/stageitems/stage_img";
   QString suffix = "*.png";
   QString imageName = "";
   QString name[] = {"01", "02", "03", "04", "05", "06", "07", "08", "09", "10"};
@@ -335,9 +330,9 @@ LockStageMenuWidget::LockStageMenuWidget(int stageType) :
   }
 
   if (type == 0)
-    stageItem[10] = new StageMenuItem(":/images/mainmenuitems/button_advance*.png");
+    stageItem[10] = new StageMenuItem(":/images/stageitems/button_advance*.png");
   else
-    stageItem[10] = new StageMenuItem(":/images/mainmenuitems/button_normal*.png");
+    stageItem[10] = new StageMenuItem(":/images/stageitems/button_normal*.png");
   stageItem[10]->setPos(QPointF(0.37, 0.35));
   myItems.push_back(stageItem[10]);
 
@@ -408,7 +403,6 @@ LockStageMenuWidget::~LockStageMenuWidget()
 void LockStageMenuWidget::makePixmap(QPixmap& pixmap, int width, int height)
 {
   makeBasicPixmap(pixmap, width, height);
-//  QMessageBox::critical(0,"","Basic made");
   addEffect(pixmap, width, height);
 }
 
@@ -417,14 +411,12 @@ void LockStageMenuWidget::makeBasicPixmap(QPixmap& pixmap, int width, int height
   pixmap = QPixmap(width, height);
   pixmap.fill(Qt::black);
   QPainter *painter = new QPainter(&pixmap);
-  //QMessageBox::critical(0,"","Try to paint items");
   BasicPainter::paintItems(painter,
                            myItems,
                            width,
                            height,
                            frameCount);
 
-//  QMessageBox::critical(0,"","Items painted");
   painter->end();
   delete painter;
 }

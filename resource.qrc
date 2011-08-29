@@ -1,38 +1,4 @@
 <RCC>
-    <qresource prefix="/images">
-        <file>balls/blue01.png</file>
-        <file>balls/brown01.png</file>
-        <file>balls/green01.png</file>
-        <file>balls/oringe01.png</file>
-        <file>balls/purple01.png</file>
-        <file>balls/red01.png</file>
-        <file>balls/white01.png</file>
-        <file>balls/yellow01.png</file>
-        <file>mainmenuitems/swapclassicgame01.png</file>
-        <file>mainmenuitems/lock_theme.png</file>
-        <file>mainmenuitems/lock_stage.png</file>
-        <file>mainmenuitems/stage_img0105.png</file>
-        <file>mainmenuitems/stage_img0120.png</file>
-        <file>mainmenuitems/stage_img0140.png</file>
-        <file>mainmenuitems/stage_img0160.png</file>
-        <file>mainmenuitems/stage_img0180.png</file>
-        <file>mainmenuitems/stage_img0195.png</file>
-        <file>mainmenuitems/stage_img0220.png</file>
-        <file>mainmenuitems/stage_img0320.png</file>
-        <file>mainmenuitems/stage_img0420.png</file>
-        <file>mainmenuitems/stage_img0520.png</file>
-        <file>mainmenuitems/stage_img0620.png</file>
-        <file>mainmenuitems/stage_img0720.png</file>
-        <file>mainmenuitems/stage_img0820.png</file>
-        <file>mainmenuitems/stage_img0920.png</file>
-        <file>mainmenuitems/stage_img1020.png</file>
-        <file>mainmenuitems/exchange_theme.png</file>
-        <file>mainmenuitems/unite_theme.png</file>
-        <file>mainmenuitems/button_advanced.png</file>
-        <file>mainmenuitems/button_normal.png</file>
-        <file>mainmenuitems/puzzlegame01.png</file>
-        <file>mainmenuitems/rotateclassicgame01.png</file>
-    </qresource>
     <qresource prefix="/">
         <file>abcde/lock_plus1</file>
         <file>abcde/lock_plus2</file>
@@ -71,5 +37,39 @@
         <file>abcde/unite3</file>
         <file>abcde/unite4</file>
         <file>abcde/unite5</file>
+    </qresource>
+    <qresource prefix="/images">
+        <file>balls/blue01.png</file>
+        <file>balls/brown01.png</file>
+        <file>balls/green01.png</file>
+        <file>balls/oringe01.png</file>
+        <file>balls/purple01.png</file>
+        <file>balls/red01.png</file>
+        <file>balls/white01.png</file>
+        <file>balls/yellow01.png</file>
+        <file>mainmenuitems/puzzlegame01.png</file>
+        <file>mainmenuitems/rotateclassicgame01.png</file>
+        <file>mainmenuitems/swapclassicgame01.png</file>
+        <file>puzzlemenuitems/exchange_theme.png</file>
+        <file>puzzlemenuitems/lock_theme.png</file>
+        <file>puzzlemenuitems/unite_theme.png</file>
+        <file>stageitems/button_advanced.png</file>
+        <file>stageitems/button_normal.png</file>
+        <file>stageitems/stage_img0105.png</file>
+        <file>stageitems/stage_img0120.png</file>
+        <file>stageitems/stage_img0140.png</file>
+        <file>stageitems/stage_img0160.png</file>
+        <file>stageitems/stage_img0180.png</file>
+        <file>stageitems/stage_img0195.png</file>
+        <file>stageitems/stage_img0220.png</file>
+        <file>stageitems/stage_img0320.png</file>
+        <file>stageitems/stage_img0420.png</file>
+        <file>stageitems/stage_img0520.png</file>
+        <file>stageitems/stage_img0620.png</file>
+        <file>stageitems/stage_img0720.png</file>
+        <file>stageitems/stage_img0820.png</file>
+        <file>stageitems/stage_img0920.png</file>
+        <file>stageitems/stage_img1020.png</file>
+        <file>stageitems/lock_stage.png</file>
     </qresource>
 </RCC>
