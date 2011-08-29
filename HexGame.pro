@@ -32,7 +32,8 @@ SOURCES += main.cpp\
     thirtysevengameboardinfo.cpp \
     gamecommonitems.cpp \
     rotateclassicgame.cpp \
-    initpixmaps.cpp
+    initpixmaps.cpp \
+    gamerecord.cpp
 
 HEADERS  += ball.h \
     corecontroller.h \
@@ -61,7 +62,8 @@ HEADERS  += ball.h \
     thirtysevengameboardinfo.h \
     gamecommonitems.h \
     rotateclassicgame.h \
-    initpixmaps.h
+    initpixmaps.h \
+    gamerecord.h
 
 RESOURCES += \
     resource.qrc
