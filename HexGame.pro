@@ -30,7 +30,9 @@ SOURCES += main.cpp\
     stagemenuitems.cpp \
     puzzlegameinit.cpp \
     thirtysevengameboardinfo.cpp \
-    gamecommonitems.cpp
+    gamecommonitems.cpp \
+    rotateclassicgame.cpp \
+    initpixmaps.cpp
 
 HEADERS  += ball.h \
     corecontroller.h \
@@ -57,7 +59,9 @@ HEADERS  += ball.h \
     stagemenuitems.h \
     puzzlegameinit.h \
     thirtysevengameboardinfo.h \
-    gamecommonitems.h
+    gamecommonitems.h \
+    rotateclassicgame.h \
+    initpixmaps.h
 
 RESOURCES += \
     resource.qrc

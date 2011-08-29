@@ -31,6 +31,7 @@
         <file>mainmenuitems/button_advanced.png</file>
         <file>mainmenuitems/button_normal.png</file>
         <file>mainmenuitems/puzzlegame01.png</file>
+        <file>mainmenuitems/rotateclassicgame01.png</file>
     </qresource>
     <qresource prefix="/">
         <file>abcde/lock_plus1</file>

@@ -14,8 +14,8 @@
 #include <QMessageBox>
 #include <QDebug>
 
-#define MAIN_MENU_LOGICAL_WIDTH  800
-#define MAIN_MENU_LOGICAL_HEIGHT 500
+#define LOGICAL_WIDTH  800
+#define LOGICAL_HEIGHT 500
 
 int errrrr[] = {
           0,  0,  0,  0,  0,
@@ -82,8 +82,8 @@ void ExchangeStageMenuWidget::addEffect(QPixmap& pixmap, int width, int height)
 
 QPointF ExchangeStageMenuWidget::toScene(double xRate, double yRate)
 {
-  return QPointF(xRate * MAIN_MENU_LOGICAL_WIDTH,
-                 yRate * MAIN_MENU_LOGICAL_HEIGHT);
+  return QPointF(xRate * LOGICAL_WIDTH,
+                 yRate * LOGICAL_HEIGHT);
 }
 
 ExchangeStageMenuWidget::ExchangeStageMenuWidget(int stageType) :
@@ -105,15 +105,15 @@ ExchangeStageMenuWidget::ExchangeStageMenuWidget(int stageType) :
   for (int i = 0; i < 4; ++i)
   {
     imageName = QObject::tr("%1%2%3").arg(prefix).arg(name[i]).arg(suffix);
-    stageItem[i] = new StageMenuItem(imageName, 6);
+    stageItem[i] = new StageMenuItem(imageName);
     stageItem[i]->setPos(position[i]);
     myItems.push_back(stageItem[i]);
   }
 
   if (type == 0)
-    stageItem[4] = new StageMenuItem(":/images/mainmenuitems/button_advance*.png",1);
+    stageItem[4] = new StageMenuItem(":/images/mainmenuitems/button_advance*.png");
   else
-    stageItem[4] = new StageMenuItem(":/images/mainmenuitems/button_normal*.png",1);
+    stageItem[4] = new StageMenuItem(":/images/mainmenuitems/button_normal*.png");
   stageItem[4]->setPos(position[4]);
   myItems.push_back(stageItem[4]);
 
@@ -133,8 +133,8 @@ void ExchangeStageMenuWidget::dealPressed(QPointF mousePos, Qt::MouseButton butt
   for (int i = 0; i < 4; ++i)
   {
     if (distanceOfTwoPoints(mousePos,
-                            QPointF((position[i].x() + 0.12) * MAIN_MENU_LOGICAL_WIDTH,
-                                    (position[i].y() + 0.12) * MAIN_MENU_LOGICAL_HEIGHT)) < 81)
+                            QPointF((position[i].x() + 0.12) * LOGICAL_WIDTH,
+                                    (position[i].y() + 0.12) * LOGICAL_HEIGHT)) < 81)
     { 
 //      RotatePuzzleGame *puzzleGame = PuzzleGameInit::initRotatePuzzleGame(i, 0);
 //      emit giveControlTo(puzzleGame, false);
@@ -145,8 +145,8 @@ void ExchangeStageMenuWidget::dealPressed(QPointF mousePos, Qt::MouseButton butt
     }
   }
   if (distanceOfTwoPoints(mousePos,
-                          QPointF((position[4].x() + 0.12) * MAIN_MENU_LOGICAL_WIDTH,
-                                  (position[4].y() + 0.12) * MAIN_MENU_LOGICAL_HEIGHT)) < 81)
+                          QPointF((position[4].x() + 0.12) * LOGICAL_WIDTH,
+                                  (position[4].y() + 0.12) * LOGICAL_HEIGHT)) < 81)
   {
     emit giveControlTo(new ExchangeStageMenuWidget(type ^ 1), true);
   }
@@ -201,16 +201,15 @@ UniteStageMenuWidget::UniteStageMenuWidget(int stageType) :
   for (int i = 0; i < 5; ++i)
   {
     imageName = QObject::tr("%1%2%3").arg(prefix).arg(name[i]).arg(suffix);
-    stageItem[i] = new StageMenuItem(imageName,
-                                     6);
+    stageItem[i] = new StageMenuItem(imageName);
     stageItem[i]->setPos(position[i]);
     myItems.push_back(stageItem[i]);
   }
 
   if (type == 0)
-    stageItem[5] = new StageMenuItem(":/images/mainmenuitems/button_advance*.png",1);
+    stageItem[5] = new StageMenuItem(":/images/mainmenuitems/button_advance*.png");
   else
-    stageItem[5] = new StageMenuItem(":/images/mainmenuitems/button_normal*.png",1);
+    stageItem[5] = new StageMenuItem(":/images/mainmenuitems/button_normal*.png");
   stageItem[5]->setPos(position[5]);
   myItems.push_back(stageItem[5]);
 
@@ -230,8 +229,8 @@ void UniteStageMenuWidget::dealPressed(QPointF mousePos, Qt::MouseButton button)
   for (int i = 0; i < 5; ++i)
   {
     if (distanceOfTwoPoints(mousePos,
-                            QPointF((0.12 + position[i].x()) * MAIN_MENU_LOGICAL_WIDTH,
-                                    (0.12 + position[i].y()) * MAIN_MENU_LOGICAL_HEIGHT)) < 81)
+                            QPointF((0.12 + position[i].x()) * LOGICAL_WIDTH,
+                                    (0.12 + position[i].y()) * LOGICAL_HEIGHT)) < 81)
     {
 //      int *ballIndex = new int [61];
 //      int *toBeIndex = new int [61];
@@ -243,8 +242,8 @@ void UniteStageMenuWidget::dealPressed(QPointF mousePos, Qt::MouseButton button)
         emit giveControlTo(PuzzleGameInit::initRotatePuzzleGame(i, 3), false);
     }
     if (distanceOfTwoPoints(mousePos,
-                            QPointF((0.12 + position[5].x()) * MAIN_MENU_LOGICAL_WIDTH,
-                                    (0.12 + position[5].y()) * MAIN_MENU_LOGICAL_HEIGHT)) < 81)
+                            QPointF((0.12 + position[5].x()) * LOGICAL_WIDTH,
+                                    (0.12 + position[5].y()) * LOGICAL_HEIGHT)) < 81)
     {
       emit giveControlTo(new UniteStageMenuWidget(type ^ 1), true);
     }
@@ -309,8 +308,8 @@ void UniteStageMenuWidget::addEffect(QPixmap& pixmap, int width, int height)
 
 QPointF UniteStageMenuWidget::toScene(double xRate, double yRate)
 {
-  return QPointF(xRate * MAIN_MENU_LOGICAL_WIDTH,
-                 yRate * MAIN_MENU_LOGICAL_HEIGHT);
+  return QPointF(xRate * LOGICAL_WIDTH,
+                 yRate * LOGICAL_HEIGHT);
 }
 
 /////////////////////////////////////////////////////////////////////////////////
@@ -330,15 +329,15 @@ LockStageMenuWidget::LockStageMenuWidget(int stageType) :
     imageName = QObject::tr("%1%2%3").arg(prefix).arg(name[i]).arg(suffix);
     //imageName.sprintf("%s%02d%s", prefix, i + 1, suffix);
     //qDebug() << imageName;
-    stageItem[i] = new StageMenuItem(imageName, 6);
+    stageItem[i] = new StageMenuItem(imageName);
     stageItem[i]->setPos(QPointF(0.07 + 0.15 * (i % 5), 0.05 + 0.45 * (i / 5) + 0.15 * (i % 2)));
     myItems.push_back(stageItem[i]);
   }
 
   if (type == 0)
-    stageItem[10] = new StageMenuItem(":/images/mainmenuitems/button_advance*.png",1);
+    stageItem[10] = new StageMenuItem(":/images/mainmenuitems/button_advance*.png");
   else
-    stageItem[10] = new StageMenuItem(":/images/mainmenuitems/button_normal*.png",1);
+    stageItem[10] = new StageMenuItem(":/images/mainmenuitems/button_normal*.png");
   stageItem[10]->setPos(QPointF(0.37, 0.35));
   myItems.push_back(stageItem[10]);
 
@@ -358,8 +357,8 @@ void LockStageMenuWidget::dealPressed(QPointF mousePos, Qt::MouseButton button)
   for (int i = 0; i < 10; ++i)
   {
     if (distanceOfTwoPoints(mousePos,
-                            QPointF((0.12 + 0.07 + 0.15 * (i % 5)) * MAIN_MENU_LOGICAL_WIDTH,
-                                    (0.12 + 0.05 + 0.45 * (i / 5) + 0.15 * (i % 2)) * MAIN_MENU_LOGICAL_HEIGHT)) < 81)
+                            QPointF((0.12 + 0.07 + 0.15 * (i % 5)) * LOGICAL_WIDTH,
+                                    (0.12 + 0.05 + 0.45 * (i / 5) + 0.15 * (i % 2)) * LOGICAL_HEIGHT)) < 81)
     {
 //      int *ballIndex = new int [61];
 //      int *toBeIndex = new int [61];
@@ -372,8 +371,8 @@ void LockStageMenuWidget::dealPressed(QPointF mousePos, Qt::MouseButton button)
     }
   }
   if (distanceOfTwoPoints(mousePos,
-                          QPointF(0.49 * MAIN_MENU_LOGICAL_WIDTH,
-                                  0.47 * MAIN_MENU_LOGICAL_HEIGHT)) < 81)
+                          QPointF(0.49 * LOGICAL_WIDTH,
+                                  0.47 * LOGICAL_HEIGHT)) < 81)
   {
     emit giveControlTo(new LockStageMenuWidget(type ^ 1), true);
   }
@@ -437,6 +436,6 @@ void LockStageMenuWidget::addEffect(QPixmap& pixmap, int width, int height)
 
 QPointF LockStageMenuWidget::toScene(double xRate, double yRate)
 {
-  return QPointF(xRate * MAIN_MENU_LOGICAL_WIDTH,
-                 yRate * MAIN_MENU_LOGICAL_HEIGHT);
+  return QPointF(xRate * LOGICAL_WIDTH,
+                 yRate * LOGICAL_HEIGHT);
 }
