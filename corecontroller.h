@@ -102,6 +102,9 @@ private:
            balls[index];
   }
 
+  int hint();
+  bool check(Ball** copiedBalls, int tryingIndex);
+
 signals:
   void stableEliminateTested(Connections connections);
   void userMovingEliminateTested(Connections connections);

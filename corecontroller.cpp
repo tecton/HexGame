@@ -664,3 +664,140 @@ void CoreController::rotateABallTo(Ball *ball,
     ball->stopPositions.push_back(calculatePosition(tmpA, tmpR, centerPos));
   }
 }
+
+int CoreController::hint()
+{
+  int totalBallCounts = gameBoardInfo->totalBallCounts();
+  Ball **copiedBalls = new Ball*[totalBallCounts];
+  for (int i = 0;i < totalBallCounts;++i)
+    copiedBalls[i] = balls[i];
+
+  bool triedIndexes[totalBallCounts];
+  for (int i = 0;i < totalBallCounts;++i)
+    triedIndexes[i] = false;
+
+  for (int i = 0;i < totalBallCounts;++i)
+  {
+    int randIndex = rand() % (totalBallCounts - i);
+    int p = -1;
+    for (int j = 0;j < randIndex + 1;++j)
+    {
+      ++p;
+      while ( triedIndexes[p] )
+        ++p;
+    }
+    int tryingIndex = p;
+    triedIndexes[tryingIndex] = true;
+
+    if ( rule->gestureAllowed(AbstractRule::Rotate) && gameBoardInfo->canBeRotateCenter(tryingIndex) )
+    {
+      int chain[6];
+      for (int j = 0;j < 6;++j)
+      {
+        chain[j] = gameBoardInfo->nearbyIndex(tryingIndex, j);
+      }
+      bool allOccupied = true;
+      for (int j = 0;j < 6;++j)
+      {
+        if ( copiedBalls[chain[j]] == NULL )
+        {
+          allOccupied = false;
+          break;
+        }
+      }
+      if ( allOccupied )
+      {
+        for (int j = 0;j < 6;++j)
+        {
+          Ball *ball1 = copiedBalls[chain[0]];
+          for (int k = 0;k < 5;++k)
+          {
+            copiedBalls[chain[k]] = copiedBalls[chain[k+1]];
+          }
+          copiedBalls[chain[5]] = ball1;
+          if ( j != 6 )
+            for (int k = 0;k < 6;++k)
+              if ( check(copiedBalls, chain[k]) )
+                return tryingIndex;
+        }
+      }
+    }
+
+    if ( rule->gestureAllowed(AbstractRule::Swap) && copiedBalls[tryingIndex] != NULL )
+    {
+      int swapping[3];
+      swapping[0] = gameBoardInfo->leftDownIndex(tryingIndex);
+      swapping[1] = gameBoardInfo->rightDownIndex(tryingIndex);
+      swapping[2] = gameBoardInfo->rightIndex(tryingIndex);
+      for (int k = 0;k < 3;++k)
+      {
+        if ( swapping[k] != -1 && copiedBalls[swapping[k]] != NULL )
+        {
+          Ball* t = copiedBalls[tryingIndex];
+          copiedBalls[tryingIndex] = copiedBalls[swapping[k]];
+          copiedBalls[swapping[k]] = t;
+          if ( check(copiedBalls, tryingIndex) )
+            return tryingIndex;
+          if ( check(copiedBalls, swapping[k]) )
+            return swapping[k];
+          t = copiedBalls[tryingIndex];
+          copiedBalls[tryingIndex] = copiedBalls[swapping[k]];
+          copiedBalls[swapping[k]] = t;
+        }
+      }
+    }
+  }
+}
+
+bool CoreController::check(Ball** copiedBalls, int tryingIndex)
+{
+  Ball::Color currentColor = copiedBalls[tryingIndex]->getColor();
+  for (int i = 0;i < 3;++i)
+  {
+    int lenOfChain = 1;
+    for (int j = 0;j < 2;++j)
+    {
+      int movingIndex = tryingIndex;
+      while (1)
+      {
+        int nextIndex = gameBoardInfo->nearbyIndex(movingIndex, i + 3 * j);
+        if ( nextIndex == -1 ||
+          copiedBalls[nextIndex] == NULL ||
+          copiedBalls[nextIndex]->getColor() != currentColor )
+          break;
+        ++lenOfChain;
+        movingIndex = nextIndex;
+      }
+    }
+    if ( lenOfChain >= 3 )
+      return true;
+  }
+
+  int centers[6];
+  for (int i = 0;i < 6;++i)
+  {
+    centers[i] = gameBoardInfo->nearbyIndex(tryingIndex, i);
+    if ( gameBoardInfo->canBeRotateCenter(centers[i]) )
+    {
+      bool result = true;
+      int firstNearbyIndex = gameBoardInfo->nearbyIndex(centers[i],0);
+      if ( copiedBalls[firstNearbyIndex] != NULL )
+      {
+        Ball::Color chainColor = copiedBalls[firstNearbyIndex]->getColor();
+        for (int j = 1;j < 6;++j)
+        {
+          int nearbyIndex = gameBoardInfo->nearbyIndex((centers[i]), j);
+          if ( copiedBalls[nearbyIndex] == NULL ||
+             copiedBalls[nearbyIndex]->getColor() != chainColor )
+          {
+            result = false;
+            break;
+          }
+        }
+        if ( result )
+          return true;
+      }
+    }
+  }
+  return false;
+}
