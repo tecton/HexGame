@@ -7,7 +7,9 @@
 #include "gamemath.h"
 #include "mainmenuitems.h"
 #include "swapclassicgame.h"
+#include "swaptiminggame.h"
 #include "rotateclassicgame.h"
+#include "rotatetiminggame.h"
 #include "puzzlemenuwidget.h"
 
 #define LOGICAL_WIDTH  800
@@ -18,16 +20,32 @@ MainMenuWidget::MainMenuWidget() :
     frameCount(0)
 {
   swapClassicItem = new MainMenuSwapClassicItem();
-  swapClassicItem->setPos(QPointF(0.3, 0.5));
+  swapClassicItem->setPos(QPointF(0.2, 0.4));
 
   rotateClassicItem = new MainMenuRotateClassicItem();
-  rotateClassicItem->setPos(QPointF(0.5, 0.5));
+  rotateClassicItem->setPos(QPointF(0.2, 0.6));
+
+  swapEndlessItem = new MainMenuSwapEndlessItem();
+  swapEndlessItem->setPos(QPointF(0.4, 0.4));
+
+  rotateEndlessItem = new MainMenuRotateEndlessItem();
+  rotateEndlessItem->setPos(QPointF(0.4, 0.6));
+
+  swapTimingItem = new MainMenuSwapTimingItem();
+  swapTimingItem->setPos(QPointF(0.6, 0.4));
+
+  rotateTimingItem = new MainMenuRotateTimingItem();
+  rotateTimingItem->setPos(QPointF(0.6, 0.6));
 
   puzzleMenuItem = new MainMenuRotatePuzzleItem();
-  puzzleMenuItem->setPos(QPointF(0.7, 0.5));
+  puzzleMenuItem->setPos(QPointF(0.8, 0.5));
 
   myItems.push_back(swapClassicItem);
   myItems.push_back(rotateClassicItem);
+  myItems.push_back(swapEndlessItem);
+  myItems.push_back(rotateEndlessItem);
+  myItems.push_back(swapTimingItem);
+  myItems.push_back(rotateTimingItem);
   myItems.push_back(puzzleMenuItem);
 
   t = new QTimer();
@@ -80,7 +98,7 @@ void MainMenuWidget::dealPressed(QPointF mousePos, Qt::MouseButton button)
                           toScene(swapClassicItem->getPos().x(),
                                   swapClassicItem->getPos().y())) < 50)
   {
-    SwapClassicGame *swapGame = new SwapClassicGame();
+    AbstractPixmapWidget *swapGame = new SwapClassicGame();
     emit giveControlTo(swapGame, false);
   }
   else if (distanceOfTwoPoints(mousePos,
@@ -88,6 +106,34 @@ void MainMenuWidget::dealPressed(QPointF mousePos, Qt::MouseButton button)
                                   rotateClassicItem->getPos().y())) < 50)
   {
     AbstractPixmapWidget *rotateGame = new RotateClassicGame();
+    emit giveControlTo(rotateGame, false);
+  }
+  else if (distanceOfTwoPoints(mousePos,
+                          toScene(swapEndlessItem->getPos().x(),
+                                  swapEndlessItem->getPos().y())) < 50)
+  {
+//    AbstractPixmapWidget *swapGame = new SwapEndlessGame();
+//    emit giveControlTo(swapGame, false);
+  }
+  else if (distanceOfTwoPoints(mousePos,
+                          toScene(rotateEndlessItem->getPos().x(),
+                                  rotateEndlessItem->getPos().y())) < 50)
+  {
+//    AbstractPixmapWidget *rotateGame = new RotateEndlessGame();
+//    emit giveControlTo(rotateGame, false);
+  }
+  else if (distanceOfTwoPoints(mousePos,
+                          toScene(swapTimingItem->getPos().x(),
+                                  swapTimingItem->getPos().y())) < 50)
+  {
+    AbstractPixmapWidget *swapGame = new SwapTimingGame();
+    emit giveControlTo(swapGame, false);
+  }
+  else if (distanceOfTwoPoints(mousePos,
+                          toScene(rotateTimingItem->getPos().x(),
+                                  rotateTimingItem->getPos().y())) < 50)
+  {
+    AbstractPixmapWidget *rotateGame = new RotateTimingGame();
     emit giveControlTo(rotateGame, false);
   }
   else if (distanceOfTwoPoints(mousePos,

@@ -321,7 +321,7 @@ LockStageMenuWidget::LockStageMenuWidget(int stageType) :
     //imageName.sprintf("%s%02d%s", prefix, i + 1, suffix);
     //qDebug() << imageName;
     stageItem[i] = new StageMenuItem(imageName);
-    stageItem[i]->setPos(QPointF(0.07 + 0.15 * (i % 5), 0.05 + 0.45 * (i / 5) + 0.15 * (i % 2)));
+    stageItem[i]->setPos(QPointF(0.13 + 0.07 + 0.15 * (i % 5), 0.15 + 0.05 + 0.45 * (i / 5) + 0.15 * (i % 2)));
     myItems.push_back(stageItem[i]);
   }
 
@@ -329,7 +329,7 @@ LockStageMenuWidget::LockStageMenuWidget(int stageType) :
     stageItem[10] = new StageMenuItem(":/images/stageitems/button_advance*.png");
   else
     stageItem[10] = new StageMenuItem(":/images/stageitems/button_normal*.png");
-  stageItem[10]->setPos(QPointF(0.37, 0.35));
+  stageItem[10]->setPos(QPointF(0.5, 0.5));
   myItems.push_back(stageItem[10]);
 
   t = new QTimer();
@@ -348,8 +348,8 @@ void LockStageMenuWidget::dealPressed(QPointF mousePos, Qt::MouseButton button)
   for (int i = 0; i < 10; ++i)
   {
     if (distanceOfTwoPoints(mousePos,
-                            QPointF((0.12 + 0.07 + 0.15 * (i % 5)) * LOGICAL_WIDTH,
-                                    (0.12 + 0.05 + 0.45 * (i / 5) + 0.15 * (i % 2)) * LOGICAL_HEIGHT)) < 81)
+                            QPointF((0.13 + 0.07 + 0.15 * (i % 5)) * LOGICAL_WIDTH,
+                                    (0.15 + 0.05 + 0.45 * (i / 5) + 0.15 * (i % 2)) * LOGICAL_HEIGHT)) < 81)
     {
 //      int *ballIndex = new int [61];
 //      int *toBeIndex = new int [61];
@@ -362,8 +362,8 @@ void LockStageMenuWidget::dealPressed(QPointF mousePos, Qt::MouseButton button)
     }
   }
   if (distanceOfTwoPoints(mousePos,
-                          QPointF(0.49 * LOGICAL_WIDTH,
-                                  0.47 * LOGICAL_HEIGHT)) < 81)
+                          QPointF(0.5 * LOGICAL_WIDTH,
+                                  0.5 * LOGICAL_HEIGHT)) < 81)
   {
     emit giveControlTo(new LockStageMenuWidget(type ^ 1), true);
   }

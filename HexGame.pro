@@ -33,7 +33,9 @@ SOURCES += main.cpp\
     gamecommonitems.cpp \
     rotateclassicgame.cpp \
     gamerecord.cpp \
-    pixmapoperations.cpp
+    pixmapoperations.cpp \
+    swaptiminggame.cpp \
+    rotatetiminggame.cpp
 
 HEADERS  += ball.h \
     corecontroller.h \
@@ -63,7 +65,9 @@ HEADERS  += ball.h \
     gamecommonitems.h \
     rotateclassicgame.h \
     gamerecord.h \
-    pixmapoperations.h
+    pixmapoperations.h \
+    swaptiminggame.h \
+    rotatetiminggame.h
 
 RESOURCES += \
     resource.qrc

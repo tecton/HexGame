@@ -7,9 +7,13 @@
 #include <QPainter>
 #include "pixmapoperations.h"
 
-const static int kTotalItems = 3;
+const static int kTotalItems = 7;
 const static char * kItemPaths[] = {":/images/mainmenuitems/swapclassicgame*.png",
                                     ":/images/mainmenuitems/rotateclassicgame*.png",
+                                    ":/images/mainmenuitems/swapendlessgame*.png",
+                                    ":/images/mainmenuitems/rotateendlessgame*.png",
+                                    ":/images/mainmenuitems/swaptiminggame*.png",
+                                    ":/images/mainmenuitems/rotatetiminggame*.png",
                                     ":/images/mainmenuitems/puzzlegame*.png"};
 
 
@@ -31,11 +35,6 @@ const QPixmap& AbstractMainMenuItem::pixmap(ItemType type,
   return mainMenuItemPixmaps[type][frame % mainMenuItemFrameCounts[type]];
 }
 
-MainMenuSwapClassicItem::MainMenuSwapClassicItem()
-{
-  setPos(QPointF(0, 0));
-}
-
 void MainMenuSwapClassicItem::paint(QPainter *painter,
                                     int width,
                                     int height,
@@ -53,11 +52,6 @@ void MainMenuSwapClassicItem::paint(QPainter *painter,
                QPointF(x, y),
                false,
                true);
-}
-
-MainMenuRotateClassicItem::MainMenuRotateClassicItem()
-{
-  setPos(QPointF(0, 0));
 }
 
 void MainMenuRotateClassicItem::paint(QPainter *painter,
@@ -79,15 +73,86 @@ void MainMenuRotateClassicItem::paint(QPainter *painter,
                true);
 }
 
-MainMenuRotatePuzzleItem::MainMenuRotatePuzzleItem()
+void MainMenuSwapEndlessItem::paint(QPainter *painter,
+                                    int width,
+                                    int height,
+                                    int frame)
 {
-  setPos(QPointF(0, 0));
+  const QPixmap& pixmap = AbstractMainMenuItem::pixmap(
+                            AbstractMainMenuItem::SwapEndlessItem,
+                            frame);
+  double x = getPos().x() * width;
+  double y = getPos().y() * height;
+  drawPixmapAt(painter,
+               pixmap,
+               1,
+               1,
+               QPointF(x, y),
+               false,
+               true);
+}
+
+void MainMenuRotateEndlessItem::paint(QPainter *painter,
+                                      int width,
+                                      int height,
+                                      int frame)
+{
+  const QPixmap& pixmap = AbstractMainMenuItem::pixmap(
+                            AbstractMainMenuItem::RotateEndlessItem,
+                            frame);
+  double x = getPos().x() * width;
+  double y = getPos().y() * height;
+  drawPixmapAt(painter,
+               pixmap,
+               1,
+               1,
+               QPointF(x, y),
+               false,
+               true);
+}
+
+void MainMenuSwapTimingItem::paint(QPainter *painter,
+                                   int width,
+                                   int height,
+                                   int frame)
+{
+  const QPixmap& pixmap = AbstractMainMenuItem::pixmap(
+                            AbstractMainMenuItem::SwapTimingItem,
+                            frame);
+  double x = getPos().x() * width;
+  double y = getPos().y() * height;
+  drawPixmapAt(painter,
+               pixmap,
+               1,
+               1,
+               QPointF(x, y),
+               false,
+               true);
+}
+
+void MainMenuRotateTimingItem::paint(QPainter *painter,
+                                     int width,
+                                     int height,
+                                     int frame)
+{
+  const QPixmap& pixmap = AbstractMainMenuItem::pixmap(
+                            AbstractMainMenuItem::RotateTimingItem,
+                            frame);
+  double x = getPos().x() * width;
+  double y = getPos().y() * height;
+  drawPixmapAt(painter,
+               pixmap,
+               1,
+               1,
+               QPointF(x, y),
+               false,
+               true);
 }
 
 void MainMenuRotatePuzzleItem::paint(QPainter *painter,
-                                        int width,
-                                        int height,
-                                        int frame)
+                                     int width,
+                                     int height,
+                                     int frame)
 {
   const QPixmap& pixmap = AbstractMainMenuItem::pixmap(
                             AbstractMainMenuItem::RotatePuzzleItem,
