@@ -6,7 +6,7 @@
 #include <QFileInfo>
 #include <QDir>
 #include <QPainter>
-#include "initpixmaps.h"
+#include "pixmapoperations.h"
 
 StageMenuItem::StageMenuItem(QString path)
 {
@@ -21,5 +21,11 @@ void StageMenuItem::paint(QPainter *painter,
 {
   double x = getPos().x() * width;
   double y = getPos().y() * height;
-  painter->drawPixmap(QPointF(x, y), pixmaps[frame % count]);
+  drawPixmapAt(painter,
+               pixmaps[frame % count],
+               1,
+               1,
+               QPointF(x, y),
+               false,
+               true);
 }

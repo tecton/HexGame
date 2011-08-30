@@ -1,7 +1,8 @@
-#include "initpixmaps.h"
+#include "pixmapoperations.h"
 
 #include <QFileInfo>
 #include <QDir>
+#include <QPainter>
 
 void initPixmaps(QString path,
                  QVector<QPixmap>& pixmaps,
@@ -43,4 +44,31 @@ void initPixmaps(int count,
     pixmaps << current;
     frameCounts << count;
   }
+}
+
+void drawPixmapAt(QPainter *painter,
+                  const QPixmap& pixmap,
+                  double xRate,
+                  double yRate,
+                  QPointF pos,
+                  bool resize,
+                  bool center)
+{
+  double width = pixmap.width();
+  double height = pixmap.height();
+  if (resize)
+  {
+    width *= xRate;
+    height *= yRate;
+  }
+  QPointF leftUp = pos;
+  if (center)
+  {
+    leftUp.setX(leftUp.x() - width / 2);
+    leftUp.setY(leftUp.y() - height / 2);
+  }
+  if (resize)
+    painter->drawPixmap(leftUp.x(), leftUp.y(), width, height, pixmap);
+  else
+    painter->drawPixmap(leftUp.x(), leftUp.y(), pixmap);
 }

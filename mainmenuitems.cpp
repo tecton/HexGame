@@ -5,8 +5,7 @@
 #include <QFileInfo>
 #include <QDir>
 #include <QPainter>
-#include "initpixmaps.h"
-
+#include "pixmapoperations.h"
 
 const static int kTotalItems = 3;
 const static char * kItemPaths[] = {":/images/mainmenuitems/swapclassicgame*.png",
@@ -47,7 +46,13 @@ void MainMenuSwapClassicItem::paint(QPainter *painter,
                             frame);
   double x = getPos().x() * width;
   double y = getPos().y() * height;
-  painter->drawPixmap(QPointF(x, y), pixmap);
+  drawPixmapAt(painter,
+               pixmap,
+               1,
+               1,
+               QPointF(x, y),
+               false,
+               true);
 }
 
 MainMenuRotateClassicItem::MainMenuRotateClassicItem()
@@ -65,7 +70,13 @@ void MainMenuRotateClassicItem::paint(QPainter *painter,
                             frame);
   double x = getPos().x() * width;
   double y = getPos().y() * height;
-  painter->drawPixmap(QPointF(x, y), pixmap);
+  drawPixmapAt(painter,
+               pixmap,
+               1,
+               1,
+               QPointF(x, y),
+               false,
+               true);
 }
 
 MainMenuRotatePuzzleItem::MainMenuRotatePuzzleItem()
@@ -83,5 +94,11 @@ void MainMenuRotatePuzzleItem::paint(QPainter *painter,
                             frame);
   double x = getPos().x() * width;
   double y = getPos().y() * height;
-  painter->drawPixmap(QPointF(x, y), pixmap);
+  drawPixmapAt(painter,
+               pixmap,
+               1,
+               1,
+               QPointF(x, y),
+               false,
+               true);
 }
