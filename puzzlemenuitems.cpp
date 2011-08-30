@@ -5,7 +5,7 @@
 #include <QFileInfo>
 #include <QDir>
 #include <QPainter>
-#include "initpixmaps.h"
+#include "pixmapoperations.h"
 
 const static int kTotalItems = 3;
 const static char * kItemPaths[] = {":/images/puzzlemenuitems/exchange_theme*.png",
@@ -46,7 +46,13 @@ void PuzzleMenuExchangeItem::paint(QPainter *painter,
                             frame);
   double x = getPos().x() * width;
   double y = getPos().y() * height;
-  painter->drawPixmap(QPointF(x, y), pixmap);
+  drawPixmapAt(painter,
+               pixmap,
+               1,
+               1,
+               QPointF(x, y),
+               false,
+               true);
 }
 
 PuzzleMenuUniteItem::PuzzleMenuUniteItem()
@@ -64,7 +70,13 @@ void PuzzleMenuUniteItem::paint(QPainter *painter,
                             frame);
   double x = getPos().x() * width;
   double y = getPos().y() * height;
-  painter->drawPixmap(QPointF(x, y), pixmap);
+  drawPixmapAt(painter,
+               pixmap,
+               1,
+               1,
+               QPointF(x, y),
+               false,
+               true);
 }
 
 PuzzleMenuLockItem::PuzzleMenuLockItem()
@@ -82,5 +94,11 @@ void PuzzleMenuLockItem::paint(QPainter *painter,
                             frame);
   double x = getPos().x() * width;
   double y = getPos().y() * height;
-  painter->drawPixmap(QPointF(x, y), pixmap);
+  drawPixmapAt(painter,
+               pixmap,
+               1,
+               1,
+               QPointF(x, y),
+               false,
+               true);
 }

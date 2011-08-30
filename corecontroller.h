@@ -109,6 +109,7 @@ private:
 signals:
   void stableEliminateTested(Connections connections);
   void userMovingEliminateTested(Connections connections);
+  void eliminated(int count);
   void goodMove();
   void badMove();
 };

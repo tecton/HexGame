@@ -166,5 +166,23 @@ public:
                      int frame);
 };
 
+class IntegerItem : public AbstractItem
+{
+public:
+  virtual void paint(QPainter *painter,
+                     int width,
+                     int height,
+                     int frame);
+
+  inline void setValue(int v)
+  {value = v;}
+
+  inline int getValue()
+  {return value;}
+
+private:
+  int value;
+};
+
 
 #endif // GAMECOMMONITEMS_H

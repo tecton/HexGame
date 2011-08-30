@@ -13,7 +13,9 @@
 #include "gesturecontroller.h"
 #include "basicpainter.h"
 #include "puzzlegameinit.h"
+#include "stagemenuwidget.h"
 #include "gamerecord.h"
+#include "gamecommonitems.h"
 
 extern GameRecord gameRecord;
 
@@ -53,6 +55,9 @@ RotatePuzzleGame::RotatePuzzleGame(int ballIndex[], int toBeIndex[],
     index = gameIndex;
     type = gameType;
 
+    currentSteps = new IntegerItem();
+    currentSteps->setValue(0);
+
     controller = new CoreController(rule, gameboardInfo, balls);
     gestureController = new GestureController(rule, gameboardInfo, controller);
 
@@ -61,6 +66,7 @@ RotatePuzzleGame::RotatePuzzleGame(int ballIndex[], int toBeIndex[],
     t = new QTimer();
     t->setInterval(75);
     connect(t, SIGNAL(timeout()), this, SLOT(advance()));
+    connect(controller, SIGNAL(goodMove()), this, SLOT(successMoved()));
     t->start();
 }
 
@@ -128,8 +134,28 @@ QPointF RotatePuzzleGame::toScene(double xRate, double yRate)
 //}
 void RotatePuzzleGame::quitGame()
 {
-    emit giveControlTo(NULL, true);
-    delete this;
+  switch (type)
+  {
+  case 0:
+    emit giveControlTo(new ExchangeStageMenuWidget(0), true);
+    break;
+  case 1:
+    emit giveControlTo(new ExchangeStageMenuWidget(1), true);
+    break;
+  case 2:
+    emit giveControlTo(new UniteStageMenuWidget(0), true);
+    break;
+  case 3:
+    emit giveControlTo(new UniteStageMenuWidget(1), true);
+    break;
+  case 4:
+    emit giveControlTo(new LockStageMenuWidget(0), true);
+    break;
+  case 5:
+    emit giveControlTo(new LockStageMenuWidget(1), true);
+    break;
+  }
+  delete this;
 }
 
 void RotatePuzzleGame::dealPressed(QPointF mousePos, Qt::MouseButton button)
@@ -152,6 +178,11 @@ void RotatePuzzleGame::dealReleased(QPointF mousePos, Qt::MouseButton button)
     gestureController->dealReleased(mousePos);
 }
 
+void RotatePuzzleGame::successMoved()
+{
+  currentSteps->setValue(currentSteps->getValue() + 1);
+}
+
 void RotatePuzzleGame::advance()
 {
     ++frameCount;
@@ -170,18 +201,19 @@ void RotatePuzzleGame::advance()
     if (i == gameboardInfo->totalBallCounts())
     {
       int lastStageIndex[] = {4, 4, 5, 5, 10, 10};
+      int offset[] = {0, 4, 0, 5, 0, 10};
       QString fileName[] = {"exchange", "exchange", "unite", "unite",
                            "lock", "lock"};
       if (index != lastStageIndex[type])
       {
         RotatePuzzleGame* nextStage = PuzzleGameInit::initRotatePuzzleGame(index + 1,
                                                                            type);
-        gameRecord.writeData(fileName[type], index, totalSteps);
+        gameRecord.writeData(fileName[type], index + offset[type], currentSteps->getValue());
         emit giveControlTo(nextStage, true);
       }
       else
       {
-        gameRecord.writeData(fileName[type], index, totalSteps);
+        gameRecord.writeData(fileName[type], index + offset[type], currentSteps->getValue());
         emit giveControlTo(NULL, true);
       }
 //      if (index != 5)

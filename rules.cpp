@@ -140,18 +140,18 @@ bool RotateEndlessGameRule::endlessFill()
 
 ////////////////////////////////////////////////////////////////////////
 
-bool RotateTimeGameRule::gestureAllowed(AbstractRule::Gesture gesture)
+bool SwapTimingGameRule::gestureAllowed(AbstractRule::Gesture gesture)
 {
   switch (gesture)
   {
-  case Rotate:
+  case Swap:
     return true;
   default:
     return false;
   }
 }
 
-bool RotateTimeGameRule::gameStepAllowed(AbstractRule::GameStep gameStep)
+bool SwapTimingGameRule::gameStepAllowed(AbstractRule::GameStep gameStep)
 {
   switch (gameStep)
   {
@@ -167,7 +167,53 @@ bool RotateTimeGameRule::gameStepAllowed(AbstractRule::GameStep gameStep)
 }
 
 
-bool RotateTimeGameRule::eliminationAllowed
+bool SwapTimingGameRule::eliminationAllowed
+    (AbstractRule::Elimination elimination)
+{
+  switch (elimination)
+  {
+  case ThreeInARow:
+    return true;
+  default:
+    return false;
+  }
+}
+
+bool SwapTimingGameRule::endlessFill()
+{
+  return true;
+}
+
+////////////////////////////////////////////////////////////////////////
+
+bool RotateTimingGameRule::gestureAllowed(AbstractRule::Gesture gesture)
+{
+  switch (gesture)
+  {
+  case Rotate:
+    return true;
+  default:
+    return false;
+  }
+}
+
+bool RotateTimingGameRule::gameStepAllowed(AbstractRule::GameStep gameStep)
+{
+  switch (gameStep)
+  {
+  case FillWithNewBalls:
+  case AutoRotate:
+  case RemindElimination:
+  case Eliminate:
+  case RollBackWhenNoElimination:
+    return true;
+  default:
+    return false;
+  }
+}
+
+
+bool RotateTimingGameRule::eliminationAllowed
     (AbstractRule::Elimination elimination)
 {
   switch (elimination)
@@ -180,7 +226,7 @@ bool RotateTimeGameRule::eliminationAllowed
   }
 }
 
-bool RotateTimeGameRule::endlessFill()
+bool RotateTimingGameRule::endlessFill()
 {
   return true;
 }

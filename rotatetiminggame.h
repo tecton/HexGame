@@ -1,9 +1,10 @@
-#ifndef ROTATEPUZZLEGAME_H
-#define ROTATEPUZZLEGAME_H
+#ifndef ROTATETIMINGGAME_H
+#define ROTATETIMINGGAME_H
 
 #include "abstractpixmapwidget.h"
 #include "connections.h"
 
+#include <QPointF>
 
 class QPainter;
 class QTimer;
@@ -11,18 +12,21 @@ class Ball;
 class CoreController;
 class EffectPainter;
 class GestureController;
-class SixtyOneGameBoardInfo;
+class AbstractGameBoardInfo;
+class AbstractProgressBarItem;
 class AbstractRule;
-class RotatePuzzleGameRule;
+class AbstractItem;
+class AbstractBonusItem;
 class IntegerItem;
+class SwapClassicGameRule;
+class SwapClassicGameSavedInfo;
 
-class RotatePuzzleGame : public AbstractPixmapWidget
+class RotateTimingGame : public AbstractPixmapWidget
 {
   Q_OBJECT
 public:
-  RotatePuzzleGame(int ballIndex[], int tobeIndex[],
-                   int gameIndex, int gameType);
-  ~RotatePuzzleGame();
+  RotateTimingGame();
+  ~RotateTimingGame();
 
   // Functions most overloaded
   virtual void makePixmap(QPixmap& pixmap, int width, int height);
@@ -38,23 +42,37 @@ public:
 
 private:
   AbstractRule *rule;
-  SixtyOneGameBoardInfo *gameboardInfo;
+  AbstractGameBoardInfo *gameboardInfo;
   CoreController *controller;
   GestureController *gestureController;
   EffectPainter *effectPainter;
   QTimer *t;
+  QTimer *oneSecondTimer;
   int frameCount;
-  int *completeIndex;
-  int type;
-  int index;
-  IntegerItem *currentSteps;
-  // TODO:分数、奖励之类的东西
+  // TODO:
 
+  IntegerItem *scoreItem;
+  AbstractProgressBarItem *progressBar;
+  AbstractBonusItem *flame;
+  AbstractBonusItem *star;
+  AbstractItem *hint;
+  AbstractItem *exitToMainMenu;
+
+  QVector <AbstractItem *> myItems;
+
+  AbstractItem *itemAtPressPos;
+  QPointF currentPos;
+
+  void showHint();
+  void gameOver();
   void quitGame();
 
 private slots:
   void advance();
-  void successMoved();
+  void eliminated(int count);
+  void oneSecond();
+  void dealStableEliminate(Connections connections);
+  void dealUserMovingEliminate(Connections connections);
 };
 
-#endif // ROTATEPUZZLEGAME_H
+#endif // ROTATETIMINGGAME_H

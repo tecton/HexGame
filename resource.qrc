@@ -66,7 +66,10 @@
         <file>stageitems/stage_img0920.png</file>
         <file>stageitems/stage_img1020.png</file>
         <file>stageitems/lock_stage.png</file>
-        <file>stageitems/button_exit.png</file>
+        <file>mainmenuitems/rotateendlessgame01.png</file>
+        <file>mainmenuitems/rotatetiminggame01.png</file>
+        <file>mainmenuitems/swapendlessgame01.png</file>
+        <file>mainmenuitems/swaptiminggame01.png</file>
         <file>stageitems/stage_img_advanced_locked01.png</file>
         <file>stageitems/stage_img_advanced_locked02.png</file>
         <file>stageitems/stage_img_advanced_locked03.png</file>
@@ -97,5 +100,6 @@
         <file>stageitems/stage_img_locked08.png</file>
         <file>stageitems/stage_img_locked09.png</file>
         <file>stageitems/stage_img_locked10.png</file>
+        <file>stageitems/button_exit.png</file>
     </qresource>
 </RCC>
