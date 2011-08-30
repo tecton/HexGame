@@ -2,6 +2,7 @@
 #define GAMECOMMONITEMS_H
 
 #include "abstractitem.h"
+#include <QString>
 
 class AbstractGameBoardInfo;
 class EffectPainter;
@@ -174,6 +175,12 @@ public:
                      int height,
                      int frame);
 
+  inline void setHint(QString str)
+  {hint = str;}
+
+  inline QString getHint()
+  {return hint;}
+
   inline void setValue(int v)
   {value = v;}
 
@@ -181,6 +188,7 @@ public:
   {return value;}
 
 private:
+  QString hint;
   int value;
 };
 

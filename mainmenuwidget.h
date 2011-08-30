@@ -7,7 +7,7 @@
 
 class QTimer;
 class AbstractItem;
-class AbstractMainMenuItem;
+class MainMenuGameItem;
 
 class MainMenuWidget : public AbstractPixmapWidget
 {
@@ -26,13 +26,7 @@ public:
 
 private:
   QTimer *t;
-  AbstractMainMenuItem *swapClassicItem;
-  AbstractMainMenuItem *rotateClassicItem;
-  AbstractMainMenuItem *swapEndlessItem;
-  AbstractMainMenuItem *rotateEndlessItem;
-  AbstractMainMenuItem *swapTimingItem;
-  AbstractMainMenuItem *rotateTimingItem;
-  AbstractMainMenuItem *puzzleMenuItem;
+  MainMenuGameItem *items[7];
   QVector <AbstractItem *> myItems;
   int frameCount;
 

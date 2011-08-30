@@ -771,12 +771,12 @@ int CoreController::hint()
           if ( check(copiedBalls, tryingIndex) )
           {
             delete [] copiedBalls;
-            return tryingIndex;
+            return swapping[k];
           }
           if ( check(copiedBalls, swapping[k]) )
           {
             delete [] copiedBalls;
-            return swapping[k];
+            return tryingIndex;
           }
           t = copiedBalls[tryingIndex];
           copiedBalls[tryingIndex] = copiedBalls[swapping[k]];

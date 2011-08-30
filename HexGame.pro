@@ -18,7 +18,6 @@ SOURCES += main.cpp\
     gamemath.cpp \
     basicpainter.cpp \
     gesturecontroller.cpp \
-    swapclassicgame.cpp \
     effectpainter.cpp \
     mainwidget.cpp \
     mainmenuitems.cpp \
@@ -31,11 +30,12 @@ SOURCES += main.cpp\
     puzzlegameinit.cpp \
     thirtysevengameboardinfo.cpp \
     gamecommonitems.cpp \
-    rotateclassicgame.cpp \
     gamerecord.cpp \
     pixmapoperations.cpp \
     swaptiminggame.cpp \
-    rotatetiminggame.cpp
+    rotatetiminggame.cpp \
+    classicgamewidget.cpp \
+    othergameinit.cpp
 
 HEADERS  += ball.h \
     corecontroller.h \
@@ -49,7 +49,6 @@ HEADERS  += ball.h \
     basicpainter.h \
     gesturecontroller.h \
     abstractpixmapwidget.h \
-    swapclassicgame.h \
     effectpainter.h \
     mainwidget.h \
     abstractitem.h \
@@ -63,11 +62,12 @@ HEADERS  += ball.h \
     puzzlegameinit.h \
     thirtysevengameboardinfo.h \
     gamecommonitems.h \
-    rotateclassicgame.h \
     gamerecord.h \
     pixmapoperations.h \
     swaptiminggame.h \
-    rotatetiminggame.h
+    rotatetiminggame.h \
+    classicgamewidget.h \
+    othergameinit.h
 
 RESOURCES += \
     resource.qrc
