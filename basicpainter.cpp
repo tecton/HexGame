@@ -10,7 +10,7 @@
 
 #include "abstractitem.h"
 #include "ball.h"
-#include "initpixmaps.h"
+#include "pixmapoperations.h"
 
 const static int kTotalColors = 8;
 const static char * kColorPaths[] = {":/images/balls/red*.png",
@@ -53,9 +53,14 @@ void BasicPainter::paintBasicBalls(Ball **balls,
       pos.setX(pos.x() * xRate);
       pos.setY(pos.y() * yRate);
       int colorIndex = balls[i]->getColor();
-      painter->drawPixmap(
-          pos,
-          pixmaps[colorIndex][frame % frameCounts[colorIndex]]);
+      drawPixmapAt(painter,
+                   pixmaps[colorIndex][frame % frameCounts[colorIndex]],
+                   xRate,
+                   yRate,
+                   pos,
+                   true,
+                   false);
+
       if (balls[i]->getLocked())
         painter->drawText(pos, "L");
     }
@@ -84,9 +89,13 @@ void BasicPainter::paintPuzzleGameBalls(Ball **balls,
       QPointF pos = balls[i]->pos();
       pos.setX(pos.x() * xRate);
       pos.setY(pos.y() * yRate);
-      painter->drawPixmap(
-            pos,
-            pixmaps[colorIndex[i]][frame % frameCounts[colorIndex[i]]]);
+      drawPixmapAt(painter,
+                   pixmaps[colorIndex[i]][frame % frameCounts[colorIndex[i]]],
+                   xRate,
+                   yRate,
+                   pos,
+                   true,
+                   false);
 //      painter->drawText(pos, QObject::tr("%1").arg(i));
     }
   }

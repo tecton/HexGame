@@ -28,6 +28,10 @@ private:
   QTimer *t;
   AbstractMainMenuItem *swapClassicItem;
   AbstractMainMenuItem *rotateClassicItem;
+  AbstractMainMenuItem *swapEndlessItem;
+  AbstractMainMenuItem *rotateEndlessItem;
+  AbstractMainMenuItem *swapTimingItem;
+  AbstractMainMenuItem *rotateTimingItem;
   AbstractMainMenuItem *puzzleMenuItem;
   QVector <AbstractItem *> myItems;
   int frameCount;
