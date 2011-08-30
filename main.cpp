@@ -9,6 +9,8 @@
 
 #include "gamerecord.h"
 
+GameRecord record;
+
 int main(int argc, char *argv[])
 {
   srand ( time(NULL) );
@@ -35,7 +37,6 @@ int main(int argc, char *argv[])
   w.setGeometry(QRect(100,100,1024,600));
   w.show();
 
-  GameRecord record;
   int *iarr;
   int size;
   qDebug() << record.sizeOfInt("walala");

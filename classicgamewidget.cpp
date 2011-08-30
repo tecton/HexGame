@@ -1,4 +1,4 @@
-#include "swapclassicgame.h"
+#include "classicgamewidget.h"
 
 #include <QPainter>
 #include <QPixmap>
@@ -14,33 +14,57 @@
 #include "gamecommonitems.h"
 #include "gamemath.h"
 #include "thirtysevengameboardinfo.h"
+#include "othergameinit.h"
 
 #define LOGICAL_WIDTH  800
 #define LOGICAL_HEIGHT 500
 
-SwapClassicGame::SwapClassicGame() :
+ClassicGameWidget::ClassicGameWidget(AbstractRule::Gesture gesture) :
     frameCount(0),
     noSolutionCount(0)
 {
-  rule = new SwapClassicGameRule();//SwapClassicGameRule();
+  if (gesture == AbstractRule::Swap)
+    rule = new SwapClassicGameRule();
+  else
+    rule = new RotateClassicGameRule();
   gameboardInfo = new ThirtySevenGameBoardInfo();
-  //SwapClassicGameSavedInfo savedInfo = readSaved();
-  controller = new CoreController(rule, gameboardInfo, NULL);
+
+  OtherGameRecord *record = OtherGameInit::loadOtherGame(getIndex());
+
+  //ClassicGameWidgetSavedInfo savedInfo = readSaved();
+  controller = new CoreController(rule, gameboardInfo, record->balls);
   controller->fillAllBlanks();
   gestureController = new GestureController(rule, gameboardInfo, controller);
 
   effectPainter = new EffectPainter(gameboardInfo);
 
+  hightestScore = new IntegerItem();
+  hightestScore->setPos(QPointF(0.1, 0.1));
+  hightestScore->setValue(record->highestScore);
+  hightestScore->setHint("Highest Score");
+  myItems.push_back(hightestScore);
+
+  currentLevel = new IntegerItem();
+  currentLevel->setPos(QPointF(0.1, 0.15));
+  currentLevel->setValue(record->currentLevel);
+  currentLevel->setHint("Current Level");
+  myItems.push_back(currentLevel);
+
   progressBar = new VerticalProgressBarItem();
-  progressBar->setPos(QPointF(0.1, 0.1));
+  progressBar->setPos(QPointF(0.1, 0.2));
+  progressBar->setCurrent(record->currentScore);
+  progressBar->setMin(record->minScore);
+  progressBar->setMax(record->maxScore);
   myItems.push_back(progressBar);
 
   flame = new FlameItem();
   flame->setPos(QPointF(0.1, 0.3));
+  flame->setCurrent(record->flame);
   myItems.push_back(flame);
 
   star = new StarItem();
   star->setPos(QPointF(0.1, 0.5));
+  star->setCurrent(record->star);
   myItems.push_back(star);
 
   exitToMainMenu = new ExitToMainMenuItem();
@@ -52,6 +76,8 @@ SwapClassicGame::SwapClassicGame() :
   myItems.push_back(hint);
 
   itemAtPressPos = NULL;
+
+  delete record;
 
   connect(controller,
           SIGNAL(stableEliminateTested(Connections)),
@@ -68,13 +94,13 @@ SwapClassicGame::SwapClassicGame() :
   t->start();
 }
 
-void SwapClassicGame::makePixmap(QPixmap& pixmap, int width, int height)
+void ClassicGameWidget::makePixmap(QPixmap& pixmap, int width, int height)
 {
   makeBasicPixmap(pixmap, width, height);
   addEffect(pixmap, width, height);
 }
 
-SwapClassicGame::~SwapClassicGame()
+ClassicGameWidget::~ClassicGameWidget()
 {
   t->stop();
   delete t;
@@ -87,10 +113,10 @@ SwapClassicGame::~SwapClassicGame()
   delete effectPainter;
 }
 
-//void SwapClassicGame::init() //
+//void ClassicGameWidget::init() //
 //}
 
-void SwapClassicGame::makeBasicPixmap(QPixmap& pixmap, int width, int height)
+void ClassicGameWidget::makeBasicPixmap(QPixmap& pixmap, int width, int height)
 {
   pixmap = QPixmap(width, height);
   pixmap.fill(Qt::black);
@@ -111,7 +137,7 @@ void SwapClassicGame::makeBasicPixmap(QPixmap& pixmap, int width, int height)
   delete painter;
 }
 
-void SwapClassicGame::addEffect(QPixmap& pixmap, int width, int height)
+void ClassicGameWidget::addEffect(QPixmap& pixmap, int width, int height)
 {
   QPainter *painter = new QPainter(&pixmap);
   QPointF pos = currentPos;
@@ -145,18 +171,18 @@ void SwapClassicGame::addEffect(QPixmap& pixmap, int width, int height)
   effectPainter->advance();
 }
 
-QPointF SwapClassicGame::toScene(double xRate, double yRate)
+QPointF ClassicGameWidget::toScene(double xRate, double yRate)
 {
   return QPointF(xRate * gameboardInfo->width(),
                  yRate * gameboardInfo->height());
 }
 
-//SwapClassicGameSavedInfo SwapClassicGame::readSaved()
+//ClassicGameWidgetSavedInfo ClassicGameWidget::readSaved()
 //{
 
 //}
 
-void SwapClassicGame::showHint()
+void ClassicGameWidget::showHint()
 {
   int hintOnBoard = controller->hint();
   if (hintOnBoard >= 0)
@@ -172,18 +198,32 @@ void SwapClassicGame::showHint()
     gameOver();
 }
 
-void SwapClassicGame::gameOver()
+void ClassicGameWidget::gameOver()
 {
-  quitGame();
-}
-
-void SwapClassicGame::quitGame()
-{
+  OtherGameInit::clearGame(getIndex());
   emit giveControlTo(NULL, true);
   delete this;
 }
 
-void SwapClassicGame::dealPressed(QPointF mousePos, Qt::MouseButton button)
+void ClassicGameWidget::quitGame()
+{
+  OtherGameRecord record;
+  record.currentLevel = currentLevel->getValue();
+  record.minScore = progressBar->getMin();
+  record.currentScore = progressBar->getCurrent();
+  record.maxScore = progressBar->getMax();
+  record.flame = flame->getCurrent();
+  record.star = star->getCurrent();
+  record.balls = controller->balls;
+  OtherGameInit::saveOtherGame(&record,
+                               getIndex(),
+                               gameboardInfo->totalBallCounts());
+
+  emit giveControlTo(NULL, true);
+  delete this;
+}
+
+void ClassicGameWidget::dealPressed(QPointF mousePos, Qt::MouseButton button)
 {
   currentPos = mousePos;
   if (distanceOfTwoPoints(mousePos,
@@ -214,14 +254,14 @@ void SwapClassicGame::dealPressed(QPointF mousePos, Qt::MouseButton button)
   gestureController->dealPressed(mousePos);
 }
 
-void SwapClassicGame::dealMoved(QPointF mousePos, Qt::MouseButton button)
+void ClassicGameWidget::dealMoved(QPointF mousePos, Qt::MouseButton button)
 {
   currentPos = mousePos;
-//  effectPainter->clearUserMovingEliminationHints();
+  effectPainter->clearUserMovingEliminationHints();
   gestureController->dealMoved(mousePos);
 }
 
-void SwapClassicGame::dealReleased(QPointF mousePos, Qt::MouseButton button)
+void ClassicGameWidget::dealReleased(QPointF mousePos, Qt::MouseButton button)
 {
   if (itemAtPressPos != NULL)
   {
@@ -263,12 +303,12 @@ void SwapClassicGame::dealReleased(QPointF mousePos, Qt::MouseButton button)
       quitGame();
   }
 
-//  effectPainter->clearUserMovingEliminationHints();
+  effectPainter->clearUserMovingEliminationHints();
   itemAtPressPos = NULL;
   gestureController->dealReleased(mousePos);
 }
 
-void SwapClassicGame::advance()
+void ClassicGameWidget::advance()
 {
   if (progressBar->getCurrent() >= progressBar->getMax())
   {
@@ -289,7 +329,7 @@ void SwapClassicGame::advance()
 //  effectPainter->advance();
 }
 
-void SwapClassicGame::dealStableEliminate(Connections connections)
+void ClassicGameWidget::dealStableEliminate(Connections connections)
 {
   int pointsToAdd = 0;
   for (int i = 0;i < gameboardInfo->totalBallCounts();++i)
@@ -337,25 +377,45 @@ void SwapClassicGame::dealStableEliminate(Connections connections)
   progressBar->setCurrent(progressBar->getCurrent() + pointsToAdd);
 }
 
-void SwapClassicGame::dealUserMovingEliminate(Connections connections)
+void ClassicGameWidget::dealUserMovingEliminate(Connections connections)
 {
-//  effectPainter->clearUserMovingEliminationHints();
-//  for (int i = 0;i < connections.connections.size();++i)
-//  {
-//    for (int j = 0;j < connections.connections[i]->size();++j)
-//      effectPainter->userMovingEliminationHintAt(connections.connections[i]->at(j));
-//    // TODO:BLABLABLA
-//  }
+  if (rule->gestureAllowed(AbstractRule::Rotate))
+  {
+    effectPainter->clearUserMovingEliminationHints();
+    for (int i = 0;i < connections.connections.size();++i)
+    {
+      for (int j = 0;j < connections.connections[i]->size();++j)
+        effectPainter->userMovingEliminationHintAt(connections.connections[i]->at(j));
+      // TODO:BLABLABLA
+    }
+  }
 }
 
-void SwapClassicGame::nextStage()
+void ClassicGameWidget::nextStage()
 {
-  SwapClassicGame *nextStage = new SwapClassicGame();
-  nextStage->progressBar->setMin(progressBar->getMax());
-  nextStage->progressBar->setMax(progressBar->getMax() * 2);
-  nextStage->progressBar->setCurrent(progressBar->getCurrent());
-  nextStage->flame->setCurrent(flame->getCurrent());
-  nextStage->star->setCurrent(star->getCurrent());
+  OtherGameRecord record;
+  record.currentLevel = currentLevel->getValue() + 1;
+  record.minScore = progressBar->getMax();
+  record.currentScore = progressBar->getCurrent();
+  record.maxScore = progressBar->getMax() * 2;
+  record.flame = flame->getCurrent();
+  record.star = star->getCurrent();
+  record.balls = NULL;
+  OtherGameInit::saveOtherGame(&record,
+                               getIndex(),
+                               gameboardInfo->totalBallCounts());
+
+  ClassicGameWidget *nextStage;
+  if (rule->gestureAllowed(AbstractRule::Swap))
+    nextStage = new ClassicGameWidget(AbstractRule::Swap);
+  else
+    nextStage = new ClassicGameWidget(AbstractRule::Rotate);
   emit giveControlTo(nextStage, true);
   delete this;
+}
+
+
+int ClassicGameWidget::getIndex()
+{
+  return 0 + (rule->gestureAllowed(AbstractRule::Rotate) ? 1 : 0);
 }

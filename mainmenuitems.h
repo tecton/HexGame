@@ -30,46 +30,15 @@ public:
 };
 
 
-class MainMenuSwapClassicItem : public AbstractMainMenuItem
+class MainMenuGameItem : public AbstractMainMenuItem
 {
 public:
+  MainMenuGameItem(AbstractMainMenuItem::ItemType theType) :
+      type(theType) {}
   virtual void paint(QPainter *painter, int width, int height, int frame);
-};
 
-class MainMenuRotateClassicItem : public AbstractMainMenuItem
-{
-public:
-  virtual void paint(QPainter *painter, int width, int height, int frame);
-};
-
-class MainMenuSwapEndlessItem : public AbstractMainMenuItem
-{
-public:
-  virtual void paint(QPainter *painter, int width, int height, int frame);
-};
-
-class MainMenuRotateEndlessItem : public AbstractMainMenuItem
-{
-public:
-  virtual void paint(QPainter *painter, int width, int height, int frame);
-};
-
-class MainMenuSwapTimingItem : public AbstractMainMenuItem
-{
-public:
-  virtual void paint(QPainter *painter, int width, int height, int frame);
-};
-
-class MainMenuRotateTimingItem : public AbstractMainMenuItem
-{
-public:
-  virtual void paint(QPainter *painter, int width, int height, int frame);
-};
-
-class MainMenuRotatePuzzleItem : public AbstractMainMenuItem
-{
-public:
-  virtual void paint(QPainter *painter, int width, int height, int frame);
+private:
+  AbstractMainMenuItem::ItemType type;
 };
 
 #endif // MAINMENUITEMS_H

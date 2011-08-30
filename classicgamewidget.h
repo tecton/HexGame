@@ -1,7 +1,8 @@
-#ifndef ROTATECLASSICGAME_H
-#define ROTATECLASSICGAME_H
+#ifndef CLASSICGAMEWIDGET_H
+#define CLASSICGAMEWIDGET_H
 
 #include "abstractpixmapwidget.h"
+#include "abstractrule.h"
 #include "connections.h"
 
 #include <QPointF>
@@ -14,18 +15,18 @@ class EffectPainter;
 class GestureController;
 class AbstractGameBoardInfo;
 class AbstractProgressBarItem;
-class AbstractRule;
 class AbstractItem;
 class AbstractBonusItem;
+class IntegerItem;
 class SwapClassicGameRule;
 class SwapClassicGameSavedInfo;
 
-class RotateClassicGame : public AbstractPixmapWidget
+class ClassicGameWidget : public AbstractPixmapWidget
 {
   Q_OBJECT
 public:
-  RotateClassicGame();
-  ~RotateClassicGame();
+  ClassicGameWidget(AbstractRule::Gesture gesture);
+  ~ClassicGameWidget();
 
   // Functions most overloaded
   virtual void makePixmap(QPixmap& pixmap, int width, int height);
@@ -50,6 +51,8 @@ private:
   int noSolutionCount;
   // TODO:
 
+  IntegerItem *hightestScore;
+  IntegerItem *currentLevel;
   AbstractProgressBarItem *progressBar;
   AbstractBonusItem *flame;
   AbstractBonusItem *star;
@@ -66,10 +69,12 @@ private:
   void quitGame();
   void nextStage();
 
+  int getIndex();
+
 private slots:
   void advance();
   void dealStableEliminate(Connections connections);
   void dealUserMovingEliminate(Connections connections);
 };
 
-#endif // ROTATECLASSICGAME_H
+#endif // CLASSICGAMEWIDGET_H

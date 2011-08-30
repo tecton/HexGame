@@ -145,5 +145,7 @@ void IntegerItem::paint(QPainter *painter,
   painter->setPen(QColor(255,255,255,255));
   double x = getPos().x() * width;
   double y = getPos().y() * height;
-  painter->drawText(QPointF(x, y), QObject::tr("%1").arg(getValue()));
+  painter->drawText(QPointF(x, y), QObject::tr("%1 : %2").
+                    arg(hint).
+                    arg(getValue()));
 }
