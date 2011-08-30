@@ -13,6 +13,9 @@
 #include "gesturecontroller.h"
 #include "basicpainter.h"
 #include "puzzlegameinit.h"
+#include "gamerecord.h"
+
+extern GameRecord gameRecord;
 
 RotatePuzzleGame::RotatePuzzleGame(int ballIndex[], int toBeIndex[],
                                    int gameIndex, int gameType)
@@ -166,14 +169,29 @@ void RotatePuzzleGame::advance()
     }
     if (i == gameboardInfo->totalBallCounts())
     {
-      if (index != 5)
+      int lastStageIndex[] = {4, 4, 5, 5, 10, 10};
+      QString fileName[] = {"exchange", "exchange", "unite", "unite",
+                           "lock", "lock"};
+      if (index != lastStageIndex[type])
       {
         RotatePuzzleGame* nextStage = PuzzleGameInit::initRotatePuzzleGame(index + 1,
                                                                            type);
+        gameRecord.writeData(fileName[type], index, totalSteps);
         emit giveControlTo(nextStage, true);
       }
-      else if (index == 5)
+      else
+      {
+        gameRecord.writeData(fileName[type], index, totalSteps);
         emit giveControlTo(NULL, true);
+      }
+//      if (index != 5)
+//      {
+//        RotatePuzzleGame* nextStage = PuzzleGameInit::initRotatePuzzleGame(index + 1,
+//                                                                           type);
+//        emit giveControlTo(nextStage, true);
+//      }
+//      else if (index == 5)
+//        emit giveControlTo(NULL, true);
       delete this;
     }
     //  effectPainter->advance();

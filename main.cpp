@@ -6,6 +6,9 @@
 #include "sixtyonegameboardinfo.h"
 #include "rules.h"
 #include "mainwidget.h"
+#include "gamerecord.h"
+
+GameRecord gameRecord;
 
 int main(int argc, char *argv[])
 {

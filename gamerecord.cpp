@@ -29,7 +29,6 @@ bool GameRecord::resizeFile(const QString &filename, int intCount)
   return recordFile.resize(intCount * 4);
 }
 
-<<<<<<< HEAD
 bool GameRecord::exists(const QString &filename)
 {
   return QFile::exists(recordPath + filename);
@@ -40,14 +39,12 @@ bool GameRecord::remove(const QString &filename)
   return QFile::remove(recordPath + filename);
 }
 
-int GameRecord::size(const QString &filename)
+int GameRecord::sizeOfInt(const QString &filename)
 {
   QFile recordFile(recordPath + filename);
   return recordFile.size() / sizeof(int);
 }
 
-=======
->>>>>>> 519221cf00496a29df0f0e8e7498d0891561c94a
 bool GameRecord::writeData(const QString &filename, int pos, int data)
 {
   //TODO
@@ -80,7 +77,7 @@ bool GameRecord::writeDataArr(const QString &filename, int *dataArr, int size)
 {
   //TODO
   QFile recordFile(recordPath + filename);
-  if (!recordFile.open(QIODevice::ReadWrite))
+  if (!recordFile.open(QIODevice::WriteOnly))
     return false;
 
   QDataStream out(&recordFile);
@@ -90,12 +87,15 @@ bool GameRecord::writeDataArr(const QString &filename, int *dataArr, int size)
   return true;
 }
 
-bool GameRecord::readDataArr(const QString &filename, int *dataArr, int &size)
+bool GameRecord::readDataArr(const QString &filename, int *&dataArr, int &size)
 {
   //TODO
   QFile recordFile(recordPath + filename);
   if (!recordFile.open(QIODevice::ReadOnly))
     return false;
+
+  size = sizeOfInt(filename);
+  dataArr = new int[size];
 
   QDataStream in(&recordFile);
   for (int i = 0; i < size; ++i)

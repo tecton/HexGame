@@ -55,12 +55,7 @@
         <file>puzzlemenuitems/unite_theme.png</file>
         <file>stageitems/button_advanced.png</file>
         <file>stageitems/button_normal.png</file>
-        <file>stageitems/stage_img0105.png</file>
         <file>stageitems/stage_img0120.png</file>
-        <file>stageitems/stage_img0140.png</file>
-        <file>stageitems/stage_img0160.png</file>
-        <file>stageitems/stage_img0180.png</file>
-        <file>stageitems/stage_img0195.png</file>
         <file>stageitems/stage_img0220.png</file>
         <file>stageitems/stage_img0320.png</file>
         <file>stageitems/stage_img0420.png</file>
@@ -71,5 +66,36 @@
         <file>stageitems/stage_img0920.png</file>
         <file>stageitems/stage_img1020.png</file>
         <file>stageitems/lock_stage.png</file>
+        <file>stageitems/button_exit.png</file>
+        <file>stageitems/stage_img_advanced_locked01.png</file>
+        <file>stageitems/stage_img_advanced_locked02.png</file>
+        <file>stageitems/stage_img_advanced_locked03.png</file>
+        <file>stageitems/stage_img_advanced_locked04.png</file>
+        <file>stageitems/stage_img_advanced_locked05.png</file>
+        <file>stageitems/stage_img_advanced_locked06.png</file>
+        <file>stageitems/stage_img_advanced_locked07.png</file>
+        <file>stageitems/stage_img_advanced_locked08.png</file>
+        <file>stageitems/stage_img_advanced_locked09.png</file>
+        <file>stageitems/stage_img_advanced_locked10.png</file>
+        <file>stageitems/stage_img_advanced01.png</file>
+        <file>stageitems/stage_img_advanced02.png</file>
+        <file>stageitems/stage_img_advanced03.png</file>
+        <file>stageitems/stage_img_advanced04.png</file>
+        <file>stageitems/stage_img_advanced05.png</file>
+        <file>stageitems/stage_img_advanced06.png</file>
+        <file>stageitems/stage_img_advanced07.png</file>
+        <file>stageitems/stage_img_advanced08.png</file>
+        <file>stageitems/stage_img_advanced09.png</file>
+        <file>stageitems/stage_img_advanced10.png</file>
+        <file>stageitems/stage_img_locked01.png</file>
+        <file>stageitems/stage_img_locked02.png</file>
+        <file>stageitems/stage_img_locked03.png</file>
+        <file>stageitems/stage_img_locked04.png</file>
+        <file>stageitems/stage_img_locked05.png</file>
+        <file>stageitems/stage_img_locked06.png</file>
+        <file>stageitems/stage_img_locked07.png</file>
+        <file>stageitems/stage_img_locked08.png</file>
+        <file>stageitems/stage_img_locked09.png</file>
+        <file>stageitems/stage_img_locked10.png</file>
     </qresource>
 </RCC>

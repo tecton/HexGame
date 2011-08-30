@@ -45,6 +45,7 @@ private:
   int *completeIndex;
   int type;
   int index;
+  int totalSteps;
   // TODO:分数、奖励之类的东西
 
   void quitGame();

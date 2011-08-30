@@ -10,9 +10,12 @@
 #include "stagemenuitems.h"
 #include "rotatepuzzlegame.h"
 #include "puzzlegameinit.h"
+#include "gamerecord.h"
 
 #include <QMessageBox>
 #include <QDebug>
+
+extern GameRecord gameRecord;
 
 #define LOGICAL_WIDTH  800
 #define LOGICAL_HEIGHT 500
@@ -88,8 +91,7 @@ ExchangeStageMenuWidget::ExchangeStageMenuWidget(int stageType) :
   frameCount(0)
 {
   type = stageType;
-  stageItem = new StageMenuItem *[5];
-  prefix = ":/images/stageitems/stage_img";
+  stageItem = new StageMenuItem *[6];
   suffix = "*.png";
   imageName = "";
   QString name[] = {"01", "02", "03", "04"};
@@ -100,9 +102,39 @@ ExchangeStageMenuWidget::ExchangeStageMenuWidget(int stageType) :
   position[3] = QPointF(0.52, 0.2);
   position[4] = QPointF(0.37, 0.65);
 
+  // examine record
+  if (!gameRecord.exists("exchange"))
+  {
+    gameRecord.createFile("exchange", 8);
+    int *initialSteps = new int[8];
+    for (int i = 0; i < 8; ++i)
+      initialSteps[i] = -1;
+    initialSteps[0] = 99999;
+    gameRecord.writeDataArr("exchange", initialSteps, 8);
+  }
+
+  int *leastSteps;
+  int size;
+  gameRecord.readDataArr("exchange", leastSteps, size);
+
   for (int i = 0; i < 4; ++i)
   {
-    imageName = QObject::tr("%1%2%3").arg(prefix).arg(name[i]).arg(suffix);
+    if (type == 0)
+    {
+      prefix = ":/images/stageitems/stage_img";
+      if (leastSteps[i] == -1)
+        imageName = QObject::tr("%1%2%3").arg(prefix + "_locked").arg(name[i]).arg(suffix);
+      else
+        imageName = QObject::tr("%1%2%3").arg(prefix).arg(name[i]).arg(suffix);
+    }
+    else
+    {
+      prefix = ":/images/stageitems/stage_img_advanced";
+      if (leastSteps[i + 4] == -1)
+        imageName = QObject::tr("%1%2%3").arg(prefix + "_locked").arg(name[i]).arg(suffix);
+      else
+        imageName = QObject::tr("%1%2%3").arg(prefix).arg(name[i]).arg(suffix);
+    }
     stageItem[i] = new StageMenuItem(imageName);
     stageItem[i]->setPos(position[i]);
     myItems.push_back(stageItem[i]);
@@ -115,11 +147,17 @@ ExchangeStageMenuWidget::ExchangeStageMenuWidget(int stageType) :
   stageItem[4]->setPos(position[4]);
   myItems.push_back(stageItem[4]);
 
+  // exit button
+  stageItem[5] = new StageMenuItem(":/images/stageitems/button_exit*.png");
+  stageItem[5]->setPos(QPointF(0.75, 0.65));
+  myItems.push_back(stageItem[5]);
+
   t = new QTimer();
   t->setInterval(75);
   connect(t, SIGNAL(timeout()), this, SLOT(advance()));
   t->start();
 }
+
 void ExchangeStageMenuWidget::dealPressed(QPointF mousePos, Qt::MouseButton button)
 {
   if (button == Qt::RightButton)
@@ -147,6 +185,14 @@ void ExchangeStageMenuWidget::dealPressed(QPointF mousePos, Qt::MouseButton butt
                                   (position[4].y() + 0.12) * LOGICAL_HEIGHT)) < 81)
   {
     emit giveControlTo(new ExchangeStageMenuWidget(type ^ 1), true);
+  }
+  if (distanceOfTwoPoints(mousePos,
+                          QPointF((0.75 + 0.12) * LOGICAL_WIDTH,
+                                  (0.65 + 0.12) * LOGICAL_HEIGHT)) < 81)
+  {
+    emit giveControlTo(NULL, true);
+    delete this;
+    return;
   }
 }
 
@@ -183,10 +229,21 @@ UniteStageMenuWidget::UniteStageMenuWidget(int stageType) :
     frameCount(0)
 {
   type = stageType;
-  stageItem = new StageMenuItem *[6];
-  prefix = ":/images/stageitems/stage_img";
+  stageItem = new StageMenuItem *[7];
   suffix = "*.png";
   imageName = "";
+
+  // examine record
+  if (!gameRecord.exists("unite"))
+  {
+    gameRecord.createFile("unite", 10);
+    int *initialSteps = new int[10];
+    for (int i = 0; i < 10; ++i)
+      initialSteps[i] = -1;
+    initialSteps[0] = 99999;
+    gameRecord.writeDataArr("unite", initialSteps, 10);
+  }
+
   QString name[] = {"01", "02", "03", "04", "05"};
   position = new QPointF[6];
   position[0] = QPointF(0.22, 0.5);
@@ -196,9 +253,28 @@ UniteStageMenuWidget::UniteStageMenuWidget(int stageType) :
   position[4] = QPointF(0.52, 0.5);
   position[5] = QPointF(0.37, 0.65);
 
+  int *leastSteps;
+  int size;
+  gameRecord.readDataArr("unite", leastSteps, size);
+
   for (int i = 0; i < 5; ++i)
   {
-    imageName = QObject::tr("%1%2%3").arg(prefix).arg(name[i]).arg(suffix);
+    if (type == 0)
+    {
+      prefix = ":/images/stageitems/stage_img";
+      if (leastSteps[i] == -1)
+        imageName = QObject::tr("%1%2%3").arg(prefix + "_locked").arg(name[i]).arg(suffix);
+      else
+        imageName = QObject::tr("%1%2%3").arg(prefix).arg(name[i]).arg(suffix);
+    }
+    else
+    {
+      prefix = ":/images/stageitems/stage_img_advanced";
+      if (leastSteps[i + 5] == -1)
+        imageName = QObject::tr("%1%2%3").arg(prefix + "_locked").arg(name[i]).arg(suffix);
+      else
+        imageName = QObject::tr("%1%2%3").arg(prefix).arg(name[i]).arg(suffix);
+    }
     stageItem[i] = new StageMenuItem(imageName);
     stageItem[i]->setPos(position[i]);
     myItems.push_back(stageItem[i]);
@@ -211,11 +287,17 @@ UniteStageMenuWidget::UniteStageMenuWidget(int stageType) :
   stageItem[5]->setPos(position[5]);
   myItems.push_back(stageItem[5]);
 
+  // exit button
+  stageItem[6] = new StageMenuItem(":/images/stageitems/button_exit*.png");
+  stageItem[6]->setPos(QPointF(0.75, 0.65));
+  myItems.push_back(stageItem[6]);
+
   t = new QTimer();
   t->setInterval(75);
   connect(t, SIGNAL(timeout()), this, SLOT(advance()));
   t->start();
 }
+
 void UniteStageMenuWidget::dealPressed(QPointF mousePos, Qt::MouseButton button)
 {
   if (button == Qt::RightButton)
@@ -244,6 +326,14 @@ void UniteStageMenuWidget::dealPressed(QPointF mousePos, Qt::MouseButton button)
                                     (0.12 + position[5].y()) * LOGICAL_HEIGHT)) < 81)
     {
       emit giveControlTo(new UniteStageMenuWidget(type ^ 1), true);
+    }
+    if (distanceOfTwoPoints(mousePos,
+                            QPointF((0.75 + 0.12) * LOGICAL_WIDTH,
+                                    (0.65 + 0.12) * LOGICAL_HEIGHT)) < 81)
+    {
+      emit giveControlTo(NULL, true);
+      delete this;
+      return;
     }
   }
 }
@@ -313,17 +403,46 @@ LockStageMenuWidget::LockStageMenuWidget(int stageType) :
     frameCount(0)
 {
   type = stageType;
-  stageItem = new StageMenuItem *[11];
+  stageItem = new StageMenuItem *[12];
 
   QString prefix = ":/images/stageitems/stage_img";
   QString suffix = "*.png";
   QString imageName = "";
+
+  // examine record
+  if (!gameRecord.exists("lock"))
+  {
+    gameRecord.createFile("lock", 20);
+    int *initialSteps = new int[20];
+    for (int i = 0; i < 20; ++i)
+      initialSteps[i] = -1;
+    initialSteps[0] = 99999;
+    gameRecord.writeDataArr("lock", initialSteps, 20);
+  }
+
+  int *leastSteps;
+  int size;
+  gameRecord.readDataArr("lock", leastSteps, size);
+
   QString name[] = {"01", "02", "03", "04", "05", "06", "07", "08", "09", "10"};
   for (int i = 0; i < 10; ++i)
   {
-    imageName = QObject::tr("%1%2%3").arg(prefix).arg(name[i]).arg(suffix);
-    //imageName.sprintf("%s%02d%s", prefix, i + 1, suffix);
-    //qDebug() << imageName;
+    if (type == 0)
+    {
+      prefix = ":/images/stageitems/stage_img";
+      if (leastSteps[i] == -1)
+        imageName = QObject::tr("%1%2%3").arg(prefix + "_locked").arg(name[i]).arg(suffix);
+      else
+        imageName = QObject::tr("%1%2%3").arg(prefix).arg(name[i]).arg(suffix);
+    }
+    else
+    {
+      prefix = ":/images/stageitems/stage_img_advanced";
+      if (leastSteps[i + 10] == -1)
+        imageName = QObject::tr("%1%2%3").arg(prefix + "_locked").arg(name[i]).arg(suffix);
+      else
+        imageName = QObject::tr("%1%2%3").arg(prefix).arg(name[i]).arg(suffix);
+    }
     stageItem[i] = new StageMenuItem(imageName);
     stageItem[i]->setPos(QPointF(0.07 + 0.15 * (i % 5), 0.05 + 0.45 * (i / 5) + 0.15 * (i % 2)));
     myItems.push_back(stageItem[i]);
@@ -335,6 +454,11 @@ LockStageMenuWidget::LockStageMenuWidget(int stageType) :
     stageItem[10] = new StageMenuItem(":/images/stageitems/button_normal*.png");
   stageItem[10]->setPos(QPointF(0.37, 0.35));
   myItems.push_back(stageItem[10]);
+
+  // exit button
+  stageItem[11] = new StageMenuItem(":/images/stageitems/button_exit*.png");
+  stageItem[11]->setPos(QPointF(0.67, 0.35));
+  myItems.push_back(stageItem[11]);
 
   t = new QTimer();
   t->setInterval(75);
@@ -370,6 +494,14 @@ void LockStageMenuWidget::dealPressed(QPointF mousePos, Qt::MouseButton button)
                                   0.47 * LOGICAL_HEIGHT)) < 81)
   {
     emit giveControlTo(new LockStageMenuWidget(type ^ 1), true);
+  }
+  if (distanceOfTwoPoints(mousePos,
+                          QPointF((0.67 + 0.12) * LOGICAL_WIDTH,
+                                  (0.35 + 0.12) * LOGICAL_HEIGHT)) < 81)
+  {
+    emit giveControlTo(NULL, true);
+    delete this;
+    return;
   }
 }
 
