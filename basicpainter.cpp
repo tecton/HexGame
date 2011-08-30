@@ -10,7 +10,7 @@
 
 #include "abstractitem.h"
 #include "ball.h"
-#include "pixmapinit.h"
+#include "initpixmaps.h"
 
 const static int kTotalColors = 8;
 const static char * kColorPaths[] = {":/images/balls/red*.png",
