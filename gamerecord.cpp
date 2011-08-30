@@ -94,6 +94,9 @@ bool GameRecord::readDataArr(const QString &filename, int *dataArr, int &size)
   if (!recordFile.open(QIODevice::ReadOnly))
     return false;
 
+  size = size(recordFile);
+  dataArr = new int[size];
+
   QDataStream in(&recordFile);
   for (int i = 0; i < size; ++i)
     in >> dataArr[i];
