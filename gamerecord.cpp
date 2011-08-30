@@ -39,7 +39,7 @@ bool GameRecord::remove(const QString &filename)
   return QFile::remove(recordPath + filename);
 }
 
-int GameRecord::size(const QString &filename)
+int GameRecord::sizeOfInt(const QString &filename)
 {
   QFile recordFile(recordPath + filename);
   return recordFile.size() / sizeof(int);
@@ -77,7 +77,7 @@ bool GameRecord::writeDataArr(const QString &filename, int *dataArr, int size)
 {
   //TODO
   QFile recordFile(recordPath + filename);
-  if (!recordFile.open(QIODevice::ReadWrite))
+  if (!recordFile.open(QIODevice::WriteOnly))
     return false;
 
   QDataStream out(&recordFile);
@@ -87,14 +87,14 @@ bool GameRecord::writeDataArr(const QString &filename, int *dataArr, int size)
   return true;
 }
 
-bool GameRecord::readDataArr(const QString &filename, int *dataArr, int &size)
+bool GameRecord::readDataArr(const QString &filename, int *&dataArr, int &size)
 {
   //TODO
   QFile recordFile(recordPath + filename);
   if (!recordFile.open(QIODevice::ReadOnly))
     return false;
 
-  size = size(recordFile);
+  size = sizeOfInt(filename);
   dataArr = new int[size];
 
   QDataStream in(&recordFile);

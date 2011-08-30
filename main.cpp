@@ -1,11 +1,13 @@
 #include <QtGui/QApplication>
 #include <QTextCodec>
 #include <time.h>
-//#include <QDebug>
+#include <QDebug>
 //#include "mainwindow.h"
 #include "sixtyonegameboardinfo.h"
 #include "rules.h"
 #include "mainwidget.h"
+
+#include "gamerecord.h"
 
 int main(int argc, char *argv[])
 {
@@ -32,6 +34,12 @@ int main(int argc, char *argv[])
   MainWidget w;
   w.setGeometry(QRect(100,100,1024,600));
   w.show();
+
+  GameRecord record;
+  int *iarr;
+  int size;
+  qDebug() << record.sizeOfInt("walala");
+  record.readDataArr("walala", iarr, size);
 
   return a.exec();
 }

@@ -216,15 +216,18 @@ void CoreController::maintainCToOAndOToC(QPointF firstPos)
 
 void CoreController::eliminate(const QVector<int>& indexs)
 {
+  int count = 0;
   for (int i = 0;i < indexs.size();++i)
   {
     int index = indexs.at(i);
     if (balls[index])
     {
+      ++count;
       recyclingBalls[RECYCLE_STEPS - 1]->push_back(balls[index]);
       balls[index] = NULL;
     }
   }
+  emit eliminated(count);
 }
 
 void CoreController::rotateBegin(int theCenterIndex,
@@ -436,7 +439,7 @@ void CoreController::fillAllBlanks()
           lockedIndexes.push_back(*itr);
       }
     }
-  } while (rule->endlessFill() && hint() >= 0);
+  } while (false/*rule->endlessFill() && hint() < 0*/);
 
   for (QList <int>::Iterator itr = blankIndexes.begin();
        itr != blankIndexes.end();

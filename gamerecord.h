@@ -13,13 +13,13 @@ public:
 
   bool exists(const QString &filename);
   bool remove(const QString &filename);
-  int size(const QString &filename);
+  int sizeOfInt(const QString &filename);
 
   bool writeData(const QString &filename, int pos, int data);
   int readData(const QString &filename, int pos);
 
   bool writeDataArr(const QString &filename, int *dataArr, int size);
-  bool readDataArr(const QString &filename, int *dataArr, int &size);
+  bool readDataArr(const QString &filename, int *&dataArr, int &size);
 
 private:
   QString recordPath;

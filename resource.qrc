@@ -71,5 +71,9 @@
         <file>stageitems/stage_img0920.png</file>
         <file>stageitems/stage_img1020.png</file>
         <file>stageitems/lock_stage.png</file>
+        <file>mainmenuitems/rotateendlessgame01.png</file>
+        <file>mainmenuitems/rotatetiminggame01.png</file>
+        <file>mainmenuitems/swapendlessgame01.png</file>
+        <file>mainmenuitems/swaptiminggame01.png</file>
     </qresource>
 </RCC>
