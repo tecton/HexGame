@@ -1,5 +1,5 @@
-#ifndef CLASSICGAMEWIDGET_H
-#define CLASSICGAMEWIDGET_H
+#ifndef ENDLESSGAMEWIDGET_H
+#define ENDLESSGAMEWIDGET_H
 
 #include "abstractpixmapwidget.h"
 #include "abstractrule.h"
@@ -21,12 +21,12 @@ class IntegerItem;
 class SwapClassicGameRule;
 class SwapClassicGameSavedInfo;
 
-class ClassicGameWidget : public AbstractPixmapWidget
+class EndlessGameWidget : public AbstractPixmapWidget
 {
   Q_OBJECT
 public:
-  ClassicGameWidget(AbstractRule::Gesture gesture);
-  ~ClassicGameWidget();
+  EndlessGameWidget(AbstractRule::Gesture gesture);
+  ~EndlessGameWidget();
 
   // Functions most overloaded
   virtual void makePixmap(QPixmap& pixmap, int width, int height);
@@ -48,7 +48,6 @@ private:
   EffectPainter *effectPainter;
   QTimer *t;
   int frameCount;
-  int noSolutionCount;
   // TODO:
 
   IntegerItem *hightestScore;
@@ -66,7 +65,6 @@ private:
   QPointF currentPos;
 
   void showHint();
-  void gameOver();
   void quitGame();
   void nextStage();
 
@@ -76,8 +74,9 @@ private:
 private slots:
   void advance();
   void reset();
+  void elimitated(int count);
   void dealStableEliminate(Connections connections);
   void dealUserMovingEliminate(Connections connections);
 };
 
-#endif // CLASSICGAMEWIDGET_H
+#endif // ENDLESSGAMEWIDGET_H

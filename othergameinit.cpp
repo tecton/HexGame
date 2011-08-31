@@ -2,6 +2,7 @@
 
 #include "abstractpixmapwidget.h"
 #include "classicgamewidget.h"
+#include "endlessgamewidget.h"
 #include "gamerecord.h"
 #include "ball.h"
 
@@ -41,8 +42,8 @@ AbstractPixmapWidget *OtherGameInit::initOtherGame(AbstractRule::Gesture gesture
 {
   if (type == 0)
     return new ClassicGameWidget(gesture);
-//  else if (type == 1)
-//    return new EndlessGameWidget(gesture);
+  else if (type == 1)
+    return new EndlessGameWidget(gesture);
 //  else if (type == 2)
 //    return new TimingGameWidget(gesture);
   return 0;
@@ -68,6 +69,12 @@ void OtherGameInit::setHighest(int index, int score)
     record.writeDataArr("OtherGameHighest", tmp, 6);
   }
   record.writeData("OtherGameHighest", index, score);
+}
+
+void OtherGameInit::testHighest(int index, int score)
+{
+  if (getHighest(index) < score)
+    setHighest(index, score);
 }
 
 OtherGameRecord *OtherGameInit::loadOtherGame(int index)
@@ -139,5 +146,5 @@ void OtherGameInit::saveOtherGame(OtherGameRecord *gameRecord,
 
 void OtherGameInit::clearGame(int index)
 {
-
+  record.remove(fileNames[index]);
 }

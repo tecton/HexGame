@@ -27,6 +27,7 @@ public:
                                              int type);
   static int getHighest(int index);
   static void setHighest(int index, int score);
+  static void testHighest(int index, int score);
   static OtherGameRecord *loadOtherGame(int index);
   static void saveOtherGame(OtherGameRecord *record,
                             int index,

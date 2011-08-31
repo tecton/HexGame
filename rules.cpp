@@ -93,6 +93,52 @@ bool RotateClassicGameRule::endlessFill()
 
 ///////////////////////////////////////////////////////////////////////////
 
+bool SwapEndlessGameRule::gestureAllowed(AbstractRule::Gesture gesture)
+{
+  switch (gesture)
+  {
+  case Swap:
+    return true;
+  default:
+    return false;
+  }
+}
+
+bool SwapEndlessGameRule::gameStepAllowed(AbstractRule::GameStep gameStep)
+{
+  switch (gameStep)
+  {
+  case FillWithNewBalls:
+  case AutoRotate:
+  case RemindElimination:
+  case Eliminate:
+  case RollBackWhenNoElimination:
+    return true;
+  default:
+    return false;
+  }
+}
+
+
+bool SwapEndlessGameRule::eliminationAllowed
+    (AbstractRule::Elimination elimination)
+{
+  switch (elimination)
+  {
+  case ThreeInARow:
+    return true;
+  default:
+    return false;
+  }
+}
+
+bool SwapEndlessGameRule::endlessFill()
+{
+  return true;
+}
+
+//////////////////////////////////////////////////////////////////////////
+
 bool RotateEndlessGameRule::gestureAllowed(AbstractRule::Gesture gesture)
 {
   switch (gesture)

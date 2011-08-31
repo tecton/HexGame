@@ -21,6 +21,15 @@ public:
   virtual bool endlessFill();
 };
 
+class SwapEndlessGameRule : public AbstractRule
+{
+public:
+  virtual bool gestureAllowed(AbstractRule::Gesture gesture);
+  virtual bool gameStepAllowed(AbstractRule::GameStep gameStep);
+  virtual bool eliminationAllowed(AbstractRule::Elimination elimination);
+  virtual bool endlessFill();
+};
+
 class RotateEndlessGameRule : public AbstractRule
 {
 public:

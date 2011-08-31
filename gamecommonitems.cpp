@@ -137,6 +137,28 @@ void ExitToMainMenuItem::paint(QPainter *painter,
   painter->drawText(QPointF(x, y), "Exit");
 }
 
+void ResetItem::paint(QPainter *painter,
+                      int width,
+                      int height,
+                      int frame)
+{
+  painter->setPen(QColor(255,255,255,255));
+  double x = getPos().x() * width;
+  double y = getPos().y() * height;
+  painter->drawText(QPointF(x, y), "Reset");
+}
+
+void PauseItem::paint(QPainter *painter,
+                      int width,
+                      int height,
+                      int frame)
+{
+  painter->setPen(QColor(255,255,255,255));
+  double x = getPos().x() * width;
+  double y = getPos().y() * height;
+  painter->drawText(QPointF(x, y), "Pause");
+}
+
 void IntegerItem::paint(QPainter *painter,
                         int width,
                         int height,
@@ -149,3 +171,37 @@ void IntegerItem::paint(QPainter *painter,
                     arg(hint).
                     arg(getValue()));
 }
+
+void StringItem::paint(QPainter *painter,
+                       int width,
+                       int height,
+                       int frame)
+{
+  painter->setPen(QColor(255,255,255,255));
+  double x = getPos().x() * width;
+  double y = getPos().y() * height;
+  painter->drawText(QPointF(x, y), hint);
+}
+
+void ConfirmItem::paint(QPainter *painter,
+                        int width,
+                        int height,
+                        int frame)
+{
+  painter->setPen(QColor(255,255,255,255));
+  double x = getPos().x() * width;
+  double y = getPos().y() * height;
+  painter->drawText(QPointF(x, y), "Confirm");
+}
+
+void CancelItem::paint(QPainter *painter,
+                       int width,
+                       int height,
+                       int frame)
+{
+  painter->setPen(QColor(255,255,255,255));
+  double x = getPos().x() * width;
+  double y = getPos().y() * height;
+  painter->drawText(QPointF(x, y), "Cancel");
+}
+

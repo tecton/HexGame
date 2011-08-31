@@ -1,4 +1,4 @@
-#include "classicgamewidget.h"
+#include "endlessgamewidget.h"
 
 #include <QPainter>
 #include <QPixmap>
@@ -16,24 +16,22 @@
 #include "thirtysevengameboardinfo.h"
 #include "othergameinit.h"
 #include "resetwidget.h"
-#include "gameoverwidget.h"
 
 #define LOGICAL_WIDTH  800
 #define LOGICAL_HEIGHT 500
 
-ClassicGameWidget::ClassicGameWidget(AbstractRule::Gesture gesture) :
-    frameCount(0),
-    noSolutionCount(0)
+EndlessGameWidget::EndlessGameWidget(AbstractRule::Gesture gesture) :
+    frameCount(0)
 {
   if (gesture == AbstractRule::Swap)
-    rule = new SwapClassicGameRule();
+    rule = new SwapEndlessGameRule();
   else
     rule = new RotateClassicGameRule();
   gameboardInfo = new ThirtySevenGameBoardInfo();
 
   OtherGameRecord *record = OtherGameInit::loadOtherGame(getIndex());
 
-  //ClassicGameWidgetSavedInfo savedInfo = readSaved();
+  //EndlessGameWidgetSavedInfo savedInfo = readSaved();
   controller = new CoreController(rule, gameboardInfo, record->balls);
   controller->fillAllBlanks();
   gestureController = new GestureController(rule, gameboardInfo, controller);
@@ -93,6 +91,10 @@ ClassicGameWidget::ClassicGameWidget(AbstractRule::Gesture gesture) :
           SIGNAL(userMovingEliminateTested(Connections)),
           this,
           SLOT(dealUserMovingEliminate(Connections)));
+  connect(controller,
+          SIGNAL(eliminated(int)),
+          this,
+          SLOT(elimitated(int)));
 
   t = new QTimer();
   t->setInterval(75);
@@ -100,13 +102,13 @@ ClassicGameWidget::ClassicGameWidget(AbstractRule::Gesture gesture) :
   t->start();
 }
 
-void ClassicGameWidget::makePixmap(QPixmap& pixmap, int width, int height)
+void EndlessGameWidget::makePixmap(QPixmap& pixmap, int width, int height)
 {
   makeBasicPixmap(pixmap, width, height);
   addEffect(pixmap, width, height);
 }
 
-ClassicGameWidget::~ClassicGameWidget()
+EndlessGameWidget::~EndlessGameWidget()
 {
   t->stop();
   delete t;
@@ -119,10 +121,10 @@ ClassicGameWidget::~ClassicGameWidget()
   delete effectPainter;
 }
 
-//void ClassicGameWidget::init() //
+//void EndlessGameWidget::init() //
 //}
 
-void ClassicGameWidget::makeBasicPixmap(QPixmap& pixmap, int width, int height)
+void EndlessGameWidget::makeBasicPixmap(QPixmap& pixmap, int width, int height)
 {
   pixmap = QPixmap(width, height);
   pixmap.fill(Qt::black);
@@ -143,7 +145,7 @@ void ClassicGameWidget::makeBasicPixmap(QPixmap& pixmap, int width, int height)
   delete painter;
 }
 
-void ClassicGameWidget::addEffect(QPixmap& pixmap, int width, int height)
+void EndlessGameWidget::addEffect(QPixmap& pixmap, int width, int height)
 {
   QPainter *painter = new QPainter(&pixmap);
   QPointF pos = currentPos;
@@ -177,43 +179,25 @@ void ClassicGameWidget::addEffect(QPixmap& pixmap, int width, int height)
   effectPainter->advance();
 }
 
-QPointF ClassicGameWidget::toScene(double xRate, double yRate)
+QPointF EndlessGameWidget::toScene(double xRate, double yRate)
 {
   return QPointF(xRate * gameboardInfo->width(),
                  yRate * gameboardInfo->height());
 }
 
-//ClassicGameWidgetSavedInfo ClassicGameWidget::readSaved()
+//EndlessGameWidgetSavedInfo EndlessGameWidget::readSaved()
 //{
 
 //}
 
-void ClassicGameWidget::showHint()
+void EndlessGameWidget::showHint()
 {
   int hintOnBoard = controller->hint();
-  if (hintOnBoard >= 0)
-    effectPainter->hintAt(gameboardInfo->positionOfIndex(hintOnBoard),
-                          rule->gestureAllowed(AbstractRule::Rotate));
-  else if (flame->getCurrent() > 0)
-    effectPainter->hintAt(toScene(flame->getPos().x(),
-                                  flame->getPos().y()), false);
-  else if (star->getCurrent() > 0)
-    effectPainter->hintAt(toScene(star->getPos().x(),
-                                  star->getPos().y()), false);
-  else
-    gameOver();
+  effectPainter->hintAt(gameboardInfo->positionOfIndex(hintOnBoard),
+                        rule->gestureAllowed(AbstractRule::Rotate));
 }
 
-void ClassicGameWidget::gameOver()
-{
-  OtherGameInit::clearGame(getIndex());
-  OtherGameInit::testHighest(getIndex(), progressBar->getCurrent());
-  GameOverWidget *w = new GameOverWidget(getIndex(), progressBar->getCurrent());
-  emit giveControlTo(w, true);
-  delete this;
-}
-
-void ClassicGameWidget::quitGame()
+void EndlessGameWidget::quitGame()
 {
   OtherGameRecord record;
   record.currentLevel = currentLevel->getValue();
@@ -231,7 +215,7 @@ void ClassicGameWidget::quitGame()
   delete this;
 }
 
-void ClassicGameWidget::dealPressed(QPointF mousePos, Qt::MouseButton button)
+void EndlessGameWidget::dealPressed(QPointF mousePos, Qt::MouseButton button)
 {
   currentPos = mousePos;
   if (distanceOfTwoPoints(mousePos,
@@ -266,14 +250,14 @@ void ClassicGameWidget::dealPressed(QPointF mousePos, Qt::MouseButton button)
   gestureController->dealPressed(mousePos);
 }
 
-void ClassicGameWidget::dealMoved(QPointF mousePos, Qt::MouseButton button)
+void EndlessGameWidget::dealMoved(QPointF mousePos, Qt::MouseButton button)
 {
   currentPos = mousePos;
   effectPainter->clearUserMovingEliminationHints();
   gestureController->dealMoved(mousePos);
 }
 
-void ClassicGameWidget::dealReleased(QPointF mousePos, Qt::MouseButton button)
+void EndlessGameWidget::dealReleased(QPointF mousePos, Qt::MouseButton button)
 {
   if (itemAtPressPos != NULL)
   {
@@ -329,7 +313,7 @@ void ClassicGameWidget::dealReleased(QPointF mousePos, Qt::MouseButton button)
   gestureController->dealReleased(mousePos);
 }
 
-void ClassicGameWidget::advance()
+void EndlessGameWidget::advance()
 {
   if (progressBar->getCurrent() >= progressBar->getMax())
   {
@@ -338,21 +322,22 @@ void ClassicGameWidget::advance()
   }
   ++frameCount;
   frameCount = frameCount % 32;
-  if (flame->getCurrent() > 0 ||
-      star->getCurrent() > 0 ||
-      controller->hint() >= 0)
-    noSolutionCount = 0;
-  else
-    ++noSolutionCount;
   controller->advance();
-  if (noSolutionCount > 30)
-    gameOver();
 //  effectPainter->advance();
 }
 
-void ClassicGameWidget::dealStableEliminate(Connections connections)
+void EndlessGameWidget::elimitated(int count)
 {
-  int pointsToAdd = 0;
+  progressBar->setCurrent(progressBar->getCurrent() + count);
+  if (progressBar->getCurrent() > hightestScore->getValue())
+  {
+    OtherGameInit::testHighest(getIndex(), progressBar->getCurrent());
+    hightestScore->setValue(progressBar->getCurrent());
+  }
+}
+
+void EndlessGameWidget::dealStableEliminate(Connections connections)
+{
   for (int i = 0;i < gameboardInfo->totalBallCounts();++i)
   {
     QVector<QVector<int> *>& connect = connections.connectionsOfIndex[i];
@@ -376,8 +361,6 @@ void ClassicGameWidget::dealStableEliminate(Connections connections)
       // TODO:BLABLABLA
 
     }
-    if (connectionCountOfThePosition > 0)
-      ++pointsToAdd;
   }
   for (int i = 0;i < connections.connections.size();++i)
   {
@@ -395,15 +378,9 @@ void ClassicGameWidget::dealStableEliminate(Connections connections)
     if (size >= 5)
       star->addOne();
   }
-  progressBar->setCurrent(progressBar->getCurrent() + pointsToAdd);
-  if (progressBar->getCurrent() > hightestScore->getValue())
-  {
-    OtherGameInit::testHighest(getIndex(), progressBar->getCurrent());
-    hightestScore->setValue(progressBar->getCurrent());
-  }
 }
 
-void ClassicGameWidget::dealUserMovingEliminate(Connections connections)
+void EndlessGameWidget::dealUserMovingEliminate(Connections connections)
 {
   if (rule->gestureAllowed(AbstractRule::Rotate))
   {
@@ -417,7 +394,7 @@ void ClassicGameWidget::dealUserMovingEliminate(Connections connections)
   }
 }
 
-void ClassicGameWidget::nextStage()
+void EndlessGameWidget::nextStage()
 {
   OtherGameRecord record;
   record.currentLevel = currentLevel->getValue() + 1;
@@ -431,28 +408,28 @@ void ClassicGameWidget::nextStage()
                                getIndex(),
                                gameboardInfo->totalBallCounts());
 
-  ClassicGameWidget *nextStage;
+  EndlessGameWidget *nextStage;
   if (rule->gestureAllowed(AbstractRule::Swap))
-    nextStage = new ClassicGameWidget(AbstractRule::Swap);
+    nextStage = new EndlessGameWidget(AbstractRule::Swap);
   else
-    nextStage = new ClassicGameWidget(AbstractRule::Rotate);
+    nextStage = new EndlessGameWidget(AbstractRule::Rotate);
   emit giveControlTo(nextStage, true);
   delete this;
 }
 
-int ClassicGameWidget::getIndex()
+int EndlessGameWidget::getIndex()
 {
-  return 0 + (rule->gestureAllowed(AbstractRule::Rotate) ? 1 : 0);
+  return 2 + (rule->gestureAllowed(AbstractRule::Rotate) ? 1 : 0);
 }
 
-void ClassicGameWidget::reset()
+void EndlessGameWidget::reset()
 {
   OtherGameInit::clearGame(getIndex());
-  ClassicGameWidget *resetGame;
+  EndlessGameWidget *resetGame;
   if (rule->gestureAllowed(AbstractRule::Swap))
-    resetGame = new ClassicGameWidget(AbstractRule::Swap);
+    resetGame = new EndlessGameWidget(AbstractRule::Swap);
   else
-    resetGame = new ClassicGameWidget(AbstractRule::Rotate);
+    resetGame = new EndlessGameWidget(AbstractRule::Rotate);
   emit giveControlTo(resetGame, true);
   delete this;
 }

@@ -35,7 +35,11 @@ SOURCES += main.cpp\
     swaptiminggame.cpp \
     rotatetiminggame.cpp \
     classicgamewidget.cpp \
-    othergameinit.cpp
+    othergameinit.cpp \
+    resetwidget.cpp \
+    endlessgamewidget.cpp \
+    gameoverwidget.cpp \
+    pausewidget.cpp
 
 HEADERS  += ball.h \
     corecontroller.h \
@@ -67,7 +71,11 @@ HEADERS  += ball.h \
     swaptiminggame.h \
     rotatetiminggame.h \
     classicgamewidget.h \
-    othergameinit.h
+    othergameinit.h \
+    resetwidget.h \
+    endlessgamewidget.h \
+    gameoverwidget.h \
+    pausewidget.h
 
 RESOURCES += \
     resource.qrc

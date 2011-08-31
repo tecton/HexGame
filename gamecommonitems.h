@@ -167,6 +167,24 @@ public:
                      int frame);
 };
 
+class ResetItem : public AbstractItem
+{
+public:
+  virtual void paint(QPainter *painter,
+                     int width,
+                     int height,
+                     int frame);
+};
+
+class PauseItem : public AbstractItem
+{
+public:
+  virtual void paint(QPainter *painter,
+                     int width,
+                     int height,
+                     int frame);
+};
+
 class IntegerItem : public AbstractItem
 {
 public:
@@ -190,6 +208,43 @@ public:
 private:
   QString hint;
   int value;
+};
+
+class StringItem : public AbstractItem
+{
+public:
+  virtual void paint(QPainter *painter,
+                     int width,
+                     int height,
+                     int frame);
+
+  inline void setHint(QString str)
+  {hint = str;}
+
+  inline QString getHint()
+  {return hint;}
+
+private:
+  QString hint;
+  int value;
+};
+
+class ConfirmItem : public AbstractItem
+{
+public:
+  virtual void paint(QPainter *painter,
+                     int width,
+                     int height,
+                     int frame);
+};
+
+class CancelItem : public AbstractItem
+{
+public:
+  virtual void paint(QPainter *painter,
+                     int width,
+                     int height,
+                     int frame);
 };
 
 
