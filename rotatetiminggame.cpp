@@ -43,7 +43,7 @@ RotateTimingGame::RotateTimingGame() :
   star->setPos(QPointF(0.1, 0.5));
   myItems.push_back(star);
 
-  exitToMainMenu = new ExitToMainMenuItem();
+  exitToMainMenu = new ExitItem();
   exitToMainMenu->setPos(QPointF(0.1, 0.9));
   myItems.push_back(exitToMainMenu);
 

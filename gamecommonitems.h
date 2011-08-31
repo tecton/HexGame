@@ -158,7 +158,7 @@ public:
                      int frame);
 };
 
-class ExitToMainMenuItem : public AbstractItem
+class ExitItem : public AbstractItem
 {
 public:
   virtual void paint(QPainter *painter,

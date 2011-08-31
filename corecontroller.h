@@ -95,7 +95,7 @@ private:
                      bool forceFillDirection,
                      int distance = 1);
 
-  void maintainCToOAndOToC(QPointF firstPos);
+  int maintainCToOAndOToC(QPointF firstPos);
 
   inline Ball *ballAt(int index, bool disorder)
   {

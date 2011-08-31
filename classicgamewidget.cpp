@@ -77,9 +77,9 @@ ClassicGameWidget::ClassicGameWidget(AbstractRule::Gesture gesture) :
   resetItem->setPos(QPointF(0.1, 0.8));
   myItems.push_back(resetItem);
 
-  exitToMainMenu = new ExitToMainMenuItem();
-  exitToMainMenu->setPos(QPointF(0.1, 0.9));
-  myItems.push_back(exitToMainMenu);
+  exitItem = new ExitItem();
+  exitItem->setPos(QPointF(0.1, 0.9));
+  myItems.push_back(exitItem);
 
   itemAtPressPos = NULL;
 
@@ -251,9 +251,9 @@ void ClassicGameWidget::dealPressed(QPointF mousePos, Qt::MouseButton button)
                                        resetItem->getPos().y())) < 50)
     itemAtPressPos = resetItem;
   else if (distanceOfTwoPoints(mousePos,
-                               toScene(exitToMainMenu->getPos().x(),
-                                       exitToMainMenu->getPos().y())) < 50)
-    itemAtPressPos = exitToMainMenu;
+                               toScene(exitItem->getPos().x(),
+                                       exitItem->getPos().y())) < 50)
+    itemAtPressPos = exitItem;
   else
     itemAtPressPos = NULL;
 
@@ -317,10 +317,10 @@ void ClassicGameWidget::dealReleased(QPointF mousePos, Qt::MouseButton button)
       connect(w, SIGNAL(confirm()), this, SLOT(reset()));
       emit giveControlTo(w, false);
     }
-    else if (itemAtPressPos == exitToMainMenu &&
+    else if (itemAtPressPos == exitItem &&
              distanceOfTwoPoints(mousePos,
-                                 toScene(exitToMainMenu->getPos().x(),
-                                         exitToMainMenu->getPos().y())) < 30)
+                                 toScene(exitItem->getPos().x(),
+                                         exitItem->getPos().y())) < 30)
       quitGame();
   }
 

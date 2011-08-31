@@ -180,14 +180,14 @@ void ExchangeStageMenuWidget::dealPressed(QPointF mousePos, Qt::MouseButton butt
       if (type == 0)
       {
         if (!(i != 0 && leastSteps[i - 1] == -1))
-          emit giveControlTo(PuzzleGameInit::initRotatePuzzleGame(i, 0), true);
+          emit giveControlTo(PuzzleGameInit::initRotatePuzzleGame(i, 0, leastSteps[i]), true);
         else
           return;
       }
       else
       {
         if (leastSteps[i] != -1)
-          emit giveControlTo(PuzzleGameInit::initRotatePuzzleGame(i, 1), true);
+          emit giveControlTo(PuzzleGameInit::initRotatePuzzleGame(i, 1, leastSteps[i + 4]), true);
         else
           return;
       }
@@ -324,7 +324,7 @@ void UniteStageMenuWidget::dealPressed(QPointF mousePos, Qt::MouseButton button)
 
   int *leastSteps;
   int size;
-  gameRecord.readDataArr("exchange", leastSteps, size);
+  gameRecord.readDataArr("unite", leastSteps, size);
 
   for (int i = 0; i < 5; ++i)
   {
@@ -338,14 +338,14 @@ void UniteStageMenuWidget::dealPressed(QPointF mousePos, Qt::MouseButton button)
       if (type == 0)
       {
         if (!(i != 0 && leastSteps[i - 1] == -1))
-          emit giveControlTo(PuzzleGameInit::initRotatePuzzleGame(i, 2), true);
+          emit giveControlTo(PuzzleGameInit::initRotatePuzzleGame(i, 2, leastSteps[i]), true);
         else
           return;
       }
       else
       {
         if (leastSteps[i] != -1)
-          emit giveControlTo(PuzzleGameInit::initRotatePuzzleGame(i, 3), true);
+          emit giveControlTo(PuzzleGameInit::initRotatePuzzleGame(i, 3, leastSteps[i + 5]), true);
         else
           return;
       }
@@ -507,7 +507,7 @@ void LockStageMenuWidget::dealPressed(QPointF mousePos, Qt::MouseButton button)
 
   int *leastSteps;
   int size;
-  gameRecord.readDataArr("exchange", leastSteps, size);
+  gameRecord.readDataArr("lock", leastSteps, size);
 
   for (int i = 0; i < 10; ++i)
   {
@@ -522,14 +522,14 @@ void LockStageMenuWidget::dealPressed(QPointF mousePos, Qt::MouseButton button)
       if (type == 0)
       {
         if (!(i != 0 && leastSteps[i - 1] == -1))
-          emit giveControlTo(PuzzleGameInit::initRotatePuzzleGame(i, 4), true);
+          emit giveControlTo(PuzzleGameInit::initRotatePuzzleGame(i, 4, leastSteps[i]), true);
         else
           return;
       }
       else
       {
         if (leastSteps[i] != -1)
-          emit giveControlTo(PuzzleGameInit::initRotatePuzzleGame(i, 5), true);
+          emit giveControlTo(PuzzleGameInit::initRotatePuzzleGame(i, 5, leastSteps[i + 10]), true);
         else
           return;
       }

@@ -57,7 +57,7 @@ private:
   AbstractBonusItem *star;
   AbstractItem *hint;
   AbstractItem *resetItem;
-  AbstractItem *exitToMainMenu;
+  AbstractItem *exitItem;
 
   QVector <AbstractItem *> myItems;
 

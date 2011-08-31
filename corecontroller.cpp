@@ -185,7 +185,7 @@ QVector<QPointF> CoreController::newposUnderPos(QPointF mousePos)
   return result;
 }
 
-void CoreController::maintainCToOAndOToC(QPointF firstPos)
+int CoreController::maintainCToOAndOToC(QPointF firstPos)
 {
 
   int offset = 0;
@@ -212,6 +212,8 @@ void CoreController::maintainCToOAndOToC(QPointF firstPos)
     ballsOriginalIndexToCurrentIndex[o] = c;
     ballsCurrentIndexToOriginalIndex[c] = o;
   }
+
+  return offset;
 }
 
 void CoreController::eliminate(const QVector<int>& indexs)
@@ -279,7 +281,13 @@ void CoreController::rotateEnd()
 {
   if (gesture == AbstractRule::BadGesture)
     return;
-  maintainCToOAndOToC(balls[gestureInfluencedIndexs[0]]->pos());
+  int offset = maintainCToOAndOToC(balls[gestureInfluencedIndexs[0]]->pos());
+  if (offset == 0)
+  {
+    rotateRollBack();
+    gestureInfluencedIndexs.clear();
+    return;
+  }
 
   for (int i = 0;i < gestureInfluencedIndexs.size();++i)
     balls[gestureInfluencedIndexs[i]]->setState(Ball::UserReleased);

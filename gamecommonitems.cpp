@@ -126,7 +126,7 @@ void HintItem::paint(QPainter *painter,
   painter->drawText(QPointF(x, y), "Hint");
 }
 
-void ExitToMainMenuItem::paint(QPainter *painter,
+void ExitItem::paint(QPainter *painter,
                                int width,
                                int height,
                                int frame)
