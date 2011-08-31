@@ -6,7 +6,8 @@
 #include "rotatepuzzlegame.h"
 
 RotatePuzzleGame* PuzzleGameInit::initRotatePuzzleGame(int index,
-                                                       int type)
+                                                       int type,
+                                                       int minSteps)
 {
   int *ballIndex = new int [61];
   int *toBeIndex = new int [61];
@@ -53,7 +54,7 @@ RotatePuzzleGame* PuzzleGameInit::initRotatePuzzleGame(int index,
     in >> toBeIndex[i];
   }
   RotatePuzzleGame *puzzleGame = new RotatePuzzleGame(ballIndex, toBeIndex,
-                                                      index, type);
+                                                      index, type, minSteps);
   delete ballIndex;
   delete toBeIndex;
   return puzzleGame;

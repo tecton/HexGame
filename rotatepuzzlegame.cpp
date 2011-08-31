@@ -15,12 +15,13 @@
 #include "puzzlegameinit.h"
 #include "stagemenuwidget.h"
 #include "gamerecord.h"
+#include "gamemath.h"
 #include "gamecommonitems.h"
 
 extern GameRecord gameRecord;
 
 RotatePuzzleGame::RotatePuzzleGame(int ballIndex[], int toBeIndex[],
-                                   int gameIndex, int gameType)
+                                   int gameIndex, int gameType, int minSteps)
 {
     rule = new RotatePuzzleGameRule();
     gameboardInfo = new SixtyOneGameBoardInfo();
@@ -57,6 +58,25 @@ RotatePuzzleGame::RotatePuzzleGame(int ballIndex[], int toBeIndex[],
 
     currentSteps = new IntegerItem();
     currentSteps->setValue(0);
+    currentSteps->setHint("current moved steps:");
+    currentSteps->setPos(QPointF(0.5, 0.8));
+    minimalSteps = new IntegerItem();
+    if (minSteps != -1)
+    {
+      minimalSteps->setHint("record of least moved steps:");
+      minimalSteps->setValue(minSteps);
+    }
+    else
+    {
+      minimalSteps->setHint("you have not played before(suppose to be 99):");
+      minimalSteps->setValue(99);
+    }
+    minimalSteps->setPos(QPointF(0.5, 0.9));
+    exitItem = new ExitItem();
+    exitItem->setPos(QPointF(0.1,0.9));
+    myItems.push_back(currentSteps);
+    myItems.push_back(minimalSteps);
+    myItems.push_back(exitItem);
 
     controller = new CoreController(rule, gameboardInfo, balls);
     gestureController = new GestureController(rule, gameboardInfo, controller);
@@ -108,6 +128,11 @@ void RotatePuzzleGame::makeBasicPixmap(QPixmap& pixmap, int width, int height)
                                        width * 0.4 / gameboardInfo->width(),
                                        height * 0.4 / gameboardInfo->height(),
                                        frameCount);
+    BasicPainter::paintItems(painter,
+                             myItems,
+                             width,
+                             height,
+                             frameCount);
     painter->end();
     delete painter;
 }
@@ -165,6 +190,13 @@ void RotatePuzzleGame::dealPressed(QPointF mousePos, Qt::MouseButton button)
         quitGame();
         return;
     }
+    if (distanceOfTwoPoints(mousePos,
+                            toScene(exitItem->getPos().x(),
+                                    exitItem->getPos().y())) < 50)
+    {
+      quitGame();
+      return;
+    }
     gestureController->dealPressed(mousePos);
 }
 
@@ -207,7 +239,8 @@ void RotatePuzzleGame::advance()
       if (index != lastStageIndex[type])
       {
         RotatePuzzleGame* nextStage = PuzzleGameInit::initRotatePuzzleGame(index + 1,
-                                                                           type);
+                                                                           type,
+                                                                           gameRecord.readData(fileName[type], index + 1 + offset[type]));
         gameRecord.writeData(fileName[type], index + offset[type], currentSteps->getValue());
         emit giveControlTo(nextStage, true);
       }

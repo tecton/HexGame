@@ -14,14 +14,16 @@ class GestureController;
 class SixtyOneGameBoardInfo;
 class AbstractRule;
 class RotatePuzzleGameRule;
+class AbstractItem;
 class IntegerItem;
+class ExitItem;
 
 class RotatePuzzleGame : public AbstractPixmapWidget
 {
   Q_OBJECT
 public:
   RotatePuzzleGame(int ballIndex[], int tobeIndex[],
-                   int gameIndex, int gameType);
+                   int gameIndex, int gameType, int minSteps);
   ~RotatePuzzleGame();
 
   // Functions most overloaded
@@ -48,6 +50,10 @@ private:
   int type;
   int index;
   IntegerItem *currentSteps;
+  IntegerItem *minimalSteps;
+  ExitItem *exitItem;
+
+  QVector <AbstractItem *> myItems;
   // TODO:分数、奖励之类的东西
 
   void quitGame();

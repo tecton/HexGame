@@ -7,7 +7,8 @@ class PuzzleGameInit
 {
 public:
   static RotatePuzzleGame* initRotatePuzzleGame(int index,
-                                                int type);
+                                                int type,
+                                                int minSteps);
 };
 
 #endif // PUZZLEGAMEINIT_H
