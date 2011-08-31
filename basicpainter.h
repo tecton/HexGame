@@ -10,15 +10,23 @@
 #include <QVector>
 
 class Ball;
+class AbstractGameBoardInfo;
 class AbstractItem;
 class QPainter;
-
 
 class BasicPainter
 {
 public:
+  enum BackgroundId {MainMenu=0};
+  static void paintBackGround(BackgroundId id,
+                              QPainter *painter,
+                              int width,
+                              int height,
+                              int frame);
+
   // A function to paint the balls
-  static void paintBasicBalls(Ball **balls,
+  static void paintBasicBalls(AbstractGameBoardInfo *gameboard,
+                              Ball **balls,
                               int totalCount,
                               QPainter *painter,
                               double xRate,

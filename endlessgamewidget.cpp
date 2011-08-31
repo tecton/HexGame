@@ -132,7 +132,8 @@ void EndlessGameWidget::makeBasicPixmap(QPixmap& pixmap, int width, int height)
   pixmap.fill(Qt::black);
   QPainter *painter = new QPainter(&pixmap);
   Ball **balls = controller->balls;
-  BasicPainter::paintBasicBalls(balls,
+  BasicPainter::paintBasicBalls(gameboardInfo,
+                                balls,
                                 gameboardInfo->totalBallCounts(),
                                 painter,
                                 width * 1.0 / gameboardInfo->width(),

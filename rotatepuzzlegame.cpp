@@ -115,7 +115,8 @@ void RotatePuzzleGame::makeBasicPixmap(QPixmap& pixmap, int width, int height)
     QPainter *painter = new QPainter(&pixmap);
     Ball **balls = controller->balls;
     Ball **targetBalls = controller->toBeShapeBalls;
-    BasicPainter::paintBasicBalls(balls,
+    BasicPainter::paintBasicBalls(gameboardInfo,
+                                  balls,
                                   gameboardInfo->totalBallCounts(),
                                   painter,
                                   width * 1.0 / gameboardInfo->width(),

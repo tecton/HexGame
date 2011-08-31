@@ -24,6 +24,14 @@ QPointF calculatePosition(qreal a, qreal r, QPointF origin)
 {
   qreal dx = qCos(a) * r;
   qreal dy = -qSin(a) * r;
+  if ((PI - a < 0.02 && PI - a > -0.02))
+  {
+    if (dx < 0)
+      dx = -r;
+    else
+      dx = r;
+    dy = 0;
+  }
   qreal x = dx + origin.x();
   qreal y = dy + origin.y();
   return QPointF(x, y);

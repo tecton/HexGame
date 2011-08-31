@@ -4,10 +4,10 @@
 #include "gamemath.h"
 
 // The width of the item
-#define ITEM_WIDTH                              30
+#define ITEM_WIDTH                              40
 
 // The height of the item
-#define ITEM_HEIGHT                             30
+#define ITEM_HEIGHT                             40
 
 // The width of the item in a gesture
 #define ITEM_GESTURE_R                          35
@@ -15,18 +15,13 @@
 // The absolute position of game(I must draw a picture~~~)
 #define LOCATION_GAME_VIEW_X_FROM               0
 #define LOCATION_GAME_VIEW_Y_FROM               0
-#define LOCATION_GAME_VIEW_X_TO                 800
-#define LOCATION_GAME_VIEW_Y_TO                 500
+#define LOCATION_GAME_VIEW_X_TO                 1024
+#define LOCATION_GAME_VIEW_Y_TO                 600
 
-#define LOCATION_GAME_BOARD_X_FROM              (LOCATION_GAME_VIEW_X_FROM + 240) // 200
-#define LOCATION_GAME_BOARD_Y_FROM              10
-#define LOCATION_GAME_BOARD_X_TO                (LOCATION_GAME_VIEW_X_TO - 20)    // 780
-#define LOCATION_GAME_BOARD_Y_TO                (LOCATION_GAME_VIEW_Y_TO - 10)    // 490
-
-#define LOCATION_GAME_BOARD_ITEM_X_FROM         (LOCATION_GAME_BOARD_X_FROM + ITEM_WIDTH)  // 220
-#define LOCATION_GAME_BOARD_ITEM_Y_FROM         (LOCATION_GAME_BOARD_Y_FROM + ITEM_WIDTH)  // 40
-#define LOCATION_GAME_BOARD_ITEM_X_TO           (LOCATION_GAME_BOARD_X_TO - 2 * ITEM_WIDTH) // 740
-#define LOCATION_GAME_BOARD_ITEM_Y_TO           (LOCATION_GAME_BOARD_Y_TO - 2 * ITEM_HEIGHT) // 430
+#define LOCATION_GAME_BOARD_ITEM_X_FROM         350
+#define LOCATION_GAME_BOARD_ITEM_Y_FROM         25
+#define LOCATION_GAME_BOARD_ITEM_X_TO           1010
+#define LOCATION_GAME_BOARD_ITEM_Y_TO           600
 
 #define LOCATION_GAME_BOARD_ITEM_X_INTERVAL     (LOCATION_GAME_BOARD_ITEM_X_TO - \
                                                  LOCATION_GAME_BOARD_ITEM_X_FROM) / \

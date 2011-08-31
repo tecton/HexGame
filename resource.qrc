@@ -101,5 +101,7 @@
         <file>stageitems/stage_img_locked09.png</file>
         <file>stageitems/stage_img_locked10.png</file>
         <file>stageitems/button_exit.png</file>
+        <file>backgrounds/mainmenubackground.png</file>
+        <file>cursor.png</file>
     </qresource>
 </RCC>

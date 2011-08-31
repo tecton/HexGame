@@ -46,6 +46,11 @@ void MainMenuWidget::makeBasicPixmap(QPixmap& pixmap, int width, int height)
   pixmap = QPixmap(width, height);
   pixmap.fill(Qt::black);
   QPainter *painter = new QPainter(&pixmap);
+  BasicPainter::paintBackGround(BasicPainter::MainMenu,
+                                painter,
+                                width,
+                                height,
+                                frameCount);
   BasicPainter::paintItems(painter,
                            myItems,
                            width,
