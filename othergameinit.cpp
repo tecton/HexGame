@@ -3,6 +3,7 @@
 #include "abstractpixmapwidget.h"
 #include "classicgamewidget.h"
 #include "endlessgamewidget.h"
+#include "timinggamewidget.h"
 #include "gamerecord.h"
 #include "ball.h"
 
@@ -44,8 +45,8 @@ AbstractPixmapWidget *OtherGameInit::initOtherGame(AbstractRule::Gesture gesture
     return new ClassicGameWidget(gesture);
   else if (type == 1)
     return new EndlessGameWidget(gesture);
-//  else if (type == 2)
-//    return new TimingGameWidget(gesture);
+  else if (type == 2)
+    return new TimingGameWidget(gesture);
   return 0;
 }
 

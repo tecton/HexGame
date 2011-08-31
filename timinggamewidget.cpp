@@ -1,4 +1,4 @@
-#include "rotatetiminggame.h"
+#include "timinggamewidget.h"
 
 #include <QPainter>
 #include <QPixmap>
@@ -14,49 +14,76 @@
 #include "gamecommonitems.h"
 #include "gamemath.h"
 #include "thirtysevengameboardinfo.h"
+#include "othergameinit.h"
+#include "resetwidget.h"
+#include "pausewidget.h"
+#include "gameoverwidget.h"
 
 #define LOGICAL_WIDTH  800
 #define LOGICAL_HEIGHT 500
 
-RotateTimingGame::RotateTimingGame() :
+TimingGameWidget::TimingGameWidget(AbstractRule::Gesture gesture) :
     frameCount(0)
 {
-  rule = new RotateTimingGameRule();//RotateTimingGameRule();
+  if (gesture == AbstractRule::Swap)
+    rule = new SwapTimingGameRule();
+  else
+    rule = new RotateTimingGameRule();
   gameboardInfo = new ThirtySevenGameBoardInfo();
-  //RotateTimingGameSavedInfo savedInfo = readSaved();
+
+  //TimingGameWidgetSavedInfo savedInfo = readSaved();
   controller = new CoreController(rule, gameboardInfo, NULL);
   controller->fillAllBlanks();
+  for (int i = 0;i < 100;++i)
+    controller->advance();
   gestureController = new GestureController(rule, gameboardInfo, controller);
 
   effectPainter = new EffectPainter(gameboardInfo);
 
-  scoreItem = new IntegerItem();
-  scoreItem->setValue(0);
-  scoreItem->setPos(QPointF(0.1, 0.1));
-  myItems.push_back(scoreItem);
+  hightestScore = new IntegerItem();
+  hightestScore->setPos(QPointF(0.1, 0.1));
+  hightestScore->setValue(OtherGameInit::getHighest(getIndex()));
+  hightestScore->setHint("Highest Score");
+  myItems.push_back(hightestScore);
+
+  currentScore = new IntegerItem();
+  currentScore->setPos(QPointF(0.1, 0.15));
+  currentScore->setValue(0);
+  currentScore->setHint("Current Score");
+  myItems.push_back(currentScore);
+
+  timeBar = new VerticalProgressBarItem();
+  timeBar->setPos(QPointF(0.3, 0.9));
+  timeBar->setCurrent(60);
+  timeBar->setMin(0);
+  timeBar->setMax(60);
+  myItems.push_back(timeBar);
 
   flame = new FlameItem();
   flame->setPos(QPointF(0.1, 0.3));
+  flame->setCurrent(0);
   myItems.push_back(flame);
 
   star = new StarItem();
   star->setPos(QPointF(0.1, 0.5));
+  star->setCurrent(0);
   myItems.push_back(star);
-
-  exitToMainMenu = new ExitItem();
-  exitToMainMenu->setPos(QPointF(0.1, 0.9));
-  myItems.push_back(exitToMainMenu);
 
   hint = new HintItem();
   hint->setPos(QPointF(0.1, 0.7));
   myItems.push_back(hint);
 
-  progressBar = new VerticalProgressBarItem();
-  progressBar->setPos(QPointF(0.5, 0.9));
-  progressBar->setMin(0);
-  progressBar->setMax(60);
-  progressBar->setCurrent(60);
-  myItems.push_back(progressBar);
+  resetItem = new ResetItem();
+  resetItem->setPos(QPointF(0.1, 0.8));
+  myItems.push_back(resetItem);
+
+  pauseItem = new PauseItem();
+  pauseItem->setPos(QPointF(0.2, 0.8));
+  myItems.push_back(pauseItem);
+
+  exitItem = new ExitItem();
+  exitItem->setPos(QPointF(0.1, 0.9));
+  myItems.push_back(exitItem);
 
   itemAtPressPos = NULL;
 
@@ -71,7 +98,7 @@ RotateTimingGame::RotateTimingGame() :
   connect(controller,
           SIGNAL(eliminated(int)),
           this,
-          SLOT(eliminated(int)));
+          SLOT(elimitated(int)));
 
   t = new QTimer();
   t->setInterval(75);
@@ -84,18 +111,18 @@ RotateTimingGame::RotateTimingGame() :
   oneSecondTimer->start();
 }
 
-void RotateTimingGame::makePixmap(QPixmap& pixmap, int width, int height)
+void TimingGameWidget::makePixmap(QPixmap& pixmap, int width, int height)
 {
   makeBasicPixmap(pixmap, width, height);
   addEffect(pixmap, width, height);
 }
 
-RotateTimingGame::~RotateTimingGame()
+TimingGameWidget::~TimingGameWidget()
 {
-  oneSecondTimer->stop();
-  delete oneSecondTimer;
   t->stop();
   delete t;
+  oneSecondTimer->stop();
+  delete oneSecondTimer;
   for (int i = 0;i < myItems.size();++i)
     delete myItems[i];
   delete controller;
@@ -105,10 +132,10 @@ RotateTimingGame::~RotateTimingGame()
   delete effectPainter;
 }
 
-//void RotateTimingGame::init() //
+//void TimingGameWidget::init() //
 //}
 
-void RotateTimingGame::makeBasicPixmap(QPixmap& pixmap, int width, int height)
+void TimingGameWidget::makeBasicPixmap(QPixmap& pixmap, int width, int height)
 {
   pixmap = QPixmap(width, height);
   pixmap.fill(Qt::black);
@@ -129,7 +156,7 @@ void RotateTimingGame::makeBasicPixmap(QPixmap& pixmap, int width, int height)
   delete painter;
 }
 
-void RotateTimingGame::addEffect(QPixmap& pixmap, int width, int height)
+void TimingGameWidget::addEffect(QPixmap& pixmap, int width, int height)
 {
   QPainter *painter = new QPainter(&pixmap);
   QPointF pos = currentPos;
@@ -163,45 +190,39 @@ void RotateTimingGame::addEffect(QPixmap& pixmap, int width, int height)
   effectPainter->advance();
 }
 
-QPointF RotateTimingGame::toScene(double xRate, double yRate)
+QPointF TimingGameWidget::toScene(double xRate, double yRate)
 {
   return QPointF(xRate * gameboardInfo->width(),
                  yRate * gameboardInfo->height());
 }
 
-//RotateTimingGameSavedInfo RotateTimingGame::readSaved()
+//TimingGameWidgetSavedInfo TimingGameWidget::readSaved()
 //{
 
 //}
 
-void RotateTimingGame::showHint()
+void TimingGameWidget::showHint()
 {
   int hintOnBoard = controller->hint();
-  if (hintOnBoard >= 0)
-    effectPainter->hintAt(gameboardInfo->positionOfIndex(hintOnBoard),
-                          rule->gestureAllowed(AbstractRule::Rotate));
-  else if (flame->getCurrent() > 0)
-    effectPainter->hintAt(toScene(flame->getPos().x(),
-                                  flame->getPos().y()), false);
-  else if (star->getCurrent() > 0)
-    effectPainter->hintAt(toScene(star->getPos().x(),
-                                  star->getPos().y()), false);
-  else
-    gameOver();
+  effectPainter->hintAt(gameboardInfo->positionOfIndex(hintOnBoard),
+                        rule->gestureAllowed(AbstractRule::Rotate));
 }
 
-void RotateTimingGame::gameOver()
+void TimingGameWidget::gameOver()
 {
-  quitGame();
+  OtherGameInit::testHighest(getIndex(), currentScore->getValue());
+  GameOverWidget *w = new GameOverWidget(getIndex(), currentScore->getValue());
+  emit giveControlTo(w, true);
+  delete this;
 }
 
-void RotateTimingGame::quitGame()
+void TimingGameWidget::quitGame()
 {
   emit giveControlTo(NULL, true);
   delete this;
 }
 
-void RotateTimingGame::dealPressed(QPointF mousePos, Qt::MouseButton button)
+void TimingGameWidget::dealPressed(QPointF mousePos, Qt::MouseButton button)
 {
   currentPos = mousePos;
   if (distanceOfTwoPoints(mousePos,
@@ -217,9 +238,17 @@ void RotateTimingGame::dealPressed(QPointF mousePos, Qt::MouseButton button)
                                        hint->getPos().y())) < 50)
     itemAtPressPos = hint;
   else if (distanceOfTwoPoints(mousePos,
-                               toScene(exitToMainMenu->getPos().x(),
-                                       exitToMainMenu->getPos().y())) < 50)
-    itemAtPressPos = exitToMainMenu;
+                               toScene(resetItem->getPos().x(),
+                                       resetItem->getPos().y())) < 50)
+    itemAtPressPos = resetItem;
+  else if (distanceOfTwoPoints(mousePos,
+                               toScene(pauseItem->getPos().x(),
+                                       pauseItem->getPos().y())) < 50)
+    itemAtPressPos = pauseItem;
+  else if (distanceOfTwoPoints(mousePos,
+                               toScene(exitItem->getPos().x(),
+                                       exitItem->getPos().y())) < 50)
+    itemAtPressPos = exitItem;
   else
     itemAtPressPos = NULL;
 
@@ -232,14 +261,14 @@ void RotateTimingGame::dealPressed(QPointF mousePos, Qt::MouseButton button)
   gestureController->dealPressed(mousePos);
 }
 
-void RotateTimingGame::dealMoved(QPointF mousePos, Qt::MouseButton button)
+void TimingGameWidget::dealMoved(QPointF mousePos, Qt::MouseButton button)
 {
   currentPos = mousePos;
   effectPainter->clearUserMovingEliminationHints();
   gestureController->dealMoved(mousePos);
 }
 
-void RotateTimingGame::dealReleased(QPointF mousePos, Qt::MouseButton button)
+void TimingGameWidget::dealReleased(QPointF mousePos, Qt::MouseButton button)
 {
   if (itemAtPressPos != NULL)
   {
@@ -268,16 +297,37 @@ void RotateTimingGame::dealReleased(QPointF mousePos, Qt::MouseButton button)
     else if (itemAtPressPos == hint &&
              distanceOfTwoPoints(mousePos,
                                  toScene(hint->getPos().x(),
-                                         hint->getPos().y())) < 50)
+                                         hint->getPos().y())) < 30)
     {
-      int score = qMax(scoreItem->getValue() - 10, 0);
-      scoreItem->setValue(score);
+      int score = qMax(currentScore->getValue() - 10, 0);
+      currentScore->setValue(score);
       showHint();
     }
-    else if (itemAtPressPos == exitToMainMenu &&
+    else if (itemAtPressPos == pauseItem &&
              distanceOfTwoPoints(mousePos,
-                                 toScene(exitToMainMenu->getPos().x(),
-                                         exitToMainMenu->getPos().y())) < 50)
+                                 toScene(pauseItem->getPos().x(),
+                                         pauseItem->getPos().y())) < 30)
+    {
+      t->stop();
+      oneSecondTimer->stop();
+      PauseWidget *w = new PauseWidget();
+      connect(w, SIGNAL(resume()), this, SLOT(resume()));
+      emit giveControlTo(w, false);
+      return;
+    }
+    else if (itemAtPressPos == resetItem &&
+             distanceOfTwoPoints(mousePos,
+                                 toScene(resetItem->getPos().x(),
+                                         resetItem->getPos().y())) < 30)
+    {
+      ResetWidget *w = new ResetWidget();
+      connect(w, SIGNAL(confirm()), this, SLOT(reset()));
+      emit giveControlTo(w, false);
+    }
+    else if (itemAtPressPos == exitItem &&
+             distanceOfTwoPoints(mousePos,
+                                 toScene(exitItem->getPos().x(),
+                                         exitItem->getPos().y())) < 30)
       quitGame();
   }
 
@@ -286,7 +336,7 @@ void RotateTimingGame::dealReleased(QPointF mousePos, Qt::MouseButton button)
   gestureController->dealReleased(mousePos);
 }
 
-void RotateTimingGame::advance()
+void TimingGameWidget::advance()
 {
   ++frameCount;
   frameCount = frameCount % 32;
@@ -294,21 +344,17 @@ void RotateTimingGame::advance()
 //  effectPainter->advance();
 }
 
-void RotateTimingGame::oneSecond()
+void TimingGameWidget::elimitated(int count)
 {
-  progressBar->setCurrent(progressBar->getCurrent() - 1);
-  if (progressBar->getCurrent() <= 0)
-    gameOver();
-
-//  effectPainter->advance();
+  currentScore->setValue(currentScore->getValue() + count);
+  if (currentScore->getValue() > hightestScore->getValue())
+  {
+    OtherGameInit::testHighest(getIndex(), currentScore->getValue());
+    hightestScore->setValue(currentScore->getValue());
+  }
 }
 
-void RotateTimingGame::eliminated(int count)
-{
-  scoreItem->setValue(scoreItem->getValue() + count);
-}
-
-void RotateTimingGame::dealStableEliminate(Connections connections)
+void TimingGameWidget::dealStableEliminate(Connections connections)
 {
   for (int i = 0;i < gameboardInfo->totalBallCounts();++i)
   {
@@ -352,13 +398,47 @@ void RotateTimingGame::dealStableEliminate(Connections connections)
   }
 }
 
-void RotateTimingGame::dealUserMovingEliminate(Connections connections)
+void TimingGameWidget::dealUserMovingEliminate(Connections connections)
 {
-  effectPainter->clearUserMovingEliminationHints();
-  for (int i = 0;i < connections.connections.size();++i)
+  if (rule->gestureAllowed(AbstractRule::Rotate))
   {
-    for (int j = 0;j < connections.connections[i]->size();++j)
-      effectPainter->userMovingEliminationHintAt(connections.connections[i]->at(j));
-    // TODO:BLABLABLA
+    effectPainter->clearUserMovingEliminationHints();
+    for (int i = 0;i < connections.connections.size();++i)
+    {
+      for (int j = 0;j < connections.connections[i]->size();++j)
+        effectPainter->userMovingEliminationHintAt(connections.connections[i]->at(j));
+      // TODO:BLABLABLA
+    }
   }
+}
+
+int TimingGameWidget::getIndex()
+{
+  return 4 + (rule->gestureAllowed(AbstractRule::Rotate) ? 1 : 0);
+}
+
+void TimingGameWidget::reset()
+{
+  OtherGameInit::clearGame(getIndex());
+  TimingGameWidget *resetGame;
+  if (rule->gestureAllowed(AbstractRule::Swap))
+    resetGame = new TimingGameWidget(AbstractRule::Swap);
+  else
+    resetGame = new TimingGameWidget(AbstractRule::Rotate);
+  emit giveControlTo(resetGame, true);
+  delete this;
+}
+
+void TimingGameWidget::oneSecond()
+{
+  timeBar->setCurrent(timeBar->getCurrent() - 1);
+  if (timeBar->getCurrent() <= 0)
+    gameOver();
+
+}
+
+void TimingGameWidget::resume()
+{
+  t->start();
+  oneSecondTimer->start();
 }

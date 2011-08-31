@@ -34,6 +34,8 @@ EndlessGameWidget::EndlessGameWidget(AbstractRule::Gesture gesture) :
   //EndlessGameWidgetSavedInfo savedInfo = readSaved();
   controller = new CoreController(rule, gameboardInfo, record->balls);
   controller->fillAllBlanks();
+  for (int i = 0;i < 100;++i)
+    controller->advance();
   gestureController = new GestureController(rule, gameboardInfo, controller);
 
   effectPainter = new EffectPainter(gameboardInfo);

@@ -1,7 +1,8 @@
-#ifndef SWAPTIMINGGAME_H
-#define SWAPTIMINGGAME_H
+#ifndef TIMINGGAMEWIDGET_H
+#define TIMINGGAMEWIDGET_H
 
 #include "abstractpixmapwidget.h"
+#include "abstractrule.h"
 #include "connections.h"
 
 #include <QPointF>
@@ -14,19 +15,18 @@ class EffectPainter;
 class GestureController;
 class AbstractGameBoardInfo;
 class AbstractProgressBarItem;
-class AbstractRule;
 class AbstractItem;
 class AbstractBonusItem;
 class IntegerItem;
 class SwapClassicGameRule;
 class SwapClassicGameSavedInfo;
 
-class SwapTimingGame : public AbstractPixmapWidget
+class TimingGameWidget : public AbstractPixmapWidget
 {
   Q_OBJECT
 public:
-  SwapTimingGame();
-  ~SwapTimingGame();
+  TimingGameWidget(AbstractRule::Gesture gesture);
+  ~TimingGameWidget();
 
   // Functions most overloaded
   virtual void makePixmap(QPixmap& pixmap, int width, int height);
@@ -51,12 +51,15 @@ private:
   int frameCount;
   // TODO:
 
-  IntegerItem *scoreItem;
-  AbstractProgressBarItem *progressBar;
+  IntegerItem *hightestScore;
+  IntegerItem *currentScore;
+  AbstractProgressBarItem *timeBar;
   AbstractBonusItem *flame;
   AbstractBonusItem *star;
   AbstractItem *hint;
-  AbstractItem *exitToMainMenu;
+  AbstractItem *resetItem;
+  AbstractItem *pauseItem;
+  AbstractItem *exitItem;
 
   QVector <AbstractItem *> myItems;
 
@@ -64,15 +67,20 @@ private:
   QPointF currentPos;
 
   void showHint();
-  void gameOver();
   void quitGame();
+  void gameOver();
+
+  int getIndex();
+
 
 private slots:
   void advance();
-  void eliminated(int count);
+  void resume();
+  void reset();
   void oneSecond();
+  void elimitated(int count);
   void dealStableEliminate(Connections connections);
   void dealUserMovingEliminate(Connections connections);
 };
 
-#endif // SWAPTIMINGGAME_H
+#endif // TIMINGGAMEWIDGET_H

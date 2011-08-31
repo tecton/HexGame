@@ -32,14 +32,13 @@ SOURCES += main.cpp\
     gamecommonitems.cpp \
     gamerecord.cpp \
     pixmapoperations.cpp \
-    swaptiminggame.cpp \
-    rotatetiminggame.cpp \
     classicgamewidget.cpp \
     othergameinit.cpp \
     resetwidget.cpp \
     endlessgamewidget.cpp \
     gameoverwidget.cpp \
-    pausewidget.cpp
+    pausewidget.cpp \
+    timinggamewidget.cpp
 
 HEADERS  += ball.h \
     corecontroller.h \
@@ -68,14 +67,13 @@ HEADERS  += ball.h \
     gamecommonitems.h \
     gamerecord.h \
     pixmapoperations.h \
-    swaptiminggame.h \
-    rotatetiminggame.h \
     classicgamewidget.h \
     othergameinit.h \
     resetwidget.h \
     endlessgamewidget.h \
     gameoverwidget.h \
-    pausewidget.h
+    pausewidget.h \
+    timinggamewidget.h
 
 RESOURCES += \
     resource.qrc
