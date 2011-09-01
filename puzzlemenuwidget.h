@@ -29,6 +29,7 @@ private:
   AbstractPuzzleMenuItem *exchangeItem;
   AbstractPuzzleMenuItem *uniteItem;
   AbstractPuzzleMenuItem *lockItem;
+  AbstractItem *exitItem;
   QVector <AbstractItem *> myItems;
   int frameCount;
 

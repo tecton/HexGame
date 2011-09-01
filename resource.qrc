@@ -40,9 +40,7 @@
     </qresource>
     <qresource prefix="/images">
         <file>balls/blue01.png</file>
-        <file>balls/brown01.png</file>
         <file>balls/green01.png</file>
-        <file>balls/oringe01.png</file>
         <file>balls/purple01.png</file>
         <file>balls/red01.png</file>
         <file>balls/white01.png</file>
@@ -101,7 +99,27 @@
         <file>stageitems/stage_img_locked09.png</file>
         <file>stageitems/stage_img_locked10.png</file>
         <file>stageitems/button_exit.png</file>
-        <file>backgrounds/mainmenubackground.png</file>
         <file>cursor.png</file>
+        <file>backgrounds/mainmenubackground.png</file>
+        <file>balls/lock01.png</file>
+        <file>mainmenuitems/exit01.png</file>
+        <file>mainmenuitems/help01.png</file>
+        <file>buttons/cancel01.png</file>
+        <file>buttons/confirm01.png</file>
+        <file>buttons/exit01.png</file>
+        <file>buttons/hint01.png</file>
+        <file>buttons/pause01.png</file>
+        <file>buttons/reset01.png</file>
+        <file>helpwidget/helpwidget.png</file>
+        <file>bonus/flame.png</file>
+        <file>bonus/star.png</file>
+        <file>hint/arrow.png</file>
+        <file>backgrounds/61gamebackground.png</file>
+        <file>backgrounds/37gamebackground.png</file>
+        <file>gamecommonitems/bar1.png</file>
+        <file>gamecommonitems/bar2.png</file>
+        <file>backgrounds/puzzlemenubackground.png</file>
+        <file>gamecommonitems/label.png</file>
+        <file>hint/rotate.png</file>
     </qresource>
 </RCC>

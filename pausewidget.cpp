@@ -8,8 +8,8 @@
 #include "othergameinit.h"
 #include "abstractrule.h"
 
-#define LOGICAL_WIDTH  800
-#define LOGICAL_HEIGHT 500
+#define LOGICAL_WIDTH  1024
+#define LOGICAL_HEIGHT 600
 
 PauseWidget::PauseWidget()
 {

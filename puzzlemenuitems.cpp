@@ -48,10 +48,10 @@ void PuzzleMenuExchangeItem::paint(QPainter *painter,
   double y = getPos().y() * height;
   drawPixmapAt(painter,
                pixmap,
-               1,
-               1,
+               0.75,
+               0.75,
                QPointF(x, y),
-               false,
+               true,
                true);
 }
 
@@ -72,10 +72,10 @@ void PuzzleMenuUniteItem::paint(QPainter *painter,
   double y = getPos().y() * height;
   drawPixmapAt(painter,
                pixmap,
-               1,
-               1,
+               0.75,
+               0.75,
                QPointF(x, y),
-               false,
+               true,
                true);
 }
 
@@ -96,9 +96,9 @@ void PuzzleMenuLockItem::paint(QPainter *painter,
   double y = getPos().y() * height;
   drawPixmapAt(painter,
                pixmap,
-               1,
-               1,
+               0.75,
+               0.75,
                QPointF(x, y),
-               false,
+               true,
                true);
 }

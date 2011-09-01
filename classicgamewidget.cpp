@@ -18,8 +18,8 @@
 #include "resetwidget.h"
 #include "gameoverwidget.h"
 
-#define LOGICAL_WIDTH  800
-#define LOGICAL_HEIGHT 500
+#define LOGICAL_WIDTH  1024
+#define LOGICAL_HEIGHT 600
 
 ClassicGameWidget::ClassicGameWidget(AbstractRule::Gesture gesture) :
     frameCount(0),
@@ -49,25 +49,25 @@ ClassicGameWidget::ClassicGameWidget(AbstractRule::Gesture gesture) :
   myItems.push_back(hightestScore);
 
   currentLevel = new IntegerItem();
-  currentLevel->setPos(QPointF(0.1, 0.15));
+  currentLevel->setPos(QPointF(0.1, 0.25));
   currentLevel->setValue(record->currentLevel);
   currentLevel->setHint("Current Level");
   myItems.push_back(currentLevel);
 
   progressBar = new VerticalProgressBarItem();
-  progressBar->setPos(QPointF(0.1, 0.2));
+  progressBar->setPos(QPointF(0.25, 0.5));
   progressBar->setCurrent(record->currentScore);
   progressBar->setMin(record->minScore);
   progressBar->setMax(record->maxScore);
   myItems.push_back(progressBar);
 
   flame = new FlameItem();
-  flame->setPos(QPointF(0.1, 0.3));
+  flame->setPos(QPointF(0.1, 0.4));
   flame->setCurrent(record->flame);
   myItems.push_back(flame);
 
   star = new StarItem();
-  star->setPos(QPointF(0.1, 0.5));
+  star->setPos(QPointF(0.1, 0.55));
   star->setCurrent(record->star);
   myItems.push_back(star);
 
@@ -130,6 +130,11 @@ void ClassicGameWidget::makeBasicPixmap(QPixmap& pixmap, int width, int height)
   pixmap.fill(Qt::black);
   QPainter *painter = new QPainter(&pixmap);
   Ball **balls = controller->balls;
+  BasicPainter::paintBackGround(BasicPainter::Game37,
+                                painter,
+                                width,
+                                height,
+                                frameCount);
   BasicPainter::paintBasicBalls(gameboardInfo,
                                 balls,
                                 gameboardInfo->totalBallCounts(),
@@ -324,7 +329,10 @@ void ClassicGameWidget::dealReleased(QPointF mousePos, Qt::MouseButton button)
              distanceOfTwoPoints(mousePos,
                                  toScene(exitItem->getPos().x(),
                                          exitItem->getPos().y())) < 30)
+    {
       quitGame();
+      return;
+    }
   }
 
   effectPainter->clearUserMovingEliminationHints();

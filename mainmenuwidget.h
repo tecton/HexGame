@@ -26,7 +26,7 @@ public:
 
 private:
   QTimer *t;
-  MainMenuGameItem *items[7];
+  MainMenuGameItem *items[9];
   QVector <AbstractItem *> myItems;
   int frameCount;
 

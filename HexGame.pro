@@ -38,7 +38,8 @@ SOURCES += main.cpp\
     endlessgamewidget.cpp \
     gameoverwidget.cpp \
     pausewidget.cpp \
-    timinggamewidget.cpp
+    timinggamewidget.cpp \
+    helpwidget.cpp
 
 HEADERS  += ball.h \
     corecontroller.h \
@@ -73,7 +74,8 @@ HEADERS  += ball.h \
     endlessgamewidget.h \
     gameoverwidget.h \
     pausewidget.h \
-    timinggamewidget.h
+    timinggamewidget.h \
+    helpwidget.h
 
 RESOURCES += \
     resource.qrc

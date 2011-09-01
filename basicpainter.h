@@ -17,7 +17,12 @@ class QPainter;
 class BasicPainter
 {
 public:
-  enum BackgroundId {MainMenu=0};
+  enum BackgroundId {MainMenu=0,
+                     PuzzleMenu,
+                     StageMenu,
+                     Game37,
+                     Game61,
+                     PuzzleGame=Game61};
   static void paintBackGround(BackgroundId id,
                               QPainter *painter,
                               int width,

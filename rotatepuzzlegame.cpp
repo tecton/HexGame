@@ -58,22 +58,15 @@ RotatePuzzleGame::RotatePuzzleGame(int ballIndex[], int toBeIndex[],
 
     currentSteps = new IntegerItem();
     currentSteps->setValue(0);
-    currentSteps->setHint("current moved steps:");
-    currentSteps->setPos(QPointF(0.5, 0.8));
+    currentSteps->setHint("Current moved steps:");
+    currentSteps->setPos(QPointF(0.15, 0.5));
     minimalSteps = new IntegerItem();
-    if (minSteps != -1)
-    {
-      minimalSteps->setHint("record of least moved steps:");
-      minimalSteps->setValue(minSteps);
-    }
-    else
-    {
-      minimalSteps->setHint("you have not played before(suppose to be 99):");
-      minimalSteps->setValue(99);
-    }
-    minimalSteps->setPos(QPointF(0.5, 0.9));
+    minimalSteps->setHint(" Least moved steps: ");
+    minimalSteps->setValue((minSteps != -1) ? minSteps : 99);
+
+    minimalSteps->setPos(QPointF(0.15, 0.65));
     exitItem = new ExitItem();
-    exitItem->setPos(QPointF(0.1,0.9));
+    exitItem->setPos(QPointF(0.15,0.85));
     myItems.push_back(currentSteps);
     myItems.push_back(minimalSteps);
     myItems.push_back(exitItem);
@@ -115,6 +108,11 @@ void RotatePuzzleGame::makeBasicPixmap(QPixmap& pixmap, int width, int height)
     QPainter *painter = new QPainter(&pixmap);
     Ball **balls = controller->balls;
     Ball **targetBalls = controller->toBeShapeBalls;
+    BasicPainter::paintBackGround(BasicPainter::Game61,
+                                  painter,
+                                  width,
+                                  height,
+                                  frameCount);
     BasicPainter::paintBasicBalls(gameboardInfo,
                                   balls,
                                   gameboardInfo->totalBallCounts(),

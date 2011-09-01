@@ -6,8 +6,8 @@
 #include "gamecommonitems.h"
 #include "gamemath.h"
 
-#define LOGICAL_WIDTH  800
-#define LOGICAL_HEIGHT 500
+#define LOGICAL_WIDTH  1024
+#define LOGICAL_HEIGHT 600
 
 ResetWidget::ResetWidget()
 {
@@ -88,6 +88,8 @@ void ResetWidget::dealReleased(QPointF mousePos, Qt::MouseButton button)
     delete this;
     return;
   }
+
+  itemAtPressPos = NULL;
 }
 
 ResetWidget::~ResetWidget()

@@ -20,7 +20,9 @@ public:
                 RotateEndlessItem,
                 SwapTimingItem,
                 RotateTimingItem,
-                RotatePuzzleItem};
+                RotatePuzzleItem,
+                HelpItem,
+                ExitItem};
 
   // The pure virtual function to be overloaded
   virtual void paint(QPainter *painter, int width, int height, int frame)=0;

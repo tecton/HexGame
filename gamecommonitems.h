@@ -3,6 +3,7 @@
 
 #include "abstractitem.h"
 #include <QString>
+#include <QPixmap>
 
 class AbstractGameBoardInfo;
 class EffectPainter;
@@ -50,6 +51,9 @@ public:
                      int height,
                      int frame);
 
+private:
+  QPixmap background;
+  QPixmap foreground;
 };
 
 class AbstractBonusItem : public AbstractItem
@@ -127,6 +131,9 @@ public:
                                    AbstractGameBoardInfo *gameBoard,
                                    EffectPainter *effectPainter,
                                    int frame);
+
+private:
+  QPixmap p;
 };
 
 class StarItem : public AbstractBonusItem
@@ -147,6 +154,9 @@ public:
                                    AbstractGameBoardInfo *gameBoard,
                                    EffectPainter *effectPainter,
                                    int frame);
+
+private:
+  QPixmap p;
 };
 
 class HintItem : public AbstractItem
@@ -188,6 +198,8 @@ public:
 class IntegerItem : public AbstractItem
 {
 public:
+  IntegerItem();
+
   virtual void paint(QPainter *painter,
                      int width,
                      int height,
@@ -206,6 +218,7 @@ public:
   {return value;}
 
 private:
+  QPixmap p;
   QString hint;
   int value;
 };
@@ -213,6 +226,7 @@ private:
 class StringItem : public AbstractItem
 {
 public:
+  StringItem();
   virtual void paint(QPainter *painter,
                      int width,
                      int height,
@@ -225,6 +239,7 @@ public:
   {return hint;}
 
 private:
+  QPixmap p;
   QString hint;
   int value;
 };

@@ -1,11 +1,65 @@
 #include "gamecommonitems.h"
 
 #include <QPainter>
+#include <QVector>
+#include <QPixmap>
+#include <QFontMetrics>
 #include "abstractgameboardinfo.h"
 #include "effectpainter.h"
+#include "pixmapoperations.h"
+
+#define LOGICAL_WIDTH  1024
+#define LOGICAL_HEIGHT 600
+
+#define BUTTON_LOGICAL_WIDTH  120
+#define BUTTON_LOGICAL_HEIGHT 60
+
+#define HINT 0
+#define EXIT 1
+#define RESET 2
+#define PAUSE 3
+#define CONFIRM 4
+#define CANCEL 5
+
+const static int kButtonsCount = 6;
+const static char * kButtonsPaths[] = {":/images/buttons/hint*.png",
+                                       ":/images/buttons/exit*.png",
+                                       ":/images/buttons/reset*.png",
+                                       ":/images/buttons/pause*.png",
+                                       ":/images/buttons/confirm*.png",
+                                       ":/images/buttons/cancel*.png"};
+
+
+QVector<QVector<QPixmap> > buttonsPixmaps;
+QVector<int> buttonsFrameCounts;
+
+double wordWidth(QPainter *painter, QString text)
+{
+  QFontMetrics fm = painter->fontMetrics();
+  return fm.width(text);
+}
+
+void drawTextAt(double x, double y, QPainter *painter, QString text)
+{
+  QFontMetrics fm = painter->fontMetrics();
+  QPoint pt(x - fm.width(text) / 2,
+            y - (fm.ascent() + fm.descent()) / 2 + fm.ascent());
+  painter->drawText(pt,text);
+}
+
+void initButtonsPixmaps()
+{
+  initPixmaps(kButtonsCount,
+              kButtonsPaths,
+              buttonsPixmaps,
+              buttonsFrameCounts);
+}
+
 
 VerticalProgressBarItem::VerticalProgressBarItem()
 {
+  background = QPixmap(":/images/gamecommonitems/bar2.png");
+  foreground = QPixmap(":/images/gamecommonitems/bar1.png");
   setMin(0);
   setMax(30);
   setCurrent(0);
@@ -19,16 +73,39 @@ void VerticalProgressBarItem::paint(QPainter *painter,
   painter->setPen(QColor(255,255,255,255));
   double x = getPos().x() * width;
   double y = getPos().y() * height;
-  int percentage = (getCurrent() - getMin()) * 100 / (getMax() - getMin());
+  double percentage = qMax(0.0, qMin(1.0, 1.0 * (getCurrent() - getMin()) / (getMax() - getMin())));
+  double xRate = 1.0 * width / LOGICAL_WIDTH;
+  double yRate = 1.0 * height / LOGICAL_HEIGHT;
+  painter->drawPixmap(x - background.width() * xRate / 2,
+                      y - background.height() * yRate / 2,
+                      background.width() * xRate,
+                      background.height() * yRate,
+                      background,
+                      0,
+                      0,
+                      background.width(),
+                      background.height());
+
+  painter->drawPixmap(x - foreground.width() * xRate / 2,
+                      y + (1.0 * foreground.height() / 2 - 8 - percentage * 484) * yRate,
+                      foreground.width() * xRate,
+                      percentage * 484 * yRate,
+                      foreground,
+                      0,
+                      (1 - percentage) * 484 + 58,
+                      foreground.width(),
+                      percentage * (foreground.height() - 542));
+
   painter->drawText(QPointF(x, y),
                     QObject::tr("%1 % (%2-%3)").
-                    arg(percentage).
+                    arg((int)(percentage * 100)).
                     arg(getCurrent()).
                     arg(getMax()));
 }
 
 FlameItem::FlameItem()
 {
+  p = QPixmap(":/images/bonus/flame.png");
   setMax(99);
   setCurrent(0);
 }
@@ -42,17 +119,38 @@ void FlameItem::paint(QPainter *painter,
   painter->setPen(QColor(255,255,255,255));
   double x = getPos().x() * width;
   double y = getPos().y() * height;
-  painter->drawText(QPointF(x, y),
-                    QObject::tr("Flame * %1").
-                    arg(getCurrent()));
+  drawPixmapAt(painter,
+               p,
+               1.0 * width / LOGICAL_WIDTH,
+               1.0 * height / LOGICAL_HEIGHT,
+               QPointF(x, y),
+               true,
+               true);
+  y += 5;
+  QFont originalFont = painter->font();
+  QPen originalPen = painter->pen();
+  QFont f;
+  f.setBold(true);
+  f.setPixelSize(20);
+  painter->setFont(f);
+  painter->setPen(QPen(QColor(0, 0, 255, 255)));
+  QString text = QObject::tr("%1").arg(getCurrent());
+  drawTextAt(x, y, painter, text);
+  painter->setFont(originalFont);
+  painter->setPen(originalPen);
 }
 
 void FlameItem::paintLocatingIcon(QPainter *painter,
                                   QPointF pos,
                                   int frame)
 {
-  painter->setPen(QColor(255,255,255,128));
-  painter->drawText(pos, "(Flame)");
+  drawPixmapAt(painter,
+               p,
+               1,
+               1,
+               pos,
+               false,
+               true);
 }
 
 void FlameItem::paintInfluencedArea(int index,
@@ -70,6 +168,7 @@ void FlameItem::paintInfluencedArea(int index,
 
 StarItem::StarItem()
 {
+  p = QPixmap(":/images/bonus/star.png");
   setMax(99);
   setCurrent(0);
 }
@@ -83,17 +182,37 @@ void StarItem::paint(QPainter *painter,
   painter->setPen(QColor(255,255,255,255));
   double x = getPos().x() * width;
   double y = getPos().y() * height;
-  painter->drawText(QPointF(x, y),
-                    QObject::tr("Star  * %1").
-                    arg(getCurrent()));
+  drawPixmapAt(painter,
+               p,
+               1.0 * width / LOGICAL_WIDTH,
+               1.0 * height / LOGICAL_HEIGHT,
+               QPointF(x, y),
+               true,
+               true);
+  QFont originalFont = painter->font();
+  QPen originalPen = painter->pen();
+  QFont f;
+  f.setBold(true);
+  f.setPixelSize(20);
+  painter->setFont(f);
+  painter->setPen(QPen(QColor(255, 255, 0, 255)));
+  QString text = QObject::tr("%1").arg(getCurrent());
+  drawTextAt(x, y, painter, text);
+  painter->setFont(originalFont);
+  painter->setPen(originalPen);
 }
 
 void StarItem::paintLocatingIcon(QPainter *painter,
                                  QPointF pos,
                                  int frame)
 {
-  painter->setPen(QColor(255,255,255,128));
-  painter->drawText(pos, "(Star)");
+  drawPixmapAt(painter,
+               p,
+               1,
+               1,
+               pos,
+               false,
+               true);
 }
 
 void StarItem::paintInfluencedArea(int index,
@@ -120,21 +239,41 @@ void HintItem::paint(QPainter *painter,
                      int height,
                      int frame)
 {
-  painter->setPen(QColor(255,255,255,255));
+  if (buttonsPixmaps.isEmpty())
+    initButtonsPixmaps();
   double x = getPos().x() * width;
   double y = getPos().y() * height;
-  painter->drawText(QPointF(x, y), "Hint");
+  const QPixmap& p = buttonsPixmaps[HINT][frame % buttonsFrameCounts[HINT]];
+  double xRate = 1.0 * width * BUTTON_LOGICAL_WIDTH / LOGICAL_WIDTH / p.width();
+  double yRate = 1.0 * height * BUTTON_LOGICAL_HEIGHT / LOGICAL_HEIGHT / p.height();
+  drawPixmapAt(painter,
+               p,
+               xRate,
+               yRate,
+               QPointF(x, y),
+               true,
+               true);
 }
 
 void ExitItem::paint(QPainter *painter,
-                               int width,
-                               int height,
-                               int frame)
+                     int width,
+                     int height,
+                     int frame)
 {
-  painter->setPen(QColor(255,255,255,255));
+  if (buttonsPixmaps.isEmpty())
+    initButtonsPixmaps();
   double x = getPos().x() * width;
   double y = getPos().y() * height;
-  painter->drawText(QPointF(x, y), "Exit");
+  const QPixmap& p = buttonsPixmaps[EXIT][frame % buttonsFrameCounts[EXIT]];
+  double xRate = 1.0 * width * BUTTON_LOGICAL_WIDTH / LOGICAL_WIDTH / p.width();
+  double yRate = 1.0 * height * BUTTON_LOGICAL_HEIGHT / LOGICAL_HEIGHT / p.height();
+  drawPixmapAt(painter,
+               p,
+               xRate,
+               yRate,
+               QPointF(x, y),
+               true,
+               true);
 }
 
 void ResetItem::paint(QPainter *painter,
@@ -142,10 +281,20 @@ void ResetItem::paint(QPainter *painter,
                       int height,
                       int frame)
 {
-  painter->setPen(QColor(255,255,255,255));
+  if (buttonsPixmaps.isEmpty())
+    initButtonsPixmaps();
   double x = getPos().x() * width;
   double y = getPos().y() * height;
-  painter->drawText(QPointF(x, y), "Reset");
+  const QPixmap& p = buttonsPixmaps[RESET][frame % buttonsFrameCounts[RESET]];
+  double xRate = 1.0 * width * BUTTON_LOGICAL_WIDTH / LOGICAL_WIDTH / p.width();
+  double yRate = 1.0 * height * BUTTON_LOGICAL_HEIGHT / LOGICAL_HEIGHT / p.height();
+  drawPixmapAt(painter,
+               p,
+               xRate,
+               yRate,
+               QPointF(x, y),
+               true,
+               true);
 }
 
 void PauseItem::paint(QPainter *painter,
@@ -153,10 +302,25 @@ void PauseItem::paint(QPainter *painter,
                       int height,
                       int frame)
 {
-  painter->setPen(QColor(255,255,255,255));
+  if (buttonsPixmaps.isEmpty())
+    initButtonsPixmaps();
   double x = getPos().x() * width;
   double y = getPos().y() * height;
-  painter->drawText(QPointF(x, y), "Pause");
+  const QPixmap& p = buttonsPixmaps[PAUSE][frame % buttonsFrameCounts[PAUSE]];
+  double xRate = 1.0 * width * BUTTON_LOGICAL_WIDTH / LOGICAL_WIDTH / p.width();
+  double yRate = 1.0 * height * BUTTON_LOGICAL_HEIGHT / LOGICAL_HEIGHT / p.height();
+  drawPixmapAt(painter,
+               p,
+               xRate,
+               yRate,
+               QPointF(x, y),
+               true,
+               true);
+}
+
+IntegerItem::IntegerItem()
+{
+  p = QPixmap(":/images/gamecommonitems/label.png");
 }
 
 void IntegerItem::paint(QPainter *painter,
@@ -167,9 +331,37 @@ void IntegerItem::paint(QPainter *painter,
   painter->setPen(QColor(255,255,255,255));
   double x = getPos().x() * width;
   double y = getPos().y() * height;
-  painter->drawText(QPointF(x, y), QObject::tr("%1 : %2").
-                    arg(hint).
-                    arg(getValue()));
+  QFont originalFont = painter->font();
+  QPen originalPen = painter->pen();
+  QFont f;
+  f.setBold(true);
+  f.setPixelSize(20);
+  painter->setFont(f);
+  painter->setPen(QPen(QColor(255, 120, 0, 255)));
+  QString text1 = QObject::tr("%1").arg(getValue());
+  double totalHeight = 70;
+  double width1 = wordWidth(painter, text1);
+  double width2 = wordWidth(painter, hint);
+  double totalWidth = qMax(width1 * 2, width2 * 1.33);
+  drawPixmapAt(painter,
+               p,
+               totalWidth / p.width(),
+               totalHeight / p.height(),
+               QPointF(x, y),
+               true,
+               true);
+  drawTextAt(x, y - 10, painter, text1);
+  f.setPixelSize(15);
+  painter->setFont(f);
+  painter->setPen(QPen(QColor(0, 0, 255, 255)));
+  drawTextAt(x, y + 15, painter, hint);
+  painter->setFont(originalFont);
+  painter->setPen(originalPen);
+}
+
+StringItem::StringItem()
+{
+  p = QPixmap(":/images/gamecommonitems/label.png");
 }
 
 void StringItem::paint(QPainter *painter,
@@ -180,7 +372,25 @@ void StringItem::paint(QPainter *painter,
   painter->setPen(QColor(255,255,255,255));
   double x = getPos().x() * width;
   double y = getPos().y() * height;
-  painter->drawText(QPointF(x, y), hint);
+  QFont originalFont = painter->font();
+  QPen originalPen = painter->pen();
+  QFont f;
+  f.setBold(true);
+  f.setPixelSize(20);
+  painter->setFont(f);
+  painter->setPen(QPen(QColor(255, 120, 0, 255)));
+  double totalHeight = 70;
+  double totalWidth = wordWidth(painter, hint) * 2;
+  drawPixmapAt(painter,
+               p,
+               totalWidth / p.width(),
+               totalHeight / p.height(),
+               QPointF(x, y),
+               true,
+               true);
+  drawTextAt(x, y - 10, painter, hint);
+  painter->setFont(originalFont);
+  painter->setPen(originalPen);
 }
 
 void ConfirmItem::paint(QPainter *painter,
@@ -188,10 +398,20 @@ void ConfirmItem::paint(QPainter *painter,
                         int height,
                         int frame)
 {
-  painter->setPen(QColor(255,255,255,255));
+  if (buttonsPixmaps.isEmpty())
+    initButtonsPixmaps();
   double x = getPos().x() * width;
   double y = getPos().y() * height;
-  painter->drawText(QPointF(x, y), "Confirm");
+  const QPixmap& p = buttonsPixmaps[CONFIRM][frame % buttonsFrameCounts[CONFIRM]];
+  double xRate = 1.0 * width * BUTTON_LOGICAL_WIDTH / LOGICAL_WIDTH / p.width();
+  double yRate = 1.0 * height * BUTTON_LOGICAL_HEIGHT / LOGICAL_HEIGHT / p.height();
+  drawPixmapAt(painter,
+               p,
+               xRate,
+               yRate,
+               QPointF(x, y),
+               true,
+               true);
 }
 
 void CancelItem::paint(QPainter *painter,
@@ -199,9 +419,19 @@ void CancelItem::paint(QPainter *painter,
                        int height,
                        int frame)
 {
-  painter->setPen(QColor(255,255,255,255));
+  if (buttonsPixmaps.isEmpty())
+    initButtonsPixmaps();
   double x = getPos().x() * width;
   double y = getPos().y() * height;
-  painter->drawText(QPointF(x, y), "Cancel");
+  const QPixmap& p = buttonsPixmaps[CANCEL][frame % buttonsFrameCounts[CANCEL]];
+  double xRate = 1.0 * width * BUTTON_LOGICAL_WIDTH / LOGICAL_WIDTH / p.width();
+  double yRate = 1.0 * height * BUTTON_LOGICAL_HEIGHT / LOGICAL_HEIGHT / p.height();
+  drawPixmapAt(painter,
+               p,
+               xRate,
+               yRate,
+               QPointF(x, y),
+               true,
+               true);
 }
 

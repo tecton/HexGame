@@ -14,14 +14,14 @@
 #include "pixmapoperations.h"
 
 const static int kBallsTotalColors = 8;
-const static char * kBallsColorPaths[] = {":/images/balls/green*.png",
-                                          ":/images/balls/red*.png",
+const static char * kBallsColorPaths[] = {":/images/balls/red*.png",
                                           ":/images/balls/blue*.png",
+                                          ":/images/balls/green*.png",
                                           ":/images/balls/yellow*.png",
                                           ":/images/balls/purple*.png",
                                           ":/images/balls/white*.png",
-                                          ":/images/balls/oringe*.png",
-                                          ":/images/balls/brown*.png"};
+                                          ":/images/balls/purple*.png",
+                                          ":/images/balls/white*.png"};
 
 
 QVector<QVector<QPixmap> > ballsPixmaps;
@@ -34,8 +34,12 @@ void initBallsPixmaps()
               ballsFrameCounts);
 }
 
-const static int kBackgroundTotalColors = 1;
-const static char * kBackgroundColorPaths[] = {":/images/backgrounds/mainmenubackground.png"};
+const static int kBackgroundTotalColors = 5;
+const static char * kBackgroundColorPaths[] = {":/images/backgrounds/mainmenubackground.png",
+                                               ":/images/backgrounds/puzzlemenubackground.png",
+                                               ":/images/backgrounds/mainmenubackground.png",
+                                               ":/images/backgrounds/37gamebackground.png",
+                                               ":/images/backgrounds/61gamebackground.png"};
 
 QVector<QVector<QPixmap> > backgroundPixmaps;
 QVector<int> backgroundFrameCounts;
@@ -67,6 +71,8 @@ void BasicPainter::paintBackGround(BackgroundId id,
                false);
 
 }
+
+QVector<QPixmap> ballsLockPixmaps;
 
 void BasicPainter::paintBasicBalls(AbstractGameBoardInfo *gameboard,
                                    Ball **balls,
@@ -101,7 +107,26 @@ void BasicPainter::paintBasicBalls(AbstractGameBoardInfo *gameboard,
                    false);
 
       if (balls[i]->getLocked())
-        painter->drawText(pos, "L");
+      {
+        if (ballsLockPixmaps.isEmpty())
+        {
+          int tmp;
+          initPixmaps(":/images/balls/lock*.png",
+                      ballsLockPixmaps,
+                      tmp);
+
+        }
+
+        const QPixmap& p2 = ballsLockPixmaps[frame % ballsLockPixmaps.size()];
+
+        drawPixmapAt(painter,
+                     p2,
+                     a / p2.width() * xRate * 0.75,
+                     a / p2.height() * yRate * 0.75,
+                     pos,
+                     true,
+                     false);
+      }
     }
   }
 }

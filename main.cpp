@@ -2,13 +2,10 @@
 #include <QTextCodec>
 #include <time.h>
 #include "mainwidget.h"
+
 #include "gamerecord.h"
 
 GameRecord gameRecord;
-
-#include "gamerecord.h"
-
-GameRecord record;
 
 int main(int argc, char *argv[])
 {

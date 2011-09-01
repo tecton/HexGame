@@ -19,8 +19,8 @@
 #include "pausewidget.h"
 #include "gameoverwidget.h"
 
-#define LOGICAL_WIDTH  800
-#define LOGICAL_HEIGHT 500
+#define LOGICAL_WIDTH  1024
+#define LOGICAL_HEIGHT 600
 
 TimingGameWidget::TimingGameWidget(AbstractRule::Gesture gesture) :
     frameCount(0)
@@ -47,20 +47,20 @@ TimingGameWidget::TimingGameWidget(AbstractRule::Gesture gesture) :
   myItems.push_back(hightestScore);
 
   currentScore = new IntegerItem();
-  currentScore->setPos(QPointF(0.1, 0.15));
+  currentScore->setPos(QPointF(0.1, 0.25));
   currentScore->setValue(0);
   currentScore->setHint("Current Score");
   myItems.push_back(currentScore);
 
   timeBar = new VerticalProgressBarItem();
-  timeBar->setPos(QPointF(0.3, 0.9));
+  timeBar->setPos(QPointF(0.25, 0.5));
   timeBar->setCurrent(60);
   timeBar->setMin(0);
   timeBar->setMax(60);
   myItems.push_back(timeBar);
 
   flame = new FlameItem();
-  flame->setPos(QPointF(0.1, 0.3));
+  flame->setPos(QPointF(0.1, 0.375));
   flame->setCurrent(0);
   myItems.push_back(flame);
 
@@ -70,15 +70,15 @@ TimingGameWidget::TimingGameWidget(AbstractRule::Gesture gesture) :
   myItems.push_back(star);
 
   hint = new HintItem();
-  hint->setPos(QPointF(0.1, 0.7));
+  hint->setPos(QPointF(0.1, 0.6));
   myItems.push_back(hint);
 
   resetItem = new ResetItem();
-  resetItem->setPos(QPointF(0.1, 0.8));
+  resetItem->setPos(QPointF(0.1, 0.7));
   myItems.push_back(resetItem);
 
   pauseItem = new PauseItem();
-  pauseItem->setPos(QPointF(0.2, 0.8));
+  pauseItem->setPos(QPointF(0.1, 0.8));
   myItems.push_back(pauseItem);
 
   exitItem = new ExitItem();
@@ -141,6 +141,11 @@ void TimingGameWidget::makeBasicPixmap(QPixmap& pixmap, int width, int height)
   pixmap.fill(Qt::black);
   QPainter *painter = new QPainter(&pixmap);
   Ball **balls = controller->balls;
+  BasicPainter::paintBackGround(BasicPainter::Game37,
+                                painter,
+                                width,
+                                height,
+                                frameCount);
   BasicPainter::paintBasicBalls(gameboardInfo,
                                 balls,
                                 gameboardInfo->totalBallCounts(),
@@ -329,7 +334,10 @@ void TimingGameWidget::dealReleased(QPointF mousePos, Qt::MouseButton button)
              distanceOfTwoPoints(mousePos,
                                  toScene(exitItem->getPos().x(),
                                          exitItem->getPos().y())) < 30)
+    {
       quitGame();
+      return;
+    }
   }
 
   effectPainter->clearUserMovingEliminationHints();

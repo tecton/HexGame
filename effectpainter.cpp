@@ -6,8 +6,10 @@
 #include <QPolygonF>
 #include <QRadialGradient>
 #include <QLinearGradient>
+#include <QPixmap>
 #include "abstractgameboardinfo.h"
 #include "gamemath.h"
+#include "pixmapoperations.h"
 
 #define EFFECT_LAST_TIME  15
 
@@ -125,6 +127,7 @@ public:
     QRadialGradient gradient = QRadialGradient(pos2, r, pos2);
     gradient.setColorAt(0, QColor(255,255,255,200));
     gradient.setColorAt(1, QColor(255,255,255,50));
+    painter->setPen(QColor(255,255,255,0));
     painter->setBrush(QBrush(gradient));
 
     painter->drawEllipse(pos2, r, r);
@@ -274,6 +277,10 @@ public:
       pos(position),
       r(rotate)
   {
+    if (rotate)
+      p = QPixmap(":/images/hint/rotate.png");
+    else
+      p = QPixmap(":/images/hint/arrow.png");
     setAge(0);
     setLimit(20);
   }
@@ -302,18 +309,36 @@ public:
       dy = 40 * (percentage - 0.75);
     else
       dy = 10;
+    double dx = theGameboardInfo->positionOfIndex(0).x() -
+                theGameboardInfo->centerPositionOfIndex(0).x();
+    dy -= theGameboardInfo->centerPositionOfIndex(0).y() -
+          theGameboardInfo->positionOfIndex(0).y();
+
+    if (!r)
+      dy += theGameboardInfo->ballR();
+
+    pos2.setX(pos2.x() - dx);
     pos2.setY(pos2.y() - dy);
     pos2 = scale(pos2, xRate, yRate);
-    QFont f("Times",12,QFont::Normal,false);
-    f.setPixelSize(20);
-    painter->setFont(f);
-    painter->setPen(QColor(255,255,255,255));;
-    painter->drawText(pos2, QObject::tr("↓"));
+    drawPixmapAt(painter,p,xRate,yRate,pos2,true,true);
   }
+//    }
+//    else
+//    {
+//      pos2.setY(pos2.y() - dy);
+//      pos2 = scale(pos2, xRate, yRate);
+//      QFont f("Times",12,QFont::Normal,false);
+//      f.setPixelSize(20);
+//      painter->setFont(f);
+//      painter->setPen(QColor(255,255,255,255));;
+//      painter->drawText(pos2, QObject::tr("↓"));
+//    }
+
 
 private:
   QPointF pos;
   bool r;
+  QPixmap p;
 };
 
 class FlashInfo : public AbstractAgingEffect

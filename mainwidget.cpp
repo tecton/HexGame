@@ -15,7 +15,7 @@ MainWidget::MainWidget(QWidget *parent) :
     QWidget(parent),
     coolDown(0)
 {
-  setCursor(QCursor(QPixmap(":/images/cursor.png")));
+//  setCursor(QCursor(QPixmap(":/images/cursor.png")));
   MainMenuWidget *mainMenu = new MainMenuWidget();
   widgets.push_back(mainMenu);
   connect(mainMenu,

@@ -7,10 +7,10 @@
 #include "gamemath.h"
 #include "puzzlemenuitems.h"
 #include "stagemenuwidget.h"
+#include "gamecommonitems.h"
 
-#define LOGICAL_WIDTH  800
-#define LOGICAL_HEIGHT 500
-
+#define LOGICAL_WIDTH  1024
+#define LOGICAL_HEIGHT 600
 
 PuzzleMenuWidget::PuzzleMenuWidget() :
     frameCount(0)
@@ -24,9 +24,13 @@ PuzzleMenuWidget::PuzzleMenuWidget() :
   lockItem = new PuzzleMenuLockItem();
   lockItem->setPos(QPointF(0.8, 0.45));
 
+  exitItem = new ExitItem();
+  exitItem->setPos(QPointF(0.5, 0.8));
+
   myItems.push_back(exchangeItem);
   myItems.push_back(uniteItem);
   myItems.push_back(lockItem);
+  myItems.push_back(exitItem);
 
   t = new QTimer();
   t->setInterval(75);
@@ -45,6 +49,11 @@ void PuzzleMenuWidget::makeBasicPixmap(QPixmap& pixmap, int width, int height)
   pixmap = QPixmap(width, height);
   pixmap.fill(Qt::black);
   QPainter *painter = new QPainter(&pixmap);
+  BasicPainter::paintBackGround(BasicPainter::PuzzleMenu,
+                                painter,
+                                width,
+                                height,
+                                frameCount);
   BasicPainter::paintItems(painter,
                            myItems,
                            width,
@@ -81,19 +90,27 @@ void PuzzleMenuWidget::dealPressed(QPointF mousePos, Qt::MouseButton button)
     AbstractStageMenuWidget *exchangeMenu = new ExchangeStageMenuWidget(0);
     emit giveControlTo(exchangeMenu, false);
   }
-  if (distanceOfTwoPoints(mousePos,
-                          toScene(uniteItem->getPos().x(),
-                                  uniteItem->getPos().y())) < 80)
+  else if (distanceOfTwoPoints(mousePos,
+                               toScene(uniteItem->getPos().x(),
+                                       uniteItem->getPos().y())) < 80)
   {
     AbstractStageMenuWidget *uniteMenu = new UniteStageMenuWidget(0);
     emit giveControlTo(uniteMenu, false);
   }
-  if (distanceOfTwoPoints(mousePos,
-                          toScene(lockItem->getPos().x(),
-                                  lockItem->getPos().y())) < 80)
+  else if (distanceOfTwoPoints(mousePos,
+                               toScene(lockItem->getPos().x(),
+                                       lockItem->getPos().y())) < 80)
   {
     AbstractStageMenuWidget *lockMenu = new LockStageMenuWidget(0);
     emit giveControlTo(lockMenu, false);
+  }
+  else if (distanceOfTwoPoints(mousePos,
+                               toScene(exitItem->getPos().x(),
+                                       exitItem->getPos().y())) < 80)
+  {
+    emit giveControlTo(NULL, true);
+    delete this;
+    return;
   }
 }
 
