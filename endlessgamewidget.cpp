@@ -26,7 +26,7 @@ EndlessGameWidget::EndlessGameWidget(AbstractRule::Gesture gesture) :
   if (gesture == AbstractRule::Swap)
     rule = new SwapEndlessGameRule();
   else
-    rule = new RotateClassicGameRule();
+    rule = new RotateEndlessGameRule();
   gameboardInfo = new ThirtySevenGameBoardInfo();
 
   OtherGameRecord *record = OtherGameInit::loadOtherGame(getIndex());
