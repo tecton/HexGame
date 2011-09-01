@@ -96,11 +96,19 @@ void VerticalProgressBarItem::paint(QPainter *painter,
                       foreground.width(),
                       percentage * (foreground.height() - 542));
 
-  painter->drawText(QPointF(x, y),
-                    QObject::tr("%1 % (%2-%3)").
-                    arg((int)(percentage * 100)).
-                    arg(getCurrent()).
-                    arg(getMax()));
+  QFont originalFont = painter->font();
+  QPen originalPen = painter->pen();
+  QFont f;
+  f.setBold(true);
+  f.setPixelSize(20);
+  painter->setFont(f);
+  painter->setPen(QPen(QColor(0, 0, 255, 255)));
+  drawTextAt(x,
+             y - foreground.height() * yRate / 2 + 30,
+             painter,
+             QObject::tr("%1").arg(getCurrent()));
+  painter->setFont(originalFont);
+  painter->setPen(originalPen);
 }
 
 FlameItem::FlameItem()

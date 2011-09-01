@@ -210,7 +210,7 @@ QPointF TimingGameWidget::toScene(double xRate, double yRate)
 void TimingGameWidget::showHint()
 {
   int hintOnBoard = controller->hint();
-  effectPainter->hintAt(gameboardInfo->positionOfIndex(hintOnBoard),
+  effectPainter->hintAt(gameboardInfo->centerPositionOfIndex(hintOnBoard),
                         rule->gestureAllowed(AbstractRule::Rotate));
 }
 

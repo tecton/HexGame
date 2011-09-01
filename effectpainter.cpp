@@ -309,15 +309,10 @@ public:
       dy = 40 * (percentage - 0.75);
     else
       dy = 10;
-    double dx = theGameboardInfo->positionOfIndex(0).x() -
-                theGameboardInfo->centerPositionOfIndex(0).x();
-    dy -= theGameboardInfo->centerPositionOfIndex(0).y() -
-          theGameboardInfo->positionOfIndex(0).y();
 
     if (!r)
       dy += theGameboardInfo->ballR();
 
-    pos2.setX(pos2.x() - dx);
     pos2.setY(pos2.y() - dy);
     pos2 = scale(pos2, xRate, yRate);
     drawPixmapAt(painter,p,xRate,yRate,pos2,true,true);

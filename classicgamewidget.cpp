@@ -200,7 +200,7 @@ void ClassicGameWidget::showHint()
 {
   int hintOnBoard = controller->hint();
   if (hintOnBoard >= 0)
-    effectPainter->hintAt(gameboardInfo->positionOfIndex(hintOnBoard),
+    effectPainter->hintAt(gameboardInfo->centerPositionOfIndex(hintOnBoard),
                           rule->gestureAllowed(AbstractRule::Rotate));
   else if (flame->getCurrent() > 0)
     effectPainter->hintAt(toScene(flame->getPos().x(),
