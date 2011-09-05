@@ -35,6 +35,8 @@ public:
   virtual void dealMoved(QPointF mousePos, Qt::MouseButton button)=0;
   virtual void dealReleased(QPointF mousePos, Qt::MouseButton button)=0;
 
+  virtual void getForcus()=0;
+
 signals:
   // The signal mentioned at beginning
   void giveControlTo(AbstractPixmapWidget *target, bool deleteMySelf);

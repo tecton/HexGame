@@ -101,7 +101,6 @@ EndlessGameWidget::EndlessGameWidget(AbstractRule::Gesture gesture) :
   t = new QTimer();
   t->setInterval(75);
   connect(t, SIGNAL(timeout()), this, SLOT(advance()));
-  t->start();
 }
 
 void EndlessGameWidget::makePixmap(QPixmap& pixmap, int width, int height)
@@ -322,6 +321,11 @@ void EndlessGameWidget::dealReleased(QPointF mousePos, Qt::MouseButton button)
   effectPainter->clearUserMovingEliminationHints();
   itemAtPressPos = NULL;
   gestureController->dealReleased(mousePos);
+}
+
+void EndlessGameWidget::getForcus()
+{
+  t->start();
 }
 
 void EndlessGameWidget::advance()

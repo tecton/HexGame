@@ -37,6 +37,7 @@ public:
   virtual void dealPressed(QPointF mousePos, Qt::MouseButton button);
   virtual void dealMoved(QPointF mousePos, Qt::MouseButton button);
   virtual void dealReleased(QPointF mousePos, Qt::MouseButton button);
+  virtual void getForcus();
 
 //  SwapClassicGameSavedInfo readSaved();
 

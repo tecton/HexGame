@@ -154,7 +154,6 @@ ExchangeStageMenuWidget::ExchangeStageMenuWidget(int stageType) :
   t = new QTimer();
   t->setInterval(75);
   connect(t, SIGNAL(timeout()), this, SLOT(advance()));
-  t->start();
 }
 
 void ExchangeStageMenuWidget::dealPressed(QPointF mousePos, Qt::MouseButton button)
@@ -239,6 +238,11 @@ ExchangeStageMenuWidget::~ExchangeStageMenuWidget()
     delete *itr;
 }
 
+void ExchangeStageMenuWidget::getForcus()
+{
+  t->start();
+}
+
 /////////////////////////////////////////////////////////////////////////////////
 
 UniteStageMenuWidget::UniteStageMenuWidget(int stageType) :
@@ -310,7 +314,6 @@ UniteStageMenuWidget::UniteStageMenuWidget(int stageType) :
   t = new QTimer();
   t->setInterval(75);
   connect(t, SIGNAL(timeout()), this, SLOT(advance()));
-  t->start();
 }
 
 void UniteStageMenuWidget::dealPressed(QPointF mousePos, Qt::MouseButton button)
@@ -429,6 +432,11 @@ QPointF UniteStageMenuWidget::toScene(double xRate, double yRate)
                  yRate * LOGICAL_HEIGHT);
 }
 
+void UniteStageMenuWidget::getForcus()
+{
+  t->start();
+}
+
 /////////////////////////////////////////////////////////////////////////////////
 
 LockStageMenuWidget::LockStageMenuWidget(int stageType) :
@@ -494,7 +502,6 @@ LockStageMenuWidget::LockStageMenuWidget(int stageType) :
   t = new QTimer();
   t->setInterval(75);
   connect(t, SIGNAL(timeout()), this, SLOT(advance()));
-  t->start();
 }
 void LockStageMenuWidget::dealPressed(QPointF mousePos, Qt::MouseButton button)
 {
@@ -612,4 +619,9 @@ QPointF LockStageMenuWidget::toScene(double xRate, double yRate)
 {
   return QPointF(xRate * LOGICAL_WIDTH,
                  yRate * LOGICAL_HEIGHT);
+}
+
+void LockStageMenuWidget::getForcus()
+{
+  t->start();
 }

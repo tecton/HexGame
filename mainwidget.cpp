@@ -31,13 +31,17 @@ MainWidget::MainWidget(QWidget *parent) :
 void MainWidget::paintEvent(QPaintEvent *event)
 {
   if (coolDown > 0)
+  {
     --coolDown;
+    if (coolDown == 0)
+      widgets[widgets.size() - 1]->getForcus();
+  }
   widgets[widgets.size() - 1]->makePixmap(pixmap, width(), height());
   QPainter *painter = new QPainter(this);
   if (coolDown > 0)
   {
     painter->drawPixmap(0,0,width(), height(), lastPixmap);
-    painter->drawPixmap(0,-coolDown * height() / 20,width(), height(), pixmap);
+    painter->drawPixmap(0,0,width(),height()-coolDown * height() / 20, pixmap, 0, coolDown * pixmap.height() / 20,pixmap.width(),(20-coolDown) * pixmap.height() / 20);
   }
   else
     painter->drawPixmap(0,0/*,width(), height()*/, pixmap);

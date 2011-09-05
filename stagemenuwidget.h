@@ -20,6 +20,7 @@ public:
   virtual void dealPressed(QPointF mousePos, Qt::MouseButton button)=0;
   virtual void dealMoved(QPointF mousePos, Qt::MouseButton button)=0;
   virtual void dealReleased(QPointF mousePos, Qt::MouseButton button)=0;
+  virtual void getForcus()=0;
   QString prefix;
   QString suffix;
   QString imageName;
@@ -40,6 +41,7 @@ public:
   virtual void dealPressed(QPointF mousePos, Qt::MouseButton button);
   virtual void dealMoved(QPointF mousePos, Qt::MouseButton button);
   virtual void dealReleased(QPointF mousePos, Qt::MouseButton button);
+  virtual void getForcus();
 
 private:
   QTimer *t;
@@ -66,6 +68,7 @@ public:
   virtual void dealPressed(QPointF mousePos, Qt::MouseButton button);
   virtual void dealMoved(QPointF mousePos, Qt::MouseButton button);
   virtual void dealReleased(QPointF mousePos, Qt::MouseButton button);
+  virtual void getForcus();
 
 private:
   QTimer *t;
@@ -92,6 +95,7 @@ public:
   virtual void dealPressed(QPointF mousePos, Qt::MouseButton button);
   virtual void dealMoved(QPointF mousePos, Qt::MouseButton button);
   virtual void dealReleased(QPointF mousePos, Qt::MouseButton button);
+  virtual void getForcus();
 
 private:
   QTimer *t;

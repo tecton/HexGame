@@ -80,7 +80,6 @@ RotatePuzzleGame::RotatePuzzleGame(int ballIndex[], int toBeIndex[],
     t->setInterval(75);
     connect(t, SIGNAL(timeout()), this, SLOT(advance()));
     connect(controller, SIGNAL(goodMove()), this, SLOT(successMoved()));
-    t->start();
 }
 
 void RotatePuzzleGame::makePixmap(QPixmap& pixmap, int width, int height)
@@ -207,6 +206,11 @@ void RotatePuzzleGame::dealMoved(QPointF mousePos, Qt::MouseButton button)
 void RotatePuzzleGame::dealReleased(QPointF mousePos, Qt::MouseButton button)
 {
     gestureController->dealReleased(mousePos);
+}
+
+void RotatePuzzleGame::getForcus()
+{
+  t->start();
 }
 
 void RotatePuzzleGame::successMoved()

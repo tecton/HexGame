@@ -99,7 +99,6 @@ ClassicGameWidget::ClassicGameWidget(AbstractRule::Gesture gesture) :
   t = new QTimer();
   t->setInterval(75);
   connect(t, SIGNAL(timeout()), this, SLOT(advance()));
-  t->start();
 }
 
 void ClassicGameWidget::makePixmap(QPixmap& pixmap, int width, int height)
@@ -340,6 +339,11 @@ void ClassicGameWidget::dealReleased(QPointF mousePos, Qt::MouseButton button)
   gestureController->dealReleased(mousePos);
 }
 
+void ClassicGameWidget::getForcus()
+{
+  t->start();
+}
+
 void ClassicGameWidget::advance()
 {
   if (progressBar->getCurrent() >= progressBar->getMax())
@@ -460,6 +464,7 @@ void ClassicGameWidget::reset()
 {
   OtherGameInit::clearGame(getIndex());
   ClassicGameWidget *resetGame;
+  t->stop();
   if (rule->gestureAllowed(AbstractRule::Swap))
     resetGame = new ClassicGameWidget(AbstractRule::Swap);
   else

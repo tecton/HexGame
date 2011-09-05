@@ -103,12 +103,10 @@ TimingGameWidget::TimingGameWidget(AbstractRule::Gesture gesture) :
   t = new QTimer();
   t->setInterval(75);
   connect(t, SIGNAL(timeout()), this, SLOT(advance()));
-  t->start();
 
   oneSecondTimer = new QTimer();
   oneSecondTimer->setInterval(1000);
   connect(oneSecondTimer, SIGNAL(timeout()), this, SLOT(oneSecond()));
-  oneSecondTimer->start();
 }
 
 void TimingGameWidget::makePixmap(QPixmap& pixmap, int width, int height)
@@ -326,6 +324,8 @@ void TimingGameWidget::dealReleased(QPointF mousePos, Qt::MouseButton button)
                                  toScene(resetItem->getPos().x(),
                                          resetItem->getPos().y())) < 30)
     {
+      t->stop();
+      oneSecondTimer->stop();
       ResetWidget *w = new ResetWidget();
       connect(w, SIGNAL(confirm()), this, SLOT(reset()));
       emit giveControlTo(w, false);
@@ -343,6 +343,12 @@ void TimingGameWidget::dealReleased(QPointF mousePos, Qt::MouseButton button)
   effectPainter->clearUserMovingEliminationHints();
   itemAtPressPos = NULL;
   gestureController->dealReleased(mousePos);
+}
+
+void TimingGameWidget::getForcus()
+{
+  t->start();
+  oneSecondTimer->start();
 }
 
 void TimingGameWidget::advance()
@@ -428,7 +434,6 @@ int TimingGameWidget::getIndex()
 
 void TimingGameWidget::reset()
 {
-  OtherGameInit::clearGame(getIndex());
   TimingGameWidget *resetGame;
   if (rule->gestureAllowed(AbstractRule::Swap))
     resetGame = new TimingGameWidget(AbstractRule::Swap);
