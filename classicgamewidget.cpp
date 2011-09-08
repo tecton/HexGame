@@ -352,7 +352,6 @@ void ClassicGameWidget::advance()
     return;
   }
   ++frameCount;
-  frameCount = frameCount % 32;
   if (flame->getCurrent() > 0 ||
       star->getCurrent() > 0 ||
       controller->hint() >= 0)

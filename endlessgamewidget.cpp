@@ -336,7 +336,6 @@ void EndlessGameWidget::advance()
     return;
   }
   ++frameCount;
-  frameCount = frameCount % 32;
   controller->advance();
 //  effectPainter->advance();
 }

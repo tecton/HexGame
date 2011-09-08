@@ -354,7 +354,6 @@ void TimingGameWidget::getForcus()
 void TimingGameWidget::advance()
 {
   ++frameCount;
-  frameCount = frameCount % 32;
   controller->advance();
 //  effectPainter->advance();
 }

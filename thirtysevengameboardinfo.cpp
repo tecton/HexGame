@@ -18,10 +18,10 @@
 #define LOCATION_GAME_VIEW_X_TO                 1024
 #define LOCATION_GAME_VIEW_Y_TO                 600
 
-#define LOCATION_GAME_BOARD_ITEM_X_FROM         355
-#define LOCATION_GAME_BOARD_ITEM_Y_FROM         41
-#define LOCATION_GAME_BOARD_ITEM_X_TO           985
-#define LOCATION_GAME_BOARD_ITEM_Y_TO           590
+#define LOCATION_GAME_BOARD_ITEM_X_FROM         355.0
+#define LOCATION_GAME_BOARD_ITEM_Y_FROM         39.0
+#define LOCATION_GAME_BOARD_ITEM_X_TO           979.0
+#define LOCATION_GAME_BOARD_ITEM_Y_TO           583.0
 
 #define LOCATION_GAME_BOARD_ITEM_X_INTERVAL     (LOCATION_GAME_BOARD_ITEM_X_TO - \
                                                  LOCATION_GAME_BOARD_ITEM_X_FROM) / \

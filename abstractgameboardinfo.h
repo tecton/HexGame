@@ -50,7 +50,7 @@ public:
   // Index of the near by position
   virtual int nearbyIndex(int index, int direction)=0;
 
-  // The chains to reload items(from inner to outter(我这个是不是拼错了-.-))
+  // The chains to reload items(from inner to outter)
   virtual const QVector<QVector<int> >& chains()=0;
 
   // Indexes around the index

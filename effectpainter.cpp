@@ -79,17 +79,17 @@ public:
 
     QVector<QPointF> points;
     points.push_back(QPointF(xRate * pos.left(),
-                             yRate * (pos.top() + pos.bottom()) / 2));
-    points.push_back(QPointF(xRate * (3 * pos.left() + pos.right()) / 4,
-                             yRate * pos.top()));
-    points.push_back(QPointF(xRate * (pos.left() + 3 * pos.right()) / 4,
+                             yRate * (3 * pos.top() + pos.bottom()) / 4));
+    points.push_back(QPointF(xRate * (pos.left() + pos.right()) / 2,
                              yRate * pos.top()));
     points.push_back(QPointF(xRate * pos.right(),
-                             yRate * (pos.top() + pos.bottom()) / 2));
-    points.push_back(QPointF(xRate * (pos.left() + 3 * pos.right()) / 4,
+                             yRate * (3 * pos.top() + pos.bottom()) / 4));
+    points.push_back(QPointF(xRate * pos.right(),
+                             yRate * (pos.top() + 3 * pos.bottom()) / 4));
+    points.push_back(QPointF(xRate * (pos.left() + pos.right()) / 2,
                              yRate * pos.bottom()));
-    points.push_back(QPointF(xRate * (3 * pos.left() + pos.right()) / 4,
-                             yRate * pos.bottom()));
+    points.push_back(QPointF(xRate * pos.left(),
+                             yRate * (pos.top() + 3 * pos.bottom()) / 4));
     QPolygonF poly(points);
 
     painter->drawPolygon(poly);
@@ -369,10 +369,10 @@ EffectPainter::EffectPainter(
 void EffectPainter::bonusEliminationHintAt(int index)
 {
   QPointF center = gameboardInfo->centerPositionOfIndex(index);
-  QPointF leftTop = QPointF(center.x() - 0.75 * gameboardInfo->intervalBetweenTwoLayers(),
-                            center.y() - 0.75 * 0.866 * gameboardInfo->intervalBetweenTwoLayers());
-  QPointF rightBottom = QPointF(center.x() + 0.75 * gameboardInfo->intervalBetweenTwoLayers(),
-                                center.y() + 0.75 * 0.866 * gameboardInfo->intervalBetweenTwoLayers());
+  QPointF leftTop = QPointF(center.x() - gameboardInfo->intervalBetweenTwoLayers(),
+                            center.y() - 1.155 * gameboardInfo->intervalBetweenTwoLayers());
+  QPointF rightBottom = QPointF(center.x() + gameboardInfo->intervalBetweenTwoLayers(),
+                                center.y() + 1.155 * gameboardInfo->intervalBetweenTwoLayers());
   QRectF rect = QRectF(leftTop, rightBottom);
   EliminationHint *hint = new EliminationHint(rect);
   bonusEliminateEffects.push_back(hint);
@@ -389,10 +389,10 @@ void EffectPainter::clearBonusEliminationHints()
 void EffectPainter::userMovingEliminationHintAt(int index)
 {
   QPointF center = gameboardInfo->centerPositionOfIndex(index);
-  QPointF leftTop = QPointF(center.x() - 0.75 * gameboardInfo->intervalBetweenTwoLayers(),
-                            center.y() - 0.75 * 0.866 * gameboardInfo->intervalBetweenTwoLayers());
-  QPointF rightBottom = QPointF(center.x() + 0.75 * gameboardInfo->intervalBetweenTwoLayers(),
-                                center.y() + 0.75 * 0.866 * gameboardInfo->intervalBetweenTwoLayers());
+  QPointF leftTop = QPointF(center.x() - gameboardInfo->intervalBetweenTwoLayers(),
+                            center.y() - 1.155 * gameboardInfo->intervalBetweenTwoLayers());
+  QPointF rightBottom = QPointF(center.x() + gameboardInfo->intervalBetweenTwoLayers(),
+                                center.y() + 1.155 * gameboardInfo->intervalBetweenTwoLayers());
   QRectF rect = QRectF(leftTop, rightBottom);
   EliminationHint *hint = new EliminationHint(rect);
   userMovingEliminateEffects.push_back(hint);

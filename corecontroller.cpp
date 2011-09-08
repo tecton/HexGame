@@ -9,16 +9,6 @@
 #include "connections.h"
 #include "gamemath.h"
 
-#include <QDebug>
-
-//AbstractGameBoardInfo *gameBoardInfo;
-//AbstractRule *rule;
-//Ball *balls;
-//QPointF *currentPositions;
-////bool *animMustFinish;
-
-//QVector<Ball *> *recyclingBalls;
-
 #define RECYCLE_STEPS 10
 
 CoreController::CoreController(AbstractRule *theRule,
@@ -37,19 +27,6 @@ CoreController::CoreController(AbstractRule *theRule,
       balls[i] = NULL;
   }
 
-  toBeShapeBalls = new Ball *[ballCount];
-  for (int i = 0; i < ballCount; ++i)
-  {
-    if (balls[i] == NULL)
-      toBeShapeBalls[i] = NULL;
-    else
-    {
-      toBeShapeBalls[i] = new Ball();
-      toBeShapeBalls[i]->setPos(gameBoardInfo->positionOfIndex(i));
-    }
-  }
-
-  currentPositions = new QPointF[ballCount];
   ballsCurrentIndexToOriginalIndex = new int[ballCount];
   ballsOriginalIndexToCurrentIndex = new int[ballCount];
   resetCToOAndOToC();

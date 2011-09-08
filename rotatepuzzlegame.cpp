@@ -26,9 +26,8 @@ RotatePuzzleGame::RotatePuzzleGame(int ballIndex[], int toBeIndex[],
     rule = new RotatePuzzleGameRule();
     gameboardInfo = new SixtyOneGameBoardInfo();
     //RotatePuzzleGameSavedInfo savedInfo = readSaved();
-    // 拿到其中的balls给下面那个的第三个参数，然后还有各种别的地方的值的改动
     Ball **balls = new Ball *[gameboardInfo->totalBallCounts()];
-    Ball **toBeShapeBalls = new Ball *[gameboardInfo->totalBallCounts()];
+    toBeShapeBalls = new Ball *[gameboardInfo->totalBallCounts()];
     for (int i = 0; i < gameboardInfo->totalBallCounts(); ++i)
     {
       if (ballIndex[i] == -1)
@@ -47,7 +46,10 @@ RotatePuzzleGame::RotatePuzzleGame(int ballIndex[], int toBeIndex[],
         toBeShapeBalls[i]->setPos(gameboardInfo->positionOfIndex(i));
       }
       else
+      {
         balls[i] = NULL;
+        toBeShapeBalls[i] = NULL;
+      }
     }
     completeIndex = new int[gameboardInfo->totalBallCounts()];
     for (int i = 0; i < gameboardInfo->totalBallCounts(); ++i)
@@ -91,6 +93,10 @@ void RotatePuzzleGame::makePixmap(QPixmap& pixmap, int width, int height)
 RotatePuzzleGame::~RotatePuzzleGame()
 {
     t->stop();
+    for (int i = 0;i < gameboardInfo->totalBallCounts();++i)
+      if (toBeShapeBalls[i])
+        delete toBeShapeBalls[i];
+    delete [] toBeShapeBalls;
     delete t;
     delete controller;
     delete gameboardInfo;
@@ -106,7 +112,7 @@ void RotatePuzzleGame::makeBasicPixmap(QPixmap& pixmap, int width, int height)
     pixmap.fill(Qt::black);
     QPainter *painter = new QPainter(&pixmap);
     Ball **balls = controller->balls;
-    Ball **targetBalls = controller->toBeShapeBalls;
+    Ball **targetBalls = toBeShapeBalls;
     BasicPainter::paintBackGround(BasicPainter::Game61,
                                   painter,
                                   width,
@@ -221,7 +227,6 @@ void RotatePuzzleGame::successMoved()
 void RotatePuzzleGame::advance()
 {
     ++frameCount;
-    frameCount = frameCount % 32;
     controller->advance();
     Ball **balls = controller->balls;
 //    delete balls;

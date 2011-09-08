@@ -50,6 +50,8 @@ private:
   int *completeIndex;
   int type;
   int index;
+  Ball **toBeShapeBalls;
+
   IntegerItem *currentSteps;
   IntegerItem *minimalSteps;
   ExitItem *exitItem;
