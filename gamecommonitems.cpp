@@ -87,24 +87,24 @@ void VerticalProgressBarItem::paint(QPainter *painter,
                       background.height());
 
   painter->drawPixmap(x - foreground.width() * xRate / 2,
-                      y + (1.0 * foreground.height() / 2 - 8 - percentage * 484) * yRate,
+                      y + (1.0 * foreground.height() / 2 - 10.0 - percentage * 482.0) * yRate,
                       foreground.width() * xRate,
-                      percentage * 484 * yRate,
+                      percentage * 482.0 * yRate,
                       foreground,
                       0,
-                      (1 - percentage) * 484 + 58,
+                      (1 - percentage) * 482.0 + 58.0,
                       foreground.width(),
-                      percentage * (foreground.height() - 542));
+                      percentage * (foreground.height() - 68.0));
 
   QFont originalFont = painter->font();
   QPen originalPen = painter->pen();
   QFont f;
   f.setBold(true);
-  f.setPixelSize(20);
+  f.setPixelSize(20 * height / LOGICAL_HEIGHT);
   painter->setFont(f);
   painter->setPen(QPen(QColor(0, 0, 255, 255)));
   drawTextAt(x,
-             y - foreground.height() * yRate / 2 + 30,
+             y - foreground.height() * yRate / 2 + 30 * height / LOGICAL_HEIGHT,
              painter,
              QObject::tr("%1").arg(getCurrent()));
   painter->setFont(originalFont);
@@ -139,7 +139,7 @@ void FlameItem::paint(QPainter *painter,
   QPen originalPen = painter->pen();
   QFont f;
   f.setBold(true);
-  f.setPixelSize(20);
+  f.setPixelSize(20 * width / LOGICAL_WIDTH);
   painter->setFont(f);
   painter->setPen(QPen(QColor(0, 0, 255, 255)));
   QString text = QObject::tr("%1").arg(getCurrent());
@@ -201,7 +201,7 @@ void StarItem::paint(QPainter *painter,
   QPen originalPen = painter->pen();
   QFont f;
   f.setBold(true);
-  f.setPixelSize(20);
+  f.setPixelSize(20 * width / LOGICAL_WIDTH);
   painter->setFont(f);
   painter->setPen(QPen(QColor(255, 255, 0, 255)));
   QString text = QObject::tr("%1").arg(getCurrent());
@@ -343,11 +343,11 @@ void IntegerItem::paint(QPainter *painter,
   QPen originalPen = painter->pen();
   QFont f;
   f.setBold(true);
-  f.setPixelSize(20);
+  f.setPixelSize(20 * width / LOGICAL_WIDTH);
   painter->setFont(f);
   painter->setPen(QPen(QColor(255, 120, 0, 255)));
   QString text1 = QObject::tr("%1").arg(getValue());
-  double totalHeight = 70;
+  double totalHeight = 70 * height / LOGICAL_HEIGHT;
   double width1 = wordWidth(painter, text1);
   double width2 = wordWidth(painter, hint);
   double totalWidth = qMax(width1 * 2, width2 * 1.33);
@@ -358,11 +358,11 @@ void IntegerItem::paint(QPainter *painter,
                QPointF(x, y),
                true,
                true);
-  drawTextAt(x, y - 10, painter, text1);
-  f.setPixelSize(15);
+  drawTextAt(x, y - 10 * width / LOGICAL_WIDTH, painter, text1);
+  f.setPixelSize(15 * width / LOGICAL_WIDTH);
   painter->setFont(f);
   painter->setPen(QPen(QColor(0, 0, 255, 255)));
-  drawTextAt(x, y + 15, painter, hint);
+  drawTextAt(x, y + 15 * width / LOGICAL_WIDTH, painter, hint);
   painter->setFont(originalFont);
   painter->setPen(originalPen);
 }
@@ -384,10 +384,10 @@ void StringItem::paint(QPainter *painter,
   QPen originalPen = painter->pen();
   QFont f;
   f.setBold(true);
-  f.setPixelSize(20);
+  f.setPixelSize(20 * width / LOGICAL_WIDTH);
   painter->setFont(f);
   painter->setPen(QPen(QColor(255, 120, 0, 255)));
-  double totalHeight = 70;
+  double totalHeight = 70 * height / LOGICAL_HEIGHT;
   double totalWidth = wordWidth(painter, hint) * 2;
   drawPixmapAt(painter,
                p,
@@ -396,7 +396,7 @@ void StringItem::paint(QPainter *painter,
                QPointF(x, y),
                true,
                true);
-  drawTextAt(x, y - 10, painter, hint);
+  drawTextAt(x, y - 10 * width / LOGICAL_WIDTH, painter, hint);
   painter->setFont(originalFont);
   painter->setPen(originalPen);
 }
