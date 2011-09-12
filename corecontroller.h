@@ -75,6 +75,9 @@ public:
   // Returns the hint of the balls
   int hint();
 
+  // The balls
+  Ball **balls;
+
 private:
   // Infomation of the gameboard
   AbstractGameBoardInfo *gameBoardInfo;
@@ -84,9 +87,6 @@ private:
 
   // Total ball number
   int ballCount;
-
-  // The balls
-  Ball **balls;
 
   // The balls which was recycled but may used later
   QVector<Ball *> **recyclingBalls;

@@ -14,8 +14,10 @@ class Ball
 {
   friend class CoreController;
 public:
-  // Item colors(must start from 0, because we will use the value as index)
-  enum Color{Red = 0, Blue, Green, Yellow, Purple, White, Orange, Brown, BadColor};
+  // Item colors
+  // (must start from 0)
+  enum Color{Red = 0, Blue, Green, Yellow, Purple, White,
+             Orange, Brown, BadColor};
 
   // Item states
   //   STABLE:
@@ -25,9 +27,12 @@ public:
   //   SYSTEM_MOVING:
   //     Item is moved by the system.
   //   JUST_CREATED:
-  //     Item has just been created wating for additional operations.
-  enum State{Stable, AlmostStable, UserMoving, UserReleased, SystemMoving, JustCreated};
+  //     Item has just been created wating for additional
+  //     operations.
+  enum State{Stable, AlmostStable, UserMoving,
+             UserReleased, SystemMoving, JustCreated};
 
+  // Constructor with the color
   Ball(Ball::Color theColor = Ball::Red);
 
   // Set the color
@@ -62,6 +67,7 @@ public:
   inline QPointF pos()
   {return position;}
 
+  // Advance the ball, may change the position and state
   void advance();
 
   // Whether two balls have same color
@@ -71,10 +77,19 @@ public:
           color == anotherBall->color;}
 
 private:
+  // Color of the ball
   Color color;
+
+  // State of the ball
   State state;
+
+  // Whether the ball is locked
   bool locked;
+
+  // Current position of the ball
   QPointF position;
+
+  // Positions the ball should be later
   QVector<QPointF> stopPositions;
 };
 

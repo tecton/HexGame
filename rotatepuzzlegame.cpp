@@ -20,35 +20,40 @@
 
 extern GameRecord gameRecord;
 
-RotatePuzzleGame::RotatePuzzleGame(int ballIndex[], int toBeIndex[],
-                                   int gameIndex, int gameType, int minSteps)
+RotatePuzzleGame::RotatePuzzleGame(int ballIndex[],
+                                   int toBeIndex[],
+                                   int gameIndex,
+                                   int gameType,
+                                   int minSteps) :
+    direction(0),
+    targetSize(1)
 {
     rule = new RotatePuzzleGameRule();
     gameboardInfo = new SixtyOneGameBoardInfo();
     //RotatePuzzleGameSavedInfo savedInfo = readSaved();
     Ball **balls = new Ball *[gameboardInfo->totalBallCounts()];
-    toBeShapeBalls = new Ball *[gameboardInfo->totalBallCounts()];
+//    toBeShapeBalls = new Ball *[gameboardInfo->totalBallCounts()];
     for (int i = 0; i < gameboardInfo->totalBallCounts(); ++i)
     {
       if (ballIndex[i] == -1)
       {
         balls[i] = new Ball((Ball::Color)6);
-        toBeShapeBalls[i] = new Ball((Ball::Color)6);
+//        toBeShapeBalls[i] = new Ball((Ball::Color)6);
         balls[i]->setPos(gameboardInfo->positionOfIndex(i));
-        toBeShapeBalls[i]->setPos(gameboardInfo->positionOfIndex(i));
+//        toBeShapeBalls[i]->setPos(gameboardInfo->positionOfIndex(i));
         balls[i]->setLocked(true);
       }
       else if (ballIndex[i] != 0)
       {
         balls[i] = new Ball((Ball::Color)ballIndex[i]);
         balls[i]->setPos(gameboardInfo->positionOfIndex(i));
-        toBeShapeBalls[i] = new Ball((Ball::Color)toBeIndex[i]);
-        toBeShapeBalls[i]->setPos(gameboardInfo->positionOfIndex(i));
+//        toBeShapeBalls[i] = new Ball((Ball::Color)toBeIndex[i]);
+//        toBeShapeBalls[i]->setPos(gameboardInfo->positionOfIndex(i));
       }
       else
       {
         balls[i] = NULL;
-        toBeShapeBalls[i] = NULL;
+//        toBeShapeBalls[i] = NULL;
       }
     }
     completeIndex = new int[gameboardInfo->totalBallCounts()];
@@ -93,11 +98,13 @@ void RotatePuzzleGame::makePixmap(QPixmap& pixmap, int width, int height)
 RotatePuzzleGame::~RotatePuzzleGame()
 {
     t->stop();
-    for (int i = 0;i < gameboardInfo->totalBallCounts();++i)
-      if (toBeShapeBalls[i])
-        delete toBeShapeBalls[i];
-    delete [] toBeShapeBalls;
+//    for (int i = 0;i < gameboardInfo->totalBallCounts();++i)
+//      if (toBeShapeBalls[i])
+//        delete toBeShapeBalls[i];
+//    delete [] toBeShapeBalls;
     delete t;
+    for (int i = 0;i < myItems.size();++i)
+      delete myItems[i];
     delete controller;
     delete gameboardInfo;
     delete rule;
@@ -112,7 +119,6 @@ void RotatePuzzleGame::makeBasicPixmap(QPixmap& pixmap, int width, int height)
     pixmap.fill(Qt::black);
     QPainter *painter = new QPainter(&pixmap);
     Ball **balls = controller->balls;
-    Ball **targetBalls = toBeShapeBalls;
     BasicPainter::paintBackGround(BasicPainter::Game61,
                                   painter,
                                   width,
@@ -125,18 +131,23 @@ void RotatePuzzleGame::makeBasicPixmap(QPixmap& pixmap, int width, int height)
                                   width * 1.0 / gameboardInfo->width(),
                                   height * 1.0 / gameboardInfo->height(),
                                   frameCount);
-    BasicPainter::paintPuzzleGameBalls(targetBalls,
-                                       completeIndex,
-                                       gameboardInfo->totalBallCounts(),
-                                       painter,
-                                       width * 0.4 / gameboardInfo->width(),
-                                       height * 0.4 / gameboardInfo->height(),
-                                       frameCount);
     BasicPainter::paintItems(painter,
                              myItems,
                              width,
                              height,
                              frameCount);
+    if (targetSize != 1)
+      BasicPainter::darken(painter,
+                           width,
+                           height);
+    BasicPainter::paintPuzzleGameBalls(gameboardInfo,
+                                       completeIndex,
+                                       gameboardInfo->totalBallCounts(),
+                                       painter,
+                                       width * 1.0 / gameboardInfo->width(),
+                                       height * 1.0 / gameboardInfo->height(),
+                                       frameCount,
+                                       targetSize);
     painter->end();
     delete painter;
 }
@@ -194,6 +205,8 @@ void RotatePuzzleGame::dealPressed(QPointF mousePos, Qt::MouseButton button)
         quitGame();
         return;
     }
+  if (targetSize == 1 && direction == 0)
+  {
     if (distanceOfTwoPoints(mousePos,
                             toScene(exitItem->getPos().x(),
                                     exitItem->getPos().y())) < 50)
@@ -202,15 +215,25 @@ void RotatePuzzleGame::dealPressed(QPointF mousePos, Qt::MouseButton button)
       return;
     }
     gestureController->dealPressed(mousePos);
+  }
+  if (targetSize == 1 &&
+      direction == 0 &&
+      distanceOfTwoPoints(mousePos,
+                          toScene(0.2, 0.2)) < 100)
+    direction = 1;
+  else if (targetSize != 1 || direction != 0)
+    direction = 2;
 }
 
 void RotatePuzzleGame::dealMoved(QPointF mousePos, Qt::MouseButton button)
 {
+  if (targetSize == 1 && direction == 0)
     gestureController->dealMoved(mousePos);
 }
 
 void RotatePuzzleGame::dealReleased(QPointF mousePos, Qt::MouseButton button)
 {
+  if (targetSize == 1 && direction == 0)
     gestureController->dealReleased(mousePos);
 }
 
@@ -226,6 +249,23 @@ void RotatePuzzleGame::successMoved()
 
 void RotatePuzzleGame::advance()
 {
+  switch (direction)
+  {
+  case 1:
+    if (targetSize < 6)
+      ++targetSize;
+    else
+      direction = 0;
+    break;
+  case 2:
+    if (targetSize > 1)
+      --targetSize;
+    else
+      direction = 0;
+    break;
+
+  }
+
     ++frameCount;
     controller->advance();
     Ball **balls = controller->balls;
@@ -266,6 +306,7 @@ void RotatePuzzleGame::advance()
 //      else if (index == 5)
 //        emit giveControlTo(NULL, true);
       delete this;
+      return;
     }
     //  effectPainter->advance();
 }

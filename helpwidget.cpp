@@ -36,8 +36,6 @@ void HelpWidget::makeBasicPixmap(QPixmap& pixmap, int width, int height)
   pixmap.fill(Qt::black);
   QPainter *painter = new QPainter(&pixmap);
   double scale;
-  double picXYRate = 1.0 * p.width() / p.height();
-  double xyRate = 1.0 * width / height;
 
   scale = 1.0 * width / p.width();
   dy = qMax(qMin(dy, p.height() * scale - height), 0.0);

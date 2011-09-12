@@ -37,6 +37,9 @@ public:
   virtual void dealReleased(QPointF mousePos, Qt::MouseButton button);
   virtual void getForcus();
 
+  void zoomIn();
+  void zoomOut();
+
 //  SwapClassicGameSavedInfo readSaved();
 
 private:
@@ -50,14 +53,16 @@ private:
   int *completeIndex;
   int type;
   int index;
-  Ball **toBeShapeBalls;
+//  Ball **toBeShapeBalls;
 
   IntegerItem *currentSteps;
   IntegerItem *minimalSteps;
   ExitItem *exitItem;
 
   QVector <AbstractItem *> myItems;
-  // TODO:分数、奖励之类的东西
+
+  int direction;
+  int targetSize;
 
   void quitGame();
 
