@@ -1,64 +1,79 @@
+/*
+** Classes of items may be used in a game.
+*/
+
 #ifndef GAMECOMMONITEMS_H
 #define GAMECOMMONITEMS_H
 
+// File must include
 #include "abstractitem.h"
 #include <QString>
 #include <QPixmap>
 
+// Forward declaration
 class AbstractGameBoardInfo;
 class EffectPainter;
 
+// An abstract class of an item of a progress bar
 class AbstractProgressBarItem : public AbstractItem
 {
 public:
-  void setMin(int v)
+  // Functions to set and get the 3 values
+  inline void setMin(int v)
   {min = v;}
 
-  int getMin()
+  inline int getMin()
   {return min;}
 
-  void setMax(int v)
+  inline void setMax(int v)
   {max = v;}
 
-  int getMax()
+  inline int getMax()
   {return max;}
 
-  void setCurrent(int v)
+  inline void setCurrent(int v)
   {current = v;}
 
-  int getCurrent()
+  inline int getCurrent()
   {return current;}
 
-
+  // Function most overloaded(still a pure virtual one)
   virtual void paint(QPainter *painter,
                      int width,
                      int height,
                      int frame)=0;
 
 private:
+  // 3 key values of a progress bar
   int min;
   int max;
   int current;
 };
 
+// A class of an item of a vertical progress bar
 class VerticalProgressBarItem : public AbstractProgressBarItem
 {
 public:
+  // Constructor
   VerticalProgressBarItem();
 
+  // Function most overloaded
   virtual void paint(QPainter *painter,
                      int width,
                      int height,
                      int frame);
 
 private:
+  // Pixmaps to do the paint
   QPixmap background;
   QPixmap foreground;
 };
 
+// An abstract class of an item of a bonus
 class AbstractBonusItem : public AbstractItem
 {
 public:
+  // Functions to set and get the 2 values
   inline void setCurrent(int v)
   {
     if (v <= max && v >= 0)
@@ -79,6 +94,7 @@ public:
   inline int getMax()
   {return max;}
 
+  // Add one and minus one, may be used frequently
   inline void addOne()
   {
     if (count < max)
@@ -91,33 +107,41 @@ public:
       --count;
   }
 
+  // Whether it's not empty
   inline bool notEmpty()
   {return count != 0;}
 
+  // Function most overloaded(still a pure virtual one)
   virtual void paint(QPainter *painter,
                      int width,
                      int height,
                      int frame)=0;
 
+  // Paint the icon of the bonus item
   virtual void paintLocatingIcon(QPainter *painter,
                                  QPointF pos,
                                  int frame)=0;
 
+  // Paint the influenced area of the bonus item
   virtual void paintInfluencedArea(int index,
                                    AbstractGameBoardInfo *gameBoard,
                                    EffectPainter *effectPainter,
                                    int frame)=0;
 
 private:
+  // 2 key values of a bonus item
   int max;
   int count;
 };
 
+// A class of an item of a flame bonus
 class FlameItem : public AbstractBonusItem
 {
 public:
+  // Constructor
   FlameItem();
 
+  // Functions most overloaded
   virtual void paint(QPainter *painter,
                      int width,
                      int height,
@@ -133,14 +157,18 @@ public:
                                    int frame);
 
 private:
+  // The icon of the item
   QPixmap p;
 };
 
+// A class of an item of a star bonus
 class StarItem : public AbstractBonusItem
 {
 public:
+  // Constructor
   StarItem();
 
+  // Functions most overloaded
   virtual void paint(QPainter *painter,
                      int width,
                      int height,
@@ -156,55 +184,84 @@ public:
                                    int frame);
 
 private:
+  // The icon of the item
   QPixmap p;
 };
 
+// A class of an item of a button with "HINT"
 class HintItem : public AbstractItem
 {
 public:
+  // Function most overloaded
   virtual void paint(QPainter *painter,
                      int width,
                      int height,
                      int frame);
 };
 
+// A class of an item of a button with "EXIT"
 class ExitItem : public AbstractItem
 {
 public:
+  // Function most overloaded
   virtual void paint(QPainter *painter,
                      int width,
                      int height,
                      int frame);
 };
 
+// A class of an item of a button with "RESET"
 class ResetItem : public AbstractItem
 {
 public:
+  // Function most overloaded
   virtual void paint(QPainter *painter,
                      int width,
                      int height,
                      int frame);
 };
 
+// A class of an item of a button with "PAUSE"
 class PauseItem : public AbstractItem
 {
 public:
+  // Function most overloaded
   virtual void paint(QPainter *painter,
                      int width,
                      int height,
                      int frame);
 };
 
-class IntegerItem : public AbstractItem
+// A class of an item of a button with "CONFIRM"
+class ConfirmItem : public AbstractItem
 {
 public:
-  IntegerItem();
-
+  // Function most overloaded
   virtual void paint(QPainter *painter,
                      int width,
                      int height,
                      int frame);
+};
 
+// A class of an item of a button with "CANCEL"
+class CancelItem : public AbstractItem
+{
+public:
+  // Function most overloaded
+  virtual void paint(QPainter *painter,
+                     int width,
+                     int height,
+                     int frame);
+};
+
+// A class of an item to show an integer and a string to describe it
+class IntegerItem : public AbstractItem
+{
+public:
+  // Constructor
+  IntegerItem();
+
+  // Functions to set and get the 2 values
   inline void setHint(QString str)
   {hint = str;}
 
@@ -217,50 +274,49 @@ public:
   inline int getValue()
   {return value;}
 
-private:
-  QPixmap p;
-  QString hint;
-  int value;
-};
-
-class StringItem : public AbstractItem
-{
-public:
-  StringItem();
+  // Function most overloaded
   virtual void paint(QPainter *painter,
                      int width,
                      int height,
                      int frame);
 
+private:
+  // The background of the item
+  QPixmap p;
+
+  // The description of the integer
+  QString hint;
+
+  // The integer
+  int value;
+};
+
+// A class of an item to show a string
+class StringItem : public AbstractItem
+{
+public:
+  // Constructor
+  StringItem();
+
+  // Functions to set and get the string
   inline void setHint(QString str)
   {hint = str;}
 
   inline QString getHint()
   {return hint;}
 
+  // Function most overloaded
+  virtual void paint(QPainter *painter,
+                     int width,
+                     int height,
+                     int frame);
+
 private:
+  // The background of the item
   QPixmap p;
+
+  // The string
   QString hint;
-  int value;
 };
-
-class ConfirmItem : public AbstractItem
-{
-public:
-  virtual void paint(QPainter *painter,
-                     int width,
-                     int height,
-                     int frame);
-};
-
-class CancelItem : public AbstractItem
-{
-public:
-  virtual void paint(QPainter *painter,
-                     int width,
-                     int height,
-                     int frame);
-};
-
 
 #endif // GAMECOMMONITEMS_H

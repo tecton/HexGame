@@ -1,3 +1,7 @@
+/*
+** Several functions which helps to calculate
+*/
+
 #ifndef GAMEMATH_H
 #define GAMEMATH_H
 
@@ -34,7 +38,8 @@ qreal distanceOfTwoPoints(QPointF p1, QPointF p2);
 // from the center and locate the balls on the hexagon
 qreal distanceFromTheCenterWithTheAngle(qreal angle, qreal maxR);
 
-
+// Calculate a new position from the original position and scale rate in 2
+// directions
 QPointF scale(QPointF originalPos, double xRate, double yRate);
 
 #endif // GAMEMATH_H

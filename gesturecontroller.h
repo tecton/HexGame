@@ -1,9 +1,15 @@
+/*
+** Class of a controller which controls the gesture and let the core controller to do things
+*/
+
 #ifndef GESTURECONTROLLER_H
 #define GESTURECONTROLLER_H
 
+// File must include
 #include <QVector>
 #include "abstractrule.h"
 
+// Forward declaration
 class QPointF;
 class AbstractRule;
 class AbstractGameBoardInfo;
@@ -12,7 +18,10 @@ class CoreController;
 class GestureController
 {
 public:
+  // State of the gesture
   enum GestureState {NoGesture, ChooseGesture, LocateGesture};
+
+  // Constructor with the rule, the infomation of the gameboard, the core controller
   GestureController(AbstractRule *theRule,
                     AbstractGameBoardInfo *theGameBoardInfo,
                     CoreController *theController);
@@ -20,8 +29,8 @@ public:
   // 3 functions to deal with the mouse events
   // Press
   //   maintain:
-  //     _gesture_state,
-  //     _gesture_indexes
+  //     gestureState,
+  //     gestureIndexes
   void dealPressed(const QPointF& pos);
   // Move
   //   if haven't confirm which gesture it is, append _gesture_indexes
@@ -36,16 +45,26 @@ public:
   void dealReleased(const QPointF& pos);
 
 private:
+  // Rule of the game
   AbstractRule *rule;
+
+  // Infomation of the gameboard
   AbstractGameBoardInfo *gameboardInfo;
+
+  // Core controller which controls the balls
   CoreController *controller;
 
+  // The gesture allowed
   AbstractRule::Gesture gesture;
+
+  // State of the gesture
   GestureState gestureState;
+
+  // Indexes of the gesture
   QVector <int> gestureIndexes;
 
+  // Test the gesture
   void testGesture(const QPointF& pos);
-
 };
 
 #endif // GESTURECONTROLLER_H

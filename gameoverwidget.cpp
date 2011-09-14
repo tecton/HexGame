@@ -14,6 +14,7 @@
 GameOverWidget::GameOverWidget(int gameIndex, int score) :
     index(gameIndex)
 {
+  // Create the items and initialize them
   scoreHint = new IntegerItem();
   scoreHint->setPos(QPointF(0.5, 0.3));
   scoreHint->setHint("Your score is");
@@ -33,6 +34,7 @@ GameOverWidget::GameOverWidget(int gameIndex, int score) :
   cancelItem->setPos(QPointF(0.7, 0.7));
   myItems.push_back(cancelItem);
 
+  // No items was chosen
   itemAtPressPos = NULL;
 }
 
@@ -46,14 +48,21 @@ void GameOverWidget::makePixmap(QPixmap& pixmap, int width, int height)
 void GameOverWidget::makeBasicPixmap(QPixmap& pixmap, int width, int height)
 {
   pixmap = QPixmap(width, height);
+
+  // Fill the pixmap with black background
   pixmap.fill(Qt::black);
+
+  // Get the painter
   QPainter *painter = new QPainter(&pixmap);
+
+  // Paint the items
   BasicPainter::paintItems(painter,
                            myItems,
                            width,
                            height,
                            0);
 
+  // End the paint and release the space
   painter->end();
   delete painter;
 }
@@ -68,6 +77,7 @@ QPointF GameOverWidget::toScene(double xRate, double yRate)
 
 void GameOverWidget::dealPressed(QPointF mousePos, Qt::MouseButton button)
 {
+  // Choose the correct item at press position
   if (distanceOfTwoPoints(mousePos,
                           toScene(confirmItem->getPos().x(),
                                   confirmItem->getPos().y())) < 50)
@@ -82,12 +92,12 @@ void GameOverWidget::dealMoved(QPointF mousePos, Qt::MouseButton button){}
 
 void GameOverWidget::dealReleased(QPointF mousePos, Qt::MouseButton button)
 {
-
   if (distanceOfTwoPoints(mousePos,
                           toScene(confirmItem->getPos().x(),
                                   confirmItem->getPos().y())) < 50 &&
       itemAtPressPos == confirmItem)
   {
+    // Start a new game
     AbstractRule::Gesture g = (index % 2 == 0) ?
                               AbstractRule::Swap :
                               AbstractRule::Rotate;
@@ -101,6 +111,7 @@ void GameOverWidget::dealReleased(QPointF mousePos, Qt::MouseButton button)
                                        cancelItem->getPos().y())) < 50 &&
            itemAtPressPos == cancelItem)
   {
+    // Exit
     emit giveControlTo(NULL, true);
     delete this;
     return;
@@ -109,6 +120,7 @@ void GameOverWidget::dealReleased(QPointF mousePos, Qt::MouseButton button)
 
 GameOverWidget::~GameOverWidget()
 {
+  // Release the space
   for (int i = 0;i < myItems.size();++i)
     delete myItems[i];
 }

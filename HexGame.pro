@@ -48,7 +48,6 @@ HEADERS  += ball.h \
     abstractgameboardinfo.h \
     sixtyonegameboardinfo.h \
     connections.h \
-    gesture.h \
     gamemath.h \
     basicpainter.h \
     gesturecontroller.h \
