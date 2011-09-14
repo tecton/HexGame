@@ -5,9 +5,11 @@
 #ifndef BALL_H
 #define BALL_H
 
+// File must include
 #include <QVector>
 #include <QPointF>
 
+// Forward declaration
 class CoreController;
 
 class Ball

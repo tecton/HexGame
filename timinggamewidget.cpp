@@ -98,7 +98,7 @@ TimingGameWidget::TimingGameWidget(AbstractRule::Gesture gesture) :
   connect(controller,
           SIGNAL(eliminated(int)),
           this,
-          SLOT(elimitated(int)));
+          SLOT(eliminated(int)));
 
   t = new QTimer();
   t->setInterval(75);
@@ -358,7 +358,7 @@ void TimingGameWidget::advance()
 //  effectPainter->advance();
 }
 
-void TimingGameWidget::elimitated(int count)
+void TimingGameWidget::eliminated(int count)
 {
   currentScore->setValue(currentScore->getValue() + count);
   if (currentScore->getValue() > hightestScore->getValue())

@@ -182,32 +182,47 @@ void BasicPainter::paintPuzzleGameBalls
   // Size of the ball
   double ballSize = gameboard->ballR() * 2;
 
+  // Calulate some values used to locate the balls
   double scale = 0.12 * size + 0.28;
   QPointF originalCenterPos = gameboard->centerPos();
-  QPointF currentCenterPos = QPointF(gameboard->width() * 0.2,
-                                     gameboard->height() * 0.2);
-  currentCenterPos.setX((currentCenterPos.x() * (6 - size) +
-                         originalCenterPos.x() * (size - 1)) / 5 * xRate);
-  currentCenterPos.setY((currentCenterPos.y() * (6 - size) +
-                         originalCenterPos.y() * (size - 1)) / 5 * yRate);
+  QPointF currentCenterPos =
+      QPointF(gameboard->width() * 0.2,
+              gameboard->height() * 0.2);
+  currentCenterPos.setX(
+      (currentCenterPos.x() * (6 - size) +
+       originalCenterPos.x() * (size - 1)) /
+      5 * xRate);
+  currentCenterPos.setY(
+      (currentCenterPos.y() * (6 - size) +
+       originalCenterPos.y() * (size - 1)) /
+      5 * yRate);
 
+  // For each ball
   for (int i = 0;i < totalCount;++i)
   {
+    // If the ball exists
     if (colorIndex[i])
     {
-      if (colorIndex[i] == -1)
-        colorIndex[i] = 6;
+      // Get the color
+      int color = colorIndex[i] == -1 ? 6 : colorIndex[i];
+      // Get the pixmap
+      const QPixmap& p = ballsPixmaps[color]
+          [frame % ballsFrameCounts[color]];
+      // Calculate the position of the ball
       QPointF pos = gameboard->positionOfIndex(i);
-      double dx = (pos.x() - originalCenterPos.x()) * scale * xRate;
-      double dy = (pos.y() - originalCenterPos.y()) * scale * yRate;
+      double dx =(pos.x() - originalCenterPos.x()) *
+                 scale * xRate;
+      double dy = (pos.y() - originalCenterPos.y()) *
+                  scale * yRate;
       pos.setX(currentCenterPos.x() + dx);
       pos.setY(currentCenterPos.y() + dy);
-      const QPixmap& p = ballsPixmaps[colorIndex[i]]
-          [frame % ballsFrameCounts[colorIndex[i]]];
+      // Draw the pixmap
       drawPixmapAt(painter,
                    p,
-                   ballSize / p.width() * scale * xRate * 1.1,
-                   ballSize / p.height() * scale * yRate* 1.1,
+                   ballSize / p.width() * scale * xRate *
+                   1.1,
+                   ballSize / p.height() * scale * yRate*
+                   1.1,
                    pos,
                    true,
                    false);
@@ -215,11 +230,12 @@ void BasicPainter::paintPuzzleGameBalls
   }
 }
 
-void BasicPainter::paintItems(QPainter *painter,
-                              QVector<AbstractItem *> items,
-                              int width,
-                              int height,
-                              int frame)
+void BasicPainter::paintItems
+    (QPainter *painter,
+     QVector<AbstractItem *> items,
+     int width,
+     int height,
+     int frame)
 {
   // Paint each item
   for (int i = 0;i < items.size();++i)
@@ -232,5 +248,8 @@ void BasicPainter::darken(QPainter *painter,
 {
   painter->setPen(QColor(255,255,255,150));
   painter->setBrush(QBrush(QColor(255,255,255,150)));
-  painter->fillRect(0, 0, width, height, Qt::Dense4Pattern);
+  painter->fillRect(0,
+                    0,
+                    width,
+                    height, Qt::Dense4Pattern);
 }

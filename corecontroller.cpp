@@ -11,15 +11,17 @@
 
 #define RECYCLE_STEPS 10
 
-CoreController::CoreController(AbstractRule *theRule,
-                               AbstractGameBoardInfo *theGameBoardInfo,
-                               Ball **theBalls) :
+CoreController::CoreController(
+    AbstractRule *theRule,
+    AbstractGameBoardInfo *theGameBoardInfo,
+    Ball **theBalls) :
   balls(theBalls),
   gameBoardInfo(theGameBoardInfo),
   rule(theRule),
   ballCount(theGameBoardInfo->totalBallCounts()),
   gestureCoolDown(0)
 {
+  // Create the space for the ball array if neccessary
   if (balls == NULL)
   {
     balls = new Ball *[ballCount];
@@ -27,9 +29,14 @@ CoreController::CoreController(AbstractRule *theRule,
       balls[i] = NULL;
   }
 
+  // Create the space for the two arrays
   ballsCurrentIndexToOriginalIndex = new int[ballCount];
   ballsOriginalIndexToCurrentIndex = new int[ballCount];
+
+  // Reset the 2 arrays above
   resetCToOAndOToC();
+
+  // Create the space for the recycling balls
   recyclingBalls = new QVector<Ball *> *[RECYCLE_STEPS];
   for (int i = 0;i < RECYCLE_STEPS;++i)
     recyclingBalls[i] = new QVector<Ball *>();
@@ -37,6 +44,7 @@ CoreController::CoreController(AbstractRule *theRule,
 
 void CoreController::resetCToOAndOToC()
 {
+  // Ball i is on the position i
   for (int i = 0;i < ballCount;++i)
   {
     ballsCurrentIndexToOriginalIndex[i] = i;
@@ -46,24 +54,37 @@ void CoreController::resetCToOAndOToC()
 
 Connections CoreController::testStableEliminate()
 {
+  // Get the result
   Connections result = testEliminate(false);
+
+  // Emit the result
   emit stableEliminateTested(result);
+
+  // Return the result
   return result;
 }
 
 Connections CoreController::testUserMovingEliminate()
 {
+  // Get the result
   Connections result = testEliminate(true);
+
+  // Emit the result
   emit userMovingEliminateTested(result);
+
+  // Return the result
   return result;
 }
 
-Connections CoreController::testEliminate(bool includingUserMoving)
+Connections CoreController::testEliminate(
+    bool includingUserMoving)
 {
+  // Initialize the connect
   Connections result = Connections(ballCount);
 
   for (int i = 0;i < gameBoardInfo->totalBallCounts();++i)
   {
+    // If the ball doesn't exist, go to next ball
     if (!ballAt(i, includingUserMoving))
       continue;
 
@@ -75,17 +96,32 @@ Connections CoreController::testEliminate(bool includingUserMoving)
         continue;
       QVector<int> *currentConnection = new QVector<int>();
       int currentIndex = i;
+
+      // A complex condition to judge whether the ball can
+      // be in a connection and whether the ball has the
+      // same color with the first ball
       while (currentIndex != -1 &&
              ballAt(currentIndex, includingUserMoving) &&
-             firstBall->sameColor(ballAt(currentIndex, includingUserMoving)) &&
-             (ballAt(currentIndex, includingUserMoving)->getState() == Ball::Stable ||
-              ballAt(currentIndex, includingUserMoving)->getState() == Ball::AlmostStable ||
-              ballAt(currentIndex, includingUserMoving)->getState() == Ball::UserReleased ||
+             firstBall->sameColor(
+                 ballAt(currentIndex, includingUserMoving))
+             &&
+             (ballAt(currentIndex,
+                     includingUserMoving)->getState() ==
+              Ball::Stable ||
+              ballAt(currentIndex,
+                     includingUserMoving)->getState() ==
+              Ball::AlmostStable ||
+              ballAt(currentIndex,
+                     includingUserMoving)->getState() ==
+              Ball::UserReleased ||
               (includingUserMoving &&
-               ballAt(currentIndex, includingUserMoving)->getState() == Ball::UserMoving)))
+               ballAt(currentIndex,
+                      includingUserMoving)->getState() ==
+               Ball::UserMoving)))
       {
         currentConnection->push_back(currentIndex);
-        currentIndex = gameBoardInfo->nearbyIndex(currentIndex, j);
+        currentIndex =
+            gameBoardInfo->nearbyIndex(currentIndex, j);
       }
 
       if (currentConnection->size() < 3)
@@ -94,7 +130,8 @@ Connections CoreController::testEliminate(bool includingUserMoving)
       {
         result.connections.push_back(currentConnection);
         for (int k = 0;k < currentConnection->size();++k)
-          result.connectionsOfIndex[currentConnection->at(k)][j] =
+          result.connectionsOfIndex
+              [currentConnection->at(k)][j] =
               currentConnection;
       }
     }
@@ -103,7 +140,8 @@ Connections CoreController::testEliminate(bool includingUserMoving)
     if (gameBoardInfo->canBeRotateCenter(i))
     {
       bool chainCanBeEliminated = true;
-      QVector<int> chain = gameBoardInfo->chainAroundIndex(i);
+      QVector<int> chain =
+          gameBoardInfo->chainAroundIndex(i);
       if (chain.size() == 6)
       {
         if (balls[chain[0]])
@@ -111,8 +149,20 @@ Connections CoreController::testEliminate(bool includingUserMoving)
           Ball *firstBall = balls[chain[0]];
           for (int j = 0;j < 6;++j)
           {
+            // A complex condition to judge whether the
+            // ball can be in a connection and whether the
+            // ball has the same color with the first ball
             if (!balls[chain[j]] ||
-                !firstBall->sameColor(balls[chain[j]]))
+                !firstBall->sameColor(balls[chain[j]]) ||
+                !(balls[chain[j]]->getState() ==
+                  Ball::Stable ||
+                  balls[chain[j]]->getState() ==
+                  Ball::AlmostStable ||
+                  balls[chain[j]]->getState() ==
+                  Ball::UserReleased ||
+                  (includingUserMoving &&
+                   balls[chain[j]]->getState() ==
+                   Ball::UserMoving)))
             {
               chainCanBeEliminated = false;
               break;
@@ -126,10 +176,14 @@ Connections CoreController::testEliminate(bool includingUserMoving)
         chainCanBeEliminated = false;
       if (chainCanBeEliminated)
       {
-        QVector<int> *currentConnection = new QVector<int>(chain);
-        result.connectionsOfIndex[i][3] = currentConnection;
+        // Record the chain
+        QVector<int> *currentConnection =
+            new QVector<int>(chain);
+        result.connectionsOfIndex[i][3] =
+            currentConnection;
         for (int j = 0;j < 6;++j)
-          result.connectionsOfIndex[chain[j]][4+j/2] = currentConnection;
+          result.connectionsOfIndex[chain[j]][4+j/2] =
+              currentConnection;
         result.connections.push_back(currentConnection);
       }
     }
@@ -138,25 +192,40 @@ Connections CoreController::testEliminate(bool includingUserMoving)
   return result;
 }
 
-QVector<QPointF> CoreController::newposUnderPos(QPointF mousePos)
+QVector<QPointF> CoreController::newposUnderPos(
+    QPointF mousePos)
 {
+  // The distance from the center
   double maxR = gameBoardInfo->intervalBetweenTwoLayers();
-  QVector<QPointF> result = gestureInfluencedIndexsOriginalPos;
+  QVector<QPointF> result =
+      gestureInfluencedIndexsOriginalPos;
 
-  QPointF centerPos = gameBoardInfo->positionOfIndex(rotateCenterIndex);
-  QPointF gestureCenterPos = gameBoardInfo->centerPositionOfIndex(rotateCenterIndex);
+  // The position of the center
+  QPointF centerPos =
+      gameBoardInfo->positionOfIndex(rotateCenterIndex);
 
-  double mouseOriginalA = angle(gestureConfirmPos, gestureCenterPos);
-  double mouseCurrentA = angle(mousePos, gestureCenterPos);
+  // The position of the center of the gesture
+  QPointF gestureCenterPos =
+      gameBoardInfo->centerPositionOfIndex(
+          rotateCenterIndex);
+
+  // Angles used to calculate the position
+  double mouseOriginalA =
+      angle(gestureConfirmPos, gestureCenterPos);
+  double mouseCurrentA =
+      angle(mousePos, gestureCenterPos);
   double dA = mouseCurrentA - mouseOriginalA;
 
-  for (int i = 0;i < gestureInfluencedIndexsOriginalPos.size();++i)
+  for (int i = 0;
+       i < gestureInfluencedIndexsOriginalPos.size();
+       ++i)
   {
     double a = angle(result[i], centerPos) + dA;
     double r = distanceFromTheCenterWithTheAngle(a, maxR);
     result[i] = calculatePosition(a, r, centerPos);
   }
 
+  // Maintain the 2 arrays
   maintainCToOAndOToC(result[0]);
 
   return result;
@@ -164,8 +233,10 @@ QVector<QPointF> CoreController::newposUnderPos(QPointF mousePos)
 
 int CoreController::maintainCToOAndOToC(QPointF firstPos)
 {
-
+  // The offset
   int offset = 0;
+
+  // The min distance from the position given
   qreal minDis = 100000;
   for (int i = 0;i < gestureInfluencedIndexs.size();++i)
   {
@@ -175,6 +246,7 @@ int CoreController::maintainCToOAndOToC(QPointF firstPos)
            gestureInfluencedIndexs[i]));
     if (currentDis < minDis)
     {
+      // Reset offset and maintain minDis if neccessary
       minDis = currentDis;
       offset = i;
     }
@@ -183,6 +255,7 @@ int CoreController::maintainCToOAndOToC(QPointF firstPos)
 
   for (int i = 0;i < gestureInfluencedIndexs.size();++i)
   {
+    // Maintain the two arrays
     int o = gestureInfluencedIndexs[i];
     int c = gestureInfluencedIndexs[(i + offset) %
         gestureInfluencedIndexs.size()];
@@ -190,19 +263,23 @@ int CoreController::maintainCToOAndOToC(QPointF firstPos)
     ballsCurrentIndexToOriginalIndex[c] = o;
   }
 
+  // Return the offset
   return offset;
 }
 
 void CoreController::eliminate(const QVector<int>& indexs)
 {
+  // The count of the balls eliminated
   int count = 0;
   for (int i = 0;i < indexs.size();++i)
   {
     int index = indexs.at(i);
+    // If the ball exists
     if (balls[index])
     {
       ++count;
-      recyclingBalls[RECYCLE_STEPS - 1]->push_back(balls[index]);
+      recyclingBalls[RECYCLE_STEPS - 1]->
+          push_back(balls[index]);
       balls[index] = NULL;
     }
   }
@@ -212,6 +289,7 @@ void CoreController::eliminate(const QVector<int>& indexs)
 void CoreController::rotateBegin(int theCenterIndex,
                                  QPointF theMousePosition)
 {
+  // If the operation is allowed
   if (!rule->gestureAllowed(AbstractRule::Rotate) ||
       !gameBoardInfo->canBeRotateCenter(theCenterIndex) ||
       gestureCoolDown != 0)
@@ -219,11 +297,17 @@ void CoreController::rotateBegin(int theCenterIndex,
     gesture =  AbstractRule::BadGesture;
     return;
   }
+
+  // Record some infomation of the rotation
   rotateCenterIndex = theCenterIndex;
   gestureConfirmPos = theMousePosition;
   gesture = AbstractRule::Rotate;
-  gestureInfluencedIndexs = gameBoardInfo->chainAroundIndex(rotateCenterIndex);
+  gestureInfluencedIndexs =
+      gameBoardInfo->chainAroundIndex(rotateCenterIndex);
   gestureInfluencedIndexsOriginalPos.clear();
+  // For each ball influenced,
+  // if the ball doesn't exist or it's locked,
+  // the gesture will be a bad one
   for (int i = 0;i < gestureInfluencedIndexs.size();++i)
     if ((!balls[gestureInfluencedIndexs[i]]) ||
         (balls[gestureInfluencedIndexs[i]]->getLocked()))
@@ -232,25 +316,35 @@ void CoreController::rotateBegin(int theCenterIndex,
       gestureInfluencedIndexs.clear();
       return;
     }
+
+  // Set the state of the balls
   for (int i = 0;i < gestureInfluencedIndexs.size();++i)
   {
-    balls[gestureInfluencedIndexs[i]]->setState(Ball::UserMoving);
+    balls[gestureInfluencedIndexs[i]]->
+        setState(Ball::UserMoving);
     gestureInfluencedIndexsOriginalPos.push_back(
-          gameBoardInfo->positionOfIndex(gestureInfluencedIndexs[i]));
+          gameBoardInfo->positionOfIndex(
+              gestureInfluencedIndexs[i]));
   }
 }
 
-void CoreController::rotateTransition(QPointF theMousePosition)
+void CoreController::rotateTransition(
+    QPointF theMousePosition)
 {
   if (gesture == AbstractRule::BadGesture ||
       !rule->gestureAllowed(AbstractRule::Rotate) ||
       gestureCoolDown != 0)
     return;
 
-  QVector<QPointF> newPos = newposUnderPos(theMousePosition);
+  // Get the new positions
+  QVector<QPointF> newPos =
+      newposUnderPos(theMousePosition);
+
+  // For each ball, set the position
   for (int i = 0;i < gestureInfluencedIndexs.size();++i)
     balls[gestureInfluencedIndexs[i]]->setPos(newPos[i]);
 
+  // Test whether there is any connection
   testUserMovingEliminate();
 }
 
@@ -258,7 +352,12 @@ void CoreController::rotateEnd()
 {
   if (gesture == AbstractRule::BadGesture)
     return;
-  int offset = maintainCToOAndOToC(balls[gestureInfluencedIndexs[0]]->pos());
+
+  // Get the offset
+  int offset = maintainCToOAndOToC(
+      balls[gestureInfluencedIndexs[0]]->pos());
+
+  // If the balls are on the original position, roll back
   if (offset == 0)
   {
     rotateRollBack();
@@ -266,72 +365,106 @@ void CoreController::rotateEnd()
     return;
   }
 
+  // For each ball influenced
+  // Set the state
   for (int i = 0;i < gestureInfluencedIndexs.size();++i)
-    balls[gestureInfluencedIndexs[i]]->setState(Ball::UserReleased);
+    balls[gestureInfluencedIndexs[i]]->
+        setState(Ball::UserReleased);
 
-  Ball **tmp = new Ball *[gameBoardInfo->totalBallCounts()];
+  // Set the balls to the new one
+  Ball **tmp = new Ball*[gameBoardInfo->totalBallCounts()];
   for (int i = 0;i < gameBoardInfo->totalBallCounts();++i)
     tmp[i] = balls[ballsCurrentIndexToOriginalIndex[i]];
   for (int i = 0;i < gameBoardInfo->totalBallCounts();++i)
     balls[i] = tmp[i];
 
   Connections connections = testStableEliminate();
-  bool rotateSuccessful = false || !rule->gameStepAllowed(AbstractRule::Eliminate);
-  for (int i = 0;i < gestureInfluencedIndexs.size();++i)
-    if (connections.isInAChain(gestureInfluencedIndexs[i]))
-    {
-      rotateSuccessful = true;
-      break;
-    }
+
+  bool rotateSuccessful =
+      !rule->gameStepAllowed(AbstractRule::Eliminate);
+
+  if (!rotateSuccessful)
+  {
+    // Test whether there is any connection
+    for (int i = 0;i < gestureInfluencedIndexs.size();++i)
+      if (connections.isInAChain(
+          gestureInfluencedIndexs[i]))
+      {
+        rotateSuccessful = true;
+        break;
+      }
+  }
+
+  // If the rotate is successful
   if (rotateSuccessful)
   {
     if (rule->gameStepAllowed(AbstractRule::Eliminate))
     {
       QVector <int> toEliminate;
-      for (int i = 0;i < gameBoardInfo->totalBallCounts();++i)
+      for (int i = 0;
+           i < gameBoardInfo->totalBallCounts();
+           ++i)
         if (balls[i])
           if (connections.isInAChain(i))
             toEliminate.push_back(i);
+      // Eliminate the balls
       eliminate(toEliminate);
     }
+
+    // Move the balls left
     for (int i = 0;i < gestureInfluencedIndexs.size();++i)
     {
       int index = gestureInfluencedIndexs[i];
       if (balls[index])
         translateABallTo(balls[index],
-                         gameBoardInfo->positionOfIndex(index),
+                         gameBoardInfo->
+                         positionOfIndex(index),
                          2,
                          false);
     }
+    // Emit a good move signal
     emit goodMove();
   }
   else
   {
-    for (int i = 0;i < gameBoardInfo->totalBallCounts();++i)
+    // Reset the balls
+    for (int i = 0;
+         i < gameBoardInfo->totalBallCounts();
+         ++i)
       tmp[i] = balls[ballsOriginalIndexToCurrentIndex[i]];
-    for (int i = 0;i < gameBoardInfo->totalBallCounts();++i)
+    for (int i = 0;
+         i < gameBoardInfo->totalBallCounts();
+         ++i)
       balls[i] = tmp[i];
     rotateRollBack();
+    // Emit a bad move signal
     emit badMove();
   }
+
+  // Reset the two arrays
   for (int i = 0;i < gestureInfluencedIndexs.size();++i)
   {
     int index = gestureInfluencedIndexs[i];
     ballsCurrentIndexToOriginalIndex[index] = index;
     ballsOriginalIndexToCurrentIndex[index] = index;
   }
+
+  // Release the space
   delete [] tmp;
   gestureInfluencedIndexs.clear();
 }
 
 void CoreController::swap(int from, int to)
 {
+  // If a swap can be tried
   if (gestureCoolDown != 0)
     return;
   if ((!balls[from]) || balls[from]->getLocked())
     return;
   if ((!balls[to]) || balls[to]->getLocked())
     return;
+
+  // Record the 2 balls
   ballsCurrentIndexToOriginalIndex[from] = to;
   ballsCurrentIndexToOriginalIndex[to] = from;
   ballsOriginalIndexToCurrentIndex[from] = to;
@@ -340,22 +473,33 @@ void CoreController::swap(int from, int to)
   gestureInfluencedIndexs.push_back(from);
   gestureInfluencedIndexs.push_back(to);
 
+  // Set the state of the 2 balls
   balls[from]->setState(Ball::UserReleased);
   balls[to]->setState(Ball::UserReleased);
 
-  Connections connections = testUserMovingEliminate();
-  bool swapSuccessful = false;
-  if (connections.isInAChain(from) || connections.isInAChain(to))
-    swapSuccessful = true;
+  // Test whether the swap is successful
+  bool swapSuccessful =
+      !rule->gameStepAllowed(AbstractRule::Eliminate);
+  if (!swapSuccessful)
+  {
+    Connections connections = testUserMovingEliminate();
+    if (connections.isInAChain(from) ||
+        connections.isInAChain(to))
+      swapSuccessful = true;
+  }
 
   if (swapSuccessful)
   {
+    // Move 2 balls to the new position
     moveToNewPos();
+    // Emit a good move signal
     emit goodMove();
   }
   else
   {
+    // Roll back the 2 balls
     swapRollBack(from, to);
+    // Emit a bad move signal
     emit badMove();
   }
 }
@@ -363,13 +507,16 @@ void CoreController::swap(int from, int to)
 
 void CoreController::flameAt(int index)
 {
+  // Get the index of the balls influenced
   QVector <int> influencedIndexs = gameBoardInfo->chainAroundIndex(index);
   influencedIndexs.push_back(index);
+  // Eliminate the balls
   eliminate(influencedIndexs);
 }
 
 void CoreController::starAt(int index)
 {
+  // Get the index of the balls influenced
   QVector <int> influencedIndexs;
   influencedIndexs.push_back(index);
   for (int i = 0;i < 6;++i)
@@ -381,6 +528,7 @@ void CoreController::starAt(int index)
       current = gameBoardInfo->nearbyIndex(current, i);
     }
   }
+  // Eliminate the balls
   eliminate(influencedIndexs);
 }
 
@@ -388,37 +536,45 @@ void CoreController::fillAllBlanks()
 {
   if (!rule->gameStepAllowed(AbstractRule::AutoRotate))
     return;
+  // Auto rotate at the very beginning
   autoRotate();
-  if (!rule->gameStepAllowed(AbstractRule::FillWithNewBalls))
+  if (!rule->gameStepAllowed(
+      AbstractRule::FillWithNewBalls))
     return;
+
+  // Get the indexes which are blank
   QList <int> blankIndexes;
   for (int i = 0;i < gameBoardInfo->totalBallCounts();++i)
     if (!balls[i])
       blankIndexes.push_back(i);
 
+  // Record the indexes locked at this time
   QList <int> lockedIndexes;
 
   do
   {
+    // Unlock the balls
     for (QList <int>::Iterator itr = lockedIndexes.begin();
          itr != lockedIndexes.end();
          ++itr)
       if (!balls[*itr])
         balls[*itr]->setLocked(false);
-
     lockedIndexes.clear();
 
+    // Create the balls
     for (QList <int>::Iterator itr = blankIndexes.begin();
          itr != blankIndexes.end();
          ++itr)
     {
+      // Set the color of te ball and whether it's locked
       if (!balls[*itr])
-        balls[*itr] = new Ball((Ball::Color)(rand() % 6));//0));//rand() % 8));
+        balls[*itr] = new Ball((Ball::Color)(rand() % 6));
       else
-        balls[*itr]->setColor((Ball::Color)(rand() % 6));//0))//rand() % 8));
+        balls[*itr]->setColor((Ball::Color)(rand() % 6));
       if (!rule->endlessFill())
       {
-        bool setToLock = lockedIndexes.size() < 2 && ((rand() % 100) > 5);
+        bool setToLock = lockedIndexes.size() < 2 &&
+                         ((rand() % 100) > 5);
         balls[*itr]->setLocked(setToLock);
         if (setToLock)
           lockedIndexes.push_back(*itr);
@@ -426,73 +582,92 @@ void CoreController::fillAllBlanks()
     }
   } while (false/*rule->endlessFill() && hint() < 0*/);
 
-  for (QList <int>::Iterator itr = blankIndexes.begin();
-       itr != blankIndexes.end();
-       ++itr)
-    balls[*itr]->setPos(gameBoardInfo->positionOfIndex(*itr));
-
-
+  // Reset the 2 arrays
   for (int i = 0;i < gameBoardInfo->totalBallCounts();++i)
   {
     ballsOriginalIndexToCurrentIndex[i] = i;
     ballsCurrentIndexToOriginalIndex[i] = i;
   }
 
+  // Auto rotate at the end
   autoRotate();
 }
 
 void CoreController::autoRotate()
 {
-  const QVector<QVector<int> >& cs = gameBoardInfo->chains();
+  const QVector<QVector<int> >& cs =
+      gameBoardInfo->chains();
   for (int i = 0;i < gameBoardInfo->chainNumber();++i)
   {
     const QVector<int>& originalChain = cs.at(i);
-    //QVector<int> rotateChain = doubleChain(originalChain);
     int needRotateCount = 0;
     int currentFillPos = originalChain.size() - 1;
     for (int j = currentFillPos;j >= 0;--j)
     {
       Ball *ball = balls[originalChain.at(j)];
-      if (!ball) // 此格真没球
+      // If the ball doesn't exist
+      if (!ball)
       {
         ++needRotateCount;
         continue;
       }
-      //      if (ball->state() == PixmapItem::JUST_CREATED) // 此格还没填上来
-      //        ++needRotateCount;
+
       switch (ball->getState())
       {
       case Ball::UserMoving:
-      case Ball::UserReleased:
-        // TODO 打断用户的操作
-      case Ball::Stable: // 有稳定的球
-      case Ball::AlmostStable:
-      case Ball::SystemMoving: // 有正在转的球
+      // Break the user's operation
         if (needRotateCount != 0)
         {
+          rotateRollBack();
+          gestureInfluencedIndexs.clear();
+        }
+      case Ball::UserReleased:
+      // A stable ball
+      case Ball::Stable:
+      // An almost stable ball
+      case Ball::AlmostStable:
+      // A ball moved by the system
+      case Ball::SystemMoving:
+        if (needRotateCount == 0)
+          break;
+        {
+          // Current ball index
           int current = originalChain.at(j);
-          int target = originalChain.at(j + needRotateCount);
+          // Target position index
+          int target = originalChain.at(
+              j + needRotateCount);
+          // Rotate the ball to the target position
           rotateABallTo(ball,
-                        gameBoardInfo->positionOfIndex(target),
+                        gameBoardInfo->
+                        positionOfIndex(target),
                         gameBoardInfo->centerPos(),
                         5,
                         true,
                         i);
+          // Set the balls
           balls[target] = balls[current];
           balls[current] = NULL;
         }
         break;
       case Ball::JustCreated:
-        int current = originalChain.at(0);
-        int target = originalChain.at(j + needRotateCount);
-        ball->setPos(gameBoardInfo->positionOfIndex(current));
-        rotateABallTo(ball,
-                      gameBoardInfo->positionOfIndex(target),
-                      gameBoardInfo->centerPos(),
-                      10,
-                      true,
-                      i);
-
+        {
+          // Start position index
+          int current = originalChain.at(0);
+          // Target position index
+          int target = originalChain.at(
+              j + needRotateCount);
+          // Set the balls to the start position
+          ball->setPos(gameBoardInfo->
+                       positionOfIndex(current));
+          // Rotate the ball to the target position
+          rotateABallTo(ball,
+                        gameBoardInfo->
+                        positionOfIndex(target),
+                        gameBoardInfo->centerPos(),
+                        10,
+                        true,
+                        i);
+        }
       }
     }
   }
@@ -500,27 +675,40 @@ void CoreController::autoRotate()
 
 void CoreController::advance()
 {
+  // Calculate the CD
   if (gestureCoolDown > 0)
     --gestureCoolDown;
+
+  // Advance each ball
   for (int i = 0;i < ballCount;++i)
     if (balls[i])
       balls[i]->advance();
-  if (rule->gameStepAllowed(AbstractRule::Eliminate) == false)
-    return;
-  //  for (int i = 0;i < recyclingBalls[0]->size();++i)
-  //    delete recyclingBalls[0]->at(i);
-  //  delete recyclingBalls[0];
-  //  for (int i = 0;i < RECYCLE_STEPS - 1;++i)
-  //    recyclingBalls[i] = recyclingBalls[i + 1];
-  //  recyclingBalls[RECYCLE_STEPS - 1] = new QVector<Ball *>();
 
+  if (rule->gameStepAllowed(AbstractRule::Eliminate) ==
+      false)
+    return;
+
+  // Recalculate the recycling balls
+  for (int i = 0;i < recyclingBalls[0]->size();++i)
+    delete recyclingBalls[0]->at(i);
+  delete recyclingBalls[0];
+  for (int i = 0;i < RECYCLE_STEPS - 1;++i)
+    recyclingBalls[i] = recyclingBalls[i + 1];
+  recyclingBalls[RECYCLE_STEPS - 1] =
+      new QVector<Ball *>();
+
+  // Test the stable eliminations
   Connections connections = testStableEliminate();
   QVector <int> toEliminate;
   for (int i = 0;i < gameBoardInfo->totalBallCounts();++i)
     if (balls[i])
       if (connections.isInAChain(i))
         toEliminate.push_back(i);
+
+  // Eliminate the balls
   eliminate(toEliminate);
+
+  // Fill all blanks
   fillAllBlanks();
 }
 
@@ -532,20 +720,26 @@ void CoreController::moveToNewPos()
     int originalIndex = gestureInfluencedIndexs[i];
     if (balls[originalIndex])
     {
+      // Translate the ball to the correct position
       translateABallTo(balls[originalIndex],
                        gameBoardInfo->positionOfIndex(
-                         ballsOriginalIndexToCurrentIndex[originalIndex]),
+                         ballsOriginalIndexToCurrentIndex
+                         [originalIndex]),
                        3,
                        true);
+      // Set the state of the ball
       balls[gestureInfluencedIndexs[i]]->setState(Ball::SystemMoving);
     }
   }
+  // Reset the balls
   Ball **tmpBalls = new Ball *[ballCount];
   for (int i = 0;i < ballCount;++i)
-    tmpBalls[i] = balls[ballsCurrentIndexToOriginalIndex[i]];
+    tmpBalls[i] =
+        balls[ballsCurrentIndexToOriginalIndex[i]];
   for (int i = 0;i < ballCount;++i)
     balls[i] = tmpBalls[i];
   delete [] tmpBalls;
+  // Maintain the 2 arrays
   resetCToOAndOToC();
 }
 
@@ -554,20 +748,29 @@ void CoreController::rotateRollBack()
   for (int i = 0;i < gestureInfluencedIndexs.size();++i)
   {
     int currentIndex = gestureInfluencedIndexs[i];
+    // Rotate the ball to the correct position
     rotateABallTo(balls[gestureInfluencedIndexs[i]],
-                  gameBoardInfo->positionOfIndex(currentIndex),
-                  gameBoardInfo->positionOfIndex(rotateCenterIndex),
+                  gameBoardInfo->
+                  positionOfIndex(currentIndex),
+                  gameBoardInfo->
+                  positionOfIndex(rotateCenterIndex),
                   5,
                   false,
                   1);
-    balls[gestureInfluencedIndexs[i]]->setState(Ball::SystemMoving);
+    // Set the state of the ball
+    balls[gestureInfluencedIndexs[i]]->
+        setState(Ball::SystemMoving);
   }
+  // Maintain the 2 arrays
   resetCToOAndOToC();
+  // Set the CD
   gestureCoolDown = 5;
 }
 
 void CoreController::swapRollBack(int from, int to)
 {
+  // Some complex calculation to calculate the positions
+  // the balls should be at
   int halfSteps = 5;
   QPointF fromPos = gameBoardInfo->positionOfIndex(from);
   double fromX = fromPos.x();
@@ -581,17 +784,23 @@ void CoreController::swapRollBack(int from, int to)
   if (balls[to])
     balls[to]->stopPositions.clear();
 
+  // Move to the new position
   for (int i = 0;i < halfSteps;++i)
   {
     if (balls[from])
       balls[from]->stopPositions.push_back(
-            QPointF((fromX * (halfSteps - i) + toX * i) / halfSteps,
-                    (fromY * (halfSteps - i) + toY * i) / halfSteps));
+            QPointF((fromX * (halfSteps - i) + toX * i) /
+                    halfSteps,
+                    (fromY * (halfSteps - i) + toY * i) /
+                    halfSteps));
     if (balls[to])
       balls[to]->stopPositions.push_back(
-            QPointF((toX * (halfSteps - i) + fromX * i) / halfSteps,
-                    (toY * (halfSteps - i) + fromY * i) / halfSteps));
+            QPointF((toX * (halfSteps - i) + fromX * i) /
+                    halfSteps,
+                    (toY * (halfSteps - i) + fromY * i) /
+                    halfSteps));
   }
+  // Move back to the original position
   for (int i = 1;i < halfSteps;++i)
   {
     if (balls[from])
@@ -601,7 +810,9 @@ void CoreController::swapRollBack(int from, int to)
       balls[to]->stopPositions.push_back(
             balls[to]->stopPositions[halfSteps - i]);
   }
+  // Maintain the 2 arrays
   resetCToOAndOToC();
+  // Set the CD
   gestureCoolDown = halfSteps * 2;
 }
 
@@ -613,6 +824,8 @@ void CoreController::translateABallTo(Ball *ball,
   if (!ball)
     return;
 
+  // Some simple calculation to calculate the positions
+  // the ball should be at
   QPointF fromPos = ball->pos();
   double fromX = fromPos.x();
   double fromY = fromPos.y();
@@ -621,8 +834,8 @@ void CoreController::translateABallTo(Ball *ball,
 
   for (int i = 0;i < steps;++i)
     ball->stopPositions.push_back(
-          QPointF((fromX * i + toX * (steps - i)) / steps,
-                  (fromY * i + toY * (steps - i)) / steps));
+        QPointF((fromX * i + toX * (steps - i)) / steps,
+                (fromY * i + toY * (steps - i)) / steps));
 }
 
 
@@ -642,7 +855,10 @@ void CoreController::rotateABallTo(Ball *ball,
   //  if (distanceOfTwoPoints(lastPos, toPos) < 3)
   //    return;
 
+  // Some complex calculation to calculate the positions
+  // the ball should be at
 
+  // The distance from the center
   double maxR = gameBoardInfo->intervalBetweenTwoLayers();
   ball->stopPositions.clear();
   ball->setState(Ball::SystemMoving);
@@ -660,32 +876,46 @@ void CoreController::rotateABallTo(Ball *ball,
   if (clockwiseAngleDis < 0)
     clockwiseAngleDis += 2 * PI;
 
-  bool clockwise = forceFillDirection || (clockwiseAngleDis < PI);
+  bool clockwise = forceFillDirection ||
+                   (clockwiseAngleDis < PI);
 
   double& angleDis = clockwiseAngleDis;
-  angleDis = clockwise ? clockwiseAngleDis : 2 * PI - clockwiseAngleDis;
+  angleDis = clockwise ?
+             clockwiseAngleDis :
+             2 * PI - clockwiseAngleDis;
 
   ball->stopPositions.push_back(toPos);
   int j = steps - 1;
   for (int i = 1;i < steps;++i,--j)
   {
-    double tmpA = currentA + (angleDis * j / (steps - 1)) * (clockwise ? -1 : 1);
-    double tmpR = distance * distanceFromTheCenterWithTheAngle(tmpA, maxR);
-    ball->stopPositions.push_back(calculatePosition(tmpA, tmpR, centerPos));
+    // Calculate the angle and the distance and set the
+    // position
+    double tmpA = currentA + (angleDis * j / (steps - 1)) *
+                  (clockwise ? -1 : 1);
+    double tmpR =
+        distance *
+        distanceFromTheCenterWithTheAngle(tmpA, maxR);
+    ball->stopPositions.push_back(calculatePosition(
+        tmpA, tmpR, centerPos));
   }
 }
 
 int CoreController::hint()
 {
+  // Code made by VincentQiuuu!!!
   int totalBallCounts = gameBoardInfo->totalBallCounts();
+
+  // A copy of the balls
   Ball **copiedBalls = new Ball*[totalBallCounts];
   for (int i = 0;i < totalBallCounts;++i)
     copiedBalls[i] = balls[i];
 
+  // Whether the balls have benn tried
   bool triedIndexes[totalBallCounts];
   for (int i = 0;i < totalBallCounts;++i)
     triedIndexes[i] = false;
 
+  // Try the balls one by one according to a random order
   for (int i = 0;i < totalBallCounts;++i)
   {
     int randIndex = rand() % (totalBallCounts - i);
@@ -693,37 +923,44 @@ int CoreController::hint()
     for (int j = 0;j < randIndex + 1;++j)
     {
       ++p;
-      while ( triedIndexes[p] )
+      while (triedIndexes[p])
         ++p;
     }
     int tryingIndex = p;
     triedIndexes[tryingIndex] = true;
 
-    if ( rule->gestureAllowed(AbstractRule::Rotate) && gameBoardInfo->canBeRotateCenter(tryingIndex) )
+    // Test rotate
+    if (rule->gestureAllowed(AbstractRule::Rotate) &&
+        gameBoardInfo->canBeRotateCenter(tryingIndex))
     {
+      // The chain around the ball
       int chain[6];
       for (int j = 0;j < 6;++j)
-      {
-        chain[j] = gameBoardInfo->nearbyIndex(tryingIndex, j);
-      }
+        chain[j] = gameBoardInfo->
+                   nearbyIndex(tryingIndex, j);
+      // Calculate whether all the balls exist and not
+      // locked
       bool allOccupied = true;
       for (int j = 0;j < 6;++j)
       {
-        if (copiedBalls[chain[j]] == NULL || copiedBalls[chain[j]]->getLocked())
+        if (chain[j] == -1 ||
+            copiedBalls[chain[j]] == NULL ||
+            copiedBalls[chain[j]]->getLocked())
         {
           allOccupied = false;
           break;
         }
       }
-      if ( allOccupied )
+      if (allOccupied)
       {
+        // For each offset
         for (int j = 0;j < 6;++j)
         {
           Ball *ball1 = copiedBalls[chain[0]];
+          // Set the balls and check
           for (int k = 0;k < 5;++k)
-          {
-            copiedBalls[chain[k]] = copiedBalls[chain[k+1]];
-          }
+            copiedBalls[chain[k]] =
+                copiedBalls[chain[k+1]];
           copiedBalls[chain[5]] = ball1;
           if ( j != 6 )
             for (int k = 0;k < 6;++k)
@@ -736,29 +973,35 @@ int CoreController::hint()
       }
     }
 
+    // Test swap
     if ( rule->gestureAllowed(AbstractRule::Swap) &&
          copiedBalls[tryingIndex] != NULL &&
          (!copiedBalls[tryingIndex]->getLocked()))
     {
+      // The balls in the 3 directions
       int swapping[3];
-      swapping[0] = gameBoardInfo->leftDownIndex(tryingIndex);
-      swapping[1] = gameBoardInfo->rightDownIndex(tryingIndex);
+      swapping[0] = gameBoardInfo->
+                    leftDownIndex(tryingIndex);
+      swapping[1] = gameBoardInfo->
+                    rightDownIndex(tryingIndex);
       swapping[2] = gameBoardInfo->rightIndex(tryingIndex);
+      // For each direction
       for (int k = 0;k < 3;++k)
       {
         if ( swapping[k] != -1 &&
              copiedBalls[swapping[k]] != NULL &&
              (!copiedBalls[swapping[k]]->getLocked()))
         {
+          // Set the balls and check
           Ball* t = copiedBalls[tryingIndex];
           copiedBalls[tryingIndex] = copiedBalls[swapping[k]];
           copiedBalls[swapping[k]] = t;
-          if ( check(copiedBalls, tryingIndex) )
+          if (check(copiedBalls, tryingIndex))
           {
             delete [] copiedBalls;
             return swapping[k];
           }
-          if ( check(copiedBalls, swapping[k]) )
+          if (check(copiedBalls, swapping[k]))
           {
             delete [] copiedBalls;
             return tryingIndex;
@@ -783,18 +1026,21 @@ bool CoreController::check(Ball** copiedBalls, int tryingIndex)
     for (int j = 0;j < 2;++j)
     {
       int movingIndex = tryingIndex;
-      while (1)
+      while (true)
       {
-        int nextIndex = gameBoardInfo->nearbyIndex(movingIndex, i + 3 * j);
+        int nextIndex =
+            gameBoardInfo->
+            nearbyIndex(movingIndex, i + 3 * j);
         if (nextIndex == -1 ||
             copiedBalls[nextIndex] == NULL ||
-            (!copiedBalls[tryingIndex]->sameColor(copiedBalls[nextIndex])))
+            (!copiedBalls[tryingIndex]->
+             sameColor(copiedBalls[nextIndex])))
           break;
         ++lenOfChain;
         movingIndex = nextIndex;
       }
     }
-    if ( lenOfChain >= 3 )
+    if (lenOfChain >= 3)
       return true;
   }
 

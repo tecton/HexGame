@@ -23,23 +23,34 @@
 EndlessGameWidget::EndlessGameWidget(AbstractRule::Gesture gesture) :
     frameCount(0)
 {
+  // Create the rule
   if (gesture == AbstractRule::Swap)
     rule = new SwapEndlessGameRule();
   else
     rule = new RotateEndlessGameRule();
+
+  // Create the gameboard info
   gameboardInfo = new ThirtySevenGameBoardInfo();
 
+  // Load the game
   OtherGameRecord *record = OtherGameInit::loadOtherGame(getIndex());
 
-  //EndlessGameWidgetSavedInfo savedInfo = readSaved();
+  // Create the controller
   controller = new CoreController(rule, gameboardInfo, record->balls);
+
+  // Move the balls to the correct position
+  // and avoid elimination at the beginning
   controller->fillAllBlanks();
   for (int i = 0;i < 100;++i)
     controller->advance();
+
+  // Create the gesture controller
   gestureController = new GestureController(rule, gameboardInfo, controller);
 
+  //  Create the effect painter
   effectPainter = new EffectPainter(gameboardInfo);
 
+  // Create the items and initialize them
   hightestScore = new IntegerItem();
   hightestScore->setPos(QPointF(0.1, 0.1));
   hightestScore->setValue(record->highestScore);
@@ -81,10 +92,13 @@ EndlessGameWidget::EndlessGameWidget(AbstractRule::Gesture gesture) :
   exitItem->setPos(QPointF(0.1, 0.9));
   myItems.push_back(exitItem);
 
+  // No items was chosen
   itemAtPressPos = NULL;
 
+  // Release the space
   delete record;
 
+  // Connect signals and slots
   connect(controller,
           SIGNAL(stableEliminateTested(Connections)),
           this,
@@ -96,8 +110,9 @@ EndlessGameWidget::EndlessGameWidget(AbstractRule::Gesture gesture) :
   connect(controller,
           SIGNAL(eliminated(int)),
           this,
-          SLOT(elimitated(int)));
+          SLOT(eliminated(int)));
 
+  // Create the timer and connect signals and slots
   t = new QTimer();
   t->setInterval(75);
   connect(t, SIGNAL(timeout()), this, SLOT(advance()));
@@ -111,7 +126,9 @@ void EndlessGameWidget::makePixmap(QPixmap& pixmap, int width, int height)
 
 EndlessGameWidget::~EndlessGameWidget()
 {
+  // Stop the timer
   t->stop();
+  // Release the space
   delete t;
   for (int i = 0;i < myItems.size();++i)
     delete myItems[i];
@@ -128,14 +145,24 @@ EndlessGameWidget::~EndlessGameWidget()
 void EndlessGameWidget::makeBasicPixmap(QPixmap& pixmap, int width, int height)
 {
   pixmap = QPixmap(width, height);
+
+  // Fill the pixmap with black background
   pixmap.fill(Qt::black);
+
+  // Get the painter
   QPainter *painter = new QPainter(&pixmap);
+
+  // Get the balls
   Ball **balls = controller->balls;
+
+  // Paint the background
   BasicPainter::paintBackGround(BasicPainter::Game37,
                                 painter,
                                 width,
                                 height,
                                 frameCount);
+
+  // Paint the basic balls
   BasicPainter::paintBasicBalls(gameboardInfo,
                                 balls,
                                 gameboardInfo->totalBallCounts(),
@@ -143,18 +170,25 @@ void EndlessGameWidget::makeBasicPixmap(QPixmap& pixmap, int width, int height)
                                 width * 1.0 / gameboardInfo->width(),
                                 height * 1.0 / gameboardInfo->height(),
                                 frameCount);
+
+  // Paint the items
   BasicPainter::paintItems(painter,
                            myItems,
                            width,
                            height,
                            frameCount);
+
+  // End the paint and release the space
   painter->end();
   delete painter;
 }
 
 void EndlessGameWidget::addEffect(QPixmap& pixmap, int width, int height)
 {
+  // Get the painter
   QPainter *painter = new QPainter(&pixmap);
+
+  // Calculte the bonus hint and show it
   QPointF pos = currentPos;
   pos.setX(currentPos.x() * width / gameboardInfo->width());
   pos.setY(currentPos.y() * height / gameboardInfo->height());
@@ -176,13 +210,16 @@ void EndlessGameWidget::addEffect(QPixmap& pixmap, int width, int height)
     }
   }
 
+  // Paint the effects
   effectPainter->paint(painter,
                        width * 1.0 / gameboardInfo->width(),
                        height * 1.0 / gameboardInfo->height());
 
-
+  // End the paint and release the space
   painter->end();
   delete painter;
+
+  // Advance the effect painter
   effectPainter->advance();
 }
 
@@ -192,20 +229,19 @@ QPointF EndlessGameWidget::toScene(double xRate, double yRate)
                  yRate * gameboardInfo->height());
 }
 
-//EndlessGameWidgetSavedInfo EndlessGameWidget::readSaved()
-//{
-
-//}
-
 void EndlessGameWidget::showHint()
 {
+  // Get the index of the hint
   int hintOnBoard = controller->hint();
+
+  // Show the hint
   effectPainter->hintAt(gameboardInfo->centerPositionOfIndex(hintOnBoard),
                         rule->gestureAllowed(AbstractRule::Rotate));
 }
 
 void EndlessGameWidget::quitGame()
 {
+  // Make the record and save it
   OtherGameRecord record;
   record.currentLevel = currentLevel->getValue();
   record.minScore = progressBar->getMin();
@@ -224,6 +260,7 @@ void EndlessGameWidget::quitGame()
 
 void EndlessGameWidget::dealPressed(QPointF mousePos, Qt::MouseButton button)
 {
+  // Choose the correct item at press position
   currentPos = mousePos;
   if (distanceOfTwoPoints(mousePos,
                           toScene(flame->getPos().x(),
@@ -248,19 +285,27 @@ void EndlessGameWidget::dealPressed(QPointF mousePos, Qt::MouseButton button)
   else
     itemAtPressPos = NULL;
 
-
+  // Quit if it's a right button
+  // May be abandoned later
   if (button == Qt::RightButton)
   {
     quitGame();
     return;
   }
+
+  // Let the gesture controller to deal the press event
   gestureController->dealPressed(mousePos);
 }
 
 void EndlessGameWidget::dealMoved(QPointF mousePos, Qt::MouseButton button)
 {
+  // Record the current position
   currentPos = mousePos;
+
+  // Clear user moving elimination hints
   effectPainter->clearUserMovingEliminationHints();
+
+  // Let the gesture controller to deal the move event
   gestureController->dealMoved(mousePos);
 }
 
@@ -273,9 +318,14 @@ void EndlessGameWidget::dealReleased(QPointF mousePos, Qt::MouseButton button)
       int index = gameboardInfo->indexOfMousePosition(mousePos);
       if (index != -1)
       {
+        // Tell the controller to eliminate the balls
         controller->flameAt(index);
+
+        // Add effects to effect painter
         effectPainter->explodeAt(index);
         effectPainter->flash();
+
+        // Minus the value of the flame
         flame->minusOne();
       }
     }
@@ -284,9 +334,14 @@ void EndlessGameWidget::dealReleased(QPointF mousePos, Qt::MouseButton button)
       int index = gameboardInfo->indexOfMousePosition(mousePos);
       if (index != -1)
       {
+        // Tell the controller to eliminate the balls
         controller->starAt(index);
-        effectPainter->lightningAt(index/*, directions*/);
+
+        // Add effects to effect painter
+        effectPainter->lightningAt(index);
         effectPainter->flash();
+
+        // Minus the value of the flame
         star->minusOne();
       }
     }
@@ -295,8 +350,12 @@ void EndlessGameWidget::dealReleased(QPointF mousePos, Qt::MouseButton button)
                                  toScene(hint->getPos().x(),
                                          hint->getPos().y())) < 30)
     {
-      int score = qMax(progressBar->getCurrent() - 10, progressBar->getMin());
+      // Reduce the score
+      int score = qMax(progressBar->getCurrent() - 10,
+                       progressBar->getMin());
       progressBar->setCurrent(score);
+
+      // Show the hint
       showHint();
     }
     else if (itemAtPressPos == resetItem &&
@@ -304,8 +363,13 @@ void EndlessGameWidget::dealReleased(QPointF mousePos, Qt::MouseButton button)
                                  toScene(resetItem->getPos().x(),
                                          resetItem->getPos().y())) < 30)
     {
+      // Create the reset widget
       ResetWidget *w = new ResetWidget();
+
+      // Connect
       connect(w, SIGNAL(confirm()), this, SLOT(reset()));
+
+      // Give control to it
       emit giveControlTo(w, false);
     }
     else if (itemAtPressPos == exitItem &&
@@ -313,36 +377,48 @@ void EndlessGameWidget::dealReleased(QPointF mousePos, Qt::MouseButton button)
                                  toScene(exitItem->getPos().x(),
                                          exitItem->getPos().y())) < 30)
     {
+      // Quit game
       quitGame();
       return;
     }
   }
 
+  // Clear user moving elimination hints
   effectPainter->clearUserMovingEliminationHints();
   itemAtPressPos = NULL;
+
+  // Let the gesture controller to deal the release event
   gestureController->dealReleased(mousePos);
 }
 
 void EndlessGameWidget::getForcus()
 {
+  // Start the timer
   t->start();
 }
 
 void EndlessGameWidget::advance()
 {
+  // Go to next stage if the score has been reached
   if (progressBar->getCurrent() >= progressBar->getMax())
   {
     nextStage();
     return;
   }
+
+  // Add the frame count
   ++frameCount;
+
+  // Advance the controller
   controller->advance();
-//  effectPainter->advance();
 }
 
-void EndlessGameWidget::elimitated(int count)
+void EndlessGameWidget::eliminated(int count)
 {
+  // Set the score
   progressBar->setCurrent(progressBar->getCurrent() + count);
+
+  // Reset the highest score if neccessary
   if (progressBar->getCurrent() > hightestScore->getValue())
   {
     OtherGameInit::testHighest(getIndex(), progressBar->getCurrent());
@@ -352,6 +428,7 @@ void EndlessGameWidget::elimitated(int count)
 
 void EndlessGameWidget::dealStableEliminate(Connections connections)
 {
+  // Calculate the bonus
   for (int i = 0;i < gameboardInfo->totalBallCounts();++i)
   {
     QVector<QVector<int> *>& connect = connections.connectionsOfIndex[i];
@@ -372,8 +449,6 @@ void EndlessGameWidget::dealStableEliminate(Connections connections)
         flame->addOne();
       if (connectionCountOfThePosition >= 3)
         star->addOne();
-      // TODO:BLABLABLA
-
     }
   }
   for (int i = 0;i < connections.connections.size();++i)
@@ -396,6 +471,7 @@ void EndlessGameWidget::dealStableEliminate(Connections connections)
 
 void EndlessGameWidget::dealUserMovingEliminate(Connections connections)
 {
+  // Add moving elimination hint if neccessary
   if (rule->gestureAllowed(AbstractRule::Rotate))
   {
     effectPainter->clearUserMovingEliminationHints();
@@ -403,13 +479,13 @@ void EndlessGameWidget::dealUserMovingEliminate(Connections connections)
     {
       for (int j = 0;j < connections.connections[i]->size();++j)
         effectPainter->userMovingEliminationHintAt(connections.connections[i]->at(j));
-      // TODO:BLABLABLA
     }
   }
 }
 
 void EndlessGameWidget::nextStage()
 {
+  // Record the initial state of next stage
   OtherGameRecord record;
   record.currentLevel = currentLevel->getValue() + 1;
   record.minScore = progressBar->getMax();
@@ -422,6 +498,8 @@ void EndlessGameWidget::nextStage()
                                getIndex(),
                                gameboardInfo->totalBallCounts());
 
+  // Create another widget of endless game and give control
+  // to it
   EndlessGameWidget *nextStage;
   if (rule->gestureAllowed(AbstractRule::Swap))
     nextStage = new EndlessGameWidget(AbstractRule::Swap);
@@ -440,6 +518,7 @@ void EndlessGameWidget::reset()
 {
   OtherGameInit::clearGame(getIndex());
   EndlessGameWidget *resetGame;
+  t->stop();
   if (rule->gestureAllowed(AbstractRule::Swap))
     resetGame = new EndlessGameWidget(AbstractRule::Swap);
   else
