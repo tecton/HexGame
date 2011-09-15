@@ -3,13 +3,16 @@
 #include <QPointF>
 #include "abstractgameboardinfo.h"
 #include "corecontroller.h"
+#include "effectpainter.h"
 
 GestureController::GestureController(AbstractRule *theRule,
                                      AbstractGameBoardInfo *theGameBoardInfo,
-                                     CoreController *theController) :
+                                     CoreController *theController,
+                                     EffectPainter *theEffectPainter) :
     rule(theRule),
     gameboardInfo(theGameBoardInfo),
     controller(theController),
+    effectPainter(theEffectPainter),
     gesture(AbstractRule::BadGesture),
     gestureState(NoGesture)
 {
@@ -19,9 +22,10 @@ void GestureController::testGesture(const QPointF& pos)
 {
   if (gestureState != ChooseGesture)
     return;
+  // Rotate
   if (rule->gestureAllowed(AbstractRule::Rotate) &&
       gestureIndexes.size() == 3)
-  { // Rotate
+  {
     // Try to find the center
     int *connectedCount = new int[gameboardInfo->totalBallCounts()];
     for (int i = 0;i < gameboardInfo->totalBallCounts();++i)
@@ -47,6 +51,10 @@ void GestureController::testGesture(const QPointF& pos)
       }
     delete [] connectedCount;
 
+    // Clear
+    gestureIndexes.clear();
+    effectPainter->clearEffects();
+
     // If the center is valid
     if (gameboardInfo->canBeRotateCenter(center))
     {
@@ -56,7 +64,8 @@ void GestureController::testGesture(const QPointF& pos)
       return;
     }
   }
-  if (rule->gestureAllowed(AbstractRule::Swap) &&
+  // Swap
+  else if (rule->gestureAllowed(AbstractRule::Swap) &&
       gestureIndexes.size() == 2)
   {
     int from = gestureIndexes[0];
@@ -69,6 +78,12 @@ void GestureController::testGesture(const QPointF& pos)
         isNextTo = true;
         break;
       }
+
+    // Clear
+    gestureIndexes.clear();
+    effectPainter->clearEffects();
+
+    // If the swap is valid
     if (isNextTo)
     {
       controller->swap(from, to);
@@ -80,17 +95,25 @@ void GestureController::testGesture(const QPointF& pos)
 
 void GestureController::dealPressed(const QPointF& pos)
 {
-  gestureState = ChooseGesture;
+  // Clear
   gestureIndexes.clear();
+  effectPainter->clearEffects();
+
+  // Record the press
+  gestureState = ChooseGesture;
   int index = gameboardInfo->indexOfMousePosition(pos);
   if (index >= 0)
+  {
     gestureIndexes.push_back(index);
+    effectPainter->selectAt(index);
+  }
   else
     gestureState = NoGesture;
 }
 
 void GestureController::dealMoved(const QPointF& pos)
 {
+  // Record the move
   if (gestureState == ChooseGesture)
   {
     int index = gameboardInfo->indexOfMousePosition(pos);
@@ -99,8 +122,13 @@ void GestureController::dealMoved(const QPointF& pos)
       if (gestureIndexes.size() == 0 ||
           (gestureIndexes.size() > 0 &&
            gestureIndexes[gestureIndexes.size() - 1] != index))
+      {
         gestureIndexes.push_back(index);
+        effectPainter->selectAt(index);
+      }
     }
+
+    // Test the gesture
     testGesture(pos);
   }
   if (gestureState == LocateGesture)
@@ -109,8 +137,13 @@ void GestureController::dealMoved(const QPointF& pos)
 
 void GestureController::dealReleased(const QPointF& pos)
 {
+  // End of the gesture
   if (gestureState == LocateGesture)
     if (gesture == AbstractRule::Rotate)
       controller->rotateEnd();
   gestureState = NoGesture;
+
+  // Clear
+  gestureIndexes.clear();
+  effectPainter->clearEffects();
 }

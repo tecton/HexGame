@@ -39,7 +39,8 @@ SOURCES += main.cpp\
     gameoverwidget.cpp \
     pausewidget.cpp \
     timinggamewidget.cpp \
-    helpwidget.cpp
+    helpwidget.cpp \
+    publicgamesounds.cpp
 
 HEADERS  += ball.h \
     corecontroller.h \
@@ -74,7 +75,9 @@ HEADERS  += ball.h \
     gameoverwidget.h \
     pausewidget.h \
     timinggamewidget.h \
-    helpwidget.h
+    helpwidget.h \
+    publicgamesounds.h
 
 RESOURCES += \
-    resource.qrc
+    images.qrc \
+    puzzlegames.qrc

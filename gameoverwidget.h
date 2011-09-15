@@ -10,7 +10,6 @@
 #include "abstractpixmapwidget.h"
 #include <QVector>
 
-
 // Forward declaration
 class AbstractItem;
 class IntegerItem;
@@ -38,6 +37,7 @@ public:
 private:
   // The index of the game
   int index;
+
   // Items of the game
   IntegerItem *scoreHint;
   StringItem *newGameHint;

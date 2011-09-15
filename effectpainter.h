@@ -24,6 +24,10 @@ public:
   // Constructor with infomation of gameboard
   EffectPainter(AbstractGameBoardInfo *theGameboardInfo);
 
+  // 2 functions related to user's gesture
+  void selectAt(int index);
+  void clearSelectionHints();
+
   // 4 functions related to elimination hint
   void bonusEliminationHintAt(int index);
   void clearBonusEliminationHints();
@@ -59,9 +63,9 @@ private:
 
   // 3 lists of different effects
   QList<AbstractAgingEffect *> agingEffects;
+  QList<AbstractLongLastingEffect *> selectionEffects;
   QList<AbstractLongLastingEffect *> bonusEliminateEffects;
-  QList<AbstractLongLastingEffect *>
-      userMovingEliminateEffects;
+  QList<AbstractLongLastingEffect *> userMovingEliminateEffects;
 };
 
 #endif // EFFECTPAINTER_H

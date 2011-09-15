@@ -6,6 +6,7 @@
 #ifndef ABSTRACTGAMEBOARDINFO_H
 #define ABSTRACTGAMEBOARDINFO_H
 
+// File must include
 #include <QVector>
 #include <QPointF>
 
@@ -55,8 +56,7 @@ public:
 
   // Indexes around the index
   // At most 6 indexes
-  // The order is left, leftUp, rightUp, right, rightDown,
-  // leftDown
+  // The order is left, leftUp, rightUp, right, rightDown, leftDown
   virtual QVector<int> chainAroundIndex(int index)=0;
 
   // Whether the index can be a center to rotate
@@ -68,8 +68,7 @@ public:
   // The index of the item at the position of the scene
   virtual int indexOfPosition(QPointF position)=0;
 
-  // The index of the item at the position of the row and
-  // column
+  // The index of the item at the position of the row and column
   virtual int indexOfPosition(int row, int column)=0;
 
   // The index of the item at the position of the mouse

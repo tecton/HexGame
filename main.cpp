@@ -10,6 +10,7 @@ GameRecord gameRecord;
 int main(int argc, char *argv[])
 {
   srand ( time(NULL) );
+
   QTextCodec *codec = QTextCodec::codecForName("utf8");
   QTextCodec::setCodecForLocale(codec);
   QTextCodec::setCodecForCStrings(codec);

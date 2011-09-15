@@ -22,16 +22,13 @@ public:
   enum Elimination{ThreeInARow=0, Circle};
 
   // Whether a gesture is allowed
-  virtual bool gestureAllowed
-      (AbstractRule::Gesture gesture)=0;
+  virtual bool gestureAllowed(AbstractRule::Gesture gesture)=0;
 
   // Whether a step is allowed
-  virtual bool gameStepAllowed
-      (AbstractRule::GameStep gameStep)=0;
+  virtual bool gameStepAllowed(AbstractRule::GameStep gameStep)=0;
 
   // Whether an elimination is allowed
-  virtual bool eliminationAllowed
-      (AbstractRule::Elimination elimination)=0;
+  virtual bool eliminationAllowed(AbstractRule::Elimination elimination)=0;
 
   // Whether to keep the user not to died
   virtual bool endlessFill()=0;

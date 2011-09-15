@@ -131,6 +131,12 @@ private slots:
 
   // Called when some balls are eliminated
   void eliminated(int count);
+
+  // Call after a good move is made
+  void goodMove();
+
+  // Call after a bad move is made
+  void badMove();
 };
 
 #endif // ENDLESSGAMEWIDGET_H

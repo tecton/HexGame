@@ -144,6 +144,12 @@ private slots:
 
   // Resume the game
   void resume();
+
+  // Call after a good move is made
+  void goodMove();
+
+  // Call after a bad move is made
+  void badMove();
 };
 
 #endif // TIMINGGAMEWIDGET_H

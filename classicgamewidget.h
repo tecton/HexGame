@@ -134,6 +134,12 @@ private slots:
   // The connections are the balls which will be eliminated
   // if user release the mouse
   void dealUserMovingEliminate(Connections connections);
+
+  // Call after a good move is made
+  void goodMove();
+
+  // Call after a bad move is made
+  void badMove();
 };
 
 #endif // CLASSICGAMEWIDGET_H

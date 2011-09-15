@@ -1,7 +1,7 @@
 /*
 ** A class to do the basic paint.
-** Currently, the functions are all static, because I
-** haven't found anything to store in the painter.
+** Currently, the functions are all static, because I haven't found anything to
+** store in the painter.
 */
 
 #ifndef BASICPAINTER_H
@@ -64,9 +64,7 @@ public:
                          int frame);
 
   // A function to darken the things which has benn painted
-  static void darken(QPainter *painter,
-                     int width,
-                     int height);
+  static void darken(QPainter *painter, int width, int height);
 };
 
 #endif // BASICPAINTER_H

@@ -17,6 +17,7 @@
 #include "othergameinit.h"
 #include "resetwidget.h"
 #include "gameoverwidget.h"
+#include "publicgamesounds.h"
 
 #define LOGICAL_WIDTH  1024
 #define LOGICAL_HEIGHT 600
@@ -48,12 +49,14 @@ ClassicGameWidget::ClassicGameWidget(AbstractRule::Gesture gesture) :
   for (int i = 0;i < 100;++i)
     controller->advance();
 
-  // Create the gesture controller
-  gestureController = new GestureController
-                      (rule, gameboardInfo, controller);
-
   //  Create the effect painter
   effectPainter = new EffectPainter(gameboardInfo);
+
+  // Create the gesture controller
+  gestureController = new GestureController(rule,
+                                            gameboardInfo,
+                                            controller,
+                                            effectPainter);
 
   // Create the items and initialize them
   hightestScore = new IntegerItem();
@@ -278,6 +281,9 @@ void ClassicGameWidget::showHint()
 
 void ClassicGameWidget::gameOver()
 {
+  // Add sound effect
+  PublicGameSounds::addSound(PublicGameSounds::GameOver);
+
   // Clear the game record
   OtherGameInit::clearGame(getIndex());
 
@@ -381,6 +387,9 @@ void ClassicGameWidget::dealReleased(QPointF mousePos,
           gameboardInfo->indexOfMousePosition(mousePos);
       if (index != -1)
       {
+        // Add sound effect
+        PublicGameSounds::addSound(PublicGameSounds::UseFlame);
+
         // Tell the controller to eliminate the balls
         controller->flameAt(index);
 
@@ -398,6 +407,9 @@ void ClassicGameWidget::dealReleased(QPointF mousePos,
           gameboardInfo->indexOfMousePosition(mousePos);
       if (index != -1)
       {
+        // Add sound effect
+        PublicGameSounds::addSound(PublicGameSounds::UseStar);
+
         // Tell the controller to eliminate the balls
         controller->starAt(index);
 
@@ -515,9 +527,21 @@ void ClassicGameWidget::dealStableEliminate
       if (connectionCountOfThePosition >= 2)
         effectPainter->flash();
       if (connectionCountOfThePosition == 2)
+      {
+        // Add sound effect
+        PublicGameSounds::addSound(PublicGameSounds::GetFlame);
+
+        // Get a flame
         flame->addOne();
+      }
       if (connectionCountOfThePosition >= 3)
+      {
+        // Add sound effect
+        PublicGameSounds::addSound(PublicGameSounds::GetStar);
+
+        // Get a star
         star->addOne();
+      }
     }
     if (connectionCountOfThePosition > 0)
       ++pointsToAdd;
@@ -537,10 +561,26 @@ void ClassicGameWidget::dealStableEliminate
     if (size >= 4)
       effectPainter->flash();
     if (size == 4)
+    {
+      // Add sound effect
+      PublicGameSounds::addSound(PublicGameSounds::GetFlame);
+
+      // Get a flame
       flame->addOne();
+    }
     if (size >= 5)
+    {
+      // Add sound effect
+      PublicGameSounds::addSound(PublicGameSounds::GetStar);
+
+      // Get a star
       star->addOne();
+    }
   }
+
+  // Add sound effect if neccessary
+  if (pointsToAdd > 0)
+    PublicGameSounds::addEliminate(pointsToAdd);
 
   // Set the score
   progressBar->setCurrent(
@@ -576,6 +616,9 @@ void ClassicGameWidget::dealUserMovingEliminate(
 
 void ClassicGameWidget::nextStage()
 {
+  // Add sound effect
+  PublicGameSounds::addSound(PublicGameSounds::NextStage);
+
   // Record the initial state of next stage
   OtherGameRecord record;
   record.currentLevel = currentLevel->getValue() + 1;
@@ -621,4 +664,16 @@ void ClassicGameWidget::reset()
         new ClassicGameWidget(AbstractRule::Rotate);
   emit giveControlTo(resetGame, true);
   delete this;
+}
+
+void ClassicGameWidget::goodMove()
+{
+  // Add sound effect
+  PublicGameSounds::addSound(PublicGameSounds::GoodMove);
+}
+
+void ClassicGameWidget::badMove()
+{
+  // Add sound effect
+  PublicGameSounds::addSound(PublicGameSounds::BadMove);
 }

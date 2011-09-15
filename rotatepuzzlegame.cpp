@@ -79,9 +79,15 @@ RotatePuzzleGame::RotatePuzzleGame(int ballIndex[],
     myItems.push_back(exitItem);
 
     controller = new CoreController(rule, gameboardInfo, balls);
-    gestureController = new GestureController(rule, gameboardInfo, controller);
 
+    //  Create the effect painter
     effectPainter = new EffectPainter(gameboardInfo);
+
+    // Create the gesture controller
+    gestureController = new GestureController(rule,
+                                              gameboardInfo,
+                                              controller,
+                                              effectPainter);
 
     t = new QTimer();
     t->setInterval(75);

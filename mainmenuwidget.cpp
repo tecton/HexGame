@@ -13,9 +13,10 @@
 #define LOGICAL_WIDTH  1024
 #define LOGICAL_HEIGHT 600
 
-MainMenuWidget::MainMenuWidget() :
-    frameCount(0)
+MainMenuWidget::MainMenuWidget()/* :
+    frameCount(0)*/
 {
+  // Create the items and initialize them
   items[0] = new MainMenuGameItem((AbstractMainMenuItem::ItemType)0);
   items[0]->setPos(QPointF(0.375, 0.5));
   items[1] = new MainMenuGameItem((AbstractMainMenuItem::ItemType)1);
@@ -43,10 +44,11 @@ MainMenuWidget::MainMenuWidget() :
   for (int i = 0;i < 9;++i)
     myItems.push_back(items[i]);
 
-  t = new QTimer();
-  t->setInterval(75);
-  connect(t, SIGNAL(timeout()), this, SLOT(advance()));
-  t->start();
+//  // Create the timer and connect signals and slots
+//  t = new QTimer();
+//  t->setInterval(75);
+//  connect(t, SIGNAL(timeout()), this, SLOT(advance()));
+//  t->start();
 }
 
 void MainMenuWidget::makePixmap(QPixmap& pixmap, int width, int height)
@@ -58,26 +60,34 @@ void MainMenuWidget::makePixmap(QPixmap& pixmap, int width, int height)
 void MainMenuWidget::makeBasicPixmap(QPixmap& pixmap, int width, int height)
 {
   pixmap = QPixmap(width, height);
+
+  // Fill the pixmap with black background
   pixmap.fill(Qt::black);
+
+  // Get the painter
   QPainter *painter = new QPainter(&pixmap);
+
+  // Paint the background
   BasicPainter::paintBackGround(BasicPainter::MainMenu,
                                 painter,
                                 width,
                                 height,
-                                frameCount);
+                                0/*frameCount*/);
+
+  // Paint the basic balls
   BasicPainter::paintItems(painter,
                            myItems,
                            width,
                            height,
-                           frameCount);
+                           0/*frameCount*/);
 
+  // End the paint and release the space
   painter->end();
   delete painter;
 }
 
 void MainMenuWidget::addEffect(QPixmap& pixmap, int width, int height)
 {
-
 }
 
 QPointF MainMenuWidget::toScene(double xRate, double yRate)
@@ -88,12 +98,15 @@ QPointF MainMenuWidget::toScene(double xRate, double yRate)
 
 void MainMenuWidget::dealPressed(QPointF mousePos, Qt::MouseButton button)
 {
+  // Quit if it's a right button. May be abandoned later
   if (button == Qt::RightButton)
   {
     emit giveControlTo(NULL, true);
     delete this;
     return;
   }
+
+  // Create correct game if neccessary
   for (int i = 0;i < 6;++i)
   {
     if (distanceOfTwoPoints(mousePos,
@@ -110,6 +123,7 @@ void MainMenuWidget::dealPressed(QPointF mousePos, Qt::MouseButton button)
     }
   }
 
+  // Create puzzle game if neccessary
   if (distanceOfTwoPoints(mousePos,
                           toScene(items[6]->getPos().x(),
                                   items[6]->getPos().y())) < 50)
@@ -118,6 +132,7 @@ void MainMenuWidget::dealPressed(QPointF mousePos, Qt::MouseButton button)
     emit giveControlTo(puzzleMenu, false);
     return;
   }
+  // Go to help if neccessary
   else if (distanceOfTwoPoints(mousePos,
                           toScene(items[7]->getPos().x(),
                                   items[7]->getPos().y())) < 50)
@@ -126,6 +141,7 @@ void MainMenuWidget::dealPressed(QPointF mousePos, Qt::MouseButton button)
     emit giveControlTo(helpWidget, false);
     return;
   }
+  // Exit if neccessary
   else if (distanceOfTwoPoints(mousePos,
                           toScene(items[8]->getPos().x(),
                                   items[8]->getPos().y())) < 50)
@@ -140,25 +156,25 @@ void MainMenuWidget::dealPressed(QPointF mousePos, Qt::MouseButton button)
 
 void MainMenuWidget::dealMoved(QPointF mousePos, Qt::MouseButton button)
 {
-
 }
 
 void MainMenuWidget::dealReleased(QPointF mousePos, Qt::MouseButton button)
 {
-
 }
 
-void MainMenuWidget::advance()
-{
-  ++frameCount;
-  frameCount = frameCount % 32;
-  //effectPainter->advance();
-}
+//void MainMenuWidget::advance()
+//{
+//  ++frameCount;
+//  frameCount = frameCount;
+//}
 
 MainMenuWidget::~MainMenuWidget()
 {
-  t->stop();
-  delete t;
+//  // Stop the timer
+//  t->stop();
+  // Release the space
+//  delete t;
   for (int i = 0;i < myItems.size();++i)
     delete myItems[i];
+  myItems.clear();
 }

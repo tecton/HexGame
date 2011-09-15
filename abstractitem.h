@@ -6,8 +6,10 @@
 #ifndef ABSTRACTITEM_H
 #define ABSTRACTITEM_H
 
+// File must include
 #include <QPointF>
 
+// Forward declaration
 class QPainter;
 
 class AbstractItem
@@ -25,10 +27,7 @@ public:
   //     The index of the frame to show.
   //     (An item may have lots of frames which
   //      could realize an animation)
-  virtual void paint(QPainter *painter,
-                     int width,
-                     int height,
-                     int frame)=0;
+  virtual void paint(QPainter *painter, int width, int height, int frame)=0;
 
   // Set the position of the item
   // (The position is relative one, NOT absolute one!)

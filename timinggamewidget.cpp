@@ -18,6 +18,7 @@
 #include "resetwidget.h"
 #include "pausewidget.h"
 #include "gameoverwidget.h"
+#include "publicgamesounds.h"
 
 #define LOGICAL_WIDTH  1024
 #define LOGICAL_HEIGHT 600
@@ -36,9 +37,15 @@ TimingGameWidget::TimingGameWidget(AbstractRule::Gesture gesture) :
   controller->fillAllBlanks();
   for (int i = 0;i < 100;++i)
     controller->advance();
-  gestureController = new GestureController(rule, gameboardInfo, controller);
 
+  //  Create the effect painter
   effectPainter = new EffectPainter(gameboardInfo);
+
+  // Create the gesture controller
+  gestureController = new GestureController(rule,
+                                            gameboardInfo,
+                                            controller,
+                                            effectPainter);
 
   hightestScore = new IntegerItem();
   hightestScore->setPos(QPointF(0.1, 0.1));
@@ -214,6 +221,9 @@ void TimingGameWidget::showHint()
 
 void TimingGameWidget::gameOver()
 {
+  // Add sound effect
+  PublicGameSounds::addSound(PublicGameSounds::GameOver);
+
   OtherGameInit::testHighest(getIndex(), currentScore->getValue());
   GameOverWidget *w = new GameOverWidget(getIndex(), currentScore->getValue());
   emit giveControlTo(w, true);
@@ -281,6 +291,9 @@ void TimingGameWidget::dealReleased(QPointF mousePos, Qt::MouseButton button)
       int index = gameboardInfo->indexOfMousePosition(mousePos);
       if (index != -1)
       {
+        // Add sound effect
+        PublicGameSounds::addSound(PublicGameSounds::UseFlame);
+
         controller->flameAt(index);
         effectPainter->explodeAt(index);
         effectPainter->flash();
@@ -292,6 +305,9 @@ void TimingGameWidget::dealReleased(QPointF mousePos, Qt::MouseButton button)
       int index = gameboardInfo->indexOfMousePosition(mousePos);
       if (index != -1)
       {
+        // Add sound effect
+        PublicGameSounds::addSound(PublicGameSounds::UseStar);
+
         controller->starAt(index);
         effectPainter->lightningAt(index/*, directions*/);
         effectPainter->flash();
@@ -360,6 +376,10 @@ void TimingGameWidget::advance()
 
 void TimingGameWidget::eliminated(int count)
 {
+  // Add sound effect if neccessary
+  if (count > 0)
+    PublicGameSounds::addEliminate(count);
+
   currentScore->setValue(currentScore->getValue() + count);
   if (currentScore->getValue() > hightestScore->getValue())
   {
@@ -387,9 +407,21 @@ void TimingGameWidget::dealStableEliminate(Connections connections)
       if (connectionCountOfThePosition >= 2)
         effectPainter->flash();
       if (connectionCountOfThePosition == 2)
+      {
+        // Add sound effect
+        PublicGameSounds::addSound(PublicGameSounds::GetFlame);
+
+        // Get a flame
         flame->addOne();
+      }
       if (connectionCountOfThePosition >= 3)
+      {
+        // Add sound effect
+        PublicGameSounds::addSound(PublicGameSounds::GetStar);
+
+        // Get a star
         star->addOne();
+      }
       // TODO:BLABLABLA
 
     }
@@ -406,9 +438,21 @@ void TimingGameWidget::dealStableEliminate(Connections connections)
     if (size >= 4)
       effectPainter->flash();
     if (size == 4)
+    {
+      // Add sound effect
+      PublicGameSounds::addSound(PublicGameSounds::GetFlame);
+
+      // Get a flame
       flame->addOne();
+    }
     if (size >= 5)
+    {
+      // Add sound effect
+      PublicGameSounds::addSound(PublicGameSounds::GetStar);
+
+      // Get a star
       star->addOne();
+    }
   }
 }
 
@@ -454,4 +498,16 @@ void TimingGameWidget::resume()
 {
   t->start();
   oneSecondTimer->start();
+}
+
+void TimingGameWidget::goodMove()
+{
+  // Add sound effect
+  PublicGameSounds::addSound(PublicGameSounds::GoodMove);
+}
+
+void TimingGameWidget::badMove()
+{
+  // Add sound effect
+  PublicGameSounds::addSound(PublicGameSounds::BadMove);
 }

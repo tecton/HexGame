@@ -11,13 +11,13 @@ RotatePuzzleGame* PuzzleGameInit::initRotatePuzzleGame(int index,
 {
   int *ballIndex = new int [61];
   int *toBeIndex = new int [61];
-  QString filename = ":/abcde/";
+  QString filename = ":/puzzlegames/";
 //  if (type == 0)
-//    filename = ":/abcde/exchange";
+//    filename = ":/puzzlegames/exchange";
 //  if (type == 1)
-//    filename = ":/abcde/unite";
+//    filename = ":/puzzlegames/unite";
 //  if (type == 2)
-//    filename = ":/abcde/lock_plus";
+//    filename = ":/puzzlegames/lock_plus";
   switch (type)
   {
   case 0:

@@ -13,19 +13,27 @@
 #define BUTTON_LOGICAL_WIDTH  120
 #define BUTTON_LOGICAL_HEIGHT 60
 
+// Total color number of the items
 const static int kTotalItems = 9;
-const static char * kItemPaths[] = {":/images/mainmenuitems/swapclassicgame*.png",
-                                    ":/images/mainmenuitems/rotateclassicgame*.png",
-                                    ":/images/mainmenuitems/swapendlessgame*.png",
-                                    ":/images/mainmenuitems/rotateendlessgame*.png",
-                                    ":/images/mainmenuitems/swaptiminggame*.png",
-                                    ":/images/mainmenuitems/rotatetiminggame*.png",
-                                    ":/images/mainmenuitems/puzzlegame*.png",
-                                    ":/images/mainmenuitems/help*.png",
-                                    ":/images/mainmenuitems/exit*.png"};
 
+// File path of the items
+// (The last two are the same as two before them, may make
+//  cause some bug later)
+const static char * kItemPaths[] =
+{":/images/mainmenuitems/swapclassicgame*.png",
+ ":/images/mainmenuitems/rotateclassicgame*.png",
+ ":/images/mainmenuitems/swapendlessgame*.png",
+ ":/images/mainmenuitems/rotateendlessgame*.png",
+ ":/images/mainmenuitems/swaptiminggame*.png",
+ ":/images/mainmenuitems/rotatetiminggame*.png",
+ ":/images/mainmenuitems/puzzlegame*.png",
+ ":/images/mainmenuitems/help*.png",
+ ":/images/mainmenuitems/exit*.png"};
 
+// Pixmaps of the items
 QVector<QVector<QPixmap> > mainMenuItemPixmaps;
+
+// Total frame count of the items
 QVector<int> mainMenuItemFrameCounts;
 void initMainMenuItemPixmaps()
 {
@@ -38,6 +46,7 @@ void initMainMenuItemPixmaps()
 const QPixmap& AbstractMainMenuItem::pixmap(ItemType type,
                                             int frame)
 {
+  // Init pixmaps if neccessary
   if (mainMenuItemPixmaps.isEmpty())
     initMainMenuItemPixmaps();
   return mainMenuItemPixmaps[type][frame % mainMenuItemFrameCounts[type]];
@@ -48,27 +57,23 @@ void MainMenuGameItem::paint(QPainter *painter,
                              int height,
                              int frame)
 {
+  // Get the pixmap
   const QPixmap& p = AbstractMainMenuItem::pixmap(type, frame);
+
+  // Calculate the values to locate
   double x = getPos().x() * width;
   double y = getPos().y() * height;
-  if (type < 7)
-    drawPixmapAt(painter,
-                 p,
-                 1,
-                 1,
-                 QPointF(x, y),
-                 true,
-                 true);
-  else
-  {
-    double xRate = 1.0 * width * BUTTON_LOGICAL_WIDTH / LOGICAL_WIDTH / p.width();
-    double yRate = 1.0 * height * BUTTON_LOGICAL_HEIGHT / LOGICAL_HEIGHT / p.height();
-    drawPixmapAt(painter,
-                 p,
-                 xRate,
-                 yRate,
-                 QPointF(x, y),
-                 true,
-                 true);
-  }
+  double xRate = 1.0 * width * BUTTON_LOGICAL_WIDTH / LOGICAL_WIDTH /
+                 p.width();
+  double yRate = 1.0 * height * BUTTON_LOGICAL_HEIGHT / LOGICAL_HEIGHT /
+                 p.height();
+
+  // draw the pixmap
+  drawPixmapAt(painter,
+               p,
+               xRate,
+               yRate,
+               QPointF(x, y),
+               true,
+               true);
 }

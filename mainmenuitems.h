@@ -7,7 +7,10 @@
 
 #include "abstractitem.h"
 
+// File must include
 #include <QPointF>
+
+// Forward declaration
 class QPixmap;
 
 class AbstractMainMenuItem : public AbstractItem
@@ -24,7 +27,7 @@ public:
                 HelpItem,
                 ExitItem};
 
-  // The pure virtual function to be overloaded
+  // The function must be overloaded(still pure virtual)
   virtual void paint(QPainter *painter, int width, int height, int frame)=0;
 
   // A function returns the pixmap of an item
@@ -35,11 +38,15 @@ public:
 class MainMenuGameItem : public AbstractMainMenuItem
 {
 public:
+  // Constructor with the type of the item
   MainMenuGameItem(AbstractMainMenuItem::ItemType theType) :
       type(theType) {}
+
+  // The function must be overloaded
   virtual void paint(QPainter *painter, int width, int height, int frame);
 
 private:
+  // The type of the item
   AbstractMainMenuItem::ItemType type;
 };
 

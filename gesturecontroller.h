@@ -14,6 +14,7 @@ class QPointF;
 class AbstractRule;
 class AbstractGameBoardInfo;
 class CoreController;
+class EffectPainter;
 
 class GestureController
 {
@@ -21,10 +22,12 @@ public:
   // State of the gesture
   enum GestureState {NoGesture, ChooseGesture, LocateGesture};
 
-  // Constructor with the rule, the infomation of the gameboard, the core controller
+  // Constructor with the rule, the infomation of the gameboard,
+  // the core controller, the effect painter
   GestureController(AbstractRule *theRule,
                     AbstractGameBoardInfo *theGameBoardInfo,
-                    CoreController *theController);
+                    CoreController *theController,
+                    EffectPainter *theEffectPainter);
 
   // 3 functions to deal with the mouse events
   // Press
@@ -53,6 +56,9 @@ private:
 
   // Core controller which controls the balls
   CoreController *controller;
+
+  // The effective painter
+  EffectPainter *effectPainter;
 
   // The gesture allowed
   AbstractRule::Gesture gesture;

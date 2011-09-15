@@ -3,9 +3,11 @@
 
 #include "abstractpixmapwidget.h"
 
+// File must include
 #include <QVector>
 
-class QTimer;
+// Forward declaration
+//class QTimer;
 class AbstractItem;
 class MainMenuGameItem;
 
@@ -13,9 +15,13 @@ class MainMenuWidget : public AbstractPixmapWidget
 {
   Q_OBJECT
 public:
+  // Constructor
   MainMenuWidget();
+
+  // Destructor
   ~MainMenuWidget();
 
+  // Functions most overloaded
   virtual void makePixmap(QPixmap& pixmap, int width, int height);
   virtual void makeBasicPixmap(QPixmap& pixmap, int width, int height);
   virtual void addEffect(QPixmap& pixmap, int width, int height);
@@ -26,13 +32,16 @@ public:
   virtual void getForcus(){}
 
 private:
-  QTimer *t;
+  // The timer(currently not used)
+//  QTimer *t;
+
+  // Items of the game
   MainMenuGameItem *items[9];
   QVector <AbstractItem *> myItems;
-  int frameCount;
+//  int frameCount;
 
 private slots:
-  void advance();
+//  void advance();
 };
 
 #endif // MAINMENUWIDGET_H

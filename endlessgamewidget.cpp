@@ -16,6 +16,7 @@
 #include "thirtysevengameboardinfo.h"
 #include "othergameinit.h"
 #include "resetwidget.h"
+#include "publicgamesounds.h"
 
 #define LOGICAL_WIDTH  1024
 #define LOGICAL_HEIGHT 600
@@ -44,11 +45,14 @@ EndlessGameWidget::EndlessGameWidget(AbstractRule::Gesture gesture) :
   for (int i = 0;i < 100;++i)
     controller->advance();
 
-  // Create the gesture controller
-  gestureController = new GestureController(rule, gameboardInfo, controller);
-
   //  Create the effect painter
   effectPainter = new EffectPainter(gameboardInfo);
+
+  // Create the gesture controller
+  gestureController = new GestureController(rule,
+                                            gameboardInfo,
+                                            controller,
+                                            effectPainter);
 
   // Create the items and initialize them
   hightestScore = new IntegerItem();
@@ -318,6 +322,9 @@ void EndlessGameWidget::dealReleased(QPointF mousePos, Qt::MouseButton button)
       int index = gameboardInfo->indexOfMousePosition(mousePos);
       if (index != -1)
       {
+        // Add sound effect
+        PublicGameSounds::addSound(PublicGameSounds::UseFlame);
+
         // Tell the controller to eliminate the balls
         controller->flameAt(index);
 
@@ -334,6 +341,9 @@ void EndlessGameWidget::dealReleased(QPointF mousePos, Qt::MouseButton button)
       int index = gameboardInfo->indexOfMousePosition(mousePos);
       if (index != -1)
       {
+        // Add sound effect
+        PublicGameSounds::addSound(PublicGameSounds::UseStar);
+
         // Tell the controller to eliminate the balls
         controller->starAt(index);
 
@@ -415,6 +425,10 @@ void EndlessGameWidget::advance()
 
 void EndlessGameWidget::eliminated(int count)
 {
+  // Add sound effect if neccessary
+  if (count > 0)
+    PublicGameSounds::addEliminate(count);
+
   // Set the score
   progressBar->setCurrent(progressBar->getCurrent() + count);
 
@@ -446,9 +460,21 @@ void EndlessGameWidget::dealStableEliminate(Connections connections)
       if (connectionCountOfThePosition >= 2)
         effectPainter->flash();
       if (connectionCountOfThePosition == 2)
+      {
+        // Add sound effect
+        PublicGameSounds::addSound(PublicGameSounds::GetFlame);
+
+        // Get a flame
         flame->addOne();
+      }
       if (connectionCountOfThePosition >= 3)
+      {
+        // Add sound effect
+        PublicGameSounds::addSound(PublicGameSounds::GetStar);
+
+        // Get a star
         star->addOne();
+      }
     }
   }
   for (int i = 0;i < connections.connections.size();++i)
@@ -463,9 +489,21 @@ void EndlessGameWidget::dealStableEliminate(Connections connections)
     if (size >= 4)
       effectPainter->flash();
     if (size == 4)
+    {
+      // Add sound effect
+      PublicGameSounds::addSound(PublicGameSounds::GetFlame);
+
+      // Get a flame
       flame->addOne();
+    }
     if (size >= 5)
+    {
+      // Add sound effect
+      PublicGameSounds::addSound(PublicGameSounds::GetStar);
+
+      // Get a star
       star->addOne();
+    }
   }
 }
 
@@ -485,6 +523,9 @@ void EndlessGameWidget::dealUserMovingEliminate(Connections connections)
 
 void EndlessGameWidget::nextStage()
 {
+  // Add sound effect
+  PublicGameSounds::addSound(PublicGameSounds::NextStage);
+
   // Record the initial state of next stage
   OtherGameRecord record;
   record.currentLevel = currentLevel->getValue() + 1;
@@ -525,4 +566,16 @@ void EndlessGameWidget::reset()
     resetGame = new EndlessGameWidget(AbstractRule::Rotate);
   emit giveControlTo(resetGame, true);
   delete this;
+}
+
+void EndlessGameWidget::goodMove()
+{
+  // Add sound effect
+  PublicGameSounds::addSound(PublicGameSounds::GoodMove);
+}
+
+void EndlessGameWidget::badMove()
+{
+  // Add sound effect
+  PublicGameSounds::addSound(PublicGameSounds::BadMove);
 }
