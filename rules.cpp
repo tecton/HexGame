@@ -1,5 +1,6 @@
-#include "rules.h"
+// Nothing needed to be explained here.
 
+#include "rules.h"
 
 bool SwapClassicGameRule::gestureAllowed(AbstractRule::Gesture gesture)
 {

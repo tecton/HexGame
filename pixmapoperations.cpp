@@ -4,9 +4,7 @@
 #include <QDir>
 #include <QPainter>
 
-void initPixmaps(QString path,
-                 QVector<QPixmap>& pixmaps,
-                 int& frameCounts)
+void initPixmaps(QString path, QVector<QPixmap>& pixmaps, int& frameCounts)
 {
   frameCounts = 0;
   QFileInfo fi(path);
@@ -54,6 +52,7 @@ void drawPixmapAt(QPainter *painter,
                   bool resize,
                   bool center)
 {
+  // Calculate the width and height the pixmap should be
   double width = pixmap.width();
   double height = pixmap.height();
   if (resize)
@@ -61,12 +60,16 @@ void drawPixmapAt(QPainter *painter,
     width *= xRate;
     height *= yRate;
   }
+
+  // Calculate the left up position of the pixmap
   QPointF leftUp = pos;
   if (center)
   {
     leftUp.setX(leftUp.x() - width / 2);
     leftUp.setY(leftUp.y() - height / 2);
   }
+
+  // Draw the pixmap
   if (resize)
     painter->drawPixmap(leftUp.x(), leftUp.y(), width, height, pixmap);
   else

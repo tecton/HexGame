@@ -11,6 +11,7 @@
 
 extern GameRecord gameRecord;
 
+// The names of the files
 static const char* fileNames[] = {
   "SwapClassic",
   "RotateClassic",
@@ -18,6 +19,7 @@ static const char* fileNames[] = {
   "RotateEndless"
 };
 
+// Convert a ball to an integer
 int ballToInt(Ball *ball)
 {
   if (ball == NULL)
@@ -26,6 +28,7 @@ int ballToInt(Ball *ball)
           (ball->getLocked() ? 0x8000 : 0x0000);
 }
 
+// Convert an integer to a ball
 Ball *intToBall(int value)
 {
   if (value == 0xFFFF)
@@ -41,6 +44,7 @@ Ball *intToBall(int value)
 AbstractPixmapWidget *OtherGameInit::initOtherGame(AbstractRule::Gesture gesture,
                                                    int type)
 {
+  // Create the correct game
   if (type == 0)
     return new ClassicGameWidget(gesture);
   else if (type == 1)
@@ -52,6 +56,7 @@ AbstractPixmapWidget *OtherGameInit::initOtherGame(AbstractRule::Gesture gesture
 
 int OtherGameInit::getHighest(int index)
 {
+  // Create the file if neccessary
   if (!gameRecord.exists("OtherGameHighest"))
   {
     int tmp[] = {0,0,0,0,0,0};
@@ -63,6 +68,7 @@ int OtherGameInit::getHighest(int index)
 
 void OtherGameInit::setHighest(int index, int score)
 {
+  // Create the file if neccessary
   if (!gameRecord.exists("OtherGameHighest"))
   {
     int tmp[] = {0,0,0,0,0,0};
@@ -74,6 +80,7 @@ void OtherGameInit::setHighest(int index, int score)
 
 void OtherGameInit::testHighest(int index, int score)
 {
+  // Record the score if neccessary
   if (getHighest(index) < score)
     setHighest(index, score);
 }
@@ -82,9 +89,12 @@ OtherGameRecord *OtherGameInit::loadOtherGame(int index)
 {
   if (index > 3)
     return NULL;
-  OtherGameRecord *result = new OtherGameRecord();
 
+  // The record
+  OtherGameRecord *result = new OtherGameRecord();
   result->highestScore = getHighest(index);
+
+  // Set the values to default if neccessary
   if (!gameRecord.exists(fileNames[index]))
   {
     result->currentLevel = 1;
@@ -95,6 +105,7 @@ OtherGameRecord *OtherGameInit::loadOtherGame(int index)
     result->star = 0;
     result->balls = NULL;
   }
+  // Set the values to the values in the file
   else
   {
     int *data;
@@ -122,9 +133,11 @@ void OtherGameInit::saveOtherGame(OtherGameRecord *record,
   if (index > 3)
     return;
 
+  // Test the highest score
   if (getHighest(index) < record->currentScore)
     setHighest(index, record->currentScore);
 
+  // Make the data array
   int *data = new int[6 + ballCount];
   int count = 0;
   data[count++] = record->currentLevel;
@@ -141,11 +154,15 @@ void OtherGameInit::saveOtherGame(OtherGameRecord *record,
     for (int i = 0;i < ballCount;++i)
       data[count++] = ballToInt(NULL);
 
+  // Write the data to the file
   gameRecord.writeDataArr(fileNames[index], data, 6 + ballCount);
+
+  // Release space
   delete [] data;
 }
 
 void OtherGameInit::clearGame(int index)
 {
+  // Remove the file of the game
   gameRecord.remove(fileNames[index]);
 }

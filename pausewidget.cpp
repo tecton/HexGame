@@ -13,6 +13,7 @@
 
 PauseWidget::PauseWidget()
 {
+  // Create the items and initialize them
   pauseHint = new StringItem();
   pauseHint->setPos(QPointF(0.5, 0.5));
   pauseHint->setHint("Press anywhere to continue");
@@ -29,14 +30,21 @@ void PauseWidget::makePixmap(QPixmap& pixmap, int width, int height)
 void PauseWidget::makeBasicPixmap(QPixmap& pixmap, int width, int height)
 {
   pixmap = QPixmap(width, height);
+
+  // Fill the pixmap with black background
   pixmap.fill(Qt::black);
+
+  // Get the painter
   QPainter *painter = new QPainter(&pixmap);
+
+  // Paint the items
   BasicPainter::paintItems(painter,
                            myItems,
                            width,
                            height,
                            0);
 
+  // End the paint and release the space
   painter->end();
   delete painter;
 }
@@ -55,6 +63,7 @@ void PauseWidget::dealMoved(QPointF mousePos, Qt::MouseButton button){}
 
 void PauseWidget::dealReleased(QPointF mousePos, Qt::MouseButton button)
 {
+  // Exit
   emit resume();
   emit giveControlTo(NULL, true);
   delete this;
@@ -63,6 +72,7 @@ void PauseWidget::dealReleased(QPointF mousePos, Qt::MouseButton button)
 
 PauseWidget::~PauseWidget()
 {
+  // Release the space
   for (int i = 0;i < myItems.size();++i)
     delete myItems[i];
 }

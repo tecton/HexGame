@@ -1,21 +1,29 @@
+/*
+** A class to show the reset widget.
+*/
+
 #ifndef RESETWIDGET_H
 #define RESETWIDGET_H
 
+// File must include
 #include "abstractpixmapwidget.h"
 #include <QVector>
 
+// Forward declaration
 class AbstractItem;
 
 class ResetWidget : public AbstractPixmapWidget
 {
   Q_OBJECT
 public:
+  // Constructor
   ResetWidget();
+
+  // Destructor
   ~ResetWidget();
 
   // Functions most overloaded
   virtual void makePixmap(QPixmap& pixmap, int width, int height);
-//  virtual void init();
   virtual void makeBasicPixmap(QPixmap& pixmap, int width, int height);
   virtual void addEffect(QPixmap& pixmap, int width, int height);
   virtual QPointF toScene(double xRate, double yRate);
@@ -25,12 +33,20 @@ public:
   virtual void getForcus(){}
 
 private:
-  AbstractItem *itemAtPressPos;
+  // Items of the game
   AbstractItem *confirmItem;
   AbstractItem *cancelItem;
+
+  // A vector stores the items,
+  // used to paint and release the space
   QVector<AbstractItem *> myItems;
 
+  // A value records the item at the
+  // position which user press
+  AbstractItem *itemAtPressPos;
+
 signals:
+  // Two signals to show the result
   void confirm();
   void cancel();
 };

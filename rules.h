@@ -1,3 +1,7 @@
+/*
+** Classes of rules may be used in a game, nothing needed to be explained here.
+*/
+
 #ifndef RULES_H
 #define RULES_H
 
@@ -77,4 +81,5 @@ class SwapPuzzleGameRule : public PuzzleGameRule
 public:
   virtual bool gestureAllowed(AbstractRule::Gesture gesture);
 };
+
 #endif // RULES_H

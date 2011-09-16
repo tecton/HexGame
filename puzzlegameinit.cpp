@@ -9,8 +9,11 @@ RotatePuzzleGame* PuzzleGameInit::initRotatePuzzleGame(int index,
                                                        int type,
                                                        int minSteps)
 {
+  // Two arrays to store infomation of the start state and end state
   int *ballIndex = new int [61];
   int *toBeIndex = new int [61];
+
+  // Calculate the file name
   QString filename = ":/puzzlegames/";
 //  if (type == 0)
 //    filename = ":/puzzlegames/exchange";
@@ -39,8 +42,9 @@ RotatePuzzleGame* PuzzleGameInit::initRotatePuzzleGame(int index,
     filename += "lock_plus";
     break;
   }
-
   filename = QObject::tr("%1%2").arg(filename).arg(index + 1);
+
+  // Read the data of the balls from the file
   QFile file(filename);
   if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
     return NULL;
@@ -53,9 +57,14 @@ RotatePuzzleGame* PuzzleGameInit::initRotatePuzzleGame(int index,
   {
     in >> toBeIndex[i];
   }
+
+  // Create the game
   RotatePuzzleGame *puzzleGame = new RotatePuzzleGame(ballIndex, toBeIndex,
                                                       index, type, minSteps);
+
+  // Release space
   delete ballIndex;
   delete toBeIndex;
+
   return puzzleGame;
 }
