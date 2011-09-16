@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/">
+        <file>commonsounds/1.wav</file>
+        <file>commonsounds/2.wav</file>
+    </qresource>
+</RCC>

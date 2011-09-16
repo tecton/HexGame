@@ -80,4 +80,5 @@ HEADERS  += ball.h \
 
 RESOURCES += \
     images.qrc \
-    puzzlegames.qrc
+    puzzlegames.qrc \
+    sounds.qrc
