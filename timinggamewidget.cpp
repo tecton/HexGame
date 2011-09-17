@@ -26,14 +26,20 @@
 TimingGameWidget::TimingGameWidget(AbstractRule::Gesture gesture) :
     frameCount(0)
 {
+  // Create the rule
   if (gesture == AbstractRule::Swap)
     rule = new SwapTimingGameRule();
   else
     rule = new RotateTimingGameRule();
+
+  // Create the gameboard info
   gameboardInfo = new ThirtySevenGameBoardInfo();
 
-  //TimingGameWidgetSavedInfo savedInfo = readSaved();
+  // Create the controller
   controller = new CoreController(rule, gameboardInfo, NULL);
+
+  // Move the balls to the correct position
+  // and avoid elimination at the beginning
   controller->fillAllBlanks();
   for (int i = 0;i < 100;++i)
     controller->advance();
@@ -47,6 +53,7 @@ TimingGameWidget::TimingGameWidget(AbstractRule::Gesture gesture) :
                                             controller,
                                             effectPainter);
 
+  // Create the items and initialize them
   hightestScore = new IntegerItem();
   hightestScore->setPos(QPointF(0.1, 0.1));
   hightestScore->setValue(OtherGameInit::getHighest(getIndex()));
@@ -92,8 +99,10 @@ TimingGameWidget::TimingGameWidget(AbstractRule::Gesture gesture) :
   exitItem->setPos(QPointF(0.1, 0.9));
   myItems.push_back(exitItem);
 
+  // No items was chosen
   itemAtPressPos = NULL;
 
+  // Connect signals and slots
   connect(controller,
           SIGNAL(stableEliminateTested(Connections)),
           this,
@@ -107,6 +116,7 @@ TimingGameWidget::TimingGameWidget(AbstractRule::Gesture gesture) :
           this,
           SLOT(eliminated(int)));
 
+  // Create the timers and connect signals and slots
   t = new QTimer();
   t->setInterval(75);
   connect(t, SIGNAL(timeout()), this, SLOT(advance()));
@@ -124,9 +134,11 @@ void TimingGameWidget::makePixmap(QPixmap& pixmap, int width, int height)
 
 TimingGameWidget::~TimingGameWidget()
 {
+  // Stop the timer
   t->stop();
-  delete t;
   oneSecondTimer->stop();
+  // Release the space
+  delete t;
   delete oneSecondTimer;
   for (int i = 0;i < myItems.size();++i)
     delete myItems[i];
@@ -137,20 +149,27 @@ TimingGameWidget::~TimingGameWidget()
   delete effectPainter;
 }
 
-//void TimingGameWidget::init() //
-//}
-
 void TimingGameWidget::makeBasicPixmap(QPixmap& pixmap, int width, int height)
 {
   pixmap = QPixmap(width, height);
+
+  // Fill the pixmap with black background
   pixmap.fill(Qt::black);
+
+  // Get the painter
   QPainter *painter = new QPainter(&pixmap);
+
+  // Get the balls
   Ball **balls = controller->balls;
+
+  // Paint the background
   BasicPainter::paintBackGround(BasicPainter::Game37,
                                 painter,
                                 width,
                                 height,
                                 frameCount);
+
+  // Paint the basic balls
   BasicPainter::paintBasicBalls(gameboardInfo,
                                 balls,
                                 gameboardInfo->totalBallCounts(),
@@ -158,18 +177,25 @@ void TimingGameWidget::makeBasicPixmap(QPixmap& pixmap, int width, int height)
                                 width * 1.0 / gameboardInfo->width(),
                                 height * 1.0 / gameboardInfo->height(),
                                 frameCount);
+
+  // Paint the items
   BasicPainter::paintItems(painter,
                            myItems,
                            width,
                            height,
                            frameCount);
+
+  // End the paint and release the space
   painter->end();
   delete painter;
 }
 
 void TimingGameWidget::addEffect(QPixmap& pixmap, int width, int height)
 {
+  // Get the painter
   QPainter *painter = new QPainter(&pixmap);
+
+  // Calculte the bonus hint and show it
   QPointF pos = currentPos;
   pos.setX(currentPos.x() * width / gameboardInfo->width());
   pos.setY(currentPos.y() * height / gameboardInfo->height());
@@ -191,13 +217,16 @@ void TimingGameWidget::addEffect(QPixmap& pixmap, int width, int height)
     }
   }
 
+  // Paint the effects
   effectPainter->paint(painter,
                        width * 1.0 / gameboardInfo->width(),
                        height * 1.0 / gameboardInfo->height());
 
-
+  // End the paint and release the space
   painter->end();
   delete painter;
+
+  // Advance the effect painter
   effectPainter->advance();
 }
 
@@ -207,14 +236,12 @@ QPointF TimingGameWidget::toScene(double xRate, double yRate)
                  yRate * gameboardInfo->height());
 }
 
-//TimingGameWidgetSavedInfo TimingGameWidget::readSaved()
-//{
-
-//}
-
 void TimingGameWidget::showHint()
 {
+  // Get the index of the hint
   int hintOnBoard = controller->hint();
+
+  // Show the hint
   effectPainter->hintAt(gameboardInfo->centerPositionOfIndex(hintOnBoard),
                         rule->gestureAllowed(AbstractRule::Rotate));
 }
@@ -224,8 +251,12 @@ void TimingGameWidget::gameOver()
   // Add sound effect
   PublicGameSounds::addSound(PublicGameSounds::GameOver);
 
+  // Test the highest score
   OtherGameInit::testHighest(getIndex(), currentScore->getValue());
-  GameOverWidget *w = new GameOverWidget(getIndex(), currentScore->getValue());
+
+  // Create the game over widget and give control to it
+  GameOverWidget *w = new GameOverWidget(getIndex(),
+                                         currentScore->getValue());
   emit giveControlTo(w, true);
   delete this;
 }
@@ -238,6 +269,7 @@ void TimingGameWidget::quitGame()
 
 void TimingGameWidget::dealPressed(QPointF mousePos, Qt::MouseButton button)
 {
+  // Choose the correct item at press position
   currentPos = mousePos;
   if (distanceOfTwoPoints(mousePos,
                           toScene(flame->getPos().x(),
@@ -266,19 +298,27 @@ void TimingGameWidget::dealPressed(QPointF mousePos, Qt::MouseButton button)
   else
     itemAtPressPos = NULL;
 
-
+  // Quit if it's a right button
+  // May be abandoned later
   if (button == Qt::RightButton)
   {
     quitGame();
     return;
   }
+
+  // Let the gesture controller to deal the press event
   gestureController->dealPressed(mousePos);
 }
 
 void TimingGameWidget::dealMoved(QPointF mousePos, Qt::MouseButton button)
 {
+  // Record the current position
   currentPos = mousePos;
+
+  // Clear user moving elimination hints
   effectPainter->clearUserMovingEliminationHints();
+
+  // Let the gesture controller to deal the move event
   gestureController->dealMoved(mousePos);
 }
 
@@ -294,9 +334,14 @@ void TimingGameWidget::dealReleased(QPointF mousePos, Qt::MouseButton button)
         // Add sound effect
         PublicGameSounds::addSound(PublicGameSounds::UseFlame);
 
+        // Tell the controller to eliminate the balls
         controller->flameAt(index);
+
+        // Add effects to effect painter
         effectPainter->explodeAt(index);
         effectPainter->flash();
+
+        // Minus the value of the flame
         flame->minusOne();
       }
     }
@@ -308,9 +353,14 @@ void TimingGameWidget::dealReleased(QPointF mousePos, Qt::MouseButton button)
         // Add sound effect
         PublicGameSounds::addSound(PublicGameSounds::UseStar);
 
+        // Tell the controller to eliminate the balls
         controller->starAt(index);
-        effectPainter->lightningAt(index/*, directions*/);
+
+        // Add effects to effect painter
+        effectPainter->lightningAt(index);
         effectPainter->flash();
+
+        // Minus the value of the flame
         star->minusOne();
       }
     }
@@ -319,8 +369,11 @@ void TimingGameWidget::dealReleased(QPointF mousePos, Qt::MouseButton button)
                                  toScene(hint->getPos().x(),
                                          hint->getPos().y())) < 30)
     {
+      // Reduce the score
       int score = qMax(currentScore->getValue() - 10, 0);
       currentScore->setValue(score);
+
+      // Show the hint
       showHint();
     }
     else if (itemAtPressPos == pauseItem &&
@@ -328,8 +381,11 @@ void TimingGameWidget::dealReleased(QPointF mousePos, Qt::MouseButton button)
                                  toScene(pauseItem->getPos().x(),
                                          pauseItem->getPos().y())) < 30)
     {
+      // Pause
       t->stop();
       oneSecondTimer->stop();
+
+      // Show pause widget
       PauseWidget *w = new PauseWidget();
       connect(w, SIGNAL(resume()), this, SLOT(resume()));
       emit giveControlTo(w, false);
@@ -340,8 +396,11 @@ void TimingGameWidget::dealReleased(QPointF mousePos, Qt::MouseButton button)
                                  toScene(resetItem->getPos().x(),
                                          resetItem->getPos().y())) < 30)
     {
+      // Pause
       t->stop();
       oneSecondTimer->stop();
+
+      // Show reset widget
       ResetWidget *w = new ResetWidget();
       connect(w, SIGNAL(confirm()), this, SLOT(reset()));
       emit giveControlTo(w, false);
@@ -351,27 +410,34 @@ void TimingGameWidget::dealReleased(QPointF mousePos, Qt::MouseButton button)
                                  toScene(exitItem->getPos().x(),
                                          exitItem->getPos().y())) < 30)
     {
+      // Quit game
       quitGame();
       return;
     }
   }
 
+  // Clear user moving elimination hints
   effectPainter->clearUserMovingEliminationHints();
   itemAtPressPos = NULL;
+
+  // Let the gesture controller to deal the release event
   gestureController->dealReleased(mousePos);
 }
 
 void TimingGameWidget::getForcus()
 {
+  // Start the timers
   t->start();
   oneSecondTimer->start();
 }
 
 void TimingGameWidget::advance()
 {
+  // Add the frame count
   ++frameCount;
+
+  // Advance the controller
   controller->advance();
-//  effectPainter->advance();
 }
 
 void TimingGameWidget::eliminated(int count)
@@ -380,7 +446,10 @@ void TimingGameWidget::eliminated(int count)
   if (count > 0)
     PublicGameSounds::addEliminate(count);
 
+  // Set the score
   currentScore->setValue(currentScore->getValue() + count);
+
+  // Reset the highest score if neccessary
   if (currentScore->getValue() > hightestScore->getValue())
   {
     OtherGameInit::testHighest(getIndex(), currentScore->getValue());
@@ -390,6 +459,7 @@ void TimingGameWidget::eliminated(int count)
 
 void TimingGameWidget::dealStableEliminate(Connections connections)
 {
+  // Calculate the bonus
   for (int i = 0;i < gameboardInfo->totalBallCounts();++i)
   {
     QVector<QVector<int> *>& connect = connections.connectionsOfIndex[i];
@@ -422,8 +492,6 @@ void TimingGameWidget::dealStableEliminate(Connections connections)
         // Get a star
         star->addOne();
       }
-      // TODO:BLABLABLA
-
     }
   }
   for (int i = 0;i < connections.connections.size();++i)
@@ -458,6 +526,7 @@ void TimingGameWidget::dealStableEliminate(Connections connections)
 
 void TimingGameWidget::dealUserMovingEliminate(Connections connections)
 {
+  // Add moving elimination hint if neccessary
   if (rule->gestureAllowed(AbstractRule::Rotate))
   {
     effectPainter->clearUserMovingEliminationHints();
@@ -465,7 +534,6 @@ void TimingGameWidget::dealUserMovingEliminate(Connections connections)
     {
       for (int j = 0;j < connections.connections[i]->size();++j)
         effectPainter->userMovingEliminationHintAt(connections.connections[i]->at(j));
-      // TODO:BLABLABLA
     }
   }
 }
@@ -488,7 +556,10 @@ void TimingGameWidget::reset()
 
 void TimingGameWidget::oneSecond()
 {
+  // Set the time
   timeBar->setCurrent(timeBar->getCurrent() - 1);
+
+  // Game over when time up
   if (timeBar->getCurrent() <= 0)
     gameOver();
 
@@ -496,6 +567,7 @@ void TimingGameWidget::oneSecond()
 
 void TimingGameWidget::resume()
 {
+  // Start the timers
   t->start();
   oneSecondTimer->start();
 }
