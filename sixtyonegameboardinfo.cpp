@@ -263,6 +263,25 @@ int SixtyOneGameBoardInfo::leftDownIndex(int index)
   return indexToLeftDown[index];
 }
 
+int indexToFirstInTheChainIndex[] = {
+           26, 26, 26, 26, 26,
+         26, 27, 27, 27, 27, 26,
+       26, 27, 28, 28, 28, 27, 26,
+     26, 27, 28, 29, 29, 28, 27, 26,
+   26, 27, 28, 29, 30, 29, 28, 27, 26,
+     26, 27, 28, 29, 29, 28, 27, 26,
+       26, 27, 28, 28, 28, 27, 26,
+         26, 27, 27, 27, 27, 26,
+           26, 26, 26, 26, 26
+};
+
+int SixtyOneGameBoardInfo::firstOfChain(int index)
+{
+  if (index < 0 || index >= TOTAL_ITEM_NUMBER)
+    return -1;
+  return indexToFirstInTheChainIndex[index];
+}
+
 int indexToLeft[] = {
          -1,  0,  1,  2,  3,
        -1,  5,  6,  7,  8,  9,

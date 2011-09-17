@@ -53,6 +53,9 @@ public:
   virtual int rightDownIndex(int index);
   virtual int leftDownIndex(int index);
 
+  // Index of the first in the chain
+  virtual int firstOfChain(int index);
+
   // Index of the near by position
   virtual int nearbyIndex(int index, int direction);
 

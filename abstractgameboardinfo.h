@@ -82,6 +82,9 @@ public:
   virtual int firstOfLeftDown(int index)=0;
   virtual int lastOfLeftDown(int index)=0;
 
+  // Index of the first in the chain
+  virtual int firstOfChain(int index)=0;
+
   // Inverval between two layers
   virtual double intervalBetweenTwoLayers()=0;
 

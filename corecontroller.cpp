@@ -538,8 +538,7 @@ void CoreController::fillAllBlanks()
     return;
   // Auto rotate at the very beginning
   autoRotate();
-  if (!rule->gameStepAllowed(
-      AbstractRule::FillWithNewBalls))
+  if (!rule->gameStepAllowed(AbstractRule::FillWithNewBalls))
     return;
 
   // Get the indexes which are blank
@@ -551,36 +550,39 @@ void CoreController::fillAllBlanks()
   // Record the indexes locked at this time
   QList <int> lockedIndexes;
 
+  int index;
+
   do
   {
     // Unlock the balls
-    for (QList <int>::Iterator itr = lockedIndexes.begin();
-         itr != lockedIndexes.end();
-         ++itr)
-      if (!balls[*itr])
-        balls[*itr]->setLocked(false);
+    foreach (index, blankIndexes)
+      if (balls[index])
+        balls[index]->setLocked(false);
     lockedIndexes.clear();
 
     // Create the balls
-    for (QList <int>::Iterator itr = blankIndexes.begin();
-         itr != blankIndexes.end();
-         ++itr)
+    foreach (index, blankIndexes)
     {
       // Set the color of te ball and whether it's locked
-      if (!balls[*itr])
-        balls[*itr] = new Ball((Ball::Color)(rand() % 6));
+      if (!balls[index])
+        balls[index] = new Ball((Ball::Color)(rand() % 6));
       else
-        balls[*itr]->setColor((Ball::Color)(rand() % 6));
+        balls[index]->setColor((Ball::Color)(rand() % 6));
       if (!rule->endlessFill())
       {
         bool setToLock = lockedIndexes.size() < 2 &&
                          ((rand() % 100) > 5);
-        balls[*itr]->setLocked(setToLock);
+        balls[index]->setLocked(setToLock);
         if (setToLock)
-          lockedIndexes.push_back(*itr);
+          lockedIndexes.push_back(index);
       }
     }
   } while (false/*rule->endlessFill() && hint() < 0*/);
+
+  // Set the balls to the correct position
+  foreach (index, blankIndexes)
+    balls[index]->setPos(gameBoardInfo->positionOfIndex(
+          gameBoardInfo->firstOfChain(index)));
 
   // Reset the 2 arrays
   for (int i = 0;i < gameBoardInfo->totalBallCounts();++i)
@@ -588,9 +590,6 @@ void CoreController::fillAllBlanks()
     ballsOriginalIndexToCurrentIndex[i] = i;
     ballsCurrentIndexToOriginalIndex[i] = i;
   }
-
-  // Auto rotate at the end
-  autoRotate();
 }
 
 void CoreController::autoRotate()
@@ -611,6 +610,9 @@ void CoreController::autoRotate()
         ++needRotateCount;
         continue;
       }
+
+      if (ball->getState() == Ball::Stable)
+        ball->setPos(gameBoardInfo->positionOfIndex(originalChain.at(j)));
 
       switch (ball->getState())
       {

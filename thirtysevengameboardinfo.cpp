@@ -415,8 +415,8 @@ int ThirtySevenGameBoardInfo::indexOfPosition(int row, int column)
 // The index of the item at the position of the mouse
 int ThirtySevenGameBoardInfo::indexOfMousePosition(QPointF position)
 {
-  position.setX(position.x() + (ITEM_GESTURE_R - ITEM_WIDTH) / 2);
-  position.setY(position.y() + (ITEM_GESTURE_R - ITEM_HEIGHT) / 2);
+  position.setX(position.x() - (ITEM_GESTURE_R - ITEM_WIDTH) / 2);
+  position.setY(position.y() - (ITEM_GESTURE_R - ITEM_HEIGHT) / 2);
   return indexOfPosition(position);
 }
 
@@ -509,6 +509,23 @@ int ThirtySevenGameBoardInfo::lastOfLeftDown(int index)
   if (index < 0 || index >= TOTAL_ITEM_NUMBER)
     return -1;
   return indexToLastLeftDownIndex37[index];
+}
+
+int indexToFirstInTheChainIndex37[] = {
+         15, 15, 15, 15,
+       15, 16, 16, 16, 15,
+     15, 16, 17, 17, 16, 15,
+   15, 16, 17, 18, 17, 16, 15,
+     15, 16, 17, 17, 16, 15,
+       15, 16, 16, 16, 15,
+         15, 15, 15, 15
+};
+
+int ThirtySevenGameBoardInfo::firstOfChain(int index)
+{
+  if (index < 0 || index >= TOTAL_ITEM_NUMBER)
+    return -1;
+  return indexToFirstInTheChainIndex37[index];
 }
 
 // Inverval between two layers
