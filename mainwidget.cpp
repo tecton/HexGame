@@ -120,10 +120,11 @@ void MainWidget::changeControl(AbstractPixmapWidget *target,
 
   // Pop
   if (deleteMySelf)
-  {
     widgets.pop_back();
+
+  // Clear the sound effect
+  if (deleteMySelf && !target)
     PublicGameSounds::clear();
-  }
 
   // Push
   if (target)
