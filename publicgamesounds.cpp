@@ -42,6 +42,9 @@ const static int kEliminateMax = 3;
 
 void PublicGameSounds::tryToReleaseSpace()
 {
+  if (publicGameSounds.size() < 10)
+    return;
+
   // Delete the finished sounds
   MediaObject *mediaObject;
   foreach (mediaObject, publicGameSounds)
