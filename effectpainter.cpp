@@ -191,7 +191,7 @@ public:
                      double yRate)
   {
     // Calculate some values to locate
-    double r = 3 * theGameboardInfo->intervalBetweenTwoLayers() *
+    double r = 3 * theGameboardInfo->ballR() *
                getAge() /
                getLimit();
     QPointF pos2 = scale(pos, xRate, yRate);
@@ -651,14 +651,14 @@ void EffectPainter::paint(QPainter *painter,
   // Paint the effects one by one
   AbstractEffect *effect;
   foreach (effect, agingEffects)
-   effect->paint(gameboardInfo, painter, xRate, yRate);
+    effect->paint(gameboardInfo, painter, xRate, yRate);
 
   foreach (effect, selectionEffects)
     effect->paint(gameboardInfo, painter, xRate, yRate);
 
   foreach (effect, bonusEliminateEffects)
-   effect->paint(gameboardInfo, painter, xRate, yRate);
+    effect->paint(gameboardInfo, painter, xRate, yRate);
 
   foreach (effect, userMovingEliminateEffects)
-   effect->paint(gameboardInfo, painter, xRate, yRate);
+    effect->paint(gameboardInfo, painter, xRate, yRate);
 }

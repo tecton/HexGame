@@ -53,7 +53,7 @@ void GestureController::testGesture(const QPointF& pos)
 
     // Clear
     gestureIndexes.clear();
-    effectPainter->clearEffects();
+    effectPainter->clearSelectionHints();
 
     // If the center is valid
     if (gameboardInfo->canBeRotateCenter(center))
@@ -81,7 +81,7 @@ void GestureController::testGesture(const QPointF& pos)
 
     // Clear
     gestureIndexes.clear();
-    effectPainter->clearEffects();
+    effectPainter->clearSelectionHints();
 
     // If the swap is valid
     if (isNextTo)
@@ -97,7 +97,7 @@ void GestureController::dealPressed(const QPointF& pos)
 {
   // Clear
   gestureIndexes.clear();
-  effectPainter->clearEffects();
+  effectPainter->clearSelectionHints();
 
   // Record the press
   gestureState = ChooseGesture;
@@ -145,5 +145,5 @@ void GestureController::dealReleased(const QPointF& pos)
 
   // Clear
   gestureIndexes.clear();
-  effectPainter->clearEffects();
+  effectPainter->clearSelectionHints();
 }

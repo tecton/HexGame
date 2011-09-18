@@ -75,7 +75,7 @@ void MainWidget::paintEvent(QPaintEvent *event)
 QPointF MainWidget::toScene(QPointF mousePosition)
 {
   double xRate = mousePosition.x() / width();
-  double yRate = mousePosition.y()/ height();
+  double yRate = mousePosition.y() / height();
   return widgets[widgets.size() - 1]->toScene(xRate, yRate);
 }
 
