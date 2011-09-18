@@ -37,9 +37,6 @@ public:
   // Left Top of the item with the index
   virtual QPointF positionOfIndex(int index)=0;
 
-  // Center of the item with the index
-  virtual QPointF centerPositionOfIndex(int index)=0;
-
   // Index of the near by position in 6 directions
   virtual int leftIndex(int index)=0;
   virtual int leftUpIndex(int index)=0;
@@ -70,9 +67,6 @@ public:
 
   // The index of the item at the position of the row and column
   virtual int indexOfPosition(int row, int column)=0;
-
-  // The index of the item at the position of the mouse
-  virtual int indexOfMousePosition(QPointF position)=0;
 
   // Index of the first/last position in 6 directions
   virtual int firstOfRow(int row)=0;

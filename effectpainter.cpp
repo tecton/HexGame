@@ -84,7 +84,7 @@ public:
   {
     // Set the pen
     QPen pen = QPen(QColor(255,  0,  0,150));
-    pen.setWidth(3 * xRate);
+    pen.setWidth(5 * xRate);
     painter->setBrush(QBrush(QColor(255,255,255,0)));
     painter->setPen(pen);
 
@@ -497,7 +497,7 @@ EffectPainter::EffectPainter(
 void EffectPainter::selectAt(int index)
 {
   // Calculate the area
-  QPointF center = gameboardInfo->centerPositionOfIndex(index);
+  QPointF center = gameboardInfo->positionOfIndex(index);
   QPointF leftTop = QPointF(center.x() - gameboardInfo->intervalBetweenTwoLayers(),
                             center.y() - 1.155 * gameboardInfo->intervalBetweenTwoLayers());
   QPointF rightBottom = QPointF(center.x() + gameboardInfo->intervalBetweenTwoLayers(),
@@ -520,7 +520,7 @@ void EffectPainter::clearSelectionHints()
 void EffectPainter::bonusEliminationHintAt(int index)
 {
   // Calculate the area
-  QPointF center = gameboardInfo->centerPositionOfIndex(index);
+  QPointF center = gameboardInfo->positionOfIndex(index);
   QPointF leftTop = QPointF(center.x() - gameboardInfo->intervalBetweenTwoLayers(),
                             center.y() - 1.155 * gameboardInfo->intervalBetweenTwoLayers());
   QPointF rightBottom = QPointF(center.x() + gameboardInfo->intervalBetweenTwoLayers(),
@@ -543,7 +543,7 @@ void EffectPainter::clearBonusEliminationHints()
 void EffectPainter::userMovingEliminationHintAt(int index)
 {
   // Calculate the area
-  QPointF center = gameboardInfo->centerPositionOfIndex(index);
+  QPointF center = gameboardInfo->positionOfIndex(index);
   QPointF leftTop = QPointF(center.x() - gameboardInfo->intervalBetweenTwoLayers(),
                             center.y() - 1.155 * gameboardInfo->intervalBetweenTwoLayers());
   QPointF rightBottom = QPointF(center.x() + gameboardInfo->intervalBetweenTwoLayers(),
@@ -566,20 +566,20 @@ void EffectPainter::clearUserMovingEliminationHints()
 void EffectPainter::explodeAt(int index)
 {
   // Create the effect and record it
-  ExplodeInfo *info = new ExplodeInfo(gameboardInfo->centerPositionOfIndex(index));
+  ExplodeInfo *info = new ExplodeInfo(gameboardInfo->positionOfIndex(index));
   agingEffects.push_back(info);
 }
 
 void EffectPainter::lightningAt(int index/*, QVector<int> directions*/)
 {
-  LightningInfo *info = new LightningInfo(gameboardInfo->centerPositionOfIndex(index));
+  LightningInfo *info = new LightningInfo(gameboardInfo->positionOfIndex(index));
   agingEffects.push_back(info);
 }
 
 void EffectPainter::highlightAt(int index)
 {
   // Calculate the position
-  QPointF center = gameboardInfo->centerPositionOfIndex(index);
+  QPointF center = gameboardInfo->positionOfIndex(index);
 
   // Create the effect and record it
   HighlightInfo *info = new HighlightInfo(center);

@@ -101,7 +101,7 @@ void GestureController::dealPressed(const QPointF& pos)
 
   // Record the press
   gestureState = ChooseGesture;
-  int index = gameboardInfo->indexOfMousePosition(pos);
+  int index = gameboardInfo->indexOfPosition(pos);
   if (index >= 0)
   {
     gestureIndexes.push_back(index);
@@ -116,7 +116,7 @@ void GestureController::dealMoved(const QPointF& pos)
   // Record the move
   if (gestureState == ChooseGesture)
   {
-    int index = gameboardInfo->indexOfMousePosition(pos);
+    int index = gameboardInfo->indexOfPosition(pos);
     if (index >= 0)
     {
       if (gestureIndexes.size() == 0 ||

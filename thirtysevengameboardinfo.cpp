@@ -4,13 +4,10 @@
 #include "gamemath.h"
 
 // The width of the item
-#define ITEM_WIDTH                              60
-
-// The height of the item
-#define ITEM_HEIGHT                             60
+#define ITEM_SIZE                               60
 
 // The width of the item in a gesture
-#define ITEM_GESTURE_R                          50
+#define ITEM_GESTURE_R                          (ITEM_SIZE * 0.8)
 
 // The absolute position of game(I must draw a picture~~~)
 #define LOCATION_GAME_VIEW_X_FROM               0
@@ -18,30 +15,26 @@
 #define LOCATION_GAME_VIEW_X_TO                 1024
 #define LOCATION_GAME_VIEW_Y_TO                 600
 
-#define LOCATION_GAME_BOARD_ITEM_X_FROM         355.0
-#define LOCATION_GAME_BOARD_ITEM_Y_FROM         39.0
-#define LOCATION_GAME_BOARD_ITEM_X_TO           979.0
-#define LOCATION_GAME_BOARD_ITEM_Y_TO           583.0
+#define LOCATION_GAME_BOARD_ITEM_X_FROM         386.0
+#define LOCATION_GAME_BOARD_ITEM_Y_FROM         71.0
+#define LOCATION_GAME_BOARD_ITEM_X_TO           918.0
+#define LOCATION_GAME_BOARD_ITEM_Y_TO           532.0
 
-#define LOCATION_GAME_BOARD_ITEM_X_INTERVAL     (LOCATION_GAME_BOARD_ITEM_X_TO - \
-                                                 LOCATION_GAME_BOARD_ITEM_X_FROM) / \
-                                                 COLUMN_NUMBER
-#define LOCATION_GAME_BOARD_ITEM_Y_INTERVAL     (LOCATION_GAME_BOARD_ITEM_Y_TO - \
-                                                 LOCATION_GAME_BOARD_ITEM_Y_FROM) / \
-                                                 ROW_NUMBER
+#define LOCATION_GAME_BOARD_ITEM_X_INTERVAL     ((LOCATION_GAME_BOARD_ITEM_X_TO - \
+                                                  LOCATION_GAME_BOARD_ITEM_X_FROM) / \
+                                                 (COLUMN_NUMBER - 1))
+#define LOCATION_GAME_BOARD_ITEM_Y_INTERVAL     ((LOCATION_GAME_BOARD_ITEM_Y_TO - \
+                                                  LOCATION_GAME_BOARD_ITEM_Y_FROM) / \
+                                                 (ROW_NUMBER - 1))
 
+// Total chain(circle) number
+#define CHAIN_NUMBER                            4
 // Total item number
 #define TOTAL_ITEM_NUMBER                       37
 // Total row number
-#define ROW_NUMBER                              7
+#define ROW_NUMBER                              (CHAIN_NUMBER * 2 - 1)
 // Total column number
-#define COLUMN_NUMBER                           14
-// Total chain(circle) number
-#define CHAIN_NUMBER                            4
-
-// The offset of the scene and mouse
-#define SCENE_TO_MOUSE_DX                       (ITEM_WIDTH / 2)
-#define SCENE_TO_MOUSE_DY                       (ITEM_HEIGHT / 2)
+#define COLUMN_NUMBER                           (2 * ROW_NUMBER - 1)
 
 // Width of the gameboard
 int ThirtySevenGameBoardInfo::width()
@@ -58,7 +51,7 @@ int ThirtySevenGameBoardInfo::height()
 // Radius of the ball
 double ThirtySevenGameBoardInfo::ballR()
 {
-  return ITEM_WIDTH / 2;
+  return ITEM_SIZE / 2;
 }
 
 // Number of the balls
@@ -112,7 +105,7 @@ int ThirtySevenGameBoardInfo::rowOfIndex(int index)
 }
 
 int itemCountInAChain37[] = {
-  1, 6, 12, 18
+  1,  6, 12, 18
 };
 
 int originalChain37[] = {
@@ -123,8 +116,7 @@ int originalChain37[] = {
 };
 
 
-// Left Top of the item with the index
-
+// Center position of the item with the index
 QVector<QPointF> _positionOfIndex37;
 QPointF ThirtySevenGameBoardInfo::positionOfIndex(int index)
 {
@@ -141,23 +133,12 @@ QPointF ThirtySevenGameBoardInfo::positionOfIndex(int index)
                 r * LOCATION_GAME_BOARD_ITEM_Y_INTERVAL;
       _positionOfIndex37.push_back(QPointF(x, y));
     }
-
   }
   if (index < 0 || index >= TOTAL_ITEM_NUMBER)
     return QPointF(LOCATION_GAME_BOARD_ITEM_X_FROM,
                    LOCATION_GAME_BOARD_ITEM_Y_FROM);
   return _positionOfIndex37[index];
 }
-
-// Center of the item with the index
-QPointF ThirtySevenGameBoardInfo::centerPositionOfIndex(int index)
-{
-  QPointF result = positionOfIndex(index);
-  result.setX(result.x() + ITEM_WIDTH / 2);
-  result.setY(result.y() + ITEM_HEIGHT / 2);
-  return result;
-}
-
 
 // Index of the near by position in 6 directions
 int indexToLeftUp37[] = {
@@ -287,7 +268,7 @@ int ThirtySevenGameBoardInfo::nearbyIndex(int index, int direction)
   }
 }
 
-// The chains to reload items(from inner to outter(我这个是不是拼错了-.-))
+// The chains to reload items(from inner to outter)
 QVector<QVector<int> > _chains37;
 const QVector<QVector<int> >& ThirtySevenGameBoardInfo::chains()
 {
@@ -392,16 +373,18 @@ int positionToIndex37[] = {
 };
 int ThirtySevenGameBoardInfo::indexOfPosition(QPointF position)
 {
-  int c = (position.x() - LOCATION_GAME_BOARD_ITEM_X_FROM) *
-          COLUMN_NUMBER /
-          (LOCATION_GAME_BOARD_ITEM_X_TO - LOCATION_GAME_BOARD_ITEM_X_FROM);
-  int r = (position.y() - LOCATION_GAME_BOARD_ITEM_Y_FROM) *
-          ROW_NUMBER /
-          (LOCATION_GAME_BOARD_ITEM_Y_TO - LOCATION_GAME_BOARD_ITEM_Y_FROM);
-  if (c < 0 || c >= COLUMN_NUMBER || r < 0 || r > ROW_NUMBER)
+  int c = qFloor((position.x() +
+                  LOCATION_GAME_BOARD_ITEM_X_INTERVAL -
+                  LOCATION_GAME_BOARD_ITEM_X_FROM) /
+                 LOCATION_GAME_BOARD_ITEM_X_INTERVAL);
+  int r = qFloor((position.y() +
+                  LOCATION_GAME_BOARD_ITEM_Y_INTERVAL / 2 -
+                  LOCATION_GAME_BOARD_ITEM_Y_FROM) /
+                 LOCATION_GAME_BOARD_ITEM_Y_INTERVAL);
+  if (c < 0 || c > COLUMN_NUMBER || r < 0 || r >= ROW_NUMBER)
     return -1;
-  int index = positionToIndex37[r * COLUMN_NUMBER + c];
-  if (distanceOfTwoPoints(position, centerPositionOfIndex(index)) > ITEM_GESTURE_R)
+  int index = positionToIndex37[r * (COLUMN_NUMBER + 1) + c];
+  if (distanceOfTwoPoints(position, positionOfIndex(index)) > ITEM_GESTURE_R)
     return -1;
   return index;
 }
@@ -410,14 +393,6 @@ int ThirtySevenGameBoardInfo::indexOfPosition(QPointF position)
 int ThirtySevenGameBoardInfo::indexOfPosition(int row, int column)
 {
   return positionToIndex37[row * COLUMN_NUMBER + column];
-}
-
-// The index of the item at the position of the mouse
-int ThirtySevenGameBoardInfo::indexOfMousePosition(QPointF position)
-{
-  position.setX(position.x() - (ITEM_GESTURE_R - ITEM_WIDTH) / 2);
-  position.setY(position.y() - (ITEM_GESTURE_R - ITEM_HEIGHT) / 2);
-  return indexOfPosition(position);
 }
 
 // Index of the first/last position in 6 directions

@@ -4,13 +4,10 @@
 #include "gamemath.h"
 
 // The width of the item
-#define ITEM_WIDTH                              45
-
-// The height of the item
-#define ITEM_HEIGHT                             45
+#define ITEM_SIZE                               45
 
 // The width of the item in a gesture
-#define ITEM_GESTURE_R                          35
+#define ITEM_GESTURE_R                          (ITEM_SIZE * 0.8)
 
 // The absolute position of game(I must draw a picture~~~)
 #define LOCATION_GAME_VIEW_X_FROM               0
@@ -18,30 +15,26 @@
 #define LOCATION_GAME_VIEW_X_TO                 1024
 #define LOCATION_GAME_VIEW_Y_TO                 600
 
-#define LOCATION_GAME_BOARD_ITEM_X_FROM         370
-#define LOCATION_GAME_BOARD_ITEM_Y_FROM         54
-#define LOCATION_GAME_BOARD_ITEM_X_TO           961
-#define LOCATION_GAME_BOARD_ITEM_Y_TO           569
+#define LOCATION_GAME_BOARD_ITEM_X_FROM         392.0
+#define LOCATION_GAME_BOARD_ITEM_Y_FROM         74.0
+#define LOCATION_GAME_BOARD_ITEM_X_TO           914.0
+#define LOCATION_GAME_BOARD_ITEM_Y_TO           529.0
 
-#define LOCATION_GAME_BOARD_ITEM_X_INTERVAL     (LOCATION_GAME_BOARD_ITEM_X_TO - \
-                                                 LOCATION_GAME_BOARD_ITEM_X_FROM) / \
-                                                 COLUMN_NUMBER
-#define LOCATION_GAME_BOARD_ITEM_Y_INTERVAL     (LOCATION_GAME_BOARD_ITEM_Y_TO - \
-                                                 LOCATION_GAME_BOARD_ITEM_Y_FROM) / \
-                                                 ROW_NUMBER
+#define LOCATION_GAME_BOARD_ITEM_X_INTERVAL     ((LOCATION_GAME_BOARD_ITEM_X_TO - \
+                                                  LOCATION_GAME_BOARD_ITEM_X_FROM) / \
+                                                 (COLUMN_NUMBER - 1))
+#define LOCATION_GAME_BOARD_ITEM_Y_INTERVAL     ((LOCATION_GAME_BOARD_ITEM_Y_TO - \
+                                                  LOCATION_GAME_BOARD_ITEM_Y_FROM) / \
+                                                 (ROW_NUMBER - 1))
 
+// Total chain(circle) number
+#define CHAIN_NUMBER                            5
 // Total item number
 #define TOTAL_ITEM_NUMBER                       61
 // Total row number
-#define ROW_NUMBER                              9
+#define ROW_NUMBER                              (CHAIN_NUMBER * 2 - 1)
 // Total column number
-#define COLUMN_NUMBER                           18
-// Total chain(circle) number
-#define CHAIN_NUMBER                            5
-
-// The offset of the scene and mouse
-#define SCENE_TO_MOUSE_DX                       (ITEM_WIDTH / 2)
-#define SCENE_TO_MOUSE_DY                       (ITEM_HEIGHT / 2)
+#define COLUMN_NUMBER                           (2 * ROW_NUMBER - 1)
 
 // Width of the gameboard
 int SixtyOneGameBoardInfo::width()
@@ -58,7 +51,7 @@ int SixtyOneGameBoardInfo::height()
 // Radius of the ball
 double SixtyOneGameBoardInfo::ballR()
 {
-  return ITEM_WIDTH / 2;
+  return ITEM_SIZE / 2;
 }
 
 // Number of the balls
@@ -72,7 +65,7 @@ int SixtyOneGameBoardInfo::chainNumber()
   return CHAIN_NUMBER;
 }
 
-int col[] = {
+int col61[] = {
           4,  6,  8, 10, 12,
         3,  5,  7,  9, 11, 13,
       2,  4,  6,  8, 10, 12, 14,
@@ -89,11 +82,11 @@ int SixtyOneGameBoardInfo::columnOfIndex(int index)
 {
   if (index < 0 || index >= TOTAL_ITEM_NUMBER)
     return 0;
-  return col[index];
+  return col61[index];
 }
 
 
-int row[] = {
+int row61[] = {
           0,  0,  0,  0,  0,
         1,  1,  1,  1,  1,  1,
       2,  2,  2,  2,  2,  2,  2,
@@ -112,14 +105,14 @@ int SixtyOneGameBoardInfo::rowOfIndex(int index)
 {
   if (index < 0 || index >= TOTAL_ITEM_NUMBER)
     return 0;
-  return row[index];
+  return row61[index];
 }
 
-int itemCountInAChain[] = {
-  1, 6, 12, 18, 24
+int itemCountInAChain61[] = {
+  1,  6, 12, 18, 24
 };
 
-int originalChain[] = {
+int originalChain61[] = {
   30,
   29,             21,             22,             31,             39,             38,
   28, 20,         13, 14,         15, 23,         32, 40,         47, 46,         45, 37,
@@ -128,12 +121,11 @@ int originalChain[] = {
 };
 
 
-// Left Top of the item with the index
-
-QVector<QPointF> _positionOfIndex;
+// Center position of the item with the index
+QVector<QPointF> _positionOfIndex61;
 QPointF SixtyOneGameBoardInfo::positionOfIndex(int index)
 {
-  if (_positionOfIndex.isEmpty())
+  if (_positionOfIndex61.isEmpty())
   {
     for (int i = 0;i < TOTAL_ITEM_NUMBER;++i)
     {
@@ -144,30 +136,18 @@ QPointF SixtyOneGameBoardInfo::positionOfIndex(int index)
                 c * LOCATION_GAME_BOARD_ITEM_X_INTERVAL;
       qreal y = LOCATION_GAME_BOARD_ITEM_Y_FROM +
                 r * LOCATION_GAME_BOARD_ITEM_Y_INTERVAL;
-      _positionOfIndex.push_back(QPointF(x, y));
+      _positionOfIndex61.push_back(QPointF(x, y));
     }
 
   }
   if (index < 0 || index >= TOTAL_ITEM_NUMBER)
     return QPointF(LOCATION_GAME_BOARD_ITEM_X_FROM,
                    LOCATION_GAME_BOARD_ITEM_Y_FROM);
-  return _positionOfIndex[index];
+  return _positionOfIndex61[index];
 }
-
-// Center of the item with the index
-QPointF SixtyOneGameBoardInfo::centerPositionOfIndex(int index)
-{
-  QPointF result = positionOfIndex(index);
-  result.setX(result.x() + ITEM_WIDTH / 2);
-  result.setY(result.y() + ITEM_HEIGHT / 2);
-  return result;
-}
-
-
-
 
 // Index of the near by position in 6 directions
-int indexToLeftUp[] = {
+int indexToLeftUp61[] = {
            -1, -1, -1, -1, -1,
          -1,  0,  1,  2,  3,  4,
        -1, 5,  6,  7,  8,  9, 10,
@@ -183,10 +163,10 @@ int SixtyOneGameBoardInfo::leftUpIndex(int index)
 {
   if (index < 0 || index >= TOTAL_ITEM_NUMBER)
     return -1;
-  return indexToLeftUp[index];
+  return indexToLeftUp61[index];
 }
 
-int indexToRightUp[] = {
+int indexToRightUp61[] = {
            -1, -1, -1, -1, -1,
           0,  1,  2,  3,  4, -1,
         5,  6,  7,  8,  9, 10, -1,
@@ -202,11 +182,11 @@ int SixtyOneGameBoardInfo::rightUpIndex(int index)
 {
   if (index < 0 || index >= TOTAL_ITEM_NUMBER)
     return -1;
-  return indexToRightUp[index];
+  return indexToRightUp61[index];
 }
 
 
-int indexToRight[] = {
+int indexToRight61[] = {
             1,  2,  3,  4, -1,
           6,  7,  8,  9, 10, -1,
        12, 13, 14, 15, 16, 17, -1,
@@ -222,10 +202,10 @@ int SixtyOneGameBoardInfo::rightIndex(int index)
 {
   if (index < 0 || index >= TOTAL_ITEM_NUMBER)
     return -1;
-  return indexToRight[index];
+  return indexToRight61[index];
 }
 
-int indexToRightDown[] = {
+int indexToRightDown61[] = {
             6,  7,  8,  9, 10,
          12, 13, 14, 15, 16, 17,
        19, 20, 21, 22, 23, 24, 25,
@@ -241,10 +221,10 @@ int SixtyOneGameBoardInfo::rightDownIndex(int index)
 {
   if (index < 0 || index >= TOTAL_ITEM_NUMBER)
     return -1;
-  return indexToRightDown[index];
+  return indexToRightDown61[index];
 }
 
-int indexToLeftDown[] = {
+int indexToLeftDown61[] = {
           5,  6,  7,  8,  9,
        11, 12, 13, 14, 15, 16,
      18, 19, 20, 21, 22, 23, 24,
@@ -260,10 +240,10 @@ int SixtyOneGameBoardInfo::leftDownIndex(int index)
 {
   if (index < 0 || index >= TOTAL_ITEM_NUMBER)
     return -1;
-  return indexToLeftDown[index];
+  return indexToLeftDown61[index];
 }
 
-int indexToFirstInTheChainIndex[] = {
+int indexToFirstInTheChainIndex61[] = {
            26, 26, 26, 26, 26,
          26, 27, 27, 27, 27, 26,
        26, 27, 28, 28, 28, 27, 26,
@@ -279,10 +259,10 @@ int SixtyOneGameBoardInfo::firstOfChain(int index)
 {
   if (index < 0 || index >= TOTAL_ITEM_NUMBER)
     return -1;
-  return indexToFirstInTheChainIndex[index];
+  return indexToFirstInTheChainIndex61[index];
 }
 
-int indexToLeft[] = {
+int indexToLeft61[] = {
          -1,  0,  1,  2,  3,
        -1,  5,  6,  7,  8,  9,
      -1, 11, 12, 13, 14, 15, 16,
@@ -298,7 +278,7 @@ int SixtyOneGameBoardInfo::leftIndex(int index)
 {
   if (index < 0 || index >= TOTAL_ITEM_NUMBER)
     return -1;
-  return indexToLeft[index];
+  return indexToLeft61[index];
 }
 
 int SixtyOneGameBoardInfo::nearbyIndex(int index, int direction)
@@ -325,36 +305,36 @@ int SixtyOneGameBoardInfo::nearbyIndex(int index, int direction)
 }
 
 // The chains to reload items(from inner to outter(我这个是不是拼错了-.-))
-QVector<QVector<int> > _chains;
+QVector<QVector<int> > _chains61;
 const QVector<QVector<int> >& SixtyOneGameBoardInfo::chains()
 {
-  if (_chains.isEmpty())
+  if (_chains61.isEmpty())
   {
     int currentIndexInOriginalChain = 0;
     for (int i = 0;i < CHAIN_NUMBER;++i)
     {
       QVector<int> currentChain;
-      for (int j = 0;j < itemCountInAChain[i];++j)
-        currentChain.push_back(originalChain[currentIndexInOriginalChain++]);
-      _chains.push_back(currentChain);
+      for (int j = 0;j < itemCountInAChain61[i];++j)
+        currentChain.push_back(originalChain61[currentIndexInOriginalChain++]);
+      _chains61.push_back(currentChain);
     }
   }
-  return _chains;
+  return _chains61;
 }
 
 
 // Indexes around the index
 // At most 6 indexes
 // The order is left, leftUp, rightUp, right, rightDown, leftDown
-QVector<QVector<int> > _chainAroundIndex;
+QVector<QVector<int> > _chainAroundIndex61;
 QVector<int> SixtyOneGameBoardInfo::chainAroundIndex(int index)
 {
   if (index < 0 || index >= TOTAL_ITEM_NUMBER)
     return QVector<int>();
-  if (_chainAroundIndex.isEmpty())
+  if (_chainAroundIndex61.isEmpty())
     for (int i = 0;i < TOTAL_ITEM_NUMBER;++i)
-      _chainAroundIndex.push_back(QVector<int>());
-  if (_chainAroundIndex[index].isEmpty())
+      _chainAroundIndex61.push_back(QVector<int>());
+  if (_chainAroundIndex61[index].isEmpty())
   {
     QVector<int> result;
     int tmp = leftUpIndex(index);
@@ -375,14 +355,14 @@ QVector<int> SixtyOneGameBoardInfo::chainAroundIndex(int index)
     tmp = leftIndex(index);
     if (tmp >= 0)
       result.push_back(tmp);
-    _chainAroundIndex[index] = result;
+    _chainAroundIndex61[index] = result;
   }
-  return _chainAroundIndex[index];
+  return _chainAroundIndex61[index];
 }
 
 
 // Whether the index can be a center to rotate
-int indexToCanBeRotateCenter[] = {
+int indexToCanBeRotateCenter61[] = {
             0,  0,  0,  0,  0,
           0,  1,  1,  1,  1,  0,
         0,  1,  1,  1,  1,  1,  0,
@@ -398,11 +378,11 @@ bool SixtyOneGameBoardInfo::canBeRotateCenter(int index)
 {
   if (index < 0 || index >= TOTAL_ITEM_NUMBER)
     return false;
-  return indexToCanBeRotateCenter[index] == 1;
+  return indexToCanBeRotateCenter61[index] == 1;
 }
 
 // Whether the index is a joint of the chains(circles)
-int indexToIsJoint[] = {
+int indexToIsJoint61[] = {
           1,  0,  0,  0,  1,
         0,  1,  0,  0,  1,  0,
       0,  0,  1,  0,  1,  0,  0,
@@ -417,11 +397,11 @@ bool SixtyOneGameBoardInfo::isJoint(int index)
 {
   if (index < 0 || index >= TOTAL_ITEM_NUMBER)
     return false;
-  return indexToIsJoint[index];
+  return indexToIsJoint61[index];
 }
 
 // The index of the item at the position of the scene
-int positionToIndex[] = {
+int positionToIndex61[] = {
   -1, -1, -1, -1,  0,  0,  1,  1,  2,  2,  3,  3,  4,  4, -1, -1, -1, -1,
   -1, -1, -1,  5,  5,  6,  6,  7,  7,  8,  8,  9,  9, 10, 10, -1, -1, -1,
   -1, -1, 11, 11, 12, 12, 13, 13, 14, 14, 15, 15, 16, 16, 17, 17, -1, -1,
@@ -434,16 +414,18 @@ int positionToIndex[] = {
 };
 int SixtyOneGameBoardInfo::indexOfPosition(QPointF position)
 {
-  int c = (position.x() - LOCATION_GAME_BOARD_ITEM_X_FROM) *
-          COLUMN_NUMBER /
-          (LOCATION_GAME_BOARD_ITEM_X_TO - LOCATION_GAME_BOARD_ITEM_X_FROM);
-  int r = (position.y() - LOCATION_GAME_BOARD_ITEM_Y_FROM) *
-          ROW_NUMBER /
-          (LOCATION_GAME_BOARD_ITEM_Y_TO - LOCATION_GAME_BOARD_ITEM_Y_FROM);
-  if (c < 0 || c >= COLUMN_NUMBER || r < 0 || r > ROW_NUMBER)
+  int c = qFloor((position.x() +
+                  LOCATION_GAME_BOARD_ITEM_X_INTERVAL -
+                  LOCATION_GAME_BOARD_ITEM_X_FROM) /
+                 LOCATION_GAME_BOARD_ITEM_X_INTERVAL);
+  int r = qFloor((position.y() +
+                  LOCATION_GAME_BOARD_ITEM_Y_INTERVAL / 2 -
+                  LOCATION_GAME_BOARD_ITEM_Y_FROM) /
+                 LOCATION_GAME_BOARD_ITEM_Y_INTERVAL);
+  if (c < 0 || c > COLUMN_NUMBER || r < 0 || r >= ROW_NUMBER)
     return -1;
-  int index = positionToIndex[r * COLUMN_NUMBER + c];
-  if (distanceOfTwoPoints(position, centerPositionOfIndex(index)) > ITEM_GESTURE_R)
+  int index = positionToIndex61[r * (COLUMN_NUMBER + 1) + c];
+  if (distanceOfTwoPoints(position, positionOfIndex(index)) > ITEM_GESTURE_R)
     return -1;
   return index;
 }
@@ -451,23 +433,15 @@ int SixtyOneGameBoardInfo::indexOfPosition(QPointF position)
 // The index of the item at the position of the row and column
 int SixtyOneGameBoardInfo::indexOfPosition(int row, int column)
 {
-  return positionToIndex[row * COLUMN_NUMBER + column];
-}
-
-// The index of the item at the position of the mouse
-int SixtyOneGameBoardInfo::indexOfMousePosition(QPointF position)
-{
-  position.setX(position.x() + (ITEM_GESTURE_R - ITEM_WIDTH) / 2);
-  position.setY(position.y() + (ITEM_GESTURE_R - ITEM_HEIGHT) / 2);
-  return indexOfPosition(position);
+  return positionToIndex61[row * COLUMN_NUMBER + column];
 }
 
 // Index of the first/last position in 6 directions
-int rowToFirstIndex[] = {
+int rowToFirstIndex61[] = {
   0,  5, 11, 18, 26, 35, 43, 50, 56
 };
 
-int rowToLastIndex[] = {
+int rowToLastIndex61[] = {
   4, 10, 17, 25, 34, 42, 49, 55, 60
 };
 
@@ -475,17 +449,17 @@ int SixtyOneGameBoardInfo::firstOfRow(int row)
 {
   if (row < 0 && row >= ROW_NUMBER)
     return -1;
-  return rowToFirstIndex[row];
+  return rowToFirstIndex61[row];
 }
 
 int SixtyOneGameBoardInfo::lastOfRow(int row)
 {
   if (row < 0 && row >= ROW_NUMBER)
     return -1;
-  return rowToLastIndex[row];
+  return rowToLastIndex61[row];
 }
 
-int indexToFirstLeftUpIndex[] = {
+int indexToFirstLeftUpIndex61[] = {
             0,  1,  2,  3,  4,
           5,  0,  1,  2,  3,  4,
        11,  5,  0,  1,  2,  3,  4,
@@ -501,10 +475,10 @@ int SixtyOneGameBoardInfo::firstOfLeftUp(int index)
 {
   if (index < 0 || index >= TOTAL_ITEM_NUMBER)
     return -1;
-  return indexToFirstLeftUpIndex[index];
+  return indexToFirstLeftUpIndex61[index];
 }
 
-int indexToLastLeftUpIndex[] = {
+int indexToLastLeftUpIndex61[] = {
            60, 55, 49, 42, 34,
          59, 60, 55, 49, 42, 34,
        58, 59, 60, 55, 49, 42, 34,
@@ -516,7 +490,7 @@ int indexToLastLeftUpIndex[] = {
            56, 57, 58, 59, 60
 };
 
-int indexToFirstLeftDownIndex[] = {
+int indexToFirstLeftDownIndex61[] = {
            26, 35, 43, 50, 56,
          26, 35, 43, 50, 56, 57,
        26, 35, 43, 50, 56, 57, 58,
@@ -532,17 +506,17 @@ int SixtyOneGameBoardInfo::firstOfLeftDown(int index)
 {
   if (index < 0 || index >= TOTAL_ITEM_NUMBER)
     return -1;
-  return indexToFirstLeftDownIndex[index];
+  return indexToFirstLeftDownIndex61[index];
 }
 
 int SixtyOneGameBoardInfo::lastOfLeftUp(int index)
 {
   if (index < 0 || index >= TOTAL_ITEM_NUMBER)
     return -1;
-  return indexToLastLeftUpIndex[index];
+  return indexToLastLeftUpIndex61[index];
 }
 
-int indexToLastLeftDownIndex[] = {
+int indexToLastLeftDownIndex61[] = {
             0,  1,  2,  3,  4,
           0,  1,  2,  3,  4, 10,
         0,  1,  2,  3,  4, 10, 17,
@@ -558,7 +532,7 @@ int SixtyOneGameBoardInfo::lastOfLeftDown(int index)
 {
   if (index < 0 || index >= TOTAL_ITEM_NUMBER)
     return -1;
-  return indexToLastLeftDownIndex[index];
+  return indexToLastLeftDownIndex61[index];
 }
 
 // Inverval between two layers
@@ -570,5 +544,5 @@ double SixtyOneGameBoardInfo::intervalBetweenTwoLayers()
 // Center position of the gameboard
 QPointF SixtyOneGameBoardInfo::centerPos()
 {
-  return positionOfIndex(30);
+  return positionOfIndex(originalChain61[0]);
 }

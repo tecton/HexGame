@@ -211,7 +211,7 @@ void ClassicGameWidget::addEffect(QPixmap& pixmap,
     {
       flame->paintLocatingIcon(painter, pos, frameCount);
       int index =
-          gameboardInfo->indexOfMousePosition(currentPos);
+          gameboardInfo->indexOfPosition(currentPos);
       flame->paintInfluencedArea(index,
                                  gameboardInfo,
                                  effectPainter,
@@ -221,7 +221,7 @@ void ClassicGameWidget::addEffect(QPixmap& pixmap,
     {
       star->paintLocatingIcon(painter, pos, frameCount);
       int index =
-          gameboardInfo->indexOfMousePosition(currentPos);
+          gameboardInfo->indexOfPosition(currentPos);
       star->paintInfluencedArea(index,
                                 gameboardInfo,
                                 effectPainter,
@@ -261,7 +261,7 @@ void ClassicGameWidget::showHint()
   // Show the hint if there is a hint
   if (hintOnBoard >= 0)
     effectPainter->hintAt(
-        gameboardInfo->centerPositionOfIndex(hintOnBoard),
+        gameboardInfo->positionOfIndex(hintOnBoard),
         rule->gestureAllowed(AbstractRule::Rotate));
   else if (flame->getCurrent() > 0)
   // Else if there is a flame
@@ -384,7 +384,7 @@ void ClassicGameWidget::dealReleased(QPointF mousePos,
     if (itemAtPressPos == flame && flame->notEmpty())
     {
       int index =
-          gameboardInfo->indexOfMousePosition(mousePos);
+          gameboardInfo->indexOfPosition(mousePos);
       if (index != -1)
       {
         // Add sound effect
@@ -404,7 +404,7 @@ void ClassicGameWidget::dealReleased(QPointF mousePos,
     else if (itemAtPressPos == star && star->notEmpty())
     {
       int index =
-          gameboardInfo->indexOfMousePosition(mousePos);
+          gameboardInfo->indexOfPosition(mousePos);
       if (index != -1)
       {
         // Add sound effect

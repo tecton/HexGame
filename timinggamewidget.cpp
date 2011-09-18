@@ -206,13 +206,13 @@ void TimingGameWidget::addEffect(QPixmap& pixmap, int width, int height)
     if (itemAtPressPos == flame && flame->notEmpty())
     {
       flame->paintLocatingIcon(painter, pos, frameCount);
-      int index = gameboardInfo->indexOfMousePosition(currentPos);
+      int index = gameboardInfo->indexOfPosition(currentPos);
       flame->paintInfluencedArea(index, gameboardInfo, effectPainter, frameCount);
     }
     else if (itemAtPressPos == star && star->notEmpty())
     {
       star->paintLocatingIcon(painter, pos, frameCount);
-      int index = gameboardInfo->indexOfMousePosition(currentPos);
+      int index = gameboardInfo->indexOfPosition(currentPos);
       star->paintInfluencedArea(index, gameboardInfo, effectPainter, frameCount);
     }
   }
@@ -242,7 +242,7 @@ void TimingGameWidget::showHint()
   int hintOnBoard = controller->hint();
 
   // Show the hint
-  effectPainter->hintAt(gameboardInfo->centerPositionOfIndex(hintOnBoard),
+  effectPainter->hintAt(gameboardInfo->positionOfIndex(hintOnBoard),
                         rule->gestureAllowed(AbstractRule::Rotate));
 }
 
@@ -328,7 +328,7 @@ void TimingGameWidget::dealReleased(QPointF mousePos, Qt::MouseButton button)
   {
     if (itemAtPressPos == flame && flame->notEmpty())
     {
-      int index = gameboardInfo->indexOfMousePosition(mousePos);
+      int index = gameboardInfo->indexOfPosition(mousePos);
       if (index != -1)
       {
         // Add sound effect
@@ -347,7 +347,7 @@ void TimingGameWidget::dealReleased(QPointF mousePos, Qt::MouseButton button)
     }
     else if (itemAtPressPos == star && star->notEmpty())
     {
-      int index = gameboardInfo->indexOfMousePosition(mousePos);
+      int index = gameboardInfo->indexOfPosition(mousePos);
       if (index != -1)
       {
         // Add sound effect

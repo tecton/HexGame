@@ -201,13 +201,10 @@ QVector<QPointF> CoreController::newposUnderPos(
       gestureInfluencedIndexsOriginalPos;
 
   // The position of the center
-  QPointF centerPos =
-      gameBoardInfo->positionOfIndex(rotateCenterIndex);
+  QPointF centerPos = gameBoardInfo->positionOfIndex(rotateCenterIndex);
 
   // The position of the center of the gesture
-  QPointF gestureCenterPos =
-      gameBoardInfo->centerPositionOfIndex(
-          rotateCenterIndex);
+  QPointF gestureCenterPos = centerPos;
 
   // Angles used to calculate the position
   double mouseOriginalA =

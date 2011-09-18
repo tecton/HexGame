@@ -144,7 +144,7 @@ void BasicPainter::paintBasicBalls(AbstractGameBoardInfo *
                    size / p.height() * yRate,
                    pos,
                    true,
-                   false);
+                   true);
 
       // If the ball is locked
       if (balls[i]->getLocked())
@@ -160,7 +160,7 @@ void BasicPainter::paintBasicBalls(AbstractGameBoardInfo *
                      size / p2.height() * yRate * 0.75,
                      pos,
                      true,
-                     false);
+                     true);
       }
     }
   }
@@ -225,7 +225,7 @@ void BasicPainter::paintPuzzleGameBalls
                    1.1,
                    pos,
                    true,
-                   false);
+                   true);
     }
   }
 }
