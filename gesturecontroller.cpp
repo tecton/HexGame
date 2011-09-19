@@ -2,6 +2,7 @@
 
 #include <QPointF>
 #include "abstractgameboardinfo.h"
+#include "ball.h"
 #include "corecontroller.h"
 #include "effectpainter.h"
 
@@ -104,8 +105,17 @@ void GestureController::dealPressed(const QPointF& pos)
   int index = gameboardInfo->indexOfPosition(pos);
   if (index >= 0)
   {
-    gestureIndexes.push_back(index);
-    effectPainter->selectAt(index);
+    if (controller->balls[index] && !controller->balls[index]->getLocked())
+    {
+      gestureIndexes.push_back(index);
+      effectPainter->selectAt(index);
+    }
+    else
+    {
+      // Clear
+      gestureIndexes.clear();
+      effectPainter->clearSelectionHints();
+    }
   }
   else
     gestureState = NoGesture;
@@ -123,8 +133,17 @@ void GestureController::dealMoved(const QPointF& pos)
           (gestureIndexes.size() > 0 &&
            gestureIndexes[gestureIndexes.size() - 1] != index))
       {
-        gestureIndexes.push_back(index);
-        effectPainter->selectAt(index);
+        if (controller->balls[index] && !controller->balls[index]->getLocked())
+        {
+          gestureIndexes.push_back(index);
+          effectPainter->selectAt(index);
+        }
+        else
+        {
+          // Clear
+          gestureIndexes.clear();
+          effectPainter->clearSelectionHints();
+        }
       }
     }
 
