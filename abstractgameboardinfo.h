@@ -13,76 +13,170 @@
 class AbstractGameBoardInfo
 {
 public:
-  // Width of the gameboard
+  /**
+   *@brief Width of the gameboard.
+   *
+   *@return Width of the gameboard.
+   */
   virtual int width()=0;
 
-  // Height of the gameboard
+  /**
+   *@brief Height of the gameboard.
+   *
+   *@return Height of the gameboard.
+   */
   virtual int height()=0;
 
-  // Radius of the ball
+  /**
+   *@brief Radius of the ball.
+   *
+   *@return Radius of the ball.
+   */
   virtual double ballR()=0;
 
-  // Number of the balls
+  /**
+   *@brief Number of the balls.
+   *
+   *@return Number of the balls.
+   */
   virtual int totalBallCounts()=0;
 
-  // Number of chains
+  /**
+   *@brief Number of the chains.
+   *
+   *@return Number of the chains.
+   */
   virtual int chainNumber()=0;
 
-  // The column number of the item with the index
+  /**
+   *@brief The column number of the ball with the index.
+   *
+   * A ball occupies 2 columns.
+   *@return The column number of the ball with the index.
+   */
   virtual int columnOfIndex(int index)=0;
 
-  // The row number of the item with the index
+  /**
+   *@brief The row number of the ball with the index.
+   *
+   *@return The row number of the ball with the index.
+   */
   virtual int rowOfIndex(int index)=0;
 
-  // Left Top of the item with the index
+  /**
+   *@brief The center position of the ball with the index.
+   *
+   *@return The center position of the ball with the index.
+   */
   virtual QPointF positionOfIndex(int index)=0;
 
-  // Index of the near by position in 6 directions
+  //@{
+  /** Index of the near by position in 6 directions. */
   virtual int leftIndex(int index)=0;
   virtual int leftUpIndex(int index)=0;
   virtual int rightUpIndex(int index)=0;
   virtual int rightIndex(int index)=0;
   virtual int rightDownIndex(int index)=0;
   virtual int leftDownIndex(int index)=0;
+  //@}
 
-  // Index of the near by position
+  /**
+   *@brief Index of the near by position with the direction.
+   *
+   * 0 : Left down
+   * 1 : Right down
+   * 2 : Right
+   * 3 : Right up
+   * 4 : Left up
+   * 5 : Left
+   * It's mainly used to calculate the connections, so the order of the
+   * directions is different from other functions.
+   *@return Index of the near by position with the direction.
+   */
   virtual int nearbyIndex(int index, int direction)=0;
 
-  // The chains to reload items(from inner to outter)
+  /**
+   *@brief The chains to reload balls(from inner to outter).
+   *
+   *@return The chains to reload balls(from inner to outter).
+   */
   virtual const QVector<QVector<int> >& chains()=0;
 
-  // Indexes around the index
-  // At most 6 indexes
-  // The order is left, leftUp, rightUp, right, rightDown, leftDown
+  /**
+   *@brief Indexes around the index.
+   *
+   * The order is left, left up, right up, right, right down, left down
+   *@return Indexes around the index.
+   */
   virtual QVector<int> chainAroundIndex(int index)=0;
 
-  // Whether the index can be a center to rotate
+  /**
+   *@brief Whether the index can be a center to rotate.
+   *
+   * In a simple way to explain, whether it's not on the border.
+   * Of course you can make some of the ball not on the border not able to
+   * be a center to rotate according to your needs.
+   *@return Whether the index can be a center to rotate.
+   */
   virtual bool canBeRotateCenter(int index)=0;
 
-  // Whether the index is a joint of the chains(circles)
+  /**
+   *@brief Whether the index is a joint of the chains(in a circle).
+   *
+   * A chain has 6 borders.
+   * When we do the animation to rotate the balls when filling the gameboard,
+   * this function helps to speed up it.
+   *@return Whether the index is a joint of the chains(in a circle).
+   */
   virtual bool isJoint(int index)=0;
 
-  // The index of the item at the position of the scene
+  /**
+   *@brief The index of the ball at the position.
+   *
+   * It is used to locate a ball according to the user's gesture.
+   *@return The index of the ball at the position.
+   */
   virtual int indexOfPosition(QPointF position)=0;
 
-  // The index of the item at the position of the row and column
+  /**
+   *@brief The index of the ball at the position of the row and column.
+   *
+   * Will be used by the "indexOfPosition(QPointF position)" function.
+   *@return The index of the ball at the position of the row and column.
+   */
   virtual int indexOfPosition(int row, int column)=0;
 
-  // Index of the first/last position in 6 directions
+  //@{
+  /** Index of the first/last position in 6 directions. */
   virtual int firstOfRow(int row)=0;
   virtual int lastOfRow(int row)=0;
   virtual int firstOfLeftUp(int index)=0;
   virtual int lastOfLeftUp(int index)=0;
   virtual int firstOfLeftDown(int index)=0;
   virtual int lastOfLeftDown(int index)=0;
+  //@}
 
-  // Index of the first in the chain
+  /**
+   *@brief Index of the first in the chain.
+   *
+   * It is used to know the position the ball is created.
+   *@return Index of the first in the chain.
+   */
   virtual int firstOfChain(int index)=0;
 
-  // Inverval between two layers
+  /**
+   *@brief Inverval between two layers in X direction.
+   *
+   *@return Inverval between two layers in X direction.
+   */
   virtual double intervalBetweenTwoLayers()=0;
 
-  // Center position of the gameboard
+  /**
+   *@brief Center position of the gameboard.
+   *
+   * It is used to know the center of the balls.
+   *@return Center position of the gameboard.
+   */
   virtual QPointF centerPos()=0;
 };
 

@@ -18,30 +18,37 @@ class EffectPainter;
 class AbstractProgressBarItem : public AbstractItem
 {
 public:
-  // Functions to set and get the 3 values
+  //@{
+  /** Set and get the min value of the progress bar. */
   inline void setMin(int v)
   {min = v;}
 
   inline int getMin()
   {return min;}
+  //@}
 
+  //@{
+  /** Set and get the max value of the progress bar. */
   inline void setMax(int v)
   {max = v;}
 
   inline int getMax()
   {return max;}
+  //@}
 
+  //@{
+  /** Set and get the current value of the progress bar. */
   inline void setCurrent(int v)
   {current = v;}
 
   inline int getCurrent()
   {return current;}
+  //@}
 
-  // Function most overloaded(still a pure virtual one)
-  virtual void paint(QPainter *painter,
-                     int width,
-                     int height,
-                     int frame)=0;
+  /**
+   * @brief Function most overloaded(still a pure virtual one).
+   */
+  virtual void paint(QPainter *painter, int width, int height, int frame)=0;
 
 private:
   // 3 key values of a progress bar
@@ -54,14 +61,15 @@ private:
 class VerticalProgressBarItem : public AbstractProgressBarItem
 {
 public:
-  // Constructor
+  /**
+   * @brief Constructor.
+   */
   VerticalProgressBarItem();
 
-  // Function most overloaded
-  virtual void paint(QPainter *painter,
-                     int width,
-                     int height,
-                     int frame);
+  /**
+   * @brief Function most overloaded.
+   */
+  virtual void paint(QPainter *painter, int width, int height, int frame);
 
 private:
   // Pixmaps to do the paint
@@ -73,7 +81,8 @@ private:
 class AbstractBonusItem : public AbstractItem
 {
 public:
-  // Functions to set and get the 2 values
+  //@{
+  /** Set and get the current value of the bonus item. */
   inline void setCurrent(int v)
   {
     if (v <= max && v >= 0)
@@ -82,7 +91,10 @@ public:
 
   inline int getCurrent()
   {return count;}
+  //@}
 
+  //@{
+  /** Set and get the max value of the bonus item. */
   inline void setMax(int v)
   {
     if (v >= 0)
@@ -93,36 +105,58 @@ public:
 
   inline int getMax()
   {return max;}
+  //@}
 
-  // Add one and minus one, may be used frequently
+  /**
+   * @brief Add one and minus one, may be used frequently.
+   */
   inline void addOne()
   {
     if (count < max)
       ++count;
   }
 
+  /**
+   * @brief Minus one and minus one, may be used frequently.
+   */
   inline void minusOne()
   {
     if (count > 0)
       --count;
   }
 
-  // Whether it's not empty
+  /**
+   * @brief Whether it's not empty.
+   */
   inline bool notEmpty()
   {return count != 0;}
 
-  // Function most overloaded(still a pure virtual one)
-  virtual void paint(QPainter *painter,
-                     int width,
-                     int height,
-                     int frame)=0;
+  /**
+   * @brief Function most overloaded(still a pure virtual one).
+   *
+   * @param painter The painter.
+   * @param width The width.
+   * @param height The height.
+   * @param frame The index of the frame to show.
+   */
+  virtual void paint(QPainter *painter, int width, int height, int frame)=0;
 
-  // Paint the icon of the bonus item
+  /**
+   * @brief Paint the icon of the bonus item.
+   *
+   * @param painter The painter.
+   * @param pos The center position of the icon.
+   * @param frame The index of the frame to show.
+   */
   virtual void paintLocatingIcon(QPainter *painter,
+                                 int width,
+                                 int height,
                                  QPointF pos,
                                  int frame)=0;
 
-  // Paint the influenced area of the bonus item
+  /**
+   * @brief Paint the influenced area of the bonus item.
+   */
   virtual void paintInfluencedArea(int index,
                                    AbstractGameBoardInfo *gameBoard,
                                    EffectPainter *effectPainter,
@@ -138,23 +172,24 @@ private:
 class FlameItem : public AbstractBonusItem
 {
 public:
-  // Constructor
+  /**
+   * @brief Constructor.
+   */
   FlameItem();
 
-  // Functions most overloaded
-  virtual void paint(QPainter *painter,
-                     int width,
-                     int height,
-                     int frame);
-
+  //@{
+  /** Functions most overloaded. */
+  virtual void paint(QPainter *painter, int width, int height, int frame);
   virtual void paintLocatingIcon(QPainter *painter,
+                                 int width,
+                                 int height,
                                  QPointF pos,
                                  int frame);
-
   virtual void paintInfluencedArea(int index,
                                    AbstractGameBoardInfo *gameBoard,
                                    EffectPainter *effectPainter,
                                    int frame);
+  //@}
 
 private:
   // The icon of the item
@@ -165,23 +200,24 @@ private:
 class StarItem : public AbstractBonusItem
 {
 public:
-  // Constructor
+  /**
+   * @brief Constructor.
+   */
   StarItem();
 
-  // Functions most overloaded
-  virtual void paint(QPainter *painter,
-                     int width,
-                     int height,
-                     int frame);
-
+  //@{
+  /** Functions most overloaded. */
+  virtual void paint(QPainter *painter, int width, int height, int frame);
   virtual void paintLocatingIcon(QPainter *painter,
+                                 int width,
+                                 int height,
                                  QPointF pos,
                                  int frame);
-
   virtual void paintInfluencedArea(int index,
                                    AbstractGameBoardInfo *gameBoard,
                                    EffectPainter *effectPainter,
                                    int frame);
+  //@}
 
 private:
   // The icon of the item
@@ -192,93 +228,93 @@ private:
 class HintItem : public AbstractItem
 {
 public:
-  // Function most overloaded
-  virtual void paint(QPainter *painter,
-                     int width,
-                     int height,
-                     int frame);
+  /**
+   * @brief Function most overloaded.
+   */
+  virtual void paint(QPainter *painter, int width, int height, int frame);
 };
 
 // A class of an item of a button with "EXIT"
 class ExitItem : public AbstractItem
 {
 public:
-  // Function most overloaded
-  virtual void paint(QPainter *painter,
-                     int width,
-                     int height,
-                     int frame);
+  /**
+   * @brief Function most overloaded.
+   */
+  virtual void paint(QPainter *painter, int width, int height, int frame);
 };
 
 // A class of an item of a button with "RESET"
 class ResetItem : public AbstractItem
 {
 public:
-  // Function most overloaded
-  virtual void paint(QPainter *painter,
-                     int width,
-                     int height,
-                     int frame);
+  /**
+   * @brief Function most overloaded.
+   */
+  virtual void paint(QPainter *painter, int width, int height, int frame);
 };
 
 // A class of an item of a button with "PAUSE"
 class PauseItem : public AbstractItem
 {
 public:
-  // Function most overloaded
-  virtual void paint(QPainter *painter,
-                     int width,
-                     int height,
-                     int frame);
+  /**
+   * @brief Function most overloaded.
+   */
+  virtual void paint(QPainter *painter, int width, int height, int frame);
 };
 
 // A class of an item of a button with "CONFIRM"
 class ConfirmItem : public AbstractItem
 {
 public:
-  // Function most overloaded
-  virtual void paint(QPainter *painter,
-                     int width,
-                     int height,
-                     int frame);
+  /**
+   * @brief Function most overloaded.
+   */
+  virtual void paint(QPainter *painter, int width, int height, int frame);
 };
 
 // A class of an item of a button with "CANCEL"
 class CancelItem : public AbstractItem
 {
 public:
-  // Function most overloaded
-  virtual void paint(QPainter *painter,
-                     int width,
-                     int height,
-                     int frame);
+  /**
+   * @brief Function most overloaded.
+   */
+  virtual void paint(QPainter *painter, int width, int height, int frame);
 };
 
 // A class of an item to show an integer and a string to describe it
 class IntegerItem : public AbstractItem
 {
 public:
-  // Constructor
+  /**
+   * @brief Constructor.
+   */
   IntegerItem();
 
-  // Functions to set and get the 2 values
+  //@{
+  /** Set and get the hint of the item. */
   inline void setHint(QString str)
   {hint = str;}
 
   inline QString getHint()
   {return hint;}
+  //@}
 
+  //@{
+  /** Set and get the value of the item. */
   inline void setValue(int v)
   {value = v;}
 
   inline int getValue()
   {return value;}
+  //@}
 
-  // Function most overloaded
-  virtual void paint(QPainter *painter,
-                     int width,
-                     int height,
-                     int frame);
+  /**
+   * @brief Function most overloaded.
+   */
+  virtual void paint(QPainter *painter, int width, int height, int frame);
 
 private:
   // The background of the item
@@ -295,21 +331,24 @@ private:
 class StringItem : public AbstractItem
 {
 public:
-  // Constructor
+  /**
+   * @brief Constructor.
+   */
   StringItem();
 
-  // Functions to set and get the string
+  //@{
+  /** Set and get the value of the item. */
   inline void setHint(QString str)
   {hint = str;}
 
   inline QString getHint()
   {return hint;}
+  //@}
 
-  // Function most overloaded
-  virtual void paint(QPainter *painter,
-                     int width,
-                     int height,
-                     int frame);
+  /**
+   * @brief Function most overloaded.
+   */
+  virtual void paint(QPainter *painter, int width, int height, int frame);
 
 private:
   // The background of the item

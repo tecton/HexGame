@@ -31,13 +31,18 @@ class TimingGameWidget : public AbstractPixmapWidget
 {
   Q_OBJECT
 public:
-  // Constructor with the gesture
+  /**
+   * @brief Constructor with the gesture.
+   */
   TimingGameWidget(AbstractRule::Gesture gesture);
 
-  // Destructor
+  /**
+   * @brief Destructor.
+   */
   ~TimingGameWidget();
 
-  // Functions most overloaded
+  //@{
+  /** Functions most overloaded. */
   virtual void makePixmap(QPixmap& pixmap,
                           int width,
                           int height);
@@ -55,6 +60,7 @@ public:
   virtual void dealReleased(QPointF mousePos,
                             Qt::MouseButton button);
   virtual void getForcus();
+  //@}
 
 private:
   // Rule of the game

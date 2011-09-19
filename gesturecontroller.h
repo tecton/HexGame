@@ -19,32 +19,42 @@ class EffectPainter;
 class GestureController
 {
 public:
-  // State of the gesture
+  /**
+   * @brief State of the gesture.
+   */
   enum GestureState {NoGesture, ChooseGesture, LocateGesture};
 
-  // Constructor with the rule, the infomation of the gameboard,
-  // the core controller, the effect painter
+  /**
+   * @brief Constructor with the rule, the infomation of the gameboard, the
+   *  core controller, the effect painter.
+   */
   GestureController(AbstractRule *theRule,
                     AbstractGameBoardInfo *theGameBoardInfo,
                     CoreController *theController,
                     EffectPainter *theEffectPainter);
 
-  // 3 functions to deal with the mouse events
-  // Press
-  //   maintain:
-  //     gestureState,
-  //     gestureIndexes
+  /**
+   * @brief Press.
+   *
+   * maintain: gestureState,gestureIndexes
+   */
   void dealPressed(const QPointF& pos);
-  // Move
-  //   if haven't confirm which gesture it is, append _gesture_indexes
-  //   if the gesture is confirmed, set the new positions of each balls
-  //   influenced
+
+  /**
+   * @brief Move.
+   *
+   * If haven't confirm which gesture it is, append _gesture_indexes.
+   * If the gesture is confirmed, set the new positions of each balls
+   * influenced.
+   */
   void dealMoved(const QPointF& pos);
-  // Release
-  //   put balls influenced to correct position
-  //   exam whether it can be put there
-  //   if can then do something
-  //   if not then rollback
+
+  /**
+   * @brief Release.
+   *
+   * Put balls influenced to correct position exam whether it can be put there.
+   * If can then do something, if not then rollback.
+   */
   void dealReleased(const QPointF& pos);
 
 private:

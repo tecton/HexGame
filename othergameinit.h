@@ -32,28 +32,44 @@ public:
 class OtherGameInit
 {
 public:
-  // Init a game with a gesture and type of the game
+  /**
+   * @brief Init a game with a gesture and type of the game.
+   */
   static AbstractPixmapWidget *initOtherGame(AbstractRule::Gesture gesture,
                                              int type);
 
-  // Get the highest score of the game with index given
+  /**
+   * @brief Get the highest score of the game with index given.
+   */
   static int getHighest(int index);
 
-  // Set the highest score of the game with index given
+  /**
+   * @brief Set the highest score of the game with index given.
+   */
   static void setHighest(int index, int score);
 
-  // Test the highest score of the game with index given, may use setHighest
+  /**
+   * @brief Test the highest score of the game with index given, may use
+   *  setHighest.
+   */
   static void testHighest(int index, int score);
 
-  // Get the record of a game with index given
+  /**
+   * @brief Get the record of a game with index given.
+   */
   static OtherGameRecord *loadOtherGame(int index);
 
-  // Save the record of a game with index given and the count of the balls
+  /**
+   * @brief Save the record of a game with index given and the count of the
+   *  balls.
+   */
   static void saveOtherGame(OtherGameRecord *record,
                             int index,
                             int ballCount);
 
-  // Clear the record of a game with index given
+  /**
+   * @brief Clear the record of a game with index given.
+   */
   static void clearGame(int index);
 };
 

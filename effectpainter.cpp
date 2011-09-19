@@ -11,6 +11,8 @@
 #include "gamemath.h"
 #include "pixmapoperations.h"
 
+#define LIGHTNING_WIDTH 60
+
 // An abstract class of effects
 class AbstractEffect
 {
@@ -270,7 +272,13 @@ public:
       gradient.setColorAt(0, QColor(255,255,255,255));
       gradient.setColorAt(1, QColor(255,255,255,100));
       gradient.setSpread(QGradient::ReflectSpread);
-      QPen pen = QPen(QBrush(gradient), 30);
+      int penWidth;
+      if (i == 0)
+        penWidth = LIGHTNING_WIDTH * yRate;
+      else
+        penWidth =  qSqrt(qPow(LIGHTNING_WIDTH * 0.8660 * xRate, 2) +
+                          qPow(LIGHTNING_WIDTH / 2 * xRate, 2));
+      QPen pen = QPen(QBrush(gradient), penWidth);
       painter->setPen(pen);
       QPointF posA = QPointF(pos2.x() + kkx[i] * r, pos2.y() + kky[i] * r);
       QPointF posB = QPointF(pos2.x() - kkx[i] * r, pos2.y() - kky[i] * r);

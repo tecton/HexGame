@@ -22,13 +22,26 @@ class RotatePuzzleGame : public AbstractPixmapWidget
 {
   Q_OBJECT
 public:
+  /**
+   * @brief Constructor.
+   *
+   * @param ballIndex Current color indexes of the balls.
+   * @param tobeIndex Color indexes the balls should be.
+   * @param gameIndex Index of the game.
+   * @param gameType Type of the game.
+   * @param minSteps Minimal steps of the game.
+   */
   RotatePuzzleGame(int ballIndex[], int tobeIndex[],
                    int gameIndex, int gameType, int minSteps);
+
+  /**
+   * @brief Destructor.
+   */
   ~RotatePuzzleGame();
 
-  // Functions most overloaded
+  //@{
+  /** Functions most overloaded. */
   virtual void makePixmap(QPixmap& pixmap, int width, int height);
-//  virtual void init();
   virtual void makeBasicPixmap(QPixmap& pixmap, int width, int height);
   virtual void addEffect(QPixmap& pixmap, int width, int height);
   virtual QPointF toScene(double xRate, double yRate);
@@ -36,11 +49,7 @@ public:
   virtual void dealMoved(QPointF mousePos, Qt::MouseButton button);
   virtual void dealReleased(QPointF mousePos, Qt::MouseButton button);
   virtual void getForcus();
-
-  void zoomIn();
-  void zoomOut();
-
-//  SwapClassicGameSavedInfo readSaved();
+  //@}
 
 private:
   AbstractRule *rule;
@@ -53,7 +62,6 @@ private:
   int *completeIndex;
   int type;
   int index;
-//  Ball **toBeShapeBalls;
 
   IntegerItem *currentSteps;
   IntegerItem *minimalSteps;

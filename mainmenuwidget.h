@@ -15,13 +15,18 @@ class MainMenuWidget : public AbstractPixmapWidget
 {
   Q_OBJECT
 public:
-  // Constructor
+  /**
+   * @brief Constructor.
+   */
   MainMenuWidget();
 
-  // Destructor
+  /**
+   * @brief Destructor.
+   */
   ~MainMenuWidget();
 
-  // Functions most overloaded
+  //@{
+  /** Functions most overloaded. */
   virtual void makePixmap(QPixmap& pixmap, int width, int height);
   virtual void makeBasicPixmap(QPixmap& pixmap, int width, int height);
   virtual void addEffect(QPixmap& pixmap, int width, int height);
@@ -30,6 +35,7 @@ public:
   virtual void dealMoved(QPointF mousePos, Qt::MouseButton button);
   virtual void dealReleased(QPointF mousePos, Qt::MouseButton button);
   virtual void getForcus(){}
+  //@}
 
 private:
   // The timer(currently not used)

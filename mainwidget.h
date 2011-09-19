@@ -15,17 +15,23 @@ class MainWidget : public QWidget
 {
   Q_OBJECT
 public:
-  // Constructor
+  /**
+   * @brief Constructor with the parent.
+   */
   explicit MainWidget(QWidget *parent = 0);
 
-  // The paint event(may be called with a fixed interval)
+  /**
+   * @brief The paint event(may be called with a fixed interval).
+   */
   void paintEvent(QPaintEvent *event);
 
 protected:
-  // 3 kinds of mouse event
+  //@{
+  /** 3 kinds of mouse event. */
   void mousePressEvent(QMouseEvent *event);
   void mouseMoveEvent(QMouseEvent *event);
   void mouseReleaseEvent(QMouseEvent *event);
+  //@}
 
 private:
   // The timer to repaint
@@ -48,7 +54,12 @@ private:
 signals:
 
 public slots:
-  // A slot to change the control of the widgets in the stack
+  /**
+   * @brief A slot to change the control of the widgets in the stack.
+   *
+   * @param target The target to push into the stack(if not NULL).
+   * @param deleteMySelf Whether to pop from the stack.
+   */
   void changeControl(AbstractPixmapWidget *target, bool deleteMySelf);
 };
 

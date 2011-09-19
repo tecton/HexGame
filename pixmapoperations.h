@@ -12,17 +12,22 @@
 // Forward declaration
 class QPainter;
 
-// Init pixmaps of a thing
+/**
+ * @brief Init pixmaps of a thing.
+ */
 void initPixmaps(QString path, QVector<QPixmap>& pixmaps, int& frameCounts);
 
-
-// Init pixmaps of some things
+/**
+ * @brief Init pixmaps of some things.
+ */
 void initPixmaps(int count,
                  const char **paths,
                  QVector<QVector<QPixmap> >& pixmaps,
                  QVector<int>& frameCounts);
 
-// Draw a pixmap with some options
+/**
+ * @brief Draw a pixmap with some options.
+ */
 void drawPixmapAt(QPainter *painter,
                   const QPixmap& pixmap,
                   double xRate,

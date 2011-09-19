@@ -209,7 +209,7 @@ void ClassicGameWidget::addEffect(QPixmap& pixmap,
   {
     if (itemAtPressPos == flame && flame->notEmpty())
     {
-      flame->paintLocatingIcon(painter, pos, frameCount);
+      flame->paintLocatingIcon(painter, width, height, pos, frameCount);
       int index =
           gameboardInfo->indexOfPosition(currentPos);
       flame->paintInfluencedArea(index,
@@ -219,7 +219,7 @@ void ClassicGameWidget::addEffect(QPixmap& pixmap,
     }
     else if (itemAtPressPos == star && star->notEmpty())
     {
-      star->paintLocatingIcon(painter, pos, frameCount);
+      star->paintLocatingIcon(painter, width, height, pos, frameCount);
       int index =
           gameboardInfo->indexOfPosition(currentPos);
       star->paintInfluencedArea(index,

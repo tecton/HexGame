@@ -16,63 +16,89 @@ class Ball
 {
   friend class CoreController;
 public:
-  // Item colors
-  // (must start from 0)
+  /**
+   * @brief Color of the ball.
+   *
+   * Currently there are 8 colors.
+   * @warning Orange and Brown don't have the correct pixmap.
+   */
   enum Color{Red = 0, Blue, Green, Yellow, Purple, White,
              Orange, Brown, BadColor};
 
-  // Item states
-  //   STABLE:
-  //     Item is on a stable position.
-  //   USER_MOVING:
-  //     Item is moved by the user.
-  //   SYSTEM_MOVING:
-  //     Item is moved by the system.
-  //   JUST_CREATED:
-  //     Item has just been created wating for additional
-  //     operations.
+  /**
+   * @brief State of the ball.
+   *
+   * Currently there are 6 states.
+   *   STABLE:
+   *     Item is on a stable position.
+   *   AlmostStable:
+   *     Item will be on a stable position soon.
+   *   USER_MOVING:
+   *     Item is moved by the user.
+   *   UserReleased:
+   *     Item is released by the user.
+   *   SYSTEM_MOVING:
+   *     Item is moved by the system.
+   *   JUST_CREATED:
+   *     Item has just been created wating for additional operations.
+   * @warning AlmostStable aren't used, but you can use it if you turn a
+   * comment in ball.cpp be code.
+   */
   enum State{Stable, AlmostStable, UserMoving,
              UserReleased, SystemMoving, JustCreated};
 
-  // Constructor with the color
+  /**
+   * @brief Constructor with the color.
+   */
   Ball(Ball::Color theColor = Ball::Red);
 
-  // Set the color
+  //@{
+  /** Set and get the color of the ball. */
   inline void setColor(Ball::Color theColor)
   {color = theColor;}
 
-  // Get the color
   inline Ball::Color getColor()
   {return color;}
+  //@}
 
-  // Set the state
+  //@{
+  /** Set and get the state of the ball. */
   inline void setState(Ball::State theState)
   {state = theState;}
 
-  // Get the state
   inline Ball::State getState()
   {return state;}
+  //@}
 
-  // Set whether it's locked
+  //@{
+  /** Set and get whether the ball is locked. */
   inline void setLocked(bool isLocked)
   {locked = isLocked;}
 
-  // Get whether it's locked
   inline bool getLocked()
   {return locked;}
+  //@}
 
-  // Set the position
+  //@{
+  /** Set and get the position of the ball. */
   inline void setPos(QPointF pos)
   {position = pos;}
 
-  // Get the position
   inline QPointF pos()
   {return position;}
+  //@}
 
-  // Advance the ball, may change the position and state
+  /**
+   *@brief Advance the ball, may change the position and state.
+   */
   void advance();
 
-  // Whether two balls have same color
+  /**
+   *@brief Whether two balls have the same color.
+   *
+   *@param anotherBall Pointer of another ball.
+   *@return Whether two balls have the same color.
+   */
   bool sameColor(Ball* anotherBall)
   {return color != BadColor &&
           anotherBall &&

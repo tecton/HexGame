@@ -18,13 +18,18 @@ class StringItem;
 class GameOverWidget : public AbstractPixmapWidget
 {
 public:
-  // Constructor with the index of the game and the score of the game
+  /**
+   * @brief Constructor with the index of the game and the score of the game.
+   */
   GameOverWidget(int gameIndex, int score);
 
-  // Destructor
+  /**
+   * @brief Destructor.
+   */
   ~GameOverWidget();
 
-  // Functions most overloaded
+  //@{
+  /** Functions most overloaded. */
   virtual void makePixmap(QPixmap& pixmap, int width, int height);
   virtual void makeBasicPixmap(QPixmap& pixmap, int width, int height);
   virtual void addEffect(QPixmap& pixmap, int width, int height);
@@ -33,6 +38,7 @@ public:
   virtual void dealMoved(QPointF mousePos, Qt::MouseButton button);
   virtual void dealReleased(QPointF mousePos, Qt::MouseButton button);
   virtual void getForcus(){}
+  //@}
 
 private:
   // The index of the game

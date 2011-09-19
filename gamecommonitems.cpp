@@ -181,16 +181,18 @@ void FlameItem::paint(QPainter *painter,
 }
 
 void FlameItem::paintLocatingIcon(QPainter *painter,
+                                  int width,
+                                  int height,
                                   QPointF pos,
                                   int frame)
 {
   // Paint the icon
   drawPixmapAt(painter,
                p,
-               1,
-               1,
+               1.0 * width / LOGICAL_WIDTH,
+               1.0 * height / LOGICAL_HEIGHT,
                pos,
-               false,
+               true,
                true);
 }
 
@@ -257,16 +259,18 @@ void StarItem::paint(QPainter *painter,
 }
 
 void StarItem::paintLocatingIcon(QPainter *painter,
+                                 int width,
+                                 int height,
                                  QPointF pos,
                                  int frame)
 {
   // Paint the icon
   drawPixmapAt(painter,
                p,
-               1,
-               1,
+               1.0 * width / LOGICAL_WIDTH,
+               1.0 * height / LOGICAL_HEIGHT,
                pos,
-               false,
+               true,
                true);
 }
 

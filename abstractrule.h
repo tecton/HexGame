@@ -8,29 +8,61 @@
 class AbstractRule
 {
 public:
-  // Gestures
+  /**
+   * @brief Gestures
+   *
+   * Currently only 2 gestures supported(The slide gesture was abandoned).
+   */
   enum Gesture{Swap=0/*, Slide*/, Rotate, BadGesture};
 
-  // GameSteps
+  /**
+   * @brief GameSteps
+   *
+   * Currently there are 5 steps of the game.
+   */
   enum GameStep{FillWithNewBalls=0,
                 AutoRotate,
                 RemindElimination,
                 Eliminate,
                 RollBackWhenNoElimination};
 
-  // Eliminations
+  /**
+   * @brief Eliminations
+   *
+   * Currently there are 2 elimination allowed.
+   */
   enum Elimination{ThreeInARow=0, Circle};
 
-  // Whether a gesture is allowed
+  /**
+   *@brief Whether a gesture is allowed.
+   *
+   *@param gesture The gesture.
+   *@return Whether a gesture is allowed.
+   */
   virtual bool gestureAllowed(AbstractRule::Gesture gesture)=0;
 
-  // Whether a step is allowed
+  /**
+   *@brief Whether a step is allowed.
+   *
+   *@param gameStep The step.
+   *@return Whether a step is allowed.
+   */
   virtual bool gameStepAllowed(AbstractRule::GameStep gameStep)=0;
 
-  // Whether an elimination is allowed
+  /**
+   *@brief Whether an elimination is allowed.
+   *
+   *@param elimination The elimination.
+   *@return Whether an elimination is allowed.
+   */
   virtual bool eliminationAllowed(AbstractRule::Elimination elimination)=0;
 
-  // Whether to keep the user not to died
+  /**
+   *@brief Whether to keep the user not to died.
+   *
+   *@return Whether to keep the user not to died.
+   */
+  //
   virtual bool endlessFill()=0;
 };
 

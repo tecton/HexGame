@@ -16,7 +16,9 @@ class QPixmap;
 class AbstractMainMenuItem : public AbstractItem
 {
 public:
-  // Type of the items(not finished yet)
+  /**
+   * @brief Type of the items.
+   */
   enum ItemType{SwapClassicItem=0,
                 RotateClassicItem,
                 SwapEndlessItem,
@@ -27,10 +29,14 @@ public:
                 HelpItem,
                 ExitItem};
 
-  // The function must be overloaded(still pure virtual)
+  /**
+   * @brief Function most overloaded(still a pure virtual one).
+   */
   virtual void paint(QPainter *painter, int width, int height, int frame)=0;
 
-  // A function returns the pixmap of an item
+  /**
+   * @brief A function returns the pixmap of an item.
+   */
   static const QPixmap& pixmap(ItemType type, int frame);
 };
 
@@ -38,11 +44,15 @@ public:
 class MainMenuGameItem : public AbstractMainMenuItem
 {
 public:
-  // Constructor with the type of the item
+  /**
+   * @brief Constructor with the type of the item.
+   */
   MainMenuGameItem(AbstractMainMenuItem::ItemType theType) :
       type(theType) {}
 
-  // The function must be overloaded
+  /**
+   * @brief Function most overloaded.
+   */
   virtual void paint(QPainter *painter, int width, int height, int frame);
 
 private:

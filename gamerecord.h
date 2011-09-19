@@ -11,34 +11,54 @@
 class GameRecord
 {
 public:
-  // Constructor
+  /**
+   * @brief Constructor.
+   */
   GameRecord();
 
-  // Create a file
+  /**
+   * @brief Create a file.
+   */
   bool createFile(const QString &filename, int intCount);
 
-  // Resize a file
+  /**
+   * @brief Resize a file.
+   */
   bool resizeFile(const QString &filename, int intCount);
 
-  // Whether a file exists
+  /**
+   * @brief Whether a file exists.
+   */
   bool exists(const QString &filename);
 
-  // Remove a file
+  /**
+   * @brief Remove a file.
+   */
   bool remove(const QString &filename);
 
-  // Count of integer in the file
+  /**
+   * @brief Count of integer in the file.
+   */
   int sizeOfInt(const QString &filename);
 
-  // Write data
+  /**
+   * @brief Write data.
+   */
   bool writeData(const QString &filename, int pos, int data);
 
-  // Read data
+  /**
+   * @brief Read data.
+   */
   int readData(const QString &filename, int pos);
 
-  // Write data in an array
+  /**
+   * @brief Write data in an array.
+   */
   bool writeDataArr(const QString &filename, int *dataArr, int size);
 
-  // Read data into an array
+  /**
+   * @brief Read data into an array.
+   */
   bool readDataArr(const QString &filename, int *&dataArr, int &size);
 
 private:

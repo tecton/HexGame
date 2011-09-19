@@ -17,11 +17,18 @@ class PauseWidget : public AbstractPixmapWidget
 {
   Q_OBJECT
 public:
-  // Constructor
+  /**
+   * @brief Constructor.
+   */
   PauseWidget();
+
+  /**
+   * @brief Destructor.
+   */
   ~PauseWidget();
 
-  // Functions most overloaded
+  //@{
+  /** Functions most overloaded. */
   virtual void makePixmap(QPixmap& pixmap, int width, int height);
   virtual void makeBasicPixmap(QPixmap& pixmap, int width, int height);
   virtual void addEffect(QPixmap& pixmap, int width, int height);
@@ -30,6 +37,7 @@ public:
   virtual void dealMoved(QPointF mousePos, Qt::MouseButton button);
   virtual void dealReleased(QPointF mousePos, Qt::MouseButton button);
   virtual void getForcus(){}
+  //@}
 
 private:
   // Items of the game

@@ -23,8 +23,10 @@ class CoreController : public QObject
 {
   Q_OBJECT
 public:
-  // Constructor with the rule, the infomation of the
-  // gameboard and the balls
+  /**
+   * @brief Constructor with the rule, the infomation of the gameboard and the
+   * balls.
+   */
   CoreController(AbstractRule *theRule,
                  AbstractGameBoardInfo *theGameBoardInfo,
                  Ball **theBalls = NULL);
@@ -33,49 +35,74 @@ public:
   // hasn't been realized)
 //  void setBalls(Ball **theBalls);
 
-  // Test elimination with balls which are stable
-  Connections testStableEliminate();
-
-  // Test elimination with balls which are stable and balls
-  // which are moved by the user
-  Connections testUserMovingEliminate();
-
-  // Eliminate the balls with the indexs
+  /**
+   * @brief Eliminate the balls with the indexs.
+   */
   void eliminate(const QVector<int>& indexs);
 
-  // Begin a rotate gesture
+  /**
+   * @brief Begin a rotate gesture.
+   */
   void rotateBegin(int theCenterIndex,
                    QPointF theMousePosition);
 
-  // The rotate gesture continues and the balls move with
-  // the mouse
+  /**
+   * @brief The rotate gesture continues and the balls move with the mouse.
+   */
   void rotateTransition(QPointF theMousePosition);
 
-  // End the rotation
+  /**
+   * @brief End the rotation.
+   */
   void rotateEnd();
 
-  // Swap two balls
+  /**
+   * @brief Swap two balls.
+   *
+   * @param from The index of one of the ball.
+   * @param to The index of one of the ball.
+   */
   void swap(int from, int to);
 
-  // Use flame at the ball with the index
+  /**
+   * @brief Use flame at the ball with the index.
+   *
+   * @param index The index of the ball.
+   */
   void flameAt(int index);
 
-  // Use star at the ball with the index
+  /**
+   * @brief Use star at the ball with the index.
+   *
+   * @param index The index of the ball.
+   */
   void starAt(int index);
 
-  // A function to fill all blanks
+  /**
+   * @brief Fill all blanks.
+   */
   void fillAllBlanks();
 
-  // Rotate the gameboard automatically
+  /**
+   * @brief Rotate the gameboard automatically.
+   */
   void autoRotate();
 
-  // Advance the controller
+  /**
+   * @brief Advance the controller.
+   *
+   * @return The index of the key ball.(-1 when no solution)
+   */
   void advance();
 
-  // Returns the hint of the balls
+  /**
+   * @brief The hint of the balls.
+   */
   int hint();
 
-  // The balls
+  /**
+   * @brief The balls.
+   */
   Ball **balls;
 
 private:
@@ -121,6 +148,19 @@ private:
   // Reset ballsCurrentIndexToOriginalIndex and
   //       ballsOriginalIndexToCurrentIndex
   void resetCToOAndOToC();
+
+  /**
+   * @brief Test elimination with balls which are stable.
+   * @return The connections tested.
+   */
+  Connections testStableEliminate();
+
+  /**
+   * @brief Test elimination with balls which are stable and balls which are
+   * moved by the user.
+   * @return The connections tested.
+   */
+  Connections testUserMovingEliminate();
 
   // Realization of "testStableEliminate" and
   //                "testUserMovingEliminate"

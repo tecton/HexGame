@@ -11,7 +11,9 @@
 class Connections
 {
 public:
-  // Construction with the number of the balls
+  /**
+   * @brief Constructor with the number of the balls.
+   */
   Connections(int theBallCount) :
       ballCount(theBallCount),
       connectionsOfIndex(
@@ -21,7 +23,9 @@ public:
       connectionsOfIndex[i].fill(NULL, 10);
   }
 
-  // Construction with another Connection
+  /**
+   * @brief Constructor with another Connection.
+   */
   Connections(const Connections& another) :
       ballCount(another.ballCount),
       connectionsOfIndex(
@@ -50,7 +54,9 @@ public:
     }
   }
 
-  // Destructor
+  /**
+   * @brief Destructor.
+   */
   ~Connections()
   {
     for (int i = 0;i < connections.size();++i)
@@ -58,7 +64,11 @@ public:
     delete [] connectionsOfIndex;
   }
 
-  // Whether a ball is in a chain
+  /**
+   * @brief Whether a ball is in a chain.
+   *
+   * @param index The index of the ball to check.
+   */
   bool isInAChain(int index)
   {
     for (int i = 0;i < 10;++i)
@@ -67,19 +77,26 @@ public:
     return false;
   }
 
-  // Whether a ball is the center of a chain
+  /**
+   * @brief Whether a ball is the center of a chain.
+   *
+   * @param index The index of the ball to check.
+   */
   bool isCenterOfAChain(int index)
   {
     return connectionsOfIndex[index][3];
   }
 
-  // Number of the balls
+  /**
+   * @brief Number of the balls.
+   */
   int ballCount;
 
-  // Connections of each ball
   QVector<QVector<int> *> *connectionsOfIndex;
 
-  // All of the connections
+  /**
+   * @brief All of the connections.
+   */
   QVector<QVector<int> *> connections;
 };
 

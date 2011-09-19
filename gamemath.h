@@ -11,35 +11,65 @@
 // PI
 #define PI                                      3.14159265358979
 
-// Rad to angle
-inline qreal radiansToAngle(qreal r)
-{ return r * 180 / PI;}
-
-// Angle to rad
-inline qreal angleToRadians(qreal a)
-{ return a / 180 * PI;}
-
-// Returns the angle of the point acording to the origin
-// Result should be in [0, 2*PI)
+/**
+ *@brief Returns the angle of the point acording to the origin.
+ *
+ *@param point The point.
+ *@param origin The origin.
+ *@return The angle(in [0, 2*PI)).
+ */
 qreal angle(QPointF point, QPointF origin);
 
-// Calculate the position acording to the angle, radius and origin
+/**
+ *@brief Returns the position acording to the angle, radius and origin.
+ *
+ *@param a The angle.
+ *@param r The radius.
+ *@param origin The origin.
+ *@return The position.
+ */
 QPointF calculatePosition(qreal a, qreal r, QPointF origin);
 
-// When the translate path is ^, suppose that the distance between begin
-// position and end position is 1, inputs the x position, returns the y
-// position(I should draw a picture to show how it works-.-)
+/**
+ *@brief Returns the scale in Y direction in a curve.
+ *
+ * When the translate path is ^, suppose that the distance between begin
+ * position and end position is 1, inputs the x position, returns the y
+ * position(I should draw a picture to show how it works-.-)
+ *@param bridgeX The position in X direction.
+ *@return The position in Y direction.
+ */
 qreal bridgeY(qreal bridgeX);
 
-// Distance of two points
+/**
+ *@brief Distance of two points.
+ *
+ *@param p1 One point.
+ *@param p2 Another point.
+ *@return Distance of two points.
+ */
 qreal distanceOfTwoPoints(QPointF p1, QPointF p2);
 
-// Distance from the center with the angle, helps to calculate the distance
-// from the center and locate the balls on the hexagon
+/**
+ *@brief Distance from the center with the angle in a hexagon.
+ *
+ * Helps to locate the balls.
+ *@param angle The angle.
+ *@param maxR The max radius.
+ *@return Distance of two points.
+ */
 qreal distanceFromTheCenterWithTheAngle(qreal angle, qreal maxR);
 
-// Calculate a new position from the original position and scale rate in 2
-// directions
+/**
+ *@brief Calculate a new position from the original position and scale rate in
+ * 2 directions.
+ *
+ * Point(0,0) will be the origin.
+ *@param originalPos The original position.
+ *@param xRate The scale in X direction.
+ *@param yRate The scale in Y direction.
+ *@return The new point in the new scale.
+ */
 QPointF scale(QPointF originalPos, double xRate, double yRate);
 
 #endif // GAMEMATH_H
