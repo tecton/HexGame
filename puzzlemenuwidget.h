@@ -16,6 +16,7 @@ public:
   PuzzleMenuWidget();
   ~PuzzleMenuWidget();
 
+  // pure functions
   virtual void makePixmap(QPixmap& pixmap, int width, int height);
   virtual void makeBasicPixmap(QPixmap& pixmap, int width, int height);
   virtual void addEffect(QPixmap& pixmap, int width, int height);
@@ -27,10 +28,15 @@ public:
 
 private:
   QTimer *t;
+  // exchange puzzle game item shown on widget
   AbstractPuzzleMenuItem *exchangeItem;
+  // unite puzzle game item shown on widget
   AbstractPuzzleMenuItem *uniteItem;
+  // lock puzzle game item shown on widget
   AbstractPuzzleMenuItem *lockItem;
+  // exit item shown on widget
   AbstractItem *exitItem;
+  // vector to collect all items
   QVector <AbstractItem *> myItems;
   int frameCount;
 

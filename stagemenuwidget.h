@@ -13,6 +13,7 @@ class AbstractStageMenuWidget : public AbstractPixmapWidget
 {
   Q_OBJECT
 public:
+  // similar to other widgets
   virtual void makePixmap(QPixmap& pixmap, int width, int height)=0;
   virtual void makeBasicPixmap(QPixmap& pixmap, int width, int height)=0;
   virtual void addEffect(QPixmap& pixmap, int width, int height)=0;

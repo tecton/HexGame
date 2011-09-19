@@ -15,12 +15,8 @@ RotatePuzzleGame* PuzzleGameInit::initRotatePuzzleGame(int index,
 
   // Calculate the file name
   QString filename = ":/puzzlegames/";
-//  if (type == 0)
-//    filename = ":/puzzlegames/exchange";
-//  if (type == 1)
-//    filename = ":/puzzlegames/unite";
-//  if (type == 2)
-//    filename = ":/puzzlegames/lock_plus";
+
+  // choose which type to load
   switch (type)
   {
   case 0:

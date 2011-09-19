@@ -15,6 +15,7 @@
 PuzzleMenuWidget::PuzzleMenuWidget() :
     frameCount(0)
 {
+  // initialize four items and set position
   exchangeItem = new PuzzleMenuExchangeItem();
   exchangeItem->setPos(QPointF(0.2, 0.45));
 
@@ -27,6 +28,7 @@ PuzzleMenuWidget::PuzzleMenuWidget() :
   exitItem = new ExitItem();
   exitItem->setPos(QPointF(0.5, 0.8));
 
+  // collect them
   myItems.push_back(exchangeItem);
   myItems.push_back(uniteItem);
   myItems.push_back(lockItem);
@@ -83,6 +85,8 @@ void PuzzleMenuWidget::dealPressed(QPointF mousePos, Qt::MouseButton button)
     delete this;
     return;
   }
+  // determine the position where mouse down happens and init
+  // corresponding game
   if (distanceOfTwoPoints(mousePos,
                           toScene(exchangeItem->getPos().x(),
                                   exchangeItem->getPos().y())) < 80)
@@ -108,6 +112,7 @@ void PuzzleMenuWidget::dealPressed(QPointF mousePos, Qt::MouseButton button)
                                toScene(exitItem->getPos().x(),
                                        exitItem->getPos().y())) < 80)
   {
+    // exit and give out control
     emit giveControlTo(NULL, true);
     delete this;
     return;

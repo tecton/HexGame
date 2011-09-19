@@ -16,7 +16,7 @@ class QPixmap;
 class AbstractPuzzleMenuItem : public AbstractItem
 {
 public:
-  // Type of the items(not finished yet)
+  // Type of the items
   enum ItemType{ExchangeItem=0, UniteItem, LockItem};
 
   // The function must be overloaded(still pure virtual)

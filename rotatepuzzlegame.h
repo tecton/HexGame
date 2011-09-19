@@ -22,13 +22,17 @@ class RotatePuzzleGame : public AbstractPixmapWidget
 {
   Q_OBJECT
 public:
+  /* ballIndex is the original balls' index
+   * tobeIndex is the shape of balls' index which you should rotate to be
+   * gameIndex indicates which level of game
+   * gameType indicates which type of game
+   * minSteps is the minimal steps to complete the puzzle */
   RotatePuzzleGame(int ballIndex[], int tobeIndex[],
                    int gameIndex, int gameType, int minSteps);
   ~RotatePuzzleGame();
 
   // Functions most overloaded
   virtual void makePixmap(QPixmap& pixmap, int width, int height);
-//  virtual void init();
   virtual void makeBasicPixmap(QPixmap& pixmap, int width, int height);
   virtual void addEffect(QPixmap& pixmap, int width, int height);
   virtual QPointF toScene(double xRate, double yRate);
@@ -37,12 +41,12 @@ public:
   virtual void dealReleased(QPointF mousePos, Qt::MouseButton button);
   virtual void getForcus();
 
+  // zoom in and out to view the target shape
   void zoomIn();
   void zoomOut();
 
-//  SwapClassicGameSavedInfo readSaved();
-
 private:
+  // similar to other game mode
   AbstractRule *rule;
   SixtyOneGameBoardInfo *gameboardInfo;
   CoreController *controller;
@@ -53,12 +57,14 @@ private:
   int *completeIndex;
   int type;
   int index;
-//  Ball **toBeShapeBalls;
 
+  // hint information
   IntegerItem *currentSteps;
   IntegerItem *minimalSteps;
+  // exit button
   ExitItem *exitItem;
 
+  // collect items
   QVector <AbstractItem *> myItems;
 
   int direction;
