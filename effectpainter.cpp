@@ -255,8 +255,8 @@ public:
     // Calculate some values to locate
     QPointF pos2 = scale(pos, xRate, yRate);
     double r = distanceOfTwoPoints(QPointF(0, 0),
-                                   QPointF(theGameboardInfo->width(),
-                                           theGameboardInfo->height())) *
+                                   QPointF(theGameboardInfo->width() * xRate,
+                                           theGameboardInfo->height() * yRate)) *
                getAge() /
                getLimit() /
                2;
@@ -336,7 +336,7 @@ public:
     painter->setBrush(QBrush(gradient));
 
     // Draw the ellipse
-    painter->drawEllipse(pos2, r, r);
+    painter->drawEllipse(pos2, r * xRate, r * yRate);
   }
 
 private:
@@ -381,7 +381,9 @@ public:
 
     // Set the font and pen
     painter->setPen(QColor(255, 255, 255, 100 + 50 * getAge() / getLimit()));
-    painter->setFont(f);
+    QFont f2 = f;
+    f2.setPointSize(f.pointSize() * xRate);
+    painter->setFont(f2);
 
     // Draw the words
     painter->drawText(pos2, string);
