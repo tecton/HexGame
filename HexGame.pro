@@ -76,7 +76,8 @@ HEADERS  += ball.h \
     pausewidget.h \
     timinggamewidget.h \
     helpwidget.h \
-    publicgamesounds.h
+    publicgamesounds.h \
+    config.h
 
 RESOURCES += \
     images.qrc \

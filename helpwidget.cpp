@@ -61,6 +61,8 @@ void HelpWidget::makeBasicPixmap(
 
   // Get the painter
   QPainter *painter = new QPainter(&pixmap);
+#else
+  painter->fillRect(0,0,width,height,QColor(0,0,0));
 #endif
 
   // The scale of the pixmap

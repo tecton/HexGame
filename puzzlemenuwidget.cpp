@@ -88,8 +88,10 @@ void PuzzleMenuWidget::makeBasicPixmap(
                            height,
                            frameCount);
 
+#ifdef USE_PIXMAP
   painter->end();
   delete painter;
+#endif
 }
 
 void PuzzleMenuWidget::addEffect(

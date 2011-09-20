@@ -55,6 +55,8 @@ void ExchangeStageMenuWidget::makeBasicPixmap(
 
   // Get the painter
   QPainter *painter = new QPainter(&pixmap);
+#else
+  painter->fillRect(0,0,width,height,QColor(0,0,0));
 #endif
 
   BasicPainter::paintItems(painter,
@@ -435,6 +437,8 @@ void UniteStageMenuWidget::makeBasicPixmap(
 
   // Get the painter
   QPainter *painter = new QPainter(&pixmap);
+#else
+  painter->fillRect(0,0,width,height,QColor(0,0,0));
 #endif
 
   BasicPainter::paintItems(painter,
@@ -659,6 +663,8 @@ void LockStageMenuWidget::makeBasicPixmap(
 
   // Get the painter
   QPainter *painter = new QPainter(&pixmap);
+#else
+  painter->fillRect(0,0,width,height,QColor(0,0,0));
 #endif
 
   BasicPainter::paintItems(painter,
