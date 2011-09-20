@@ -20,15 +20,35 @@ PauseWidget::PauseWidget()
   myItems.push_back(pauseHint);
 }
 
-void PauseWidget::makePixmap(QPixmap& pixmap, int width, int height)
+void PauseWidget::makePixmap(
+#ifdef USE_PIXMAP
+      QPixmap& pixmap,
+#else
+      QPainter* painter,
+#endif
+                                   int width,
+                                   int height)
 {
-  makeBasicPixmap(pixmap, width, height);
-  addEffect(pixmap, width, height);
+#ifdef USE_PIXMAP
+      makeBasicPixmap(pixmap, width, height);
+      addEffect(pixmap, width, height);
+#else
+      makeBasicPixmap(painter, width, height);
+      addEffect(painter, width, height);
+#endif
 }
 
 //  void PauseWidget::init();
-void PauseWidget::makeBasicPixmap(QPixmap& pixmap, int width, int height)
+void PauseWidget::makeBasicPixmap(
+#ifdef USE_PIXMAP
+      QPixmap& pixmap,
+#else
+      QPainter* painter,
+#endif
+                                   int width,
+                                   int height)
 {
+#ifdef USE_PIXMAP
   pixmap = QPixmap(width, height);
 
   // Fill the pixmap with black background
@@ -36,6 +56,7 @@ void PauseWidget::makeBasicPixmap(QPixmap& pixmap, int width, int height)
 
   // Get the painter
   QPainter *painter = new QPainter(&pixmap);
+#endif
 
   // Paint the items
   BasicPainter::paintItems(painter,
@@ -44,12 +65,21 @@ void PauseWidget::makeBasicPixmap(QPixmap& pixmap, int width, int height)
                            height,
                            0);
 
+#ifdef USE_PIXMAP
   // End the paint and release the space
   painter->end();
   delete painter;
+#endif
 }
 
-void PauseWidget::addEffect(QPixmap& pixmap, int width, int height){}
+void PauseWidget::addEffect(
+#ifdef USE_PIXMAP
+      QPixmap& pixmap,
+#else
+      QPainter* painter,
+#endif
+                                   int width,
+                                   int height){}
 
 QPointF PauseWidget::toScene(double xRate, double yRate)
 {

@@ -51,14 +51,34 @@ MainMenuWidget::MainMenuWidget()/* :
 //  t->start();
 }
 
-void MainMenuWidget::makePixmap(QPixmap& pixmap, int width, int height)
+void MainMenuWidget::makePixmap(
+#ifdef USE_PIXMAP
+      QPixmap& pixmap,
+#else
+      QPainter* painter,
+#endif
+                                   int width,
+                                   int height)
 {
-  makeBasicPixmap(pixmap, width, height);
-  addEffect(pixmap, width, height);
+#ifdef USE_PIXMAP
+      makeBasicPixmap(pixmap, width, height);
+      addEffect(pixmap, width, height);
+#else
+      makeBasicPixmap(painter, width, height);
+      addEffect(painter, width, height);
+#endif
 }
 
-void MainMenuWidget::makeBasicPixmap(QPixmap& pixmap, int width, int height)
+void MainMenuWidget::makeBasicPixmap(
+#ifdef USE_PIXMAP
+      QPixmap& pixmap,
+#else
+      QPainter* painter,
+#endif
+                                       int width,
+                                       int height)
 {
+#ifdef USE_PIXMAP
   pixmap = QPixmap(width, height);
 
   // Fill the pixmap with black background
@@ -66,6 +86,7 @@ void MainMenuWidget::makeBasicPixmap(QPixmap& pixmap, int width, int height)
 
   // Get the painter
   QPainter *painter = new QPainter(&pixmap);
+#endif
 
   // Paint the background
   BasicPainter::paintBackGround(BasicPainter::MainMenu,
@@ -81,12 +102,21 @@ void MainMenuWidget::makeBasicPixmap(QPixmap& pixmap, int width, int height)
                            height,
                            0/*frameCount*/);
 
+#ifdef USE_PIXMAP
   // End the paint and release the space
   painter->end();
   delete painter;
+#endif
 }
 
-void MainMenuWidget::addEffect(QPixmap& pixmap, int width, int height)
+void MainMenuWidget::addEffect(
+#ifdef USE_PIXMAP
+      QPixmap& pixmap,
+#else
+      QPainter* painter,
+#endif
+                               int width,
+                               int height)
 {
 }
 

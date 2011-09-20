@@ -40,17 +40,43 @@ PuzzleMenuWidget::PuzzleMenuWidget() :
   t->start();
 }
 
-void PuzzleMenuWidget::makePixmap(QPixmap& pixmap, int width, int height)
+void PuzzleMenuWidget::makePixmap(
+#ifdef USE_PIXMAP
+      QPixmap& pixmap,
+#else
+      QPainter* painter,
+#endif
+                                   int width,
+                                   int height)
 {
-  makeBasicPixmap(pixmap, width, height);
-  addEffect(pixmap, width, height);
+#ifdef USE_PIXMAP
+      makeBasicPixmap(pixmap, width, height);
+      addEffect(pixmap, width, height);
+#else
+      makeBasicPixmap(painter, width, height);
+      addEffect(painter, width, height);
+#endif
 }
 
-void PuzzleMenuWidget::makeBasicPixmap(QPixmap& pixmap, int width, int height)
+void PuzzleMenuWidget::makeBasicPixmap(
+#ifdef USE_PIXMAP
+      QPixmap& pixmap,
+#else
+      QPainter* painter,
+#endif
+                                   int width,
+                                   int height)
 {
+#ifdef USE_PIXMAP
   pixmap = QPixmap(width, height);
+
+  // Fill the pixmap with black background
   pixmap.fill(Qt::black);
+
+  // Get the painter
   QPainter *painter = new QPainter(&pixmap);
+#endif
+
   BasicPainter::paintBackGround(BasicPainter::PuzzleMenu,
                                 painter,
                                 width,
@@ -66,7 +92,14 @@ void PuzzleMenuWidget::makeBasicPixmap(QPixmap& pixmap, int width, int height)
   delete painter;
 }
 
-void PuzzleMenuWidget::addEffect(QPixmap& pixmap, int width, int height)
+void PuzzleMenuWidget::addEffect(
+#ifdef USE_PIXMAP
+      QPixmap& pixmap,
+#else
+      QPainter* painter,
+#endif
+                                   int width,
+                                   int height)
 {
 
 }

@@ -126,10 +126,23 @@ TimingGameWidget::TimingGameWidget(AbstractRule::Gesture gesture) :
   connect(oneSecondTimer, SIGNAL(timeout()), this, SLOT(oneSecond()));
 }
 
-void TimingGameWidget::makePixmap(QPixmap& pixmap, int width, int height)
+void TimingGameWidget::makePixmap(
+#ifdef USE_PIXMAP
+      QPixmap& pixmap,
+#else
+      QPainter* painter,
+#endif
+                                   int width,
+                                   int height)
 {
-  makeBasicPixmap(pixmap, width, height);
-  addEffect(pixmap, width, height);
+#ifdef USE_PIXMAP
+      makeBasicPixmap(pixmap, width, height);
+      addEffect(pixmap, width, height);
+#else
+      makeBasicPixmap(painter, width, height);
+      addEffect(painter, width, height);
+#endif
+
 }
 
 TimingGameWidget::~TimingGameWidget()
@@ -149,8 +162,16 @@ TimingGameWidget::~TimingGameWidget()
   delete effectPainter;
 }
 
-void TimingGameWidget::makeBasicPixmap(QPixmap& pixmap, int width, int height)
+void TimingGameWidget::makeBasicPixmap(
+#ifdef USE_PIXMAP
+      QPixmap& pixmap,
+#else
+      QPainter* painter,
+#endif
+                                        int width,
+                                        int height)
 {
+#ifdef USE_PIXMAP
   pixmap = QPixmap(width, height);
 
   // Fill the pixmap with black background
@@ -158,6 +179,7 @@ void TimingGameWidget::makeBasicPixmap(QPixmap& pixmap, int width, int height)
 
   // Get the painter
   QPainter *painter = new QPainter(&pixmap);
+#endif
 
   // Get the balls
   Ball **balls = controller->balls;
@@ -170,13 +192,14 @@ void TimingGameWidget::makeBasicPixmap(QPixmap& pixmap, int width, int height)
                                 frameCount);
 
   // Paint the basic balls
-  BasicPainter::paintBasicBalls(gameboardInfo,
-                                balls,
-                                gameboardInfo->totalBallCounts(),
-                                painter,
-                                width * 1.0 / gameboardInfo->width(),
-                                height * 1.0 / gameboardInfo->height(),
-                                frameCount);
+  BasicPainter::paintBasicBalls
+      (gameboardInfo,
+       balls,
+       gameboardInfo->totalBallCounts(),
+       painter,
+       width * 1.0 / gameboardInfo->width(),
+       height * 1.0 / gameboardInfo->height(),
+       frameCount);
 
   // Paint the items
   BasicPainter::paintItems(painter,
@@ -185,46 +208,74 @@ void TimingGameWidget::makeBasicPixmap(QPixmap& pixmap, int width, int height)
                            height,
                            frameCount);
 
+#ifdef USE_PIXMAP
   // End the paint and release the space
   painter->end();
   delete painter;
+#endif
 }
 
-void TimingGameWidget::addEffect(QPixmap& pixmap, int width, int height)
+void TimingGameWidget::addEffect(
+#ifdef USE_PIXMAP
+      QPixmap& pixmap,
+#else
+      QPainter* painter,
+#endif
+                                  int width,
+                                  int height)
 {
+#ifdef USE_PIXMAP
   // Get the painter
   QPainter *painter = new QPainter(&pixmap);
+#endif
 
   // Calculte the bonus hint and show it
   QPointF pos = currentPos;
-  pos.setX(currentPos.x() * width / gameboardInfo->width());
-  pos.setY(currentPos.y() * height / gameboardInfo->height());
-
+  pos.setX(currentPos.x() *
+           width /
+           gameboardInfo->width());
+  pos.setY(currentPos.y() *
+           height /
+           gameboardInfo->height());
   effectPainter->clearBonusEliminationHints();
   if (itemAtPressPos != NULL)
   {
     if (itemAtPressPos == flame && flame->notEmpty())
     {
       flame->paintLocatingIcon(painter, width, height, pos, frameCount);
-      int index = gameboardInfo->indexOfPosition(currentPos);
-      flame->paintInfluencedArea(index, gameboardInfo, effectPainter, frameCount);
+      int index =
+          gameboardInfo->indexOfPosition(currentPos);
+      flame->paintInfluencedArea(index,
+                                 gameboardInfo,
+                                 effectPainter,
+                                 frameCount);
     }
     else if (itemAtPressPos == star && star->notEmpty())
     {
       star->paintLocatingIcon(painter, width, height, pos, frameCount);
-      int index = gameboardInfo->indexOfPosition(currentPos);
-      star->paintInfluencedArea(index, gameboardInfo, effectPainter, frameCount);
+      int index =
+          gameboardInfo->indexOfPosition(currentPos);
+      star->paintInfluencedArea(index,
+                                gameboardInfo,
+                                effectPainter,
+                                frameCount);
     }
   }
 
   // Paint the effects
   effectPainter->paint(painter,
-                       width * 1.0 / gameboardInfo->width(),
-                       height * 1.0 / gameboardInfo->height());
+                       width *
+                       1.0 /
+                       gameboardInfo->width(),
+                       height *
+                       1.0 /
+                       gameboardInfo->height());
 
+#ifdef USE_PIXMAP
   // End the paint and release the space
   painter->end();
   delete painter;
+#endif
 
   // Advance the effect painter
   effectPainter->advance();
@@ -449,12 +500,12 @@ void TimingGameWidget::eliminated(int count)
   // Set the score
   currentScore->setValue(currentScore->getValue() + count);
 
-  // Reset the highest score if neccessary
-  if (currentScore->getValue() > hightestScore->getValue())
-  {
-    OtherGameInit::testHighest(getIndex(), currentScore->getValue());
-    hightestScore->setValue(currentScore->getValue());
-  }
+//  // Reset the highest score if neccessary
+//  if (currentScore->getValue() > hightestScore->getValue())
+//  {
+//    OtherGameInit::testHighest(getIndex(), currentScore->getValue());
+//    hightestScore->setValue(currentScore->getValue());
+//  }
 }
 
 void TimingGameWidget::dealStableEliminate(Connections connections)

@@ -91,10 +91,23 @@ RotatePuzzleGame::RotatePuzzleGame(int ballIndex[],
     connect(controller, SIGNAL(goodMove()), this, SLOT(successMoved()));
 }
 
-void RotatePuzzleGame::makePixmap(QPixmap& pixmap, int width, int height)
+void RotatePuzzleGame::makePixmap(
+#ifdef USE_PIXMAP
+      QPixmap& pixmap,
+#else
+      QPainter* painter,
+#endif
+                                   int width,
+                                   int height)
 {
-    makeBasicPixmap(pixmap, width, height);
-    addEffect(pixmap, width, height);
+#ifdef USE_PIXMAP
+      makeBasicPixmap(pixmap, width, height);
+      addEffect(pixmap, width, height);
+#else
+      makeBasicPixmap(painter, width, height);
+      addEffect(painter, width, height);
+#endif
+
 }
 
 RotatePuzzleGame::~RotatePuzzleGame()
@@ -112,11 +125,25 @@ RotatePuzzleGame::~RotatePuzzleGame()
 }
 
 
-void RotatePuzzleGame::makeBasicPixmap(QPixmap& pixmap, int width, int height)
+void RotatePuzzleGame::makeBasicPixmap(
+#ifdef USE_PIXMAP
+      QPixmap& pixmap,
+#else
+      QPainter* painter,
+#endif
+                                       int width,
+                                       int height)
 {
-    pixmap = QPixmap(width, height);
-    pixmap.fill(Qt::black);
-    QPainter *painter = new QPainter(&pixmap);
+#ifdef USE_PIXMAP
+  pixmap = QPixmap(width, height);
+
+  // Fill the pixmap with black background
+  pixmap.fill(Qt::black);
+
+  // Get the painter
+  QPainter *painter = new QPainter(&pixmap);
+#endif
+
     Ball **balls = controller->balls;
     BasicPainter::paintBackGround(BasicPainter::Game61,
                                   painter,
@@ -147,18 +174,31 @@ void RotatePuzzleGame::makeBasicPixmap(QPixmap& pixmap, int width, int height)
                                        height * 1.0 / gameboardInfo->height(),
                                        frameCount,
                                        targetSize);
+#ifdef USE_PIXMAP
     painter->end();
     delete painter;
+#endif
 }
 
-void RotatePuzzleGame::addEffect(QPixmap& pixmap, int width, int height)
+void RotatePuzzleGame::addEffect(
+#ifdef USE_PIXMAP
+      QPixmap& pixmap,
+#else
+      QPainter* painter,
+#endif
+                                   int width,
+                                   int height)
 {
+#ifdef USE_PIXMAP
     QPainter *painter = new QPainter(&pixmap);
+#endif
     effectPainter->paint(painter,
                          width * 1.0 / gameboardInfo->width(),
                          height * 1.0 / gameboardInfo->height());
+#ifdef USE_PIXMAP
     painter->end();
     delete painter;
+#endif
 }
 
 QPointF RotatePuzzleGame::toScene(double xRate, double yRate)

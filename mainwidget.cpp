@@ -11,6 +11,7 @@
 #include "abstractpixmapwidget.h"
 #include "mainmenuwidget.h"
 #include "publicgamesounds.h"
+#include "config.h"
 
 MainWidget::MainWidget(QWidget *parent) :
     QWidget(parent),
@@ -50,21 +51,34 @@ void MainWidget::paintEvent(QPaintEvent *event)
       widgets[widgets.size() - 1]->getForcus();
   }
 
-  // Let the widget to make a pixmap
-  widgets[widgets.size() - 1]->makePixmap(pixmap, width(), height());
-
   // Get the painter
   QPainter *painter = new QPainter(this);
 
   if (coolDown > 0)
   {
-    // Paint with 2 pixmaps
+    // Paint last pixmap
     painter->drawPixmap(0,0,width(), height(), lastPixmap);
+#ifdef USE_PIXMAP
+    // Let the widget to make a pixmap
+    widgets[widgets.size() - 1]->makePixmap(pixmap, width(), height());
     painter->drawPixmap(0,0,width(),height()-coolDown * height() / 20, pixmap, 0, coolDown * pixmap.height() / 20,pixmap.width(),(20-coolDown) * pixmap.height() / 20);
+#else
+    painter->translate(0, -coolDown * height() / 20);
+    widgets[widgets.size() - 1]->makePixmap(painter, width(), height());
+#endif
   }
   else
-    // Paint with 1 pixmap
+  {
+#ifdef USE_PIXMAP
+    // Let the widget to make a pixmap
+    widgets[widgets.size() - 1]->makePixmap(pixmap, width(), height());
+
     painter->drawPixmap(0,0/*,width(), height()*/, pixmap);
+#else
+    widgets[widgets.size() - 1]->makePixmap(painter, width(), height());
+#endif
+
+  }
 
   // End the paint and release the space
   painter->end();
@@ -113,7 +127,18 @@ void MainWidget::changeControl(AbstractPixmapWidget *target,
                                bool deleteMySelf)
 {
   // Record the last pixmap
+#ifdef USE_PIXMAP
   widgets[widgets.size() - 1]->makePixmap(lastPixmap, width(), height());
+#else
+  lastPixmap = QPixmap(width(), height());
+
+  QPainter *painter = new QPainter(&lastPixmap);
+  widgets[widgets.size() - 1]->makePixmap(painter, width(), height());
+
+  // End the paint and release the space
+  painter->end();
+  delete painter;
+#endif
 
   // Set CD
   coolDown = 20;

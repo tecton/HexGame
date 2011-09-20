@@ -4,8 +4,7 @@
 #include <QString>
 #include <QDir>
 
-//#define MOBILITY
-#define PHONON
+#include "config.h"
 
 #ifdef MOBILITY
 #include <QMediaPlayer>

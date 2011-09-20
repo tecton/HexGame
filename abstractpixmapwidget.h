@@ -10,8 +10,10 @@
 
 // File must include
 #include <QObject>
+#include "config.h"
 
 // Forward declaration
+class QPainter;
 class QPixmap;
 class QPointF;
 
@@ -27,7 +29,14 @@ public:
    *@param width The width of the pixmap should be.
    *@param height The height of the pixmap should be.
    */
-  virtual void makePixmap(QPixmap& pixmap, int width, int height)=0;
+  virtual void makePixmap(
+#ifdef USE_PIXMAP
+      QPixmap& pixmap,
+#else
+      QPainter* painter,
+#endif
+      int width,
+      int height)=0;
 
   /**
    *@brief Make the basic part of the pixmap.
@@ -37,7 +46,14 @@ public:
    *@param width The width of the pixmap should be.
    *@param height The height of the pixmap should be.
    */
-  virtual void makeBasicPixmap(QPixmap& pixmap, int width, int height)=0;
+  virtual void makeBasicPixmap(
+#ifdef USE_PIXMAP
+      QPixmap& pixmap,
+#else
+      QPainter* painter,
+#endif
+      int width,
+      int height)=0;
 
   /**
    *@brief Add the effect to the pixmap.
@@ -47,7 +63,14 @@ public:
    *@param width The width of the pixmap should be.
    *@param height The height of the pixmap should be.
    */
-  virtual void addEffect(QPixmap& pixmap, int width, int height)=0;
+  virtual void addEffect(
+#ifdef USE_PIXMAP
+      QPixmap& pixmap,
+#else
+      QPainter* painter,
+#endif
+      int width,
+      int height)=0;
 
   /**
    *@brief Returns the logical position of the given rate.

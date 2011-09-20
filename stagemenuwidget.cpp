@@ -20,29 +20,63 @@ extern GameRecord gameRecord;
 #define LOGICAL_WIDTH  1024
 #define LOGICAL_HEIGHT 600
 
-void ExchangeStageMenuWidget::makePixmap(QPixmap& pixmap, int width, int height)
+void ExchangeStageMenuWidget::makePixmap(
+#ifdef USE_PIXMAP
+      QPixmap& pixmap,
+#else
+      QPainter* painter,
+#endif
+                                   int width,
+                                   int height)
 {
-  makeBasicPixmap(pixmap, width, height);
-//  QMessageBox::critical(0,"","Basic made");
-  addEffect(pixmap, width, height);
+#ifdef USE_PIXMAP
+      makeBasicPixmap(pixmap, width, height);
+      addEffect(pixmap, width, height);
+#else
+      makeBasicPixmap(painter, width, height);
+      addEffect(painter, width, height);
+#endif
 }
 
-void ExchangeStageMenuWidget::makeBasicPixmap(QPixmap& pixmap, int width, int height)
+void ExchangeStageMenuWidget::makeBasicPixmap(
+#ifdef USE_PIXMAP
+      QPixmap& pixmap,
+#else
+      QPainter* painter,
+#endif
+                                   int width,
+                                   int height)
 {
+#ifdef USE_PIXMAP
   pixmap = QPixmap(width, height);
+
+  // Fill the pixmap with black background
   pixmap.fill(Qt::black);
+
+  // Get the painter
   QPainter *painter = new QPainter(&pixmap);
+#endif
+
   BasicPainter::paintItems(painter,
                            myItems,
                            width,
                            height,
                            frameCount);
 
+#ifdef USE_PIXMAP
   painter->end();
   delete painter;
+#endif
 }
 
-void ExchangeStageMenuWidget::addEffect(QPixmap& pixmap, int width, int height)
+void ExchangeStageMenuWidget::addEffect(
+#ifdef USE_PIXMAP
+      QPixmap& pixmap,
+#else
+      QPainter* painter,
+#endif
+                                   int width,
+                                   int height)
 {
 
 }
@@ -366,28 +400,63 @@ UniteStageMenuWidget::~UniteStageMenuWidget()
     delete *itr;
 }
 
-void UniteStageMenuWidget::makePixmap(QPixmap& pixmap, int width, int height)
+void UniteStageMenuWidget::makePixmap(
+#ifdef USE_PIXMAP
+      QPixmap& pixmap,
+#else
+      QPainter* painter,
+#endif
+                                   int width,
+                                   int height)
 {
-  makeBasicPixmap(pixmap, width, height);
-  addEffect(pixmap, width, height);
+#ifdef USE_PIXMAP
+      makeBasicPixmap(pixmap, width, height);
+      addEffect(pixmap, width, height);
+#else
+      makeBasicPixmap(painter, width, height);
+      addEffect(painter, width, height);
+#endif
 }
 
-void UniteStageMenuWidget::makeBasicPixmap(QPixmap& pixmap, int width, int height)
+void UniteStageMenuWidget::makeBasicPixmap(
+#ifdef USE_PIXMAP
+      QPixmap& pixmap,
+#else
+      QPainter* painter,
+#endif
+                                   int width,
+                                   int height)
 {
+#ifdef USE_PIXMAP
   pixmap = QPixmap(width, height);
+
+  // Fill the pixmap with black background
   pixmap.fill(Qt::black);
+
+  // Get the painter
   QPainter *painter = new QPainter(&pixmap);
+#endif
+
   BasicPainter::paintItems(painter,
                            myItems,
                            width,
                            height,
                            frameCount);
 
+#ifdef USE_PIXMAP
   painter->end();
   delete painter;
+#endif
 }
 
-void UniteStageMenuWidget::addEffect(QPixmap& pixmap, int width, int height)
+void UniteStageMenuWidget::addEffect(
+#ifdef USE_PIXMAP
+      QPixmap& pixmap,
+#else
+      QPainter* painter,
+#endif
+                                   int width,
+                                   int height)
 {
 
 }
@@ -555,28 +624,63 @@ LockStageMenuWidget::~LockStageMenuWidget()
     delete *itr;
 }
 
-void LockStageMenuWidget::makePixmap(QPixmap& pixmap, int width, int height)
+void LockStageMenuWidget::makePixmap(
+#ifdef USE_PIXMAP
+      QPixmap& pixmap,
+#else
+      QPainter* painter,
+#endif
+                                   int width,
+                                   int height)
 {
-  makeBasicPixmap(pixmap, width, height);
-  addEffect(pixmap, width, height);
+#ifdef USE_PIXMAP
+      makeBasicPixmap(pixmap, width, height);
+      addEffect(pixmap, width, height);
+#else
+      makeBasicPixmap(painter, width, height);
+      addEffect(painter, width, height);
+#endif
 }
 
-void LockStageMenuWidget::makeBasicPixmap(QPixmap& pixmap, int width, int height)
+void LockStageMenuWidget::makeBasicPixmap(
+#ifdef USE_PIXMAP
+      QPixmap& pixmap,
+#else
+      QPainter* painter,
+#endif
+                                   int width,
+                                   int height)
 {
+#ifdef USE_PIXMAP
   pixmap = QPixmap(width, height);
+
+  // Fill the pixmap with black background
   pixmap.fill(Qt::black);
+
+  // Get the painter
   QPainter *painter = new QPainter(&pixmap);
+#endif
+
   BasicPainter::paintItems(painter,
                            myItems,
                            width,
                            height,
                            frameCount);
 
+#ifdef USE_PIXMAP
   painter->end();
   delete painter;
+#endif
 }
 
-void LockStageMenuWidget::addEffect(QPixmap& pixmap, int width, int height)
+void LockStageMenuWidget::addEffect(
+#ifdef USE_PIXMAP
+      QPixmap& pixmap,
+#else
+      QPainter* painter,
+#endif
+                                   int width,
+                                   int height)
 {
 
 }

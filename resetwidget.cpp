@@ -24,15 +24,35 @@ ResetWidget::ResetWidget()
   itemAtPressPos = NULL;
 }
 
-void ResetWidget::makePixmap(QPixmap& pixmap, int width, int height)
+void ResetWidget::makePixmap(
+#ifdef USE_PIXMAP
+      QPixmap& pixmap,
+#else
+      QPainter* painter,
+#endif
+                                   int width,
+                                   int height)
 {
-  makeBasicPixmap(pixmap, width, height);
-  addEffect(pixmap, width, height);
+#ifdef USE_PIXMAP
+      makeBasicPixmap(pixmap, width, height);
+      addEffect(pixmap, width, height);
+#else
+      makeBasicPixmap(painter, width, height);
+      addEffect(painter, width, height);
+#endif
 }
 
 //  void ResetWidget::init();
-void ResetWidget::makeBasicPixmap(QPixmap& pixmap, int width, int height)
+void ResetWidget::makeBasicPixmap(
+#ifdef USE_PIXMAP
+      QPixmap& pixmap,
+#else
+      QPainter* painter,
+#endif
+                                   int width,
+                                   int height)
 {
+#ifdef USE_PIXMAP
   pixmap = QPixmap(width, height);
 
   // Fill the pixmap with black background
@@ -40,6 +60,7 @@ void ResetWidget::makeBasicPixmap(QPixmap& pixmap, int width, int height)
 
   // Get the painter
   QPainter *painter = new QPainter(&pixmap);
+#endif
 
   // Paint the items
   BasicPainter::paintItems(painter,
@@ -48,12 +69,21 @@ void ResetWidget::makeBasicPixmap(QPixmap& pixmap, int width, int height)
                            height,
                            0);
 
+#ifdef USE_PIXMAP
   // End the paint and release the space
   painter->end();
   delete painter;
+#endif
 }
 
-void ResetWidget::addEffect(QPixmap& pixmap, int width, int height){}
+void ResetWidget::addEffect(
+#ifdef USE_PIXMAP
+      QPixmap& pixmap,
+#else
+      QPainter* painter,
+#endif
+                                   int width,
+                                   int height){}
 
 QPointF ResetWidget::toScene(double xRate, double yRate)
 {

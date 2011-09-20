@@ -122,12 +122,23 @@ ClassicGameWidget::ClassicGameWidget(AbstractRule::Gesture gesture) :
   connect(t, SIGNAL(timeout()), this, SLOT(advance()));
 }
 
-void ClassicGameWidget::makePixmap(QPixmap& pixmap,
+void ClassicGameWidget::makePixmap(
+#ifdef USE_PIXMAP
+      QPixmap& pixmap,
+#else
+      QPainter* painter,
+#endif
                                    int width,
                                    int height)
 {
-  makeBasicPixmap(pixmap, width, height);
-  addEffect(pixmap, width, height);
+#ifdef USE_PIXMAP
+      makeBasicPixmap(pixmap, width, height);
+      addEffect(pixmap, width, height);
+#else
+      makeBasicPixmap(painter, width, height);
+      addEffect(painter, width, height);
+#endif
+
 }
 
 ClassicGameWidget::~ClassicGameWidget()
@@ -145,10 +156,16 @@ ClassicGameWidget::~ClassicGameWidget()
   delete effectPainter;
 }
 
-void ClassicGameWidget::makeBasicPixmap(QPixmap& pixmap,
+void ClassicGameWidget::makeBasicPixmap(
+#ifdef USE_PIXMAP
+      QPixmap& pixmap,
+#else
+      QPainter* painter,
+#endif
                                         int width,
                                         int height)
 {
+#ifdef USE_PIXMAP
   pixmap = QPixmap(width, height);
 
   // Fill the pixmap with black background
@@ -156,6 +173,7 @@ void ClassicGameWidget::makeBasicPixmap(QPixmap& pixmap,
 
   // Get the painter
   QPainter *painter = new QPainter(&pixmap);
+#endif
 
   // Get the balls
   Ball **balls = controller->balls;
@@ -184,17 +202,26 @@ void ClassicGameWidget::makeBasicPixmap(QPixmap& pixmap,
                            height,
                            frameCount);
 
+#ifdef USE_PIXMAP
   // End the paint and release the space
   painter->end();
   delete painter;
+#endif
 }
 
-void ClassicGameWidget::addEffect(QPixmap& pixmap,
+void ClassicGameWidget::addEffect(
+#ifdef USE_PIXMAP
+      QPixmap& pixmap,
+#else
+      QPainter* painter,
+#endif
                                   int width,
                                   int height)
 {
+#ifdef USE_PIXMAP
   // Get the painter
   QPainter *painter = new QPainter(&pixmap);
+#endif
 
   // Calculte the bonus hint and show it
   QPointF pos = currentPos;
@@ -238,9 +265,11 @@ void ClassicGameWidget::addEffect(QPixmap& pixmap,
                        1.0 /
                        gameboardInfo->height());
 
+#ifdef USE_PIXMAP
   // End the paint and release the space
   painter->end();
   delete painter;
+#endif
 
   // Advance the effect painter
   effectPainter->advance();
@@ -586,14 +615,14 @@ void ClassicGameWidget::dealStableEliminate
   progressBar->setCurrent(
       progressBar->getCurrent() + pointsToAdd);
 
-  // Reset the highest score if neccessary
-  if (progressBar->getCurrent() >
-      hightestScore->getValue())
-  {
-    OtherGameInit::testHighest(getIndex(),
-                               progressBar->getCurrent());
-    hightestScore->setValue(progressBar->getCurrent());
-  }
+//  // Reset the highest score if neccessary
+//  if (progressBar->getCurrent() >
+//      hightestScore->getValue())
+//  {
+//    OtherGameInit::testHighest(getIndex(),
+//                               progressBar->getCurrent());
+//    hightestScore->setValue(progressBar->getCurrent());
+//  }
 }
 
 void ClassicGameWidget::dealUserMovingEliminate(

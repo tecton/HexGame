@@ -26,14 +26,34 @@ HelpWidget::HelpWidget() :
   itemAtPressPos = NULL;
 }
 
-void HelpWidget::makePixmap(QPixmap& pixmap, int width, int height)
+void HelpWidget::makePixmap(
+#ifdef USE_PIXMAP
+      QPixmap& pixmap,
+#else
+      QPainter* painter,
+#endif
+                                   int width,
+                                   int height)
 {
-  makeBasicPixmap(pixmap, width, height);
-  addEffect(pixmap, width, height);
+#ifdef USE_PIXMAP
+      makeBasicPixmap(pixmap, width, height);
+      addEffect(pixmap, width, height);
+#else
+      makeBasicPixmap(painter, width, height);
+      addEffect(painter, width, height);
+#endif
 }
 
-void HelpWidget::makeBasicPixmap(QPixmap& pixmap, int width, int height)
+void HelpWidget::makeBasicPixmap(
+#ifdef USE_PIXMAP
+      QPixmap& pixmap,
+#else
+      QPainter* painter,
+#endif
+                                   int width,
+                                   int height)
 {
+#ifdef USE_PIXMAP
   pixmap = QPixmap(width, height);
 
   // Fill the pixmap with black background
@@ -41,6 +61,7 @@ void HelpWidget::makeBasicPixmap(QPixmap& pixmap, int width, int height)
 
   // Get the painter
   QPainter *painter = new QPainter(&pixmap);
+#endif
 
   // The scale of the pixmap
   double scale;
@@ -66,12 +87,21 @@ void HelpWidget::makeBasicPixmap(QPixmap& pixmap, int width, int height)
                            height,
                            0);
 
+#ifdef USE_PIXMAP
   // End the paint and release the space
   painter->end();
   delete painter;
+#endif
 }
 
-void HelpWidget::addEffect(QPixmap& pixmap, int width, int height){}
+void HelpWidget::addEffect(
+#ifdef USE_PIXMAP
+      QPixmap& pixmap,
+#else
+      QPainter* painter,
+#endif
+                                   int width,
+                                   int height){}
 
 QPointF HelpWidget::toScene(double xRate, double yRate)
 {

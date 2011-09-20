@@ -27,9 +27,30 @@ public:
 
   //@{
   /** Functions most overloaded. */
-  virtual void makePixmap(QPixmap& pixmap, int width, int height);
-  virtual void makeBasicPixmap(QPixmap& pixmap, int width, int height);
-  virtual void addEffect(QPixmap& pixmap, int width, int height);
+  virtual void makePixmap(
+#ifdef USE_PIXMAP
+      QPixmap& pixmap,
+#else
+      QPainter* painter,
+#endif
+      int width,
+      int height);
+  virtual void makeBasicPixmap(
+#ifdef USE_PIXMAP
+      QPixmap& pixmap,
+#else
+      QPainter* painter,
+#endif
+      int width,
+      int height);
+  virtual void addEffect(
+#ifdef USE_PIXMAP
+      QPixmap& pixmap,
+#else
+      QPainter* painter,
+#endif
+      int width,
+      int height);
   virtual QPointF toScene(double xRate, double yRate);
   virtual void dealPressed(QPointF mousePos, Qt::MouseButton button);
   virtual void dealMoved(QPointF mousePos, Qt::MouseButton button);
