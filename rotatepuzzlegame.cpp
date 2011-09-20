@@ -32,28 +32,23 @@ RotatePuzzleGame::RotatePuzzleGame(int ballIndex[],
     gameboardInfo = new SixtyOneGameBoardInfo();
     //RotatePuzzleGameSavedInfo savedInfo = readSaved();
     Ball **balls = new Ball *[gameboardInfo->totalBallCounts()];
-//    toBeShapeBalls = new Ball *[gameboardInfo->totalBallCounts()];
     for (int i = 0; i < gameboardInfo->totalBallCounts(); ++i)
     {
+      // init balls according to the index
       if (ballIndex[i] == -1)
       {
         balls[i] = new Ball((Ball::Color)6);
-//        toBeShapeBalls[i] = new Ball((Ball::Color)6);
         balls[i]->setPos(gameboardInfo->positionOfIndex(i));
-//        toBeShapeBalls[i]->setPos(gameboardInfo->positionOfIndex(i));
         balls[i]->setLocked(true);
       }
       else if (ballIndex[i] != 0)
       {
         balls[i] = new Ball((Ball::Color)ballIndex[i]);
         balls[i]->setPos(gameboardInfo->positionOfIndex(i));
-//        toBeShapeBalls[i] = new Ball((Ball::Color)toBeIndex[i]);
-//        toBeShapeBalls[i]->setPos(gameboardInfo->positionOfIndex(i));
       }
       else
       {
         balls[i] = NULL;
-//        toBeShapeBalls[i] = NULL;
       }
     }
     completeIndex = new int[gameboardInfo->totalBallCounts()];
@@ -63,6 +58,7 @@ RotatePuzzleGame::RotatePuzzleGame(int ballIndex[],
     index = gameIndex;
     type = gameType;
 
+    // init two hint information
     currentSteps = new IntegerItem();
     currentSteps->setValue(0);
     currentSteps->setHint("Current moved steps:");
@@ -70,10 +66,10 @@ RotatePuzzleGame::RotatePuzzleGame(int ballIndex[],
     minimalSteps = new IntegerItem();
     minimalSteps->setHint(" Least moved steps: ");
     minimalSteps->setValue((minSteps != -1) ? minSteps : 99);
-
     minimalSteps->setPos(QPointF(0.15, 0.65));
     exitItem = new ExitItem();
     exitItem->setPos(QPointF(0.15,0.85));
+    // collect them
     myItems.push_back(currentSteps);
     myItems.push_back(minimalSteps);
     myItems.push_back(exitItem);
@@ -104,11 +100,8 @@ void RotatePuzzleGame::makePixmap(QPixmap& pixmap, int width, int height)
 RotatePuzzleGame::~RotatePuzzleGame()
 {
     t->stop();
-//    for (int i = 0;i < gameboardInfo->totalBallCounts();++i)
-//      if (toBeShapeBalls[i])
-//        delete toBeShapeBalls[i];
-//    delete [] toBeShapeBalls;
     delete t;
+    // delete the collected items
     for (int i = 0;i < myItems.size();++i)
       delete myItems[i];
     delete controller;
@@ -174,12 +167,9 @@ QPointF RotatePuzzleGame::toScene(double xRate, double yRate)
                    yRate * gameboardInfo->height());
 }
 
-//RotatePuzzleGameSavedInfo RotatePuzzleGame::readSaved()
-//{
-
-//}
 void RotatePuzzleGame::quitGame()
 {
+  // create a new widget and give control to it
   switch (type)
   {
   case 0:
@@ -303,16 +293,7 @@ void RotatePuzzleGame::advance()
         gameRecord.writeData(fileName[type], index + offset[type], currentSteps->getValue());
         emit giveControlTo(NULL, true);
       }
-//      if (index != 5)
-//      {
-//        RotatePuzzleGame* nextStage = PuzzleGameInit::initRotatePuzzleGame(index + 1,
-//                                                                           type);
-//        emit giveControlTo(nextStage, true);
-//      }
-//      else if (index == 5)
-//        emit giveControlTo(NULL, true);
       delete this;
       return;
     }
-    //  effectPainter->advance();
 }

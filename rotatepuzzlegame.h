@@ -25,11 +25,11 @@ public:
   /**
    * @brief Constructor.
    *
-   * @param ballIndex Current color indexes of the balls.
-   * @param tobeIndex Color indexes the balls should be.
-   * @param gameIndex Index of the game.
+   * @param ballIndex The original balls' index.
+   * @param tobeIndex The shape of balls' index should be.
+   * @param gameIndex Level of the game.
    * @param gameType Type of the game.
-   * @param minSteps Minimal steps of the game.
+   * @param minSteps Minimal steps to complete the puzzle.
    */
   RotatePuzzleGame(int ballIndex[], int tobeIndex[],
                    int gameIndex, int gameType, int minSteps);
@@ -52,6 +52,7 @@ public:
   //@}
 
 private:
+  // similar to other game mode
   AbstractRule *rule;
   SixtyOneGameBoardInfo *gameboardInfo;
   CoreController *controller;
@@ -63,10 +64,13 @@ private:
   int type;
   int index;
 
+  // hint information
   IntegerItem *currentSteps;
   IntegerItem *minimalSteps;
+  // exit button
   ExitItem *exitItem;
 
+  // collect items
   QVector <AbstractItem *> myItems;
 
   int direction;

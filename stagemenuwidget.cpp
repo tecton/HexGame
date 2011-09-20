@@ -20,40 +20,6 @@ extern GameRecord gameRecord;
 #define LOGICAL_WIDTH  1024
 #define LOGICAL_HEIGHT 600
 
-int errrrr[] = {
-          0,  0,  0,  0,  0,
-        0,  3,  7,  7,  0,  0,
-      0,  7,  3,  7,  7,  7,  0,
-    0,  7,  7,  2,  7,  7,  7,  0,
-  0,  0,  7,  7,  1,  2,  3,  3,  0,
-    0,  7,  7,  2,  7,  7,  7,  0,
-      0,  7,  3,  7,  7,  7,  0,
-        0,  3,  7,  7,  0,  0,
-          0,  0,  0,  0,  0
-};
-
-// useless function which is combined into puzzlegameinit.cpp
-
-//void getStageBallIndex(int *ballIndex,int *toBeIndex, int index, int type)
-//{
-//  QString filename;
-//  if (type == 0)
-//    filename = ":/stages/exchange";
-//  filename = QObject::tr("%1%2").arg(filename).arg(index + 1);
-//  QFile file(filename);
-//  if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
-//    return;
-//  QTextStream in(&file);
-//  for (int i = 0; i < 61; ++i)
-//  {
-//    in >> ballIndex[i];
-//  }
-//  for (int i = 0; i < 61; ++i)
-//  {
-//    in >> toBeIndex[i];
-//  }
-//}
-
 void ExchangeStageMenuWidget::makePixmap(QPixmap& pixmap, int width, int height)
 {
   makeBasicPixmap(pixmap, width, height);

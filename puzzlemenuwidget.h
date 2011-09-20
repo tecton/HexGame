@@ -37,10 +37,15 @@ public:
 
 private:
   QTimer *t;
+  // exchange puzzle game item shown on widget
   AbstractPuzzleMenuItem *exchangeItem;
+  // unite puzzle game item shown on widget
   AbstractPuzzleMenuItem *uniteItem;
+  // lock puzzle game item shown on widget
   AbstractPuzzleMenuItem *lockItem;
+  // exit item shown on widget
   AbstractItem *exitItem;
+  // vector to collect all items
   QVector <AbstractItem *> myItems;
   int frameCount;
 
