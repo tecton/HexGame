@@ -18,6 +18,7 @@
 #include "resetwidget.h"
 #include "gameoverwidget.h"
 #include "publicgamesounds.h"
+#include "ball.h"
 
 #define LOGICAL_WIDTH  1024
 #define LOGICAL_HEIGHT 600
@@ -48,6 +49,12 @@ ClassicGameWidget::ClassicGameWidget(AbstractRule::Gesture gesture) :
   controller->fillAllBlanks();
   for (int i = 0;i < 100;++i)
     controller->advance();
+
+  for (int i = 0;i < gameboardInfo->totalBallCounts();++i)
+    if (controller->balls[i])
+      controller->balls[i]->setState(Ball::JustCreated);
+
+  controller->autoRotate();
 
   //  Create the effect painter
   effectPainter = new EffectPainter(gameboardInfo);
