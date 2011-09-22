@@ -9,6 +9,9 @@ class QTimer;
 class AbstractItem;
 class AbstractPuzzleMenuItem;
 
+/**
+ * @brief A class of the menu in puzzle game.
+ */
 class PuzzleMenuWidget : public AbstractPixmapWidget
 {
   Q_OBJECT
@@ -23,8 +26,6 @@ public:
    */
   ~PuzzleMenuWidget();
 
-  //@{
-  /** Functions most overloaded. */
   virtual void makePixmap(
 #ifdef USE_PIXMAP
       QPixmap& pixmap,
@@ -54,7 +55,6 @@ public:
   virtual void dealMoved(QPointF mousePos, Qt::MouseButton button);
   virtual void dealReleased(QPointF mousePos, Qt::MouseButton button);
   virtual void getForcus(){}
-  //@}
 
 private:
   QTimer *t;

@@ -1,13 +1,13 @@
-/*
-** A class to store the infomation of connections.
-*/
-
 #ifndef CONNECTIONS_H
 #define CONNECTIONS_H
 
 // File most include
 #include <QVector>
 
+/**
+ * @brief A class to store the infomation of connections.
+ * It also contains some functions to know the infomation about each ball.
+ */
 class Connections
 {
 public:

@@ -11,6 +11,9 @@
 class AbstractItem;
 class MainMenuGameItem;
 
+/**
+ * @brief A class of main menu.
+ */
 class MainMenuWidget : public AbstractPixmapWidget
 {
   Q_OBJECT
@@ -25,8 +28,6 @@ public:
    */
   ~MainMenuWidget();
 
-  //@{
-  /** Functions most overloaded. */
   virtual void makePixmap(
 #ifdef USE_PIXMAP
       QPixmap& pixmap,
@@ -56,7 +57,6 @@ public:
   virtual void dealMoved(QPointF mousePos, Qt::MouseButton button);
   virtual void dealReleased(QPointF mousePos, Qt::MouseButton button);
   virtual void getForcus(){}
-  //@}
 
 private:
   // The timer(currently not used)

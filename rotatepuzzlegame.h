@@ -18,6 +18,9 @@ class AbstractItem;
 class IntegerItem;
 class ExitItem;
 
+/**
+ * @brief A class to play a rotate puzzle game.
+ */
 class RotatePuzzleGame : public AbstractPixmapWidget
 {
   Q_OBJECT
@@ -39,8 +42,6 @@ public:
    */
   ~RotatePuzzleGame();
 
-  //@{
-  /** Functions most overloaded. */
   virtual void makePixmap(
 #ifdef USE_PIXMAP
       QPixmap& pixmap,
@@ -70,7 +71,6 @@ public:
   virtual void dealMoved(QPointF mousePos, Qt::MouseButton button);
   virtual void dealReleased(QPointF mousePos, Qt::MouseButton button);
   virtual void getForcus();
-  //@}
 
 private:
   // similar to other game mode

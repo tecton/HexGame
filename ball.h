@@ -1,7 +1,3 @@
-/*
-** Class of a ball
-*/
-
 #ifndef BALL_H
 #define BALL_H
 
@@ -12,6 +8,9 @@
 // Forward declaration
 class CoreController;
 
+/**
+ * @brief A class of a ball.
+ */
 class Ball
 {
   friend class CoreController;

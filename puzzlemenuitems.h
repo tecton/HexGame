@@ -1,5 +1,5 @@
 /*
-** Classes of items used in puzzle secondary menu.
+**
 */
 
 #ifndef ABSTRACTPUZZLEMENUITEMS_H
@@ -13,16 +13,22 @@
 // File must include
 class QPixmap;
 
+/**
+ * @brief An abstract class of items used in puzzle secondary menu.
+ */
 class AbstractPuzzleMenuItem : public AbstractItem
 {
 public:
-  // Type of the items
+  /**
+   * @brief Type of the items.
+   */
   enum ItemType{ExchangeItem=0, UniteItem, LockItem};
 
-  // The function must be overloaded(still pure virtual)
   virtual void paint(QPainter *painter, int width, int height, int frame)=0;
 
-  // A function returns the pixmap of an item
+  /**
+   * @brief A function returns the pixmap of an item.
+   */
   static const QPixmap& pixmap(ItemType type, int frame);
 
 private:
@@ -31,33 +37,45 @@ private:
   QPointF position;
 };
 
+/**
+ * @brief A class of items used in puzzle secondary menu of exchange serial.
+ */
 class PuzzleMenuExchangeItem : public AbstractPuzzleMenuItem
 {
 public:
-  // Constructor
+  /**
+   * @brief Constructor.
+   */
   PuzzleMenuExchangeItem();
 
-  // The function must be overloaded
   virtual void paint(QPainter *painter, int width, int height, int frame);
 };
 
+/**
+ * @brief A class of items used in puzzle secondary menu of unit serial.
+ */
 class PuzzleMenuUniteItem : public AbstractPuzzleMenuItem
 {
 public:
-  // Constructor
+  /**
+   * @brief Constructor.
+   */
   PuzzleMenuUniteItem();
 
-  // The function must be overloaded
   virtual void paint(QPainter *painter, int width, int height, int frame);
 };
 
+/**
+ * @brief A class of items used in puzzle secondary menu of lock serial.
+ */
 class PuzzleMenuLockItem : public AbstractPuzzleMenuItem
 {
 public:
-  // Constructor
+  /**
+   * @brief Constructor.
+   */
   PuzzleMenuLockItem();
 
-  // The function must be overloaded
   virtual void paint(QPainter *painter, int width, int height, int frame);
 };
 

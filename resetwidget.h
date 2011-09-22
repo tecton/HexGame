@@ -1,7 +1,3 @@
-/*
-** A class to show the reset widget.
-*/
-
 #ifndef RESETWIDGET_H
 #define RESETWIDGET_H
 
@@ -12,6 +8,9 @@
 // Forward declaration
 class AbstractItem;
 
+/**
+ * @brief A class to show the reset widget.
+ */
 class ResetWidget : public AbstractPixmapWidget
 {
   Q_OBJECT
@@ -26,8 +25,6 @@ public:
    */
   ~ResetWidget();
 
-  //@{
-  /** Functions most overloaded. */
   virtual void makePixmap(
 #ifdef USE_PIXMAP
       QPixmap& pixmap,
@@ -57,7 +54,6 @@ public:
   virtual void dealMoved(QPointF mousePos, Qt::MouseButton button);
   virtual void dealReleased(QPointF mousePos, Qt::MouseButton button);
   virtual void getForcus(){}
-  //@}
 
 private:
   // Items of the game

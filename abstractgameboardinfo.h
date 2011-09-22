@@ -1,8 +1,3 @@
-/*
-** Abstract class of a gameboard.
-** It should return quite a lot of infomation about location.
-*/
-
 #ifndef ABSTRACTGAMEBOARDINFO_H
 #define ABSTRACTGAMEBOARDINFO_H
 
@@ -10,6 +5,11 @@
 #include <QVector>
 #include <QPointF>
 
+
+/**
+ * @brief An abstract class of a gameboard.
+ * It should return quite a lot of infomation about location.
+ */
 class AbstractGameBoardInfo
 {
 public:
@@ -70,15 +70,35 @@ public:
    */
   virtual QPointF positionOfIndex(int index)=0;
 
-  //@{
-  /** Index of the near by position in 6 directions. */
+  /**
+   *@brief Index of the left ball.
+   */
   virtual int leftIndex(int index)=0;
+
+  /**
+   *@brief Index of the left up ball.
+   */
   virtual int leftUpIndex(int index)=0;
+
+  /**
+   *@brief Index of the right up ball.
+   */
   virtual int rightUpIndex(int index)=0;
+
+  /**
+   *@brief Index of the right ball.
+   */
   virtual int rightIndex(int index)=0;
+
+  /**
+   *@brief Index of the right down ball.
+   */
   virtual int rightDownIndex(int index)=0;
+
+  /**
+   *@brief Index of the left down ball.
+   */
   virtual int leftDownIndex(int index)=0;
-  //@}
 
   /**
    *@brief Index of the near by position with the direction.
@@ -146,15 +166,35 @@ public:
    */
   virtual int indexOfPosition(int row, int column)=0;
 
-  //@{
-  /** Index of the first/last position in 6 directions. */
+  /**
+   *@brief Index of the first one in left -- right direction.
+   */
   virtual int firstOfRow(int row)=0;
+
+  /**
+   *@brief Index of the last one in left -- right direction.
+   */
   virtual int lastOfRow(int row)=0;
+
+  /**
+   *@brief Index of the first one in left up -- right down direction.
+   */
   virtual int firstOfLeftUp(int index)=0;
+
+  /**
+   *@brief Index of the last one in left up -- right down direction.
+   */
   virtual int lastOfLeftUp(int index)=0;
+
+  /**
+   *@brief Index of the first one in left down -- right up direction.
+   */
   virtual int firstOfLeftDown(int index)=0;
+
+  /**
+   *@brief Index of the last one in left down -- right up direction.
+   */
   virtual int lastOfLeftDown(int index)=0;
-  //@}
 
   /**
    *@brief Index of the first in the chain.

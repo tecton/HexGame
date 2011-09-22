@@ -1,9 +1,3 @@
-/*
-** A class to control the core part of the game.
-** It maintains all the things of the balls according to
-** the rule and the infomation of the gameboard.
-*/
-
 #ifndef CORECONTROLLER_H
 #define CORECONTROLLER_H
 
@@ -19,6 +13,11 @@ class AbstractGameBoardInfo;
 class Ball;
 class Gesture;
 
+/**
+ * @brief A class to control the core part of the game.
+ * It maintains all the things of the balls according to the rule and the
+ * infomation of the gameboard.
+ */
 class CoreController : public QObject
 {
   Q_OBJECT

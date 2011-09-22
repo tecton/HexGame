@@ -1,6 +1,6 @@
-/*
-** Several functions which helps to calculate
-*/
+/**
+ *@brief Several functions which helps to calculate.
+ */
 
 #ifndef GAMEMATH_H
 #define GAMEMATH_H

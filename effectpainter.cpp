@@ -13,44 +13,73 @@
 
 #define LIGHTNING_WIDTH 60
 
-// An abstract class of effects
+/**
+ * @brief An abstract class of effects.
+ */
 class AbstractEffect
 {
 public:
-  // A pure virtual function to paint the effect on the screen
+  /**
+   *@brief Paint the effect on the screen.
+   *
+   *@param theGameboardInfo The infomation of the gameboard
+   *@param painter The QPainter to do the paint.
+   *@param xRate The scale in X direction.
+   *@param yRate The scale in Y direction.
+   *
+   */
   virtual void paint(AbstractGameBoardInfo *theGameboardInfo,
                      QPainter *painter,
                      double xRate,
                      double yRate)=0;
 };
 
-// An abstract class of effects only last for a while
+/**
+ * @brief An abstract class of effects only last for a while.
+ */
 class AbstractAgingEffect : public AbstractEffect
 {
 public:
-  // Function most overloaded(still a pure virtual one)
+  /**
+   * @brief Function most overloaded(still a pure virtual one).
+   */
   virtual void paint(AbstractGameBoardInfo *theGameboardInfo,
                      QPainter *painter,
                      double xRate,
                      double yRate)=0;
 
-  // Advance the effect, returns whether it should last
+  /**
+   * @brief Advance the effect, returns whether it should last.
+   *
+   * @return Whether it should last.
+   */
   inline bool advance()
   {
     ++age;
     return age <= ageLimit;
   }
 
-  // Getter and setter of the 2 properties
+  /**
+   * @brief Get the age of effect.
+   */
   inline int getAge()
   {return age;}
 
+  /**
+   * @brief Set the age of effect.
+   */
   inline void setAge(int v)
   {age = v;}
 
+  /**
+   * @brief Get the limit age of effect.
+   */
   inline int getLimit()
   {return ageLimit;}
 
+  /**
+   * @brief Set the limit age of effect.
+   */
   inline void setLimit(int v)
   {ageLimit = v;}
 
@@ -62,23 +91,31 @@ private:
   int ageLimit;
 };
 
-// A class of an effect to show which balls were choosed
+/**
+ * @brief A class of an effect to show which balls were choosed.
+ */
 class SelectionHint : public AbstractLongLastingEffect
 {
 public:
-  // Constructor with the area of the effect
+  /**
+   * @brief Constructor with the area of the effect.
+   */
   SelectionHint(QRectF position) :
       pos(position)
   {}
 
-  // Getter and setter of the position
+  /**
+   * @brief Set the position.
+   */
   inline void setPos(QRectF position)
   {pos = position;}
 
+  /**
+   * @brief Get the position.
+   */
   inline QRectF getPos()
   {return pos;}
 
-  // Function most overloaded
   virtual void paint(AbstractGameBoardInfo *theGameboardInfo,
                      QPainter *painter,
                      double xRate,
@@ -115,24 +152,32 @@ private:
   QRectF pos;
 };
 
-// A class of an effect to show which balls will be eliminated after the user
-// release the mouse
+/**
+ * @brief A class of an effect to show which balls will be eliminated after the
+ * user release the mouse.
+ */
 class EliminationHint : public AbstractLongLastingEffect
 {
 public:
-  // Constructor with the area of the effect
+  /**
+   * @brief Constructor with the area of the effect.
+   */
   EliminationHint(QRectF position) :
       pos(position)
   {}
 
-  // Getter and setter of the position
+  /**
+   * @brief Set the position.
+   */
   inline void setPos(QRectF position)
   {pos = position;}
 
+  /**
+   * @brief Get the position.
+   */
   inline QRectF getPos()
   {return pos;}
 
-  // Function most overloaded
   virtual void paint(AbstractGameBoardInfo *theGameboardInfo,
                      QPainter *painter,
                      double xRate,
@@ -167,11 +212,15 @@ private:
   QRectF pos;
 };
 
-// A class of an effect to show an explosion
+/**
+ * @brief A class of an effect to show an explosion.
+ */
 class ExplodeInfo : public AbstractAgingEffect
 {
 public:
-  // Constructor with the center position of the effect
+  /**
+   * @brief Constructor with the center position of the effect.
+   */
   ExplodeInfo(QPointF position) :
       pos(position)
   {
@@ -179,14 +228,18 @@ public:
     setLimit(5);
   }
 
-  // Getter and setter of the position
+  /**
+   * @brief Set the position.
+   */
   inline void setPos(QPointF position)
   {pos = position;}
 
+  /**
+   * @brief Get the position.
+   */
   inline QPointF getPos()
   {return pos;}
 
-  // Function most overloaded
   virtual void paint(AbstractGameBoardInfo *theGameboardInfo,
                      QPainter *painter,
                      double xRate,
@@ -218,11 +271,15 @@ private:
 double kkx[3] = {-0.5, 0.5, 1};
 double kky[3] = {-0.866, -0.866, 0};
 
-// A class of an effect to show a lightning in 6 directions
+/**
+ * @brief A class of an effect to show a lightning in 6 directions.
+ */
 class LightningInfo : public AbstractAgingEffect
 {
 public:
-  // Constructor with the center position of the effect
+  /**
+   * @brief Constructor with the center position of the effect.
+   */
   LightningInfo(QPointF position) :
       pos(position)
   {
@@ -234,7 +291,9 @@ public:
     setLimit(5);
   }
 
-  // Getter and setter of the position
+  /**
+   * @brief Set the position.
+   */
   inline void setPos(QPointF position)
   {
     pos = position;
@@ -243,10 +302,12 @@ public:
     linearPoints[2] = QPointF(pos.x(), pos.y() + 15);
   }
 
+  /**
+   * @brief Get the position.
+   */
   inline QPointF getPos()
   {return pos;}
 
-  // Function most overloaded
   virtual void paint(AbstractGameBoardInfo *theGameboardInfo,
                      QPainter *painter,
                      double xRate,
@@ -296,11 +357,15 @@ private:
   QPointF linearPoints[3];
 };
 
-// A class of an effect to show a highlight
+/**
+ * @brief A class of an effect to show a highlight.
+ */
 class HighlightInfo : public AbstractAgingEffect
 {
 public:
-  // Constructor with the center position of the effect
+  /**
+   * @brief Constructor with the center position of the effect.
+   */
   HighlightInfo(QPointF position) :
       pos(position)
   {
@@ -308,10 +373,15 @@ public:
     setLimit(10);
   }
 
-  // Getter and setter of the position
+  /**
+   * @brief Set the position.
+   */
   inline void setPos(QPointF position)
   {pos = position;}
 
+  /**
+   * @brief Get the position.
+   */
   inline QPointF getPos()
   {return pos;}
 
@@ -344,11 +414,15 @@ private:
   QPointF pos;
 };
 
-// A class of an effect to show words
+/**
+ * @brief A class of an effect to show words.
+ */
 class WordsInfo : public AbstractAgingEffect
 {
 public:
-  // Constructor with the words, center position, size of the words
+  /**
+   * @brief Constructor with the words, center position, size of the words.
+   */
   WordsInfo(QString str, QPointF position, double size) :
       string(str),
       pos(position)
@@ -358,14 +432,18 @@ public:
     setLimit(20);
   }
 
-  // Getter and setter of the position
+  /**
+   * @brief Set the position.
+   */
   inline void setPos(QPointF position)
   {pos = position;}
 
+  /**
+   * @brief Get the position.
+   */
   inline QPointF getPos()
   {return pos;}
 
-  // Function most overloaded
   virtual void paint(AbstractGameBoardInfo *theGameboardInfo,
                      QPainter *painter,
                      double xRate,
@@ -403,11 +481,15 @@ private:
   QFont f;
 };
 
-// A class of an effect to show hints
+/**
+ * @brief A class of an effect to show hints.
+ */
 class HintInfo : public AbstractAgingEffect
 {
 public:
-  // Constructor with the center position, whether it's rotate
+  /**
+   * @brief Constructor with the center position, whether it's rotate.
+   */
   HintInfo(QPointF position, bool rotate) :
       pos(position),
       r(rotate)
@@ -421,14 +503,18 @@ public:
     setLimit(20);
   }
 
-  // Getter and setter of the position
+  /**
+   * @brief Set the position.
+   */
   inline void setPos(QPointF position)
   {pos = position;}
 
+  /**
+   * @brief Get the position.
+   */
   inline QPointF getPos()
   {return pos;}
 
-  // Function most overloaded
   virtual void paint(AbstractGameBoardInfo *theGameboardInfo,
                      QPainter *painter,
                      double xRate,
@@ -468,18 +554,21 @@ private:
   QPixmap p;
 };
 
-// A class of an effect to show a flash (full screen)
+/**
+ * @brief A class of an effect to show a flash (full screen).
+ */
 class FlashInfo : public AbstractAgingEffect
 {
 public:
-  // Constructor
+  /**
+   * @brief Constructor.
+   */
   FlashInfo()
   {
     setAge(0);
     setLimit(12);
   }
 
-  // Function most overloaded
   virtual void paint(AbstractGameBoardInfo *theGameboardInfo,
                      QPainter *painter,
                      double xRate,

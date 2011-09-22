@@ -9,6 +9,9 @@ class QTimer;
 class AbstractItem;
 class StageMenuItem;
 
+/**
+ * @brief An abstract class of stage menu widgets.
+ */
 class AbstractStageMenuWidget : public AbstractPixmapWidget
 {
   Q_OBJECT
@@ -49,6 +52,9 @@ public:
   int type;
 };
 
+/**
+ * @brief A class of stage menu widget of exchange serial.
+ */
 class ExchangeStageMenuWidget : public AbstractStageMenuWidget
 {
   Q_OBJECT
@@ -97,6 +103,9 @@ private slots:
   void advance();
 };
 
+/**
+ * @brief A class of stage menu widget of sunit serial.
+ */
 class UniteStageMenuWidget : public AbstractStageMenuWidget
 {
   Q_OBJECT
@@ -145,6 +154,9 @@ private slots:
   void advance();
 };
 
+/**
+ * @brief A class of stage menu widget of lock serial.
+ */
 class LockStageMenuWidget : public AbstractStageMenuWidget
 {
   Q_OBJECT

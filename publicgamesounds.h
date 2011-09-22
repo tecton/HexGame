@@ -1,10 +1,9 @@
-/*
-** Class to control the common sounds in the game.
-*/
-
 #ifndef PUBLICGAMESOUNDS_H
 #define PUBLICGAMESOUNDS_H
 
+/**
+ * @brief A class to control the common sounds in the game.
+ */
 class PublicGameSounds
 {
 public:

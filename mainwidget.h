@@ -11,6 +11,11 @@ class QPixmap;
 class AbstractPixmapWidget;
 class SwapClassicGame;
 
+/**
+ * @brief A class which is the ONLY one which inherits QWidget in the project.
+ *
+ * It maintains a stack of pointers of widget in the game.
+ */
 class MainWidget : public QWidget
 {
   Q_OBJECT
@@ -26,12 +31,20 @@ public:
   void paintEvent(QPaintEvent *event);
 
 protected:
-  //@{
-  /** 3 kinds of mouse event. */
+  /**
+   * @brief Mouse press event.
+   */
   void mousePressEvent(QMouseEvent *event);
+
+  /**
+   * @brief Mouse move event.
+   */
   void mouseMoveEvent(QMouseEvent *event);
+
+  /**
+   * @brief Mouse release event.
+   */
   void mouseReleaseEvent(QMouseEvent *event);
-  //@}
 
 private:
   // The timer to repaint

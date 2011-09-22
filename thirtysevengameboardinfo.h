@@ -6,6 +6,9 @@
 #include <QVector>
 #include <QPointF>
 
+/**
+ * @brief A class which tells us the infomation of a gameboard with 37 balls.
+ */
 class ThirtySevenGameBoardInfo : public AbstractGameBoardInfo
 {
 

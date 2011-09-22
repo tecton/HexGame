@@ -1,9 +1,3 @@
-/*
-** A class to do the basic paint.
-** Currently, the functions are all static, because I haven't found anything to
-** store in the painter.
-*/
-
 #ifndef BASICPAINTER_H
 #define BASICPAINTER_H
 
@@ -16,6 +10,12 @@ class AbstractGameBoardInfo;
 class AbstractItem;
 class QPainter;
 
+/**
+ * @brief A class to do the basic paint.
+ *
+ * Currently, the functions are all static, because I haven't found anything to
+ * store in the painter.
+ */
 class BasicPainter
 {
 public:

@@ -1,8 +1,3 @@
-/*
-** Abstract class of an item.
-** It should have the ability to paint itself.
-*/
-
 #ifndef ABSTRACTITEM_H
 #define ABSTRACTITEM_H
 
@@ -12,6 +7,10 @@
 // Forward declaration
 class QPainter;
 
+/**
+ * @brief An abstract class of an item.
+ * It should have the ability to paint itself.
+ */
 class AbstractItem
 {
 public:
@@ -24,8 +23,6 @@ public:
    *@param height The height of the whole QPaintDevice.
    *@param frame The index of the frame to show
    *       (An item may have lots of frames which will realize an animation).
-   *@exception std::out_of_range [exception's comment.]
-   *@return [return's comment.]
    */
   virtual void paint(QPainter *painter, int width, int height, int frame)=0;
 

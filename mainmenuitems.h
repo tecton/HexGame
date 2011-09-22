@@ -1,7 +1,3 @@
-/*
-** Classes of items used in main menu.
-*/
-
 #ifndef MAINMENUITEMS_H
 #define MAINMENUITEMS_H
 
@@ -13,6 +9,9 @@
 // Forward declaration
 class QPixmap;
 
+/**
+ * @brief An abstract class of items used in main menu.
+ */
 class AbstractMainMenuItem : public AbstractItem
 {
 public:
@@ -40,7 +39,9 @@ public:
   static const QPixmap& pixmap(ItemType type, int frame);
 };
 
-
+/**
+ * @brief A class of items used in main menu.
+ */
 class MainMenuGameItem : public AbstractMainMenuItem
 {
 public:
@@ -50,9 +51,6 @@ public:
   MainMenuGameItem(AbstractMainMenuItem::ItemType theType) :
       type(theType) {}
 
-  /**
-   * @brief Function most overloaded.
-   */
   virtual void paint(QPainter *painter, int width, int height, int frame);
 
 private:

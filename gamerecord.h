@@ -1,13 +1,12 @@
-/*
-** Class to deal with the files.
-*/
-
 #ifndef GAMERECORD_H
 #define GAMERECORD_H
 
 // File must include
 #include <QString>
 
+/**
+ * @brief A class to deal with the files.
+ */
 class GameRecord
 {
 public:

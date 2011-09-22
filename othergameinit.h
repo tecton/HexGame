@@ -1,7 +1,3 @@
-/*
-** Classes used to initialize a game which isn't a puzzle game.
-*/
-
 #ifndef OTHERGAMEINIT_H
 #define OTHERGAMEINIT_H
 
@@ -13,7 +9,9 @@ class AbstractPixmapWidget;
 class AbstractRule;
 class Ball;
 
-// A class to record the infomation of a game
+/**
+ * @brief A class to record the infomation of a game.
+ */
 class OtherGameRecord
 {
 public:
@@ -27,8 +25,11 @@ public:
   int star;
 };
 
-// A class to init other games.
-// In fact, there are some functions to do connect the game with the file.
+/**
+ * @brief A class to init other games.
+ *
+ * In fact, there are some functions to connect the game with the file.
+ */
 class OtherGameInit
 {
 public:

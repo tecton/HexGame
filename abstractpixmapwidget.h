@@ -1,10 +1,3 @@
-/*
-** Abstract class of a widget which can't be seen directly, but can make a
-** pixmap to show what it should look like. Only one such widget is allowed to
-** be active at a time, so it should emit a signal when it give this ability
-** to other widget.
-*/
-
 #ifndef ABSTRACTPIXMAPWIDGET_H
 #define ABSTRACTPIXMAPWIDGET_H
 
@@ -17,6 +10,14 @@ class QPainter;
 class QPixmap;
 class QPointF;
 
+/**
+ * @brief An abstract class of a widget.
+ *
+ * Abstract class of a widget which can't be seen directly, but can make a
+ * pixmap to show what it should look like. Only one such widget is allowed to
+ * be active at a time, so it should emit a signal when it give this ability to
+ * other widget.
+ */
 class AbstractPixmapWidget :public QObject
 {
   Q_OBJECT
@@ -83,12 +84,20 @@ public:
    */
   virtual QPointF toScene(double xRate, double yRate)=0;
 
-  //@{
-  /** 3 functions to deal with mouse operations. */
+  /**
+   *@brief Function to deal with press event of mouse.
+   */
   virtual void dealPressed(QPointF mousePos, Qt::MouseButton button)=0;
+
+  /**
+   *@brief Function to deal with move event of mouse.
+   */
   virtual void dealMoved(QPointF mousePos, Qt::MouseButton button)=0;
+
+  /**
+   *@brief Function to deal with release event of mouse.
+   */
   virtual void dealReleased(QPointF mousePos, Qt::MouseButton button)=0;
-  //@}
 
   /**
    *@brief Should be called when the widget get focus, used to restart the

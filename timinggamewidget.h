@@ -1,7 +1,3 @@
-/*
-** A class to play an endless game.
-*/
-
 #ifndef TIMINGGAMEWIDGET_H
 #define TIMINGGAMEWIDGET_H
 
@@ -27,6 +23,9 @@ class IntegerItem;
 class SwapClassicGameRule;
 class SwapClassicGameSavedInfo;
 
+/**
+ * @brief A class to play an endless game.
+ */
 class TimingGameWidget : public AbstractPixmapWidget
 {
   Q_OBJECT
@@ -41,8 +40,6 @@ public:
    */
   ~TimingGameWidget();
 
-  //@{
-  /** Functions most overloaded. */
   virtual void makePixmap(
 #ifdef USE_PIXMAP
       QPixmap& pixmap,
@@ -75,7 +72,6 @@ public:
   virtual void dealReleased(QPointF mousePos,
                             Qt::MouseButton button);
   virtual void getForcus();
-  //@}
 
 private:
   // Rule of the game

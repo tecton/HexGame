@@ -1,10 +1,9 @@
-/*
-** Abstract class of a rule of the game.
-*/
-
 #ifndef ABSTRACTRULE_H
 #define ABSTRACTRULE_H
 
+/**
+ * @brief An abstract class of a rule of the game.
+ */
 class AbstractRule
 {
 public:

@@ -1,7 +1,3 @@
-/*
-** Class of a controller which controls the gesture and let the core controller to do things
-*/
-
 #ifndef GESTURECONTROLLER_H
 #define GESTURECONTROLLER_H
 
@@ -16,6 +12,10 @@ class AbstractGameBoardInfo;
 class CoreController;
 class EffectPainter;
 
+/**
+ * @brief A class of a controller which controls the gesture and let the core
+ * controller to do things.
+ */
 class GestureController
 {
 public:

@@ -1,7 +1,3 @@
-/*
-** Classes of items used in puzzle stage menu.
-*/
-
 #ifndef STAGEMENUITEMS_H
 #define STAGEMENUITEMS_H
 
@@ -14,12 +10,17 @@
 // File must include
 class QPixmap;
 
+/**
+ * @brief A class of items used in puzzle stage menu.
+ */
 class StageMenuItem : public AbstractItem
 {
 public:
+  /**
+   * @brief Constructor with the path of the item.
+   */
   StageMenuItem(QString path);
 
-  // The function must be overloaded
   virtual void paint(QPainter *painter, int width, int height, int frame);
 
 private:

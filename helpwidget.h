@@ -1,7 +1,3 @@
-/*
-** Class of a help widget which shows the help.
-*/
-
 #ifndef HELPWIDGET_H
 #define HELPWIDGET_H
 
@@ -14,6 +10,9 @@
 // Forward declaration
 class AbstractItem;
 
+/**
+ * @brief A class of a help widget which shows the help.
+ */
 class HelpWidget : public AbstractPixmapWidget
 {
   Q_OBJECT
@@ -28,8 +27,6 @@ public:
    */
   ~HelpWidget();
 
-  //@{
-  /** Functions most overloaded. */
   virtual void makePixmap(
 #ifdef USE_PIXMAP
       QPixmap& pixmap,
@@ -59,7 +56,6 @@ public:
   virtual void dealMoved(QPointF mousePos, Qt::MouseButton button);
   virtual void dealReleased(QPointF mousePos, Qt::MouseButton button);
   virtual void getForcus(){}
-  //@}
 
 private:
   // The pixmap to show

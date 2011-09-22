@@ -1,6 +1,6 @@
-/*
-** Functions used to deal with pixmaps
-*/
+/**
+ * @brief Functions used to deal with pixmaps.
+ */
 
 #ifndef PIXMAPOPERATIONS_H
 #define PIXMAPOPERATIONS_H

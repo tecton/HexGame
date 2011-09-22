@@ -1,5 +1,5 @@
 /*
-** A realization of AbstractGameBoardInfo
+**
 **
 ** SixtyOneGameBoardInfo can tell us the infomation of a gameboard
 ** with 61 balls.
@@ -14,6 +14,9 @@
 #include <QVector>
 #include <QPointF>
 
+/**
+ * @brief A class which tells us the infomation of a gameboard with 61 balls.
+ */
 class SixtyOneGameBoardInfo : public AbstractGameBoardInfo
 {
 

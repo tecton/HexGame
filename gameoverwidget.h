@@ -1,8 +1,3 @@
-/*
-** A class to show the game over widget.
-** May be seperated later.
-*/
-
 #ifndef GAMEOVERWIDGET_H
 #define GAMEOVERWIDGET_H
 
@@ -15,6 +10,10 @@ class AbstractItem;
 class IntegerItem;
 class StringItem;
 
+/**
+ * @brief A class to show the game over widget.
+ * May be seperated later.
+ */
 class GameOverWidget : public AbstractPixmapWidget
 {
 public:
@@ -28,8 +27,6 @@ public:
    */
   ~GameOverWidget();
 
-  //@{
-  /** Functions most overloaded. */
   virtual void makePixmap(
 #ifdef USE_PIXMAP
       QPixmap& pixmap,
@@ -59,7 +56,6 @@ public:
   virtual void dealMoved(QPointF mousePos, Qt::MouseButton button);
   virtual void dealReleased(QPointF mousePos, Qt::MouseButton button);
   virtual void getForcus(){}
-  //@}
 
 private:
   // The index of the game
