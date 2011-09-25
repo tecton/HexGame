@@ -4,8 +4,12 @@
 #include "mainwidget.h"
 
 #include "gamerecord.h"
+#include "statistic.h"
+#include "achievements.h"
 
 GameRecord gameRecord;
+Statistic statistic;
+Achievements achievements;
 
 int main(int argc, char *argv[])
 {
@@ -16,6 +20,11 @@ int main(int argc, char *argv[])
   QTextCodec::setCodecForCStrings(codec);
   QTextCodec::setCodecForTr(codec);
   QApplication a(argc, argv);
+
+  QObject::connect(&statistic,
+                   SIGNAL(statisticChanged(Statistic::StatisticType,int,int)),
+                   &achievements,
+                   SLOT(statisticChanged(Statistic::StatisticType,int,int)));
 
   MainWidget w;
   w.setAttribute(Qt::WA_PaintOnScreen);

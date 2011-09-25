@@ -20,6 +20,9 @@
 #include "gameoverwidget.h"
 #include "publicgamesounds.h"
 #include "ball.h"
+#include "statistic.h"
+
+extern Statistic statistic;
 
 #define LOGICAL_WIDTH  1024
 #define LOGICAL_HEIGHT 600
@@ -401,6 +404,8 @@ void TimingGameWidget::dealReleased(QPointF mousePos, Qt::MouseButton button)
 
         // Minus the value of the flame
         flame->minusOne();
+
+        statistic.changeStatistic(Statistic::FlameUsedCount, 1, true);
       }
     }
     else if (itemAtPressPos == star && star->notEmpty())
@@ -420,6 +425,8 @@ void TimingGameWidget::dealReleased(QPointF mousePos, Qt::MouseButton button)
 
         // Minus the value of the flame
         star->minusOne();
+
+        statistic.changeStatistic(Statistic::StarUsedCount, 1, true);
       }
     }
     else if (itemAtPressPos == hint &&
@@ -541,6 +548,8 @@ void TimingGameWidget::dealStableEliminate(Connections connections)
 
         // Get a flame
         flame->addOne();
+
+        statistic.changeStatistic(Statistic::FlameGetCount, 1, true);
       }
       if (connectionCountOfThePosition >= 3)
       {
@@ -549,6 +558,8 @@ void TimingGameWidget::dealStableEliminate(Connections connections)
 
         // Get a star
         star->addOne();
+
+        statistic.changeStatistic(Statistic::StarGetCount, 1, true);
       }
     }
   }
@@ -570,6 +581,8 @@ void TimingGameWidget::dealStableEliminate(Connections connections)
 
       // Get a flame
       flame->addOne();
+
+      statistic.changeStatistic(Statistic::FlameGetCount, 1, true);
     }
     if (size >= 5)
     {
@@ -578,6 +591,8 @@ void TimingGameWidget::dealStableEliminate(Connections connections)
 
       // Get a star
       star->addOne();
+
+      statistic.changeStatistic(Statistic::StarGetCount, 1, true);
     }
   }
 }

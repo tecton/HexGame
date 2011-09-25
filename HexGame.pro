@@ -40,7 +40,11 @@ SOURCES += main.cpp\
     pausewidget.cpp \
     timinggamewidget.cpp \
     helpwidget.cpp \
-    publicgamesounds.cpp
+    publicgamesounds.cpp \
+    achievementitem.cpp \
+    statistic.cpp \
+    achievements.cpp \
+    achievementwidget.cpp
 
 HEADERS  += ball.h \
     corecontroller.h \
@@ -77,7 +81,11 @@ HEADERS  += ball.h \
     timinggamewidget.h \
     helpwidget.h \
     publicgamesounds.h \
-    config.h
+    config.h \
+    achievementitem.h \
+    statistic.h \
+    achievements.h \
+    achievementwidget.h
 
 RESOURCES += \
     images.qrc \

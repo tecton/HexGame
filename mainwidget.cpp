@@ -12,6 +12,9 @@
 #include "mainmenuwidget.h"
 #include "publicgamesounds.h"
 #include "config.h"
+#include "achievements.h"
+
+extern Achievements achievements;
 
 MainWidget::MainWidget(QWidget *parent) :
     QWidget(parent),
@@ -79,6 +82,9 @@ void MainWidget::paintEvent(QPaintEvent *event)
 #endif
 
   }
+
+  achievements.paint(painter, width(), height());
+  achievements.advance();
 
   // End the paint and release the space
   painter->end();

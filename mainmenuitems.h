@@ -28,9 +28,6 @@ public:
                 HelpItem,
                 ExitItem};
 
-  /**
-   * @brief Function most overloaded(still a pure virtual one).
-   */
   virtual void paint(QPainter *painter, int width, int height, int frame)=0;
 
   /**

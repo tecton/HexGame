@@ -7,8 +7,6 @@
 #include "gamerecord.h"
 #include "ball.h"
 
-#include <QDebug>
-
 extern GameRecord gameRecord;
 
 // The names of the files

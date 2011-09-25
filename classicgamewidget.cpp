@@ -19,6 +19,9 @@
 #include "gameoverwidget.h"
 #include "publicgamesounds.h"
 #include "ball.h"
+#include "statistic.h"
+
+extern Statistic statistic;
 
 #define LOGICAL_WIDTH  1024
 #define LOGICAL_HEIGHT 600
@@ -435,6 +438,8 @@ void ClassicGameWidget::dealReleased(QPointF mousePos,
 
         // Minus the value of the flame
         flame->minusOne();
+
+        statistic.changeStatistic(Statistic::FlameUsedCount, 1, true);
       }
     }
     else if (itemAtPressPos == star && star->notEmpty())
@@ -455,6 +460,8 @@ void ClassicGameWidget::dealReleased(QPointF mousePos,
 
         // Minus the value of the flame
         star->minusOne();
+
+        statistic.changeStatistic(Statistic::StarUsedCount, 1, true);
       }
     }
     else if (itemAtPressPos == hint &&
@@ -569,6 +576,8 @@ void ClassicGameWidget::dealStableEliminate
 
         // Get a flame
         flame->addOne();
+
+        statistic.changeStatistic(Statistic::FlameGetCount, 1, true);
       }
       if (connectionCountOfThePosition >= 3)
       {
@@ -577,6 +586,8 @@ void ClassicGameWidget::dealStableEliminate
 
         // Get a star
         star->addOne();
+
+        statistic.changeStatistic(Statistic::StarGetCount, 1, true);
       }
     }
     if (connectionCountOfThePosition > 0)
@@ -603,6 +614,8 @@ void ClassicGameWidget::dealStableEliminate
 
       // Get a flame
       flame->addOne();
+
+      statistic.changeStatistic(Statistic::FlameGetCount, 1, true);
     }
     if (size >= 5)
     {
@@ -611,6 +624,8 @@ void ClassicGameWidget::dealStableEliminate
 
       // Get a star
       star->addOne();
+
+      statistic.changeStatistic(Statistic::StarGetCount, 1, true);
     }
   }
 
