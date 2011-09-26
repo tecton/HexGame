@@ -6,7 +6,7 @@
 qreal angle(QPointF point, QPointF origin)
 {
   qreal dx = point.x() - origin.x();
-  qreal dy = origin.y() - point.y();
+  qreal dy = point.y() - origin.y();
   qreal result = qAtan(qAbs(dy / dx));
   if (dx < 0 && dy >= 0)
     return PI - result;
