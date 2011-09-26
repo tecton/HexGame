@@ -11,9 +11,6 @@
 #define DESCRIPTION_WIDTH   500
 #define DESCRIPTION_HEIGHT  450
 
-#define HALF_WIDTH_RATE  (ITEM_WIDTH / 2 / LOGICAL_WIDTH)
-#define HALF_HEIGHT_RATE (ITEM_HEIGHT / 2 / LOGICAL_HEIGHT)
-
 double AbstractAchievementItem::width()
 {
   return ITEM_WIDTH;
