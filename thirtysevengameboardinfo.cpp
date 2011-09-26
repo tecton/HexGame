@@ -506,7 +506,7 @@ int ThirtySevenGameBoardInfo::firstOfChain(int index)
 // Inverval between two layers
 double ThirtySevenGameBoardInfo::intervalBetweenTwoLayers()
 {
-  return LOCATION_GAME_BOARD_ITEM_X_INTERVAL;
+  return LOCATION_GAME_BOARD_ITEM_X_INTERVAL * 2;
 }
 
 // Center position of the gameboard

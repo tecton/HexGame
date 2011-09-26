@@ -6,7 +6,7 @@
 qreal angle(QPointF point, QPointF origin)
 {
   qreal dx = point.x() - origin.x();
-  qreal dy = point.y() - origin.y();
+  qreal dy = origin.y() - point.y();
   qreal result = qAtan(qAbs(dy / dx));
   if (dx < 0 && dy >= 0)
     return PI - result;
@@ -62,9 +62,7 @@ qreal distanceFromTheCenterWithTheAngle(qreal angle, qreal maxR)
     angle += PI / 3;
   while (angle >= PI / 3)
     angle -= PI / 3;
-  return maxR * 2 *
-         qSin(PI / 3) /
-         qSin(2 * PI / 3 - angle);
+  return maxR * qSin(PI / 3) / qSin(2 * PI / 3 - angle);
 }
 
 // Calculate a new position from the original position and scale rate in 2

@@ -393,7 +393,7 @@ public:
   {
     // Calculate some values to locate
     QPointF pos2 = scale(pos, xRate, yRate);
-    double r = theGameboardInfo->intervalBetweenTwoLayers() *
+    double r = theGameboardInfo->ballR() *
                getAge() /
                getLimit();
 
@@ -597,10 +597,10 @@ void EffectPainter::selectAt(int index)
 {
   // Calculate the area
   QPointF center = gameboardInfo->positionOfIndex(index);
-  QPointF leftTop = QPointF(center.x() - gameboardInfo->intervalBetweenTwoLayers(),
-                            center.y() - 1.155 * gameboardInfo->intervalBetweenTwoLayers());
-  QPointF rightBottom = QPointF(center.x() + gameboardInfo->intervalBetweenTwoLayers(),
-                                center.y() + 1.155 * gameboardInfo->intervalBetweenTwoLayers());
+  QPointF leftTop = QPointF(center.x() - 0.5 * gameboardInfo->intervalBetweenTwoLayers(),
+                            center.y() - 0.5 * 1.155 * gameboardInfo->intervalBetweenTwoLayers());
+  QPointF rightBottom = QPointF(center.x() + 0.5 * gameboardInfo->intervalBetweenTwoLayers(),
+                                center.y() + 0.5 * 1.155 * gameboardInfo->intervalBetweenTwoLayers());
   QRectF rect = QRectF(leftTop, rightBottom);
 
   // Create the effect and record it
@@ -620,10 +620,10 @@ void EffectPainter::bonusEliminationHintAt(int index)
 {
   // Calculate the area
   QPointF center = gameboardInfo->positionOfIndex(index);
-  QPointF leftTop = QPointF(center.x() - gameboardInfo->intervalBetweenTwoLayers(),
-                            center.y() - 1.155 * gameboardInfo->intervalBetweenTwoLayers());
-  QPointF rightBottom = QPointF(center.x() + gameboardInfo->intervalBetweenTwoLayers(),
-                                center.y() + 1.155 * gameboardInfo->intervalBetweenTwoLayers());
+  QPointF leftTop = QPointF(center.x() - 0.5 * gameboardInfo->intervalBetweenTwoLayers(),
+                            center.y() - 0.5 * 1.155 * gameboardInfo->intervalBetweenTwoLayers());
+  QPointF rightBottom = QPointF(center.x() + 0.5 * gameboardInfo->intervalBetweenTwoLayers(),
+                                center.y() + 0.5 * 1.155 * gameboardInfo->intervalBetweenTwoLayers());
   QRectF rect = QRectF(leftTop, rightBottom);
 
   // Create the effect and record it
@@ -643,10 +643,10 @@ void EffectPainter::userMovingEliminationHintAt(int index)
 {
   // Calculate the area
   QPointF center = gameboardInfo->positionOfIndex(index);
-  QPointF leftTop = QPointF(center.x() - gameboardInfo->intervalBetweenTwoLayers(),
-                            center.y() - 1.155 * gameboardInfo->intervalBetweenTwoLayers());
-  QPointF rightBottom = QPointF(center.x() + gameboardInfo->intervalBetweenTwoLayers(),
-                                center.y() + 1.155 * gameboardInfo->intervalBetweenTwoLayers());
+  QPointF leftTop = QPointF(center.x() - 0.5 * gameboardInfo->intervalBetweenTwoLayers(),
+                            center.y() - 0.5 * 1.155 * gameboardInfo->intervalBetweenTwoLayers());
+  QPointF rightBottom = QPointF(center.x() + 0.5 * gameboardInfo->intervalBetweenTwoLayers(),
+                                center.y() + 0.5 * 1.155 * gameboardInfo->intervalBetweenTwoLayers());
   QRectF rect = QRectF(leftTop, rightBottom);
 
   // Create the effect and record it

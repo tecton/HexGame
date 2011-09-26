@@ -538,7 +538,7 @@ int SixtyOneGameBoardInfo::lastOfLeftDown(int index)
 // Inverval between two layers
 double SixtyOneGameBoardInfo::intervalBetweenTwoLayers()
 {
-  return LOCATION_GAME_BOARD_ITEM_X_INTERVAL;
+  return LOCATION_GAME_BOARD_ITEM_X_INTERVAL * 2;
 }
 
 // Center position of the gameboard
