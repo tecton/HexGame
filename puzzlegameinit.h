@@ -14,8 +14,7 @@ public:
    * @brief Init a game with the index, type, and min step.
    */
   static RotatePuzzleGame* initRotatePuzzleGame(int index,
-                                                int type,
-                                                int minSteps);
+                                                int type);
 };
 
 #endif // PUZZLEGAMEINIT_H

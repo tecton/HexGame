@@ -125,16 +125,19 @@ void PuzzleMenuWidget::dealPressed(QPointF mousePos, Qt::MouseButton button)
   {
     AbstractStageMenuWidget *exchangeMenu = new ExchangeStageMenuWidget(0);
     emit giveControlTo(exchangeMenu, false);
+    return;
   }
   else if (uniteItem->in(mousePos, LOGICAL_WIDTH, LOGICAL_HEIGHT))
   {
     AbstractStageMenuWidget *uniteMenu = new UniteStageMenuWidget(0);
     emit giveControlTo(uniteMenu, false);
+    return;
   }
   else if (lockItem->in(mousePos, LOGICAL_WIDTH, LOGICAL_HEIGHT))
   {
     AbstractStageMenuWidget *lockMenu = new LockStageMenuWidget(0);
     emit giveControlTo(lockMenu, false);
+    return;
   }
   else if (exitItem->in(mousePos, LOGICAL_WIDTH, LOGICAL_HEIGHT))
   {

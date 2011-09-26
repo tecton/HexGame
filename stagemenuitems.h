@@ -17,13 +17,26 @@ class StageMenuItem : public AbstractCircleItem
 {
 public:
   /**
-   * @brief Constructor with the path of the item.
+   * @brief Constructor of the exit item.
    */
-  StageMenuItem(QString path);
+  StageMenuItem();
+
+  /**
+   * @brief Constructor of the advance item.
+   */
+  StageMenuItem(bool advanced);
+
+  /**
+   * @brief Constructor of the items to choose stage.
+   */
+  StageMenuItem(int stage, bool locked, bool advanced);
 
   virtual void paint(QPainter *painter, int width, int height, int frame);
 
   virtual double r();
+
+  inline bool getLocked()
+  {return lock;}
 
 private:
   // The position of the item
@@ -35,6 +48,8 @@ private:
 
   // The count of the pixmaps
   int count;
+
+  bool lock;
 };
 
 

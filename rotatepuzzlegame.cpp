@@ -14,11 +14,9 @@
 #include "basicpainter.h"
 #include "puzzlegameinit.h"
 #include "stagemenuwidget.h"
-#include "gamerecord.h"
 #include "gamemath.h"
 #include "gamecommonitems.h"
-
-extern GameRecord gameRecord;
+#include "puzzlegamerecord.h"
 
 RotatePuzzleGame::RotatePuzzleGame(int ballIndex[],
                                    int toBeIndex[],
@@ -236,11 +234,12 @@ void RotatePuzzleGame::quitGame()
 
 void RotatePuzzleGame::dealPressed(QPointF mousePos, Qt::MouseButton button)
 {
-    if (button == Qt::RightButton)
-    {
-        quitGame();
-        return;
-    }
+  if (button == Qt::RightButton)
+  {
+    quitGame();
+    return;
+  }
+
   if (targetSize == 1 && direction == 0)
   {
     if (exitItem->in(mousePos,
@@ -316,24 +315,22 @@ void RotatePuzzleGame::advance()
     }
     if (i == gameboardInfo->totalBallCounts())
     {
-      int lastStageIndex[] = {4, 4, 5, 5, 10, 10};
-      int offset[] = {0, 4, 0, 5, 0, 10};
-      QString fileName[] = {"exchange", "exchange", "unite", "unite",
-                           "lock", "lock"};
-      if (index != lastStageIndex[type])
+      int stageCount = PuzzleGameRecord::totalStages(type);
+      if (index + 1 < stageCount)
       {
-        RotatePuzzleGame* nextStage = PuzzleGameInit::initRotatePuzzleGame(index + 1,
-                                                                           type,
-                                                                           gameRecord.readData(fileName[type], index + 1 + offset[type]));
-        gameRecord.writeData(fileName[type], index + offset[type], currentSteps->getValue());
+        RotatePuzzleGame* nextStage =
+            PuzzleGameInit::initRotatePuzzleGame(index + 1, type);
+        PuzzleGameRecord::testLeastSteps(type, index, currentSteps->getValue());
         emit giveControlTo(nextStage, true);
+        delete this;
+        return;
       }
       else
       {
-        gameRecord.writeData(fileName[type], index + offset[type], currentSteps->getValue());
+        PuzzleGameRecord::testLeastSteps(type, index, currentSteps->getValue());
         emit giveControlTo(NULL, true);
+        delete this;
+        return;
       }
-      delete this;
-      return;
     }
 }

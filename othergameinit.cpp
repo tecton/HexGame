@@ -5,9 +5,11 @@
 #include "endlessgamewidget.h"
 #include "timinggamewidget.h"
 #include "gamerecord.h"
+#include "statistic.h"
 #include "ball.h"
 
 extern GameRecord gameRecord;
+extern Statistic statistic;
 
 // The names of the files
 static const char* fileNames[] = {
@@ -39,8 +41,8 @@ Ball *intToBall(int value)
 
 }
 
-AbstractPixmapWidget *OtherGameInit::initOtherGame(AbstractRule::Gesture gesture,
-                                                   int type)
+AbstractPixmapWidget *OtherGameInit::initOtherGame
+    (AbstractRule::Gesture gesture, int type)
 {
   // Create the correct game
   if (type == 0)
@@ -54,26 +56,15 @@ AbstractPixmapWidget *OtherGameInit::initOtherGame(AbstractRule::Gesture gesture
 
 int OtherGameInit::getHighest(int index)
 {
-  // Create the file if neccessary
-  if (!gameRecord.exists("OtherGameHighest"))
-  {
-    int tmp[] = {0,0,0,0,0,0};
-    gameRecord.createFile("OtherGameHighest", 6);
-    gameRecord.writeDataArr("OtherGameHighest", tmp, 6);
-  }
-  return gameRecord.readData("OtherGameHighest", index);
+  return statistic.getStatistic(
+      (Statistic::StatisticType)((int)Statistic::SwapClassicPoint + index));
 }
 
 void OtherGameInit::setHighest(int index, int score)
 {
-  // Create the file if neccessary
-  if (!gameRecord.exists("OtherGameHighest"))
-  {
-    int tmp[] = {0,0,0,0,0,0};
-    gameRecord.createFile("OtherGameHighest", 6);
-    gameRecord.writeDataArr("OtherGameHighest", tmp, 6);
-  }
-  gameRecord.writeData("OtherGameHighest", index, score);
+  statistic.changeStatistic(
+      (Statistic::StatisticType)((int)Statistic::SwapClassicPoint + index),
+      score);
 }
 
 void OtherGameInit::testHighest(int index, int score)

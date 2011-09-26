@@ -82,11 +82,8 @@ void calculateLevel(AbstractAchievementItem::ItemType type,
                     int& levelFrom,
                     int& levelTo)
 {
-  // TODO
-  levelFrom = 0;
-  levelTo = 1;
-//  levelFrom = calculateLevel(type, lastValue);
-//  levelTo = calculateLevel(type, currentValue);
+  levelFrom = calculateLevel(type, lastValue);
+  levelTo = calculateLevel(type, currentValue);
 }
 
 AbstractAchievementItem::ItemType typeConvert(Statistic::StatisticType type)
@@ -128,9 +125,6 @@ void Achievements::statisticChanged(Statistic::StatisticType type,
     AbstractAchievementItem *item = getAchievementItem(itemType);
     if (item != NULL)
       items.push_back(item);
-    item = getAchievementItem(itemType);
-    if (item != NULL)
-      items.push_back(item);
   }
 }
 
@@ -165,18 +159,34 @@ int Achievements::getAchievementLevel(AbstractAchievementItem::ItemType type,
 AbstractAchievementItem *Achievements::getAchievementItem
       (AbstractAchievementItem::ItemType type)
 {
-  int value;
   AbstractAchievementItem *item = NULL;
   switch (type)
   {
   case AbstractAchievementItem::FlameGet:
-  case AbstractAchievementItem::StarGet:
-  case AbstractAchievementItem::RotateClassic:
-  case AbstractAchievementItem::Timing:
-  case AbstractAchievementItem::RotatePuzzle:
-    value = statistic.getStatistic(Statistic::FlameGetCount);
     item = new FlameGetItem
-           (getAchievementLevel(AbstractAchievementItem::FlameGet), value);
+           (getAchievementLevel(AbstractAchievementItem::FlameGet),
+            statistic.getStatistic(Statistic::FlameGetCount));
+    break;
+  case AbstractAchievementItem::StarGet:
+    item = new StarGetItem
+           (getAchievementLevel(AbstractAchievementItem::StarGet),
+            statistic.getStatistic(Statistic::StarGetCount));
+    break;
+  case AbstractAchievementItem::RotateClassic:
+    item = new RotateClassicPointItem
+           (getAchievementLevel(AbstractAchievementItem::RotateClassic),
+            statistic.getStatistic(Statistic::RotateClassicPoint));
+    break;
+  case AbstractAchievementItem::Timing:
+    item = new TimingPointItem
+           (getAchievementLevel(AbstractAchievementItem::RotateClassic),
+            qMax(statistic.getStatistic(Statistic::SwapTimingPoint),
+                 statistic.getStatistic(Statistic::RotateTimingPoint)));
+    break;
+  case AbstractAchievementItem::RotatePuzzle:
+    item = new RotatePuzzleFinishedItem
+           (statistic.getStatistic(Statistic::RotatePuzzleFinished),
+            statistic.getStatistic(Statistic::RotatePuzzleTotal));
     break;
   default:
     break;

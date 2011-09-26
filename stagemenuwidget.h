@@ -41,15 +41,17 @@ public:
 #endif
       int width,
       int height)=0;
-  virtual QPointF toScene(double xRate, double yRate)=0;
-  virtual void dealPressed(QPointF mousePos, Qt::MouseButton button)=0;
-  virtual void dealMoved(QPointF mousePos, Qt::MouseButton button)=0;
-  virtual void dealReleased(QPointF mousePos, Qt::MouseButton button)=0;
+  virtual QPointF toScene(double xRate, double yRate);
+  virtual void dealPressed(QPointF mousePos, Qt::MouseButton button);
+  virtual void dealMoved(QPointF mousePos, Qt::MouseButton button);
+  virtual void dealReleased(QPointF mousePos, Qt::MouseButton button);
   virtual void getForcus()=0;
-  QString prefix;
-  QString suffix;
-  QString imageName;
+
+  virtual int getType()=0;
+  virtual AbstractStageMenuWidget *switchType(int currentType)=0;
+  int stageCount;
   int type;
+  StageMenuItem **stageItem;
 };
 
 /**
@@ -86,15 +88,16 @@ public:
 #endif
                          int width,
                          int height);
-  virtual QPointF toScene(double xRate, double yRate);
-  virtual void dealPressed(QPointF mousePos, Qt::MouseButton button);
-  virtual void dealMoved(QPointF mousePos, Qt::MouseButton button);
-  virtual void dealReleased(QPointF mousePos, Qt::MouseButton button);
   virtual void getForcus();
+
+  virtual int getType()
+  {return type;}
+
+  virtual AbstractStageMenuWidget *switchType(int currentType)
+  {return new ExchangeStageMenuWidget(currentType ^ 1);}
 
 private:
   QTimer *t;
-  StageMenuItem **stageItem;
   QVector <AbstractItem *> myItems;
   int frameCount;
 
@@ -136,15 +139,16 @@ public:
 #endif
                                int width,
                                int height);
-  virtual QPointF toScene(double xRate, double yRate);
-  virtual void dealPressed(QPointF mousePos, Qt::MouseButton button);
-  virtual void dealMoved(QPointF mousePos, Qt::MouseButton button);
-  virtual void dealReleased(QPointF mousePos, Qt::MouseButton button);
   virtual void getForcus();
+
+  virtual int getType()
+  {return type + 2;}
+
+  virtual AbstractStageMenuWidget *switchType(int currentType)
+  {return new UniteStageMenuWidget(currentType ^ 1);}
 
 private:
   QTimer *t;
-  StageMenuItem **stageItem;
   QVector <AbstractItem *> myItems;
   int frameCount;
 
@@ -186,15 +190,16 @@ public:
 #endif
                                int width,
                                int height);
-  virtual QPointF toScene(double xRate, double yRate);
-  virtual void dealPressed(QPointF mousePos, Qt::MouseButton button);
-  virtual void dealMoved(QPointF mousePos, Qt::MouseButton button);
-  virtual void dealReleased(QPointF mousePos, Qt::MouseButton button);
   virtual void getForcus();
+
+  virtual int getType()
+  {return type + 4;}
+
+  virtual AbstractStageMenuWidget *switchType(int currentType)
+  {return new LockStageMenuWidget(currentType ^ 1);}
 
 private:
   QTimer *t;
-  StageMenuItem **stageItem;
   QVector <AbstractItem *> myItems;
   int frameCount;
 

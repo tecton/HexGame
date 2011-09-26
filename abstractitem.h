@@ -66,10 +66,10 @@ public:
     QPointF centerPos = getPos();
     centerPos.setX(centerPos.x() * windowWidth);
     centerPos.setY(centerPos.y() * windowHeight);
-    return mousePos.x() - centerPos.x() < width() &&
-           mousePos.x() - centerPos.x() > -width() &&
-           mousePos.y() - centerPos.y() < height() &&
-           mousePos.y() - centerPos.y() > -height();
+    return mousePos.x() - centerPos.x() < width() / 2 &&
+           mousePos.x() - centerPos.x() > -width() / 2 &&
+           mousePos.y() - centerPos.y() < height() / 2 &&
+           mousePos.y() - centerPos.y() > -height() / 2;
   }
 
   virtual double width()=0;

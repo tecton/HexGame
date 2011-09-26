@@ -109,6 +109,8 @@ void MainWidget::mousePressEvent(QMouseEvent *event)
   // Tell the widget if neccessary
   QPointF pos = toScene(event->posF());
   widgets[widgets.size() - 1]->dealPressed(pos, event->button());
+
+  event->accept();
 }
 
 void MainWidget::mouseMoveEvent(QMouseEvent *event)
@@ -119,6 +121,7 @@ void MainWidget::mouseMoveEvent(QMouseEvent *event)
   // Tell the widget if neccessary
   QPointF pos = toScene(event->posF());
   widgets[widgets.size() - 1]->dealMoved(pos, event->button());
+  event->accept();
 }
 
 void MainWidget::mouseReleaseEvent(QMouseEvent *event)
@@ -129,6 +132,7 @@ void MainWidget::mouseReleaseEvent(QMouseEvent *event)
   // Tell the widget if neccessary
   QPointF pos = toScene(event->posF());
   widgets[widgets.size() - 1]->dealReleased(pos, event->button());
+  event->accept();
 }
 
 void MainWidget::changeControl(AbstractPixmapWidget *target,

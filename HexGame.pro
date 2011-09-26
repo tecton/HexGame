@@ -44,7 +44,8 @@ SOURCES += main.cpp\
     achievementitem.cpp \
     statistic.cpp \
     achievements.cpp \
-    achievementwidget.cpp
+    achievementwidget.cpp \
+    puzzlegamerecord.cpp
 
 HEADERS  += ball.h \
     corecontroller.h \
@@ -85,7 +86,8 @@ HEADERS  += ball.h \
     achievementitem.h \
     statistic.h \
     achievements.h \
-    achievementwidget.h
+    achievementwidget.h \
+    puzzlegamerecord.h
 
 RESOURCES += \
     images.qrc \
