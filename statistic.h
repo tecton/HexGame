@@ -7,10 +7,10 @@ class Statistic : public QObject
 {
   Q_OBJECT
 public:
-  enum StatisticType {FlameGetCount=0, //
-                      StarGetCount, //
-                      FlameUsedCount, //
-                      StarUsedCount, //
+  enum StatisticType {FlameGetCount=0,
+                      StarGetCount,
+                      FlameUsedCount,
+                      StarUsedCount,
                       GoodMoveCount,
                       BadMoveCount,
                       SwapClassicPoint,

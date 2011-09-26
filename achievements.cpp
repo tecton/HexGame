@@ -179,7 +179,7 @@ AbstractAchievementItem *Achievements::getAchievementItem
     break;
   case AbstractAchievementItem::Timing:
     item = new TimingPointItem
-           (getAchievementLevel(AbstractAchievementItem::RotateClassic),
+           (getAchievementLevel(AbstractAchievementItem::Timing),
             qMax(statistic.getStatistic(Statistic::SwapTimingPoint),
                  statistic.getStatistic(Statistic::RotateTimingPoint)));
     break;

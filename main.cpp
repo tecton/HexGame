@@ -27,7 +27,7 @@ int main(int argc, char *argv[])
                    SLOT(statisticChanged(Statistic::StatisticType,int,int)));
 
   MainWidget w;
-  w.setAttribute(Qt::WA_PaintOnScreen);
+//  w.setAttribute(Qt::WA_PaintOnScreen);
   w.setGeometry(QRect(100,100,1024,600));
   w.show();
 

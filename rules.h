@@ -7,6 +7,9 @@
 
 #include "abstractrule.h"
 
+/**
+ * @brief A class of a rule of the swap classic game.
+ */
 class SwapClassicGameRule : public AbstractRule
 {
 public:
@@ -16,6 +19,9 @@ public:
   virtual bool endlessFill();
 };
 
+/**
+ * @brief A class of a rule of the rotate classic game.
+ */
 class RotateClassicGameRule : public AbstractRule
 {
 public:
@@ -25,6 +31,9 @@ public:
   virtual bool endlessFill();
 };
 
+/**
+ * @brief A class of a rule of the swap endless game.
+ */
 class SwapEndlessGameRule : public AbstractRule
 {
 public:
@@ -34,6 +43,9 @@ public:
   virtual bool endlessFill();
 };
 
+/**
+ * @brief A class of a rule of the rotate endless game.
+ */
 class RotateEndlessGameRule : public AbstractRule
 {
 public:
@@ -43,6 +55,9 @@ public:
   virtual bool endlessFill();
 };
 
+/**
+ * @brief A class of a rule of the swap timing game.
+ */
 class SwapTimingGameRule : public AbstractRule
 {
 public:
@@ -52,6 +67,9 @@ public:
   virtual bool endlessFill();
 };
 
+/**
+ * @brief A class of a rule of the rotate timing game.
+ */
 class RotateTimingGameRule : public AbstractRule
 {
 public:
@@ -61,6 +79,9 @@ public:
   virtual bool endlessFill();
 };
 
+/**
+ * @brief A class of a rule of the puzzle game.
+ */
 class PuzzleGameRule : public AbstractRule
 {
 public:
@@ -70,12 +91,18 @@ public:
   virtual bool endlessFill();
 };
 
+/**
+ * @brief A class of a rule of the rotate puzzle game.
+ */
 class RotatePuzzleGameRule : public PuzzleGameRule
 {
 public:
   virtual bool gestureAllowed(AbstractRule::Gesture gesture);
 };
 
+/**
+ * @brief A class of a rule of the swap puzzle game(not used).
+ */
 class SwapPuzzleGameRule : public PuzzleGameRule
 {
 public:

@@ -133,7 +133,7 @@ void VerticalProgressBarItem::paint(QPainter *painter,
 
 double AbstractBonusItem::r()
 {
-  return 25;
+  return 35;
 }
 
 FlameItem::FlameItem()

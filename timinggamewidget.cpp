@@ -110,6 +110,14 @@ TimingGameWidget::TimingGameWidget(AbstractRule::Gesture gesture) :
 
   // Connect signals and slots
   connect(controller,
+          SIGNAL(goodMove()),
+          this,
+          SLOT(goodMove()));
+  connect(controller,
+          SIGNAL(badMove()),
+          this,
+          SLOT(badMove()));
+  connect(controller,
           SIGNAL(stableEliminateTested(Connections)),
           this,
           SLOT(dealStableEliminate(Connections)));
