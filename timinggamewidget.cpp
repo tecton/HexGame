@@ -639,10 +639,14 @@ void TimingGameWidget::goodMove()
 {
   // Add sound effect
   PublicGameSounds::addSound(PublicGameSounds::GoodMove);
+
+  statistic.changeStatistic(Statistic::GoodMoveCount, 1, true);
 }
 
 void TimingGameWidget::badMove()
 {
   // Add sound effect
   PublicGameSounds::addSound(PublicGameSounds::BadMove);
+
+  statistic.changeStatistic(Statistic::BadMoveCount, 1, true);
 }

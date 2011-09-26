@@ -404,9 +404,7 @@ void ClassicGameWidget::dealReleased(QPointF mousePos, Qt::MouseButton button)
 {
   if (itemAtPressPos != NULL)
   {
-    if (itemAtPressPos == flame &&
-        flame->in(mousePos, gameboardInfo->width(), gameboardInfo->height()) &&
-        flame->notEmpty())
+    if (itemAtPressPos == flame && flame->notEmpty())
     {
       int index = gameboardInfo->indexOfPosition(mousePos);
       if (index != -1)
@@ -427,9 +425,7 @@ void ClassicGameWidget::dealReleased(QPointF mousePos, Qt::MouseButton button)
         statistic.changeStatistic(Statistic::FlameUsedCount, 1, true);
       }
     }
-    else if (itemAtPressPos == star &&
-             star->in(mousePos, gameboardInfo->width(), gameboardInfo->height()) &&
-             star->notEmpty())
+    else if (itemAtPressPos == star && star->notEmpty())
     {
       int index = gameboardInfo->indexOfPosition(mousePos);
       if (index != -1)
@@ -694,8 +690,7 @@ void ClassicGameWidget::reset()
   if (rule->gestureAllowed(AbstractRule::Swap))
     resetGame = new ClassicGameWidget(AbstractRule::Swap);
   else
-    resetGame =
-        new ClassicGameWidget(AbstractRule::Rotate);
+    resetGame = new ClassicGameWidget(AbstractRule::Rotate);
   emit giveControlTo(resetGame, true);
   delete this;
 }
@@ -704,10 +699,14 @@ void ClassicGameWidget::goodMove()
 {
   // Add sound effect
   PublicGameSounds::addSound(PublicGameSounds::GoodMove);
+
+  statistic.changeStatistic(Statistic::GoodMoveCount, 1, true);
 }
 
 void ClassicGameWidget::badMove()
 {
   // Add sound effect
   PublicGameSounds::addSound(PublicGameSounds::BadMove);
+
+  statistic.changeStatistic(Statistic::BadMoveCount, 1, true);
 }
