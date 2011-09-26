@@ -67,7 +67,7 @@ RotatePuzzleGame::RotatePuzzleGame(int ballIndex[],
     minimalSteps->setHint(" Least moved steps: ");
     minimalSteps->setValue((minSteps != -1) ? minSteps : 99);
     minimalSteps->setPos(QPointF(0.15, 0.65));
-    exitItem = new ExitItem();
+    exitItem = new ButtonItem("Exit");
     exitItem->setPos(QPointF(0.15,0.85));
     // collect them
     myItems.push_back(currentSteps);
@@ -243,9 +243,9 @@ void RotatePuzzleGame::dealPressed(QPointF mousePos, Qt::MouseButton button)
     }
   if (targetSize == 1 && direction == 0)
   {
-    if (distanceOfTwoPoints(mousePos,
-                            toScene(exitItem->getPos().x(),
-                                    exitItem->getPos().y())) < 50)
+    if (exitItem->in(mousePos,
+                     gameboardInfo->width(),
+                     gameboardInfo->height()))
     {
       quitGame();
       return;

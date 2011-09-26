@@ -12,7 +12,6 @@
 #include "gesturecontroller.h"
 #include "basicpainter.h"
 #include "gamecommonitems.h"
-#include "gamemath.h"
 #include "thirtysevengameboardinfo.h"
 #include "othergameinit.h"
 #include "resetwidget.h"
@@ -23,9 +22,6 @@
 #include "statistic.h"
 
 extern Statistic statistic;
-
-#define LOGICAL_WIDTH  1024
-#define LOGICAL_HEIGHT 600
 
 TimingGameWidget::TimingGameWidget(AbstractRule::Gesture gesture) :
     frameCount(0)
@@ -93,19 +89,19 @@ TimingGameWidget::TimingGameWidget(AbstractRule::Gesture gesture) :
   star->setCurrent(0);
   myItems.push_back(star);
 
-  hint = new HintItem();
+  hint = new ButtonItem("Hint");
   hint->setPos(QPointF(0.1, 0.6));
   myItems.push_back(hint);
 
-  resetItem = new ResetItem();
+  resetItem = new ButtonItem("Reset");
   resetItem->setPos(QPointF(0.1, 0.7));
   myItems.push_back(resetItem);
 
-  pauseItem = new PauseItem();
+  pauseItem = new ButtonItem("Pause");
   pauseItem->setPos(QPointF(0.1, 0.8));
   myItems.push_back(pauseItem);
 
-  exitItem = new ExitItem();
+  exitItem = new ButtonItem("Exit");
   exitItem->setPos(QPointF(0.1, 0.9));
   myItems.push_back(exitItem);
 
@@ -332,29 +328,23 @@ void TimingGameWidget::dealPressed(QPointF mousePos, Qt::MouseButton button)
 {
   // Choose the correct item at press position
   currentPos = mousePos;
-  if (distanceOfTwoPoints(mousePos,
-                          toScene(flame->getPos().x(),
-                                  flame->getPos().y())) < 50)
+  if (flame->in(mousePos, gameboardInfo->width(), gameboardInfo->height()))
     itemAtPressPos = flame;
-  else if (distanceOfTwoPoints(mousePos,
-                               toScene(star->getPos().x(),
-                                       star->getPos().y())) < 50)
+  else if (star->in(mousePos, gameboardInfo->width(), gameboardInfo->height()))
     itemAtPressPos = star;
-  else if (distanceOfTwoPoints(mousePos,
-                               toScene(hint->getPos().x(),
-                                       hint->getPos().y())) < 50)
+  else if (hint->in(mousePos, gameboardInfo->width(), gameboardInfo->height()))
     itemAtPressPos = hint;
-  else if (distanceOfTwoPoints(mousePos,
-                               toScene(resetItem->getPos().x(),
-                                       resetItem->getPos().y())) < 50)
+  else if (resetItem->in(mousePos,
+                         gameboardInfo->width(),
+                         gameboardInfo->height()))
     itemAtPressPos = resetItem;
-  else if (distanceOfTwoPoints(mousePos,
-                               toScene(pauseItem->getPos().x(),
-                                       pauseItem->getPos().y())) < 50)
+  else if (pauseItem->in(mousePos,
+                         gameboardInfo->width(),
+                         gameboardInfo->height()))
     itemAtPressPos = pauseItem;
-  else if (distanceOfTwoPoints(mousePos,
-                               toScene(exitItem->getPos().x(),
-                                       exitItem->getPos().y())) < 50)
+  else if (exitItem->in(mousePos,
+                        gameboardInfo->width(),
+                        gameboardInfo->height()))
     itemAtPressPos = exitItem;
   else
     itemAtPressPos = NULL;
@@ -430,9 +420,9 @@ void TimingGameWidget::dealReleased(QPointF mousePos, Qt::MouseButton button)
       }
     }
     else if (itemAtPressPos == hint &&
-             distanceOfTwoPoints(mousePos,
-                                 toScene(hint->getPos().x(),
-                                         hint->getPos().y())) < 30)
+             hint->in(mousePos,
+                      gameboardInfo->width(),
+                      gameboardInfo->height()))
     {
       // Reduce the score
       int score = qMax(currentScore->getValue() - 10, 0);
@@ -442,9 +432,9 @@ void TimingGameWidget::dealReleased(QPointF mousePos, Qt::MouseButton button)
       showHint();
     }
     else if (itemAtPressPos == pauseItem &&
-             distanceOfTwoPoints(mousePos,
-                                 toScene(pauseItem->getPos().x(),
-                                         pauseItem->getPos().y())) < 30)
+             pauseItem->in(mousePos,
+                           gameboardInfo->width(),
+                           gameboardInfo->height()))
     {
       // Pause
       t->stop();
@@ -457,9 +447,9 @@ void TimingGameWidget::dealReleased(QPointF mousePos, Qt::MouseButton button)
       return;
     }
     else if (itemAtPressPos == resetItem &&
-             distanceOfTwoPoints(mousePos,
-                                 toScene(resetItem->getPos().x(),
-                                         resetItem->getPos().y())) < 30)
+             resetItem->in(mousePos,
+                           gameboardInfo->width(),
+                           gameboardInfo->height()))
     {
       // Pause
       t->stop();
@@ -471,9 +461,9 @@ void TimingGameWidget::dealReleased(QPointF mousePos, Qt::MouseButton button)
       emit giveControlTo(w, false);
     }
     else if (itemAtPressPos == exitItem &&
-             distanceOfTwoPoints(mousePos,
-                                 toScene(exitItem->getPos().x(),
-                                         exitItem->getPos().y())) < 30)
+             exitItem->in(mousePos,
+                          gameboardInfo->width(),
+                          gameboardInfo->height()))
     {
       // Quit game
       quitGame();

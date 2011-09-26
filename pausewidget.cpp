@@ -4,7 +4,6 @@
 #include <QPixmap>
 #include "basicpainter.h"
 #include "gamecommonitems.h"
-#include "gamemath.h"
 #include "othergameinit.h"
 #include "abstractrule.h"
 

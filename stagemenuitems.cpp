@@ -37,3 +37,8 @@ void StageMenuItem::paint(QPainter *painter,
                true,
                true);
 }
+
+double StageMenuItem::r()
+{
+  return 100;
+}

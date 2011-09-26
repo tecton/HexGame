@@ -7,10 +7,10 @@
 #include "statistic.h"
 #include <QVector>
 
-const int kFlameGetStage[] =      {10, 100, 1000};
-const int kStarGetStage[] =       {10, 100, 1000};
-const int kRotateClassicStage[] = {500, 1000, 2000};
-const int kTimingStage[] =        {400, 700, 1000};
+const int kFlameGetStage[] =      {10, 100, 1000, -1};
+const int kStarGetStage[] =       {10, 100, 1000, -1};
+const int kRotateClassicStage[] = {500, 1000, 2000, -1};
+const int kTimingStage[] =        {400, 700, 1000, -1};
 
 class QPainter;
 

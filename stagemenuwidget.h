@@ -97,7 +97,6 @@ private:
   StageMenuItem **stageItem;
   QVector <AbstractItem *> myItems;
   int frameCount;
-  QPointF *position;
 
 private slots:
   void advance();
@@ -148,7 +147,6 @@ private:
   StageMenuItem **stageItem;
   QVector <AbstractItem *> myItems;
   int frameCount;
-  QPointF *position;
 
 private slots:
   void advance();

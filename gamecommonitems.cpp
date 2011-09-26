@@ -131,6 +131,11 @@ void VerticalProgressBarItem::paint(QPainter *painter,
   painter->setFont(originalFont);
 }
 
+double AbstractBonusItem::r()
+{
+  return 25;
+}
+
 FlameItem::FlameItem()
 {
   // Set the icon
@@ -295,161 +300,213 @@ void StarItem::paintInfluencedArea(int index,
   }
 }
 
-void HintItem::paint(QPainter *painter,
-                     int width,
-                     int height,
-                     int frame)
+ButtonItem::ButtonItem(QString str)
 {
-  // Init buttons if neccessary
-  if (buttonsPixmaps.isEmpty())
-    initButtonsPixmaps();
-
-  // Calculate values to locate
-  double x = getPos().x() * width;
-  double y = getPos().y() * height;
-  const QPixmap& p = buttonsPixmaps[HINT][frame % buttonsFrameCounts[HINT]];
-  double xRate = 1.0 * width * BUTTON_LOGICAL_WIDTH / LOGICAL_WIDTH / p.width();
-  double yRate = 1.0 * height * BUTTON_LOGICAL_HEIGHT / LOGICAL_HEIGHT / p.height();
-
-  // Paint the icon
-  drawPixmapAt(painter,
-               p,
-               xRate,
-               yRate,
-               QPointF(x, y),
-               true,
-               true);
+  caption = str;
+  background = QPixmap(""/*":/images/gamecommonitems/buttonbackground.png"*/);
 }
 
-void ExitItem::paint(QPainter *painter,
-                     int width,
-                     int height,
-                     int frame)
+void ButtonItem::paint(QPainter *painter, int width, int height, int frame)
 {
-  // Init buttons if neccessary
-  if (buttonsPixmaps.isEmpty())
-    initButtonsPixmaps();
+    // Calculate values to locate
+    double x = getPos().x() * width;
+    double y = getPos().y() * height;
+    double xRate = 1.0 * width * BUTTON_LOGICAL_WIDTH /
+                   LOGICAL_WIDTH / background.width();
+    double yRate = 1.0 * height * BUTTON_LOGICAL_HEIGHT /
+                   LOGICAL_HEIGHT / background.height();
 
-  // Calculate values to locate
-  double x = getPos().x() * width;
-  double y = getPos().y() * height;
-  const QPixmap& p = buttonsPixmaps[EXIT][frame % buttonsFrameCounts[EXIT]];
-  double xRate = 1.0 * width * BUTTON_LOGICAL_WIDTH / LOGICAL_WIDTH / p.width();
-  double yRate = 1.0 * height * BUTTON_LOGICAL_HEIGHT / LOGICAL_HEIGHT / p.height();
+    // Paint the icon
+    drawPixmapAt(painter,
+                 background,
+                 xRate,
+                 yRate,
+                 QPointF(x, y),
+                 true,
+                 true);
 
-  // Paint the icon
-  drawPixmapAt(painter,
-               p,
-               xRate,
-               yRate,
-               QPointF(x, y),
-               true,
-               true);
+    // Save the font
+    QFont originalFont = painter->font();
+
+    // Set the font and pen
+    QFont f;
+    f.setBold(true);
+    f.setPixelSize(20 * width / LOGICAL_WIDTH);
+    painter->setFont(f);
+    painter->setPen(QColor(255, 255, 255));
+    // Paint the text
+    drawTextAt(x, y, painter, caption);
+
+    // Set the font to the original one
+    painter->setFont(originalFont);
 }
 
-void ResetItem::paint(QPainter *painter,
-                      int width,
-                      int height,
-                      int frame)
+
+double ButtonItem::width()
 {
-  // Init buttons if neccessary
-  if (buttonsPixmaps.isEmpty())
-    initButtonsPixmaps();
-
-  // Calculate values to locate
-  double x = getPos().x() * width;
-  double y = getPos().y() * height;
-  const QPixmap& p = buttonsPixmaps[RESET][frame % buttonsFrameCounts[RESET]];
-  double xRate = 1.0 * width * BUTTON_LOGICAL_WIDTH / LOGICAL_WIDTH / p.width();
-  double yRate = 1.0 * height * BUTTON_LOGICAL_HEIGHT / LOGICAL_HEIGHT / p.height();
-
-  // Paint the icon
-  drawPixmapAt(painter,
-               p,
-               xRate,
-               yRate,
-               QPointF(x, y),
-               true,
-               true);
+  return BUTTON_LOGICAL_WIDTH;
 }
 
-void PauseItem::paint(QPainter *painter,
-                      int width,
-                      int height,
-                      int frame)
+double ButtonItem::height()
 {
-  // Init buttons if neccessary
-  if (buttonsPixmaps.isEmpty())
-    initButtonsPixmaps();
-
-  // Calculate values to locate
-  double x = getPos().x() * width;
-  double y = getPos().y() * height;
-  const QPixmap& p = buttonsPixmaps[PAUSE][frame % buttonsFrameCounts[PAUSE]];
-  double xRate = 1.0 * width * BUTTON_LOGICAL_WIDTH / LOGICAL_WIDTH / p.width();
-  double yRate = 1.0 * height * BUTTON_LOGICAL_HEIGHT / LOGICAL_HEIGHT / p.height();
-
-  // Paint the icon
-  drawPixmapAt(painter,
-               p,
-               xRate,
-               yRate,
-               QPointF(x, y),
-               true,
-               true);
+  return BUTTON_LOGICAL_HEIGHT;
 }
 
-void ConfirmItem::paint(QPainter *painter,
-                        int width,
-                        int height,
-                        int frame)
-{
-  // Init buttons if neccessary
-  if (buttonsPixmaps.isEmpty())
-    initButtonsPixmaps();
+//void HintItem::paint(QPainter *painter,
+//                     int width,
+//                     int height,
+//                     int frame)
+//{
+//  // Init buttons if neccessary
+//  if (buttonsPixmaps.isEmpty())
+//    initButtonsPixmaps();
 
-  // Calculate values to locate
-  double x = getPos().x() * width;
-  double y = getPos().y() * height;
-  const QPixmap& p = buttonsPixmaps[CONFIRM][frame % buttonsFrameCounts[CONFIRM]];
-  double xRate = 1.0 * width * BUTTON_LOGICAL_WIDTH / LOGICAL_WIDTH / p.width();
-  double yRate = 1.0 * height * BUTTON_LOGICAL_HEIGHT / LOGICAL_HEIGHT / p.height();
+//  // Calculate values to locate
+//  double x = getPos().x() * width;
+//  double y = getPos().y() * height;
+//  const QPixmap& p = buttonsPixmaps[HINT][frame % buttonsFrameCounts[HINT]];
+//  double xRate = 1.0 * width * BUTTON_LOGICAL_WIDTH / LOGICAL_WIDTH / p.width();
+//  double yRate = 1.0 * height * BUTTON_LOGICAL_HEIGHT / LOGICAL_HEIGHT / p.height();
 
-  // Paint the icon
-  drawPixmapAt(painter,
-               p,
-               xRate,
-               yRate,
-               QPointF(x, y),
-               true,
-               true);
-}
+//  // Paint the icon
+//  drawPixmapAt(painter,
+//               p,
+//               xRate,
+//               yRate,
+//               QPointF(x, y),
+//               true,
+//               true);
+//}
 
-void CancelItem::paint(QPainter *painter,
-                       int width,
-                       int height,
-                       int frame)
-{
-  // Init buttons if neccessary
-  if (buttonsPixmaps.isEmpty())
-    initButtonsPixmaps();
+//void ExitItem::paint(QPainter *painter,
+//                     int width,
+//                     int height,
+//                     int frame)
+//{
+//  // Init buttons if neccessary
+//  if (buttonsPixmaps.isEmpty())
+//    initButtonsPixmaps();
 
-  // Calculate values to locate
-  double x = getPos().x() * width;
-  double y = getPos().y() * height;
-  const QPixmap& p = buttonsPixmaps[CANCEL][frame % buttonsFrameCounts[CANCEL]];
-  double xRate = 1.0 * width * BUTTON_LOGICAL_WIDTH / LOGICAL_WIDTH / p.width();
-  double yRate = 1.0 * height * BUTTON_LOGICAL_HEIGHT / LOGICAL_HEIGHT / p.height();
+//  // Calculate values to locate
+//  double x = getPos().x() * width;
+//  double y = getPos().y() * height;
+//  const QPixmap& p = buttonsPixmaps[EXIT][frame % buttonsFrameCounts[EXIT]];
+//  double xRate = 1.0 * width * BUTTON_LOGICAL_WIDTH / LOGICAL_WIDTH / p.width();
+//  double yRate = 1.0 * height * BUTTON_LOGICAL_HEIGHT / LOGICAL_HEIGHT / p.height();
 
-  // Paint the icon
-  drawPixmapAt(painter,
-               p,
-               xRate,
-               yRate,
-               QPointF(x, y),
-               true,
-               true);
-}
+//  // Paint the icon
+//  drawPixmapAt(painter,
+//               p,
+//               xRate,
+//               yRate,
+//               QPointF(x, y),
+//               true,
+//               true);
+//}
+
+//void ResetItem::paint(QPainter *painter,
+//                      int width,
+//                      int height,
+//                      int frame)
+//{
+//  // Init buttons if neccessary
+//  if (buttonsPixmaps.isEmpty())
+//    initButtonsPixmaps();
+
+//  // Calculate values to locate
+//  double x = getPos().x() * width;
+//  double y = getPos().y() * height;
+//  const QPixmap& p = buttonsPixmaps[RESET][frame % buttonsFrameCounts[RESET]];
+//  double xRate = 1.0 * width * BUTTON_LOGICAL_WIDTH / LOGICAL_WIDTH / p.width();
+//  double yRate = 1.0 * height * BUTTON_LOGICAL_HEIGHT / LOGICAL_HEIGHT / p.height();
+
+//  // Paint the icon
+//  drawPixmapAt(painter,
+//               p,
+//               xRate,
+//               yRate,
+//               QPointF(x, y),
+//               true,
+//               true);
+//}
+
+//void PauseItem::paint(QPainter *painter,
+//                      int width,
+//                      int height,
+//                      int frame)
+//{
+//  // Init buttons if neccessary
+//  if (buttonsPixmaps.isEmpty())
+//    initButtonsPixmaps();
+
+//  // Calculate values to locate
+//  double x = getPos().x() * width;
+//  double y = getPos().y() * height;
+//  const QPixmap& p = buttonsPixmaps[PAUSE][frame % buttonsFrameCounts[PAUSE]];
+//  double xRate = 1.0 * width * BUTTON_LOGICAL_WIDTH / LOGICAL_WIDTH / p.width();
+//  double yRate = 1.0 * height * BUTTON_LOGICAL_HEIGHT / LOGICAL_HEIGHT / p.height();
+
+//  // Paint the icon
+//  drawPixmapAt(painter,
+//               p,
+//               xRate,
+//               yRate,
+//               QPointF(x, y),
+//               true,
+//               true);
+//}
+
+//void ConfirmItem::paint(QPainter *painter,
+//                        int width,
+//                        int height,
+//                        int frame)
+//{
+//  // Init buttons if neccessary
+//  if (buttonsPixmaps.isEmpty())
+//    initButtonsPixmaps();
+
+//  // Calculate values to locate
+//  double x = getPos().x() * width;
+//  double y = getPos().y() * height;
+//  const QPixmap& p = buttonsPixmaps[CONFIRM][frame % buttonsFrameCounts[CONFIRM]];
+//  double xRate = 1.0 * width * BUTTON_LOGICAL_WIDTH / LOGICAL_WIDTH / p.width();
+//  double yRate = 1.0 * height * BUTTON_LOGICAL_HEIGHT / LOGICAL_HEIGHT / p.height();
+
+//  // Paint the icon
+//  drawPixmapAt(painter,
+//               p,
+//               xRate,
+//               yRate,
+//               QPointF(x, y),
+//               true,
+//               true);
+//}
+
+//void CancelItem::paint(QPainter *painter,
+//                       int width,
+//                       int height,
+//                       int frame)
+//{
+//  // Init buttons if neccessary
+//  if (buttonsPixmaps.isEmpty())
+//    initButtonsPixmaps();
+
+//  // Calculate values to locate
+//  double x = getPos().x() * width;
+//  double y = getPos().y() * height;
+//  const QPixmap& p = buttonsPixmaps[CANCEL][frame % buttonsFrameCounts[CANCEL]];
+//  double xRate = 1.0 * width * BUTTON_LOGICAL_WIDTH / LOGICAL_WIDTH / p.width();
+//  double yRate = 1.0 * height * BUTTON_LOGICAL_HEIGHT / LOGICAL_HEIGHT / p.height();
+
+//  // Paint the icon
+//  drawPixmapAt(painter,
+//               p,
+//               xRate,
+//               yRate,
+//               QPointF(x, y),
+//               true,
+//               true);
+//}
 
 IntegerItem::IntegerItem()
 {

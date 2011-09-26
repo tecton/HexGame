@@ -6,7 +6,6 @@
 #include <QFileInfo>
 #include <QTextStream>
 #include "basicpainter.h"
-#include "gamemath.h"
 #include "stagemenuitems.h"
 #include "rotatepuzzlegame.h"
 #include "puzzlegameinit.h"
@@ -97,7 +96,7 @@ ExchangeStageMenuWidget::ExchangeStageMenuWidget(int stageType) :
   suffix = "*.png";
   imageName = "";
   QString name[] = {"01", "02", "03", "04"};
-  position = new QPointF[5];
+  QPointF position[5];
   position[0] = QPointF(0.35, 0.35);
   position[1] = QPointF(0.5, 0.2);
   position[2] = QPointF(0.5, 0.5);
@@ -173,8 +172,7 @@ void ExchangeStageMenuWidget::dealPressed(QPointF mousePos, Qt::MouseButton butt
 
   for (int i = 0; i < 4; ++i)
   {
-    if (distanceOfTwoPoints(mousePos,
-                            toScene(position[i].x(), position[i].y())) < 81)
+    if (stageItem[i]->in(mousePos, LOGICAL_WIDTH, LOGICAL_HEIGHT))
     { 
 //      RotatePuzzleGame *puzzleGame = PuzzleGameInit::initRotatePuzzleGame(i, 0);
 //      emit giveControlTo(puzzleGame, false);
@@ -196,16 +194,13 @@ void ExchangeStageMenuWidget::dealPressed(QPointF mousePos, Qt::MouseButton butt
       return;
     }
   }
-  if (distanceOfTwoPoints(mousePos,
-                          toScene(position[4].x(), position[4].y())) < 81)
+  if (stageItem[4]->in(mousePos, LOGICAL_WIDTH, LOGICAL_HEIGHT))
   {
     emit giveControlTo(new ExchangeStageMenuWidget(type ^ 1), true);
     delete this;
     return;
   }
-  else if (distanceOfTwoPoints(mousePos,
-                          QPointF(0.8 * LOGICAL_WIDTH,
-                                  0.8 * LOGICAL_HEIGHT)) < 81)
+  else if (stageItem[5]->in(mousePos, LOGICAL_WIDTH, LOGICAL_HEIGHT))
   {
     emit giveControlTo(NULL, true);
     delete this;
@@ -226,7 +221,6 @@ void ExchangeStageMenuWidget::dealReleased(QPointF mousePos, Qt::MouseButton but
 void ExchangeStageMenuWidget::advance()
 {
   ++frameCount;
-  frameCount = frameCount % 32;
   //effectPainter->advance();
 }
 
@@ -266,7 +260,7 @@ UniteStageMenuWidget::UniteStageMenuWidget(int stageType) :
   }
 
   QString name[] = {"01", "02", "03", "04", "05"};
-  position = new QPointF[6];
+  QPointF position[6];
   position[0] = QPointF(0.35, 0.65);
   position[1] = QPointF(0.35, 0.35);
   position[2] = QPointF(0.5, 0.2);
@@ -333,8 +327,7 @@ void UniteStageMenuWidget::dealPressed(QPointF mousePos, Qt::MouseButton button)
 
   for (int i = 0; i < 5; ++i)
   {
-    if (distanceOfTwoPoints(mousePos,
-                            toScene(position[i].x(), position[i].y())) < 81)
+    if (stageItem[i]->in(mousePos, LOGICAL_WIDTH, LOGICAL_HEIGHT))
     {
 //      int *ballIndex = new int [61];
 //      int *toBeIndex = new int [61];
@@ -357,16 +350,13 @@ void UniteStageMenuWidget::dealPressed(QPointF mousePos, Qt::MouseButton button)
       delete this;
       return;
     }
-    if (distanceOfTwoPoints(mousePos,
-                            toScene(position[5].x(), position[5].y())) < 81)
+    if (stageItem[5]->in(mousePos, LOGICAL_WIDTH, LOGICAL_HEIGHT))
     {
       emit giveControlTo(new UniteStageMenuWidget(type ^ 1), true);
       delete this;
       return;
     }
-    else if (distanceOfTwoPoints(mousePos,
-                            QPointF(0.8 * LOGICAL_WIDTH,
-                                    0.8 * LOGICAL_HEIGHT)) < 81)
+    else if (stageItem[6]->in(mousePos, LOGICAL_WIDTH, LOGICAL_HEIGHT))
     {
       emit giveControlTo(NULL, true);
       delete this;
@@ -388,7 +378,6 @@ void UniteStageMenuWidget::dealReleased(QPointF mousePos, Qt::MouseButton button
 void UniteStageMenuWidget::advance()
 {
   ++frameCount;
-  frameCount = frameCount % 32;
   //effectPainter->advance();
 }
 
@@ -557,9 +546,7 @@ void LockStageMenuWidget::dealPressed(QPointF mousePos, Qt::MouseButton button)
 
   for (int i = 0; i < 10; ++i)
   {
-    if (distanceOfTwoPoints(mousePos,
-                            QPointF((0.13 + 0.07 + 0.15 * (i % 5)) * LOGICAL_WIDTH,
-                                    (0.15 + 0.05 + 0.45 * (i / 5) + 0.15 * (i % 2)) * LOGICAL_HEIGHT)) < 81)
+    if (stageItem[i]->in(mousePos, LOGICAL_WIDTH, LOGICAL_HEIGHT))
     {
 //      int *ballIndex = new int [61];
 //      int *toBeIndex = new int [61];
@@ -583,17 +570,13 @@ void LockStageMenuWidget::dealPressed(QPointF mousePos, Qt::MouseButton button)
       return;
     }
   }
-  if (distanceOfTwoPoints(mousePos,
-                          QPointF(0.5 * LOGICAL_WIDTH,
-                                  0.5 * LOGICAL_HEIGHT)) < 81)
+  if (stageItem[10]->in(mousePos, LOGICAL_WIDTH, LOGICAL_HEIGHT))
   {
     emit giveControlTo(new LockStageMenuWidget(type ^ 1), true);
     delete this;
     return;
   }
-  else if (distanceOfTwoPoints(mousePos,
-                          QPointF(0.8 * LOGICAL_WIDTH,
-                                  0.5 * LOGICAL_HEIGHT)) < 81)
+  else if (stageItem[11]->in(mousePos, LOGICAL_WIDTH, LOGICAL_HEIGHT))
   {
     emit giveControlTo(NULL, true);
     delete this;
@@ -614,7 +597,6 @@ void LockStageMenuWidget::dealReleased(QPointF mousePos, Qt::MouseButton button)
 void LockStageMenuWidget::advance()
 {
   ++frameCount;
-  frameCount = frameCount % 32;
   //effectPainter->advance();
 }
 

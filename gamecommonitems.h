@@ -58,6 +58,9 @@ public:
 
   virtual void paint(QPainter *painter, int width, int height, int frame)=0;
 
+  virtual bool in(QPointF mousePos, int windowWidth, int windowHeight)
+  {return false;}
+
 private:
   // 3 key values of a progress bar
   int min;
@@ -87,7 +90,7 @@ private:
 /**
  * @brief An abstract class of an item of a bonus.
  */
-class AbstractBonusItem : public AbstractItem
+class AbstractBonusItem : public AbstractCircleItem
 {
 public:
   /**
@@ -176,6 +179,8 @@ public:
                                    EffectPainter *effectPainter,
                                    int frame)=0;
 
+  virtual double r();
+
 private:
   // 2 key values of a bonus item
   int max;
@@ -237,58 +242,76 @@ private:
 };
 
 /**
- * @brief A class of an item of a button with "HINT".
+ * @brief A class of an item of a button with text
  */
-class HintItem : public AbstractItem
+class ButtonItem : public AbstractRectItem
 {
 public:
+  ButtonItem(QString str);
+
   virtual void paint(QPainter *painter, int width, int height, int frame);
+
+  virtual double width();
+  virtual double height();
+
+private:
+  QString caption;
+  QPixmap background;
 };
 
-/**
- * @brief A class of an item of a button with "EXIT".
- */
-class ExitItem : public AbstractItem
-{
-public:
-  virtual void paint(QPainter *painter, int width, int height, int frame);
-};
+///**
+// * @brief A class of an item of a button with "HINT".
+// */
+//class HintItem : public AbstractItem
+//{
+//public:
+//  virtual void paint(QPainter *painter, int width, int height, int frame);
+//};
 
-/**
- * @brief A class of an item of a button with "RESET".
- */
-class ResetItem : public AbstractItem
-{
-public:
-  virtual void paint(QPainter *painter, int width, int height, int frame);
-};
+///**
+// * @brief A class of an item of a button with "EXIT".
+// */
+//class ExitItem : public AbstractItem
+//{
+//public:
+//  virtual void paint(QPainter *painter, int width, int height, int frame);
+//};
 
-/**
- * @brief A class of an item of a button with "PAUSE".
- */
-class PauseItem : public AbstractItem
-{
-public:
-  virtual void paint(QPainter *painter, int width, int height, int frame);
-};
+///**
+// * @brief A class of an item of a button with "RESET".
+// */
+//class ResetItem : public AbstractItem
+//{
+//public:
+//  virtual void paint(QPainter *painter, int width, int height, int frame);
+//};
 
-/**
- * @brief A class of an item of a button with "CONFIRM".
- */
-class ConfirmItem : public AbstractItem
-{
-public:
-  virtual void paint(QPainter *painter, int width, int height, int frame);
-};
+///**
+// * @brief A class of an item of a button with "PAUSE".
+// */
+//class PauseItem : public AbstractItem
+//{
+//public:
+//  virtual void paint(QPainter *painter, int width, int height, int frame);
+//};
 
-/**
- * @brief A class of an item of a button with "CANCEL".
- */
-class CancelItem : public AbstractItem
-{
-public:
-  virtual void paint(QPainter *painter, int width, int height, int frame);
-};
+///**
+// * @brief A class of an item of a button with "CONFIRM".
+// */
+//class ConfirmItem : public AbstractItem
+//{
+//public:
+//  virtual void paint(QPainter *painter, int width, int height, int frame);
+//};
+
+///**
+// * @brief A class of an item of a button with "CANCEL".
+// */
+//class CancelItem : public AbstractItem
+//{
+//public:
+//  virtual void paint(QPainter *painter, int width, int height, int frame);
+//};
 
 /**
  * @brief A class of an item to show an integer and a string to describe it.
@@ -328,6 +351,9 @@ public:
 
   virtual void paint(QPainter *painter, int width, int height, int frame);
 
+  virtual bool in(QPointF mousePos, int windowWidth, int windowHeight)
+  {return false;}
+
 private:
   // The background of the item
   QPixmap p;
@@ -363,6 +389,9 @@ public:
   {return hint;}
 
   virtual void paint(QPainter *painter, int width, int height, int frame);
+
+  virtual bool in(QPointF mousePos, int windowWidth, int windowHeight)
+  {return false;}
 
 private:
   // The background of the item

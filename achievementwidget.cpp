@@ -4,7 +4,6 @@
 #include <QPixmap>
 #include "basicpainter.h"
 #include "gamecommonitems.h"
-#include "gamemath.h"
 #include "achievements.h"
 
 #define LOGICAL_WIDTH  1024
@@ -17,7 +16,7 @@ AchievementWidget::AchievementWidget() :
     activeAchievementIndex(0)
 {
   // Create the items and initialize them
-  exitItem = new ExitItem();
+  exitItem = new ButtonItem("Exit");
   exitItem->setPos(QPointF(0.75, 0.9));
   myItems.push_back(exitItem);
 
@@ -116,28 +115,28 @@ void AchievementWidget::dealPressed(QPointF mousePos, Qt::MouseButton button)
                                   exitItem->getPos().y())) < 50)
     itemAtPressPos = exitItem;
 
-  mousePos.setX(mousePos.x() / LOGICAL_WIDTH);
-  mousePos.setY(mousePos.y() / LOGICAL_HEIGHT);
   for (int i = 0;i < achievementItems.size();++i)
-    if (achievementItems[i]->in(mousePos))
+    if (achievementItems[i]->in(mousePos, LOGICAL_WIDTH, LOGICAL_HEIGHT))
+    {
       activeAchievementIndex = i;
+      break;
+    }
 }
 
 void AchievementWidget::dealMoved(QPointF mousePos, Qt::MouseButton button)
 {
-  mousePos.setX(mousePos.x() / LOGICAL_WIDTH);
-  mousePos.setY(mousePos.y() / LOGICAL_HEIGHT);
   for (int i = 0;i < achievementItems.size();++i)
-    if (achievementItems[i]->in(mousePos))
+    if (achievementItems[i]->in(mousePos, LOGICAL_WIDTH, LOGICAL_HEIGHT))
+    {
       activeAchievementIndex = i;
+      break;
+    }
 }
 
 void AchievementWidget::dealReleased(QPointF mousePos, Qt::MouseButton button)
 {
-  if (distanceOfTwoPoints(mousePos,
-                          toScene(exitItem->getPos().x(),
-                                  exitItem->getPos().y())) < 50 &&
-      itemAtPressPos == exitItem)
+  if (itemAtPressPos == exitItem &&
+      exitItem->in(mousePos, LOGICAL_WIDTH, LOGICAL_HEIGHT))
   {
     // Exit
     emit giveControlTo(NULL, true);

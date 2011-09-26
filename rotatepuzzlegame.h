@@ -16,7 +16,6 @@ class AbstractRule;
 class RotatePuzzleGameRule;
 class AbstractItem;
 class IntegerItem;
-class ExitItem;
 
 /**
  * @brief A class to play a rotate puzzle game.
@@ -89,7 +88,7 @@ private:
   IntegerItem *currentSteps;
   IntegerItem *minimalSteps;
   // exit button
-  ExitItem *exitItem;
+  AbstractItem *exitItem;
 
   // collect items
   QVector <AbstractItem *> myItems;

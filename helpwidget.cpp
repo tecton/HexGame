@@ -3,7 +3,6 @@
 #include <QPainter>
 #include "basicpainter.h"
 #include "gamecommonitems.h"
-#include "gamemath.h"
 #include "othergameinit.h"
 #include "abstractrule.h"
 #include "pixmapoperations.h"
@@ -18,7 +17,7 @@ HelpWidget::HelpWidget() :
   p = QPixmap(":/images/helpwidget/helpwidget.png");
 
   // Create the item and initialize it
-  exitItem = new ExitItem();
+  exitItem = new ButtonItem("Exit");
   exitItem->setPos(QPointF(0.5, 0.95));
   myItems.push_back(exitItem);
 
@@ -115,9 +114,7 @@ void HelpWidget::dealPressed(QPointF mousePos, Qt::MouseButton button)
 {
   // Choose the correct item at press position
   lastPos = mousePos;
-  if (distanceOfTwoPoints(mousePos,
-                          toScene(exitItem->getPos().x(),
-                                  exitItem->getPos().y())) < 50)
+  if (exitItem->in(mousePos, LOGICAL_WIDTH, LOGICAL_HEIGHT))
     itemAtPressPos = exitItem;
 }
 
@@ -132,10 +129,8 @@ void HelpWidget::dealMoved(QPointF mousePos, Qt::MouseButton button)
 
 void HelpWidget::dealReleased(QPointF mousePos, Qt::MouseButton button)
 {
-  if (distanceOfTwoPoints(mousePos,
-                          toScene(exitItem->getPos().x(),
-                                  exitItem->getPos().y())) < 50 &&
-      itemAtPressPos == exitItem)
+  if (itemAtPressPos == exitItem &&
+      exitItem->in(mousePos, LOGICAL_WIDTH, LOGICAL_HEIGHT))
   {
     // Exit
     emit giveControlTo(NULL, true);

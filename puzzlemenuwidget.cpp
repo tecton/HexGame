@@ -4,7 +4,6 @@
 #include <QPixmap>
 #include <QPainter>
 #include "basicpainter.h"
-#include "gamemath.h"
 #include "puzzlemenuitems.h"
 #include "stagemenuwidget.h"
 #include "gamecommonitems.h"
@@ -25,7 +24,7 @@ PuzzleMenuWidget::PuzzleMenuWidget() :
   lockItem = new PuzzleMenuLockItem();
   lockItem->setPos(QPointF(0.8, 0.45));
 
-  exitItem = new ExitItem();
+  exitItem = new ButtonItem("Exit");
   exitItem->setPos(QPointF(0.5, 0.8));
 
   // collect them
@@ -122,30 +121,22 @@ void PuzzleMenuWidget::dealPressed(QPointF mousePos, Qt::MouseButton button)
   }
   // determine the position where mouse down happens and init
   // corresponding game
-  if (distanceOfTwoPoints(mousePos,
-                          toScene(exchangeItem->getPos().x(),
-                                  exchangeItem->getPos().y())) < 80)
+  if (exchangeItem->in(mousePos, LOGICAL_WIDTH, LOGICAL_HEIGHT))
   {
     AbstractStageMenuWidget *exchangeMenu = new ExchangeStageMenuWidget(0);
     emit giveControlTo(exchangeMenu, false);
   }
-  else if (distanceOfTwoPoints(mousePos,
-                               toScene(uniteItem->getPos().x(),
-                                       uniteItem->getPos().y())) < 80)
+  else if (uniteItem->in(mousePos, LOGICAL_WIDTH, LOGICAL_HEIGHT))
   {
     AbstractStageMenuWidget *uniteMenu = new UniteStageMenuWidget(0);
     emit giveControlTo(uniteMenu, false);
   }
-  else if (distanceOfTwoPoints(mousePos,
-                               toScene(lockItem->getPos().x(),
-                                       lockItem->getPos().y())) < 80)
+  else if (lockItem->in(mousePos, LOGICAL_WIDTH, LOGICAL_HEIGHT))
   {
     AbstractStageMenuWidget *lockMenu = new LockStageMenuWidget(0);
     emit giveControlTo(lockMenu, false);
   }
-  else if (distanceOfTwoPoints(mousePos,
-                               toScene(exitItem->getPos().x(),
-                                       exitItem->getPos().y())) < 80)
+  else if (exitItem->in(mousePos, LOGICAL_WIDTH, LOGICAL_HEIGHT))
   {
     // exit and give out control
     emit giveControlTo(NULL, true);

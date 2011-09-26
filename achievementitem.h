@@ -11,7 +11,7 @@
 /**
  * @brief An abstract class of items used in achievement widget.
  */
-class AbstractAchievementItem : public AbstractItem
+class AbstractAchievementItem : public AbstractRectItem
 {
 public:
   /**
@@ -26,11 +26,17 @@ public:
   virtual void paint(QPainter *painter, int width, int height, int frame)=0;
 
   /**
+   * @brief Get the description of the achievement.
+   */
+  virtual QString getDescription()=0;
+
+  /**
    * @brief Paint the description of the achievement in the given rect.
    */
-  virtual void paintDescription(QPainter *painter, QRectF rect, int frame)=0;
+  void paintDescription(QPainter *painter, QRectF rect, int frame);
 
-  bool in(QPointF mousePos);
+  virtual double width();
+  virtual double height();
 };
 
 /**
@@ -41,13 +47,32 @@ class FlameGetItem : public AbstractAchievementItem
 {
 public:
   FlameGetItem(int theLevel, int theCurrent);
+
   virtual void paint(QPainter *painter, int width, int height, int frame);
-  virtual void paintDescription(QPainter *painter, QRectF rect, int frame);
+  virtual QString getDescription()
+  {return description;}
 
 private:
   int level;
   int current;
+  int next;
+  QString description;
 };
+
+///**
+// * @brief A class of items used in achievement widget to show number of flames
+// * the user has got.
+// */
+//class StarGetItem : public AbstractAchievementItem
+//{
+//public:
+//  StarItem(int theLevel, int theCurrent);
+//  virtual void paint(QPainter *painter, int width, int height, int frame);
+
+//private:
+//  int level;
+//  int current;
+//};
 
 
 

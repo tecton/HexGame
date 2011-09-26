@@ -16,7 +16,7 @@ class QPixmap;
 /**
  * @brief An abstract class of items used in puzzle secondary menu.
  */
-class AbstractPuzzleMenuItem : public AbstractItem
+class AbstractPuzzleMenuItem : public AbstractRectItem
 {
 public:
   /**
@@ -30,6 +30,9 @@ public:
    * @brief A function returns the pixmap of an item.
    */
   static const QPixmap& pixmap(ItemType type, int frame);
+
+  virtual double width();
+  virtual double height();
 
 private:
   // The position of the item

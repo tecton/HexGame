@@ -12,7 +12,6 @@
 #include "gesturecontroller.h"
 #include "basicpainter.h"
 #include "gamecommonitems.h"
-#include "gamemath.h"
 #include "thirtysevengameboardinfo.h"
 #include "othergameinit.h"
 #include "resetwidget.h"
@@ -22,9 +21,6 @@
 #include "statistic.h"
 
 extern Statistic statistic;
-
-#define LOGICAL_WIDTH  1024
-#define LOGICAL_HEIGHT 600
 
 ClassicGameWidget::ClassicGameWidget(AbstractRule::Gesture gesture) :
     frameCount(0),
@@ -98,15 +94,15 @@ ClassicGameWidget::ClassicGameWidget(AbstractRule::Gesture gesture) :
   star->setCurrent(record->star);
   myItems.push_back(star);
 
-  hint = new HintItem();
+  hint = new ButtonItem("Hint");
   hint->setPos(QPointF(0.1, 0.7));
   myItems.push_back(hint);
 
-  resetItem = new ResetItem();
+  resetItem = new ButtonItem("Reset");
   resetItem->setPos(QPointF(0.1, 0.8));
   myItems.push_back(resetItem);
 
-  exitItem = new ExitItem();
+  exitItem = new ButtonItem("Exit");
   exitItem->setPos(QPointF(0.1, 0.9));
   myItems.push_back(exitItem);
 
@@ -362,30 +358,19 @@ void ClassicGameWidget::dealPressed(QPointF mousePos,
 {
   // Choose the correct item at press position
   currentPos = mousePos;
-  if (distanceOfTwoPoints(
-      mousePos,
-      toScene(flame->getPos().x(),
-              flame->getPos().y())) < 50)
+  if (flame->in(mousePos, gameboardInfo->width(), gameboardInfo->height()))
     itemAtPressPos = flame;
-  else if (distanceOfTwoPoints(
-      mousePos,
-      toScene(star->getPos().x(),
-              star->getPos().y())) < 50)
+  else if (star->in(mousePos, gameboardInfo->width(), gameboardInfo->height()))
     itemAtPressPos = star;
-  else if (distanceOfTwoPoints(
-      mousePos,
-      toScene(hint->getPos().x(),
-              hint->getPos().y())) < 50)
+  else if (hint->in(mousePos, gameboardInfo->width(), gameboardInfo->height()))
     itemAtPressPos = hint;
-  else if (distanceOfTwoPoints(
-      mousePos,
-      toScene(resetItem->getPos().x(),
-              resetItem->getPos().y())) < 50)
+  else if (resetItem->in(mousePos,
+                         gameboardInfo->width(),
+                         gameboardInfo->height()))
     itemAtPressPos = resetItem;
-  else if (distanceOfTwoPoints(
-      mousePos,
-      toScene(exitItem->getPos().x(),
-              exitItem->getPos().y())) < 50)
+  else if (exitItem->in(mousePos,
+                        gameboardInfo->width(),
+                        gameboardInfo->height()))
     itemAtPressPos = exitItem;
   else
     itemAtPressPos = NULL;
@@ -415,15 +400,15 @@ void ClassicGameWidget::dealMoved(QPointF mousePos,
   gestureController->dealMoved(mousePos);
 }
 
-void ClassicGameWidget::dealReleased(QPointF mousePos,
-                                     Qt::MouseButton button)
+void ClassicGameWidget::dealReleased(QPointF mousePos, Qt::MouseButton button)
 {
   if (itemAtPressPos != NULL)
   {
-    if (itemAtPressPos == flame && flame->notEmpty())
+    if (itemAtPressPos == flame &&
+        flame->in(mousePos, gameboardInfo->width(), gameboardInfo->height()) &&
+        flame->notEmpty())
     {
-      int index =
-          gameboardInfo->indexOfPosition(mousePos);
+      int index = gameboardInfo->indexOfPosition(mousePos);
       if (index != -1)
       {
         // Add sound effect
@@ -442,10 +427,11 @@ void ClassicGameWidget::dealReleased(QPointF mousePos,
         statistic.changeStatistic(Statistic::FlameUsedCount, 1, true);
       }
     }
-    else if (itemAtPressPos == star && star->notEmpty())
+    else if (itemAtPressPos == star &&
+             star->in(mousePos, gameboardInfo->width(), gameboardInfo->height()) &&
+             star->notEmpty())
     {
-      int index =
-          gameboardInfo->indexOfPosition(mousePos);
+      int index = gameboardInfo->indexOfPosition(mousePos);
       if (index != -1)
       {
         // Add sound effect
@@ -465,10 +451,9 @@ void ClassicGameWidget::dealReleased(QPointF mousePos,
       }
     }
     else if (itemAtPressPos == hint &&
-             distanceOfTwoPoints(
-                 mousePos,
-                 toScene(hint->getPos().x(),
-                         hint->getPos().y())) < 30)
+             hint->in(mousePos,
+                      gameboardInfo->width(),
+                      gameboardInfo->height()))
     {
       // Reduce the score
       int score = qMax(progressBar->getCurrent() - 10,
@@ -479,10 +464,9 @@ void ClassicGameWidget::dealReleased(QPointF mousePos,
       showHint();
     }
     else if (itemAtPressPos == resetItem &&
-             distanceOfTwoPoints(
-                 mousePos,
-                 toScene(resetItem->getPos().x(),
-                         resetItem->getPos().y())) < 30)
+             resetItem->in(mousePos,
+                           gameboardInfo->width(),
+                           gameboardInfo->height()))
     {
       // Create the reset widget
       ResetWidget *w = new ResetWidget();
@@ -494,10 +478,9 @@ void ClassicGameWidget::dealReleased(QPointF mousePos,
       emit giveControlTo(w, false);
     }
     else if (itemAtPressPos == exitItem &&
-             distanceOfTwoPoints(
-                 mousePos,
-                 toScene(exitItem->getPos().x(),
-                         exitItem->getPos().y())) < 30)
+             exitItem->in(mousePos,
+                          gameboardInfo->width(),
+                          gameboardInfo->height()))
     {
       // Quit game
       quitGame();

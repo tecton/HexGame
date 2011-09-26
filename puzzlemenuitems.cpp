@@ -43,6 +43,17 @@ const QPixmap& AbstractPuzzleMenuItem::pixmap(ItemType type,
   return puzzleMenuItemPixmaps[type][frame % puzzleMenuItemFrameCounts[type]];
 }
 
+double AbstractPuzzleMenuItem::width()
+{
+  return 300;
+}
+
+double AbstractPuzzleMenuItem::height()
+{
+  return 300;
+}
+
+
 PuzzleMenuExchangeItem::PuzzleMenuExchangeItem()
 {
   setPos(QPointF(0, 0));

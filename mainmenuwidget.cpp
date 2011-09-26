@@ -4,7 +4,6 @@
 #include <QPixmap>
 #include <QPainter>
 #include "basicpainter.h"
-#include "gamemath.h"
 #include "mainmenuitems.h"
 #include "puzzlemenuwidget.h"
 #include "othergameinit.h"
@@ -35,10 +34,10 @@ MainMenuWidget::MainMenuWidget()/* :
   items[6] = new MainMenuGameItem(AbstractMainMenuItem::RotatePuzzleItem);
   items[6]->setPos(QPointF(0.605, 0.5));
 
-  items[7] = new MainMenuGameItem(AbstractMainMenuItem::HelpItem);
+  items[7] = new MainMenuButtonItem(AbstractMainMenuItem::HelpItem);
   items[7]->setPos(QPointF(0.1, 0.7));
 
-  items[8] = new MainMenuGameItem(AbstractMainMenuItem::ExitItem);
+  items[8] = new MainMenuButtonItem(AbstractMainMenuItem::ExitItem);
   items[8]->setPos(QPointF(0.1, 0.8));
 
   for (int i = 0;i < 9;++i)
@@ -139,9 +138,7 @@ void MainMenuWidget::dealPressed(QPointF mousePos, Qt::MouseButton button)
   // Create correct game if neccessary
   for (int i = 0;i < 6;++i)
   {
-    if (distanceOfTwoPoints(mousePos,
-                            toScene(items[i]->getPos().x(),
-                                    items[i]->getPos().y())) < 80)
+    if (items[i]->in(mousePos, LOGICAL_WIDTH, LOGICAL_HEIGHT))
     {
       AbstractRule::Gesture gesture = (i % 2 == 0) ?
                                       AbstractRule::Swap :
@@ -154,27 +151,21 @@ void MainMenuWidget::dealPressed(QPointF mousePos, Qt::MouseButton button)
   }
 
   // Create puzzle game if neccessary
-  if (distanceOfTwoPoints(mousePos,
-                          toScene(items[6]->getPos().x(),
-                                  items[6]->getPos().y())) < 50)
+  if (items[6]->in(mousePos, LOGICAL_WIDTH, LOGICAL_HEIGHT))
   {
     AbstractPixmapWidget *puzzleMenu = new PuzzleMenuWidget();
     emit giveControlTo(puzzleMenu, false);
     return;
   }
   // Go to help if neccessary
-  else if (distanceOfTwoPoints(mousePos,
-                          toScene(items[7]->getPos().x(),
-                                  items[7]->getPos().y())) < 50)
+  else if (items[7]->in(mousePos, LOGICAL_WIDTH, LOGICAL_HEIGHT))
   {
     AbstractPixmapWidget *helpWidget = new HelpWidget();
     emit giveControlTo(helpWidget, false);
     return;
   }
   // Exit if neccessary
-  else if (distanceOfTwoPoints(mousePos,
-                          toScene(items[8]->getPos().x(),
-                                  items[8]->getPos().y())) < 50)
+  else if (items[8]->in(mousePos, LOGICAL_WIDTH, LOGICAL_HEIGHT))
   {
     emit giveControlTo(NULL, true);
     delete this;

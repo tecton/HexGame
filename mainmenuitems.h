@@ -12,7 +12,7 @@ class QPixmap;
 /**
  * @brief An abstract class of items used in main menu.
  */
-class AbstractMainMenuItem : public AbstractItem
+class AbstractMainMenuItem
 {
 public:
   /**
@@ -28,8 +28,6 @@ public:
                 HelpItem,
                 ExitItem};
 
-  virtual void paint(QPainter *painter, int width, int height, int frame)=0;
-
   /**
    * @brief A function returns the pixmap of an item.
    */
@@ -37,9 +35,9 @@ public:
 };
 
 /**
- * @brief A class of items used in main menu.
+ * @brief A class of items used in main menu which is buttons in a circle.
  */
-class MainMenuGameItem : public AbstractMainMenuItem
+class MainMenuGameItem  : public AbstractCircleItem
 {
 public:
   /**
@@ -49,6 +47,30 @@ public:
       type(theType) {}
 
   virtual void paint(QPainter *painter, int width, int height, int frame);
+
+  virtual double r();
+
+private:
+  // The type of the item
+  AbstractMainMenuItem::ItemType type;
+};
+
+/**
+ * @brief A class of items used in main menu which is buttons in a circle.
+ */
+class MainMenuButtonItem  : public AbstractRectItem
+{
+public:
+  /**
+   * @brief Constructor with the type of the item.
+   */
+  MainMenuButtonItem(AbstractMainMenuItem::ItemType theType) :
+      type(theType) {}
+
+  virtual void paint(QPainter *painter, int width, int height, int frame);
+
+  virtual double width();
+  virtual double height();
 
 private:
   // The type of the item

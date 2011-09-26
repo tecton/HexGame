@@ -9,7 +9,6 @@
 // Forward declaration
 //class QTimer;
 class AbstractItem;
-class MainMenuGameItem;
 
 /**
  * @brief A class of main menu.
@@ -63,7 +62,7 @@ private:
 //  QTimer *t;
 
   // Items of the game
-  MainMenuGameItem *items[9];
+  AbstractItem *items[9];
   QVector <AbstractItem *> myItems;
 //  int frameCount;
 

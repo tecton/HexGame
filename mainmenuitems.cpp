@@ -77,3 +77,45 @@ void MainMenuGameItem::paint(QPainter *painter,
                true,
                true);
 }
+
+double MainMenuGameItem::r()
+{
+  return 80;
+}
+
+
+void MainMenuButtonItem::paint(QPainter *painter,
+                               int width,
+                               int height,
+                               int frame)
+{
+  // Get the pixmap
+  const QPixmap& p = AbstractMainMenuItem::pixmap(type, frame);
+
+  // Calculate the values to locate
+  double x = getPos().x() * width;
+  double y = getPos().y() * height;
+  double xRate = 1.0 * width * BUTTON_LOGICAL_WIDTH / LOGICAL_WIDTH /
+                 p.width();
+  double yRate = 1.0 * height * BUTTON_LOGICAL_HEIGHT / LOGICAL_HEIGHT /
+                 p.height();
+
+  // draw the pixmap
+  drawPixmapAt(painter,
+               p,
+               xRate,
+               yRate,
+               QPointF(x, y),
+               true,
+               true);
+}
+
+double MainMenuButtonItem::width()
+{
+  return BUTTON_LOGICAL_WIDTH;
+}
+
+double MainMenuButtonItem::height()
+{
+  return BUTTON_LOGICAL_HEIGHT;
+}

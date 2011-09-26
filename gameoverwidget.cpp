@@ -4,7 +4,6 @@
 #include <QPixmap>
 #include "basicpainter.h"
 #include "gamecommonitems.h"
-#include "gamemath.h"
 #include "othergameinit.h"
 #include "abstractrule.h"
 
@@ -26,11 +25,11 @@ GameOverWidget::GameOverWidget(int gameIndex, int score) :
   newGameHint->setHint("Restart a game?");
   myItems.push_back(newGameHint);
 
-  confirmItem = new ConfirmItem();
+  confirmItem = new ButtonItem("Confirm");
   confirmItem->setPos(QPointF(0.3, 0.7));
   myItems.push_back(confirmItem);
 
-  cancelItem = new CancelItem();
+  cancelItem = new ButtonItem("Cancel");
   cancelItem->setPos(QPointF(0.7, 0.7));
   myItems.push_back(cancelItem);
 
@@ -109,13 +108,9 @@ QPointF GameOverWidget::toScene(double xRate, double yRate)
 void GameOverWidget::dealPressed(QPointF mousePos, Qt::MouseButton button)
 {
   // Choose the correct item at press position
-  if (distanceOfTwoPoints(mousePos,
-                          toScene(confirmItem->getPos().x(),
-                                  confirmItem->getPos().y())) < 50)
+  if (confirmItem->in(mousePos, LOGICAL_WIDTH, LOGICAL_HEIGHT))
     itemAtPressPos = confirmItem;
-  else if (distanceOfTwoPoints(mousePos,
-                               toScene(cancelItem->getPos().x(),
-                                       cancelItem->getPos().y())) < 50)
+  else if (cancelItem->in(mousePos, LOGICAL_WIDTH, LOGICAL_HEIGHT))
     itemAtPressPos = cancelItem;
 }
 
@@ -123,10 +118,8 @@ void GameOverWidget::dealMoved(QPointF mousePos, Qt::MouseButton button){}
 
 void GameOverWidget::dealReleased(QPointF mousePos, Qt::MouseButton button)
 {
-  if (distanceOfTwoPoints(mousePos,
-                          toScene(confirmItem->getPos().x(),
-                                  confirmItem->getPos().y())) < 50 &&
-      itemAtPressPos == confirmItem)
+  if (itemAtPressPos == confirmItem &&
+      confirmItem->in(mousePos, LOGICAL_WIDTH, LOGICAL_HEIGHT))
   {
     // Start a new game
     AbstractRule::Gesture g = (index % 2 == 0) ?
@@ -137,10 +130,8 @@ void GameOverWidget::dealReleased(QPointF mousePos, Qt::MouseButton button)
     delete this;
     return;
   }
-  else if (distanceOfTwoPoints(mousePos,
-                               toScene(cancelItem->getPos().x(),
-                                       cancelItem->getPos().y())) < 50 &&
-           itemAtPressPos == cancelItem)
+  else if (itemAtPressPos == cancelItem &&
+           cancelItem->in(mousePos, LOGICAL_WIDTH, LOGICAL_HEIGHT))
   {
     // Exit
     emit giveControlTo(NULL, true);

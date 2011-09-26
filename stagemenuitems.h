@@ -13,7 +13,7 @@ class QPixmap;
 /**
  * @brief A class of items used in puzzle stage menu.
  */
-class StageMenuItem : public AbstractItem
+class StageMenuItem : public AbstractCircleItem
 {
 public:
   /**
@@ -22,6 +22,8 @@ public:
   StageMenuItem(QString path);
 
   virtual void paint(QPainter *painter, int width, int height, int frame);
+
+  virtual double r();
 
 private:
   // The position of the item
