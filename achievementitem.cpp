@@ -26,7 +26,7 @@ void AbstractAchievementItem::paintDescription(QPainter *painter,
                                                QRectF rect,
                                                int frame)
 {
-  painter->setPen(QColor(255,0,0));
+  painter->setPen(QColor(255,0,0,255*descriptionAge/DESCRIPTION_AGE_LIMIT));
   painter->drawRect(rect);
   painter->drawText(rect, Qt::AlignCenter, getDescription());
 }

@@ -29,7 +29,10 @@ AchievementWidget::AchievementWidget() :
         QPointF(0.25,
                 Y_FROM / LOGICAL_HEIGHT +
                 (Y_TO - Y_FROM) * i / (achievementItems.size() - 1) / LOGICAL_HEIGHT));
+    achievementItems[i]->loseDescriptionFocus();
   }
+
+
 
   // No items was chosen
   itemAtPressPos = NULL;
@@ -83,6 +86,7 @@ void AchievementWidget::makeBasicPixmap(
                            0);
 
   QRectF rect = QRectF(0.55 * width, 0.1 * height, 0.4 * width, 0.7 * height);
+  achievementItems[activeAchievementIndex]->advanceDescription();
   achievementItems[activeAchievementIndex]->paintDescription(painter, rect, 0);
 
 #ifdef USE_PIXMAP
@@ -118,7 +122,11 @@ void AchievementWidget::dealPressed(QPointF mousePos, Qt::MouseButton button)
   for (int i = 0;i < achievementItems.size();++i)
     if (achievementItems[i]->in(mousePos, LOGICAL_WIDTH, LOGICAL_HEIGHT))
     {
-      activeAchievementIndex = i;
+      if (activeAchievementIndex != i)
+      {
+        achievementItems[i]->setDescriptionAge(0);
+        activeAchievementIndex = i;
+      }
       break;
     }
 }
@@ -128,7 +136,11 @@ void AchievementWidget::dealMoved(QPointF mousePos, Qt::MouseButton button)
   for (int i = 0;i < achievementItems.size();++i)
     if (achievementItems[i]->in(mousePos, LOGICAL_WIDTH, LOGICAL_HEIGHT))
     {
+    if (activeAchievementIndex != i)
+    {
+      achievementItems[i]->setDescriptionAge(0);
       activeAchievementIndex = i;
+    }
       break;
     }
 }

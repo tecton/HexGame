@@ -10,7 +10,7 @@ class AbstractAchievementItem;
 class AbstractItem;
 
 /**
- * @brief A class to show the achievements.
+ * @brief A class to show all the achievements.
  */
 class AchievementWidget : public AbstractPixmapWidget
 {
@@ -66,6 +66,7 @@ private:
   AbstractItem *itemAtPressPos;
 
   int activeAchievementIndex;
+
 };
 
 #endif // ACHIEVEMENTWIDGET_H
