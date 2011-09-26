@@ -14,19 +14,41 @@ const int kTimingStage[] =        {400, 700, 1000, -1};
 
 class QPainter;
 
+/**
+ * @brief A class to manage achievements according to the statistic.
+ */
 class Achievements : public QObject
 {
   Q_OBJECT
 public:
+  /**
+   * @brief Constructor.
+   */
   Achievements();
 
   virtual void paint(QPainter *painter, int width, int height);
+
+  /**
+   * @brief Advance the object to realize some animations.
+   */
   void advance();
 
-
+  /**
+   * @brief Get the pointer of the item of the achievement.
+   */
   static AbstractAchievementItem *getAchievementItem
       (AbstractAchievementItem::ItemType type);
+
+  /**
+   * @brief Get the pointers of all the items.
+   */
   static QVector<AbstractAchievementItem *> getAchievementItems();
+
+  /**
+   * @brief Get the level of the achievement.
+   *
+   * Some hints will be shown once the user reached a higher level.
+   */
   static int getAchievementLevel(AbstractAchievementItem::ItemType type,
                                  int value = -1);
 
@@ -35,6 +57,10 @@ private:
   int count;
 
 public slots:
+  /**
+   * @brief Called when the statistic changed, it will check the statistic and
+   * give correct response.
+   */
   void statisticChanged(Statistic::StatisticType type,
                         int lastValue,
                         int currentValue);

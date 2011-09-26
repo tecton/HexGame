@@ -4,10 +4,12 @@
 #include <QColor>
 #include "achievements.h"
 
-#define LOGICAL_WIDTH    1024
-#define LOGICAL_HEIGHT   600
-#define ITEM_WIDTH       400.0
-#define ITEM_HEIGHT      80.0
+#define LOGICAL_WIDTH       1024
+#define LOGICAL_HEIGHT      600
+#define ITEM_WIDTH          400.0
+#define ITEM_HEIGHT         80.0
+#define DESCRIPTION_WIDTH   500
+#define DESCRIPTION_HEIGHT  450
 
 #define HALF_WIDTH_RATE  (ITEM_WIDTH / 2 / LOGICAL_WIDTH)
 #define HALF_HEIGHT_RATE (ITEM_HEIGHT / 2 / LOGICAL_HEIGHT)
@@ -26,8 +28,8 @@ void AbstractAchievementItem::paintDescription(QPainter *painter,
                                                QRectF rect,
                                                int frame)
 {
-  painter->setPen(QColor(255,0,0));
-  painter->drawRect(rect);
+  painter->setPen(QColor(255,0,0,255*descriptionAge/DESCRIPTION_AGE_LIMIT));
+  painter->drawRoundRect(rect, 25 * rect.width() / DESCRIPTION_WIDTH, 25 * rect.height() / DESCRIPTION_HEIGHT);
   painter->drawText(rect, Qt::AlignCenter, getDescription());
 }
 

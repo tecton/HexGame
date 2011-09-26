@@ -8,8 +8,11 @@
 #include <QString>
 #include <QVector>
 
+#define DESCRIPTION_AGE_LIMIT 30
+
 /**
- * @brief An abstract class of items used in achievement widget.
+ * @brief An abstract class of items used to show brief infomation about an
+ * achievement.
  */
 class AbstractAchievementItem : public AbstractRectItem
 {
@@ -37,11 +40,28 @@ public:
 
   virtual double width();
   virtual double height();
+
+  inline void advanceDescription()
+  {
+    if (descriptionAge < DESCRIPTION_AGE_LIMIT)
+      ++descriptionAge;
+  }
+
+  inline void loseDescriptionFocus()
+  {descriptionAge = 0;}
+
+  inline int getDescriptionAge()
+  {return descriptionAge;}
+
+  inline void setDescriptionAge(int v)
+  {descriptionAge = v;}
+
+private:
+  int descriptionAge;
 };
 
 /**
- * @brief A class of items used in achievement widget to show number of flames
- * the user has got.
+ * @brief A class of items used to show number of flames the user has got.
  */
 class FlameGetItem : public AbstractAchievementItem
 {
@@ -60,8 +80,7 @@ private:
 };
 
 /**
- * @brief A class of items used in achievement widget to show number of flames
- * the user has got.
+ * @brief A class of items used to show number of stars the user has got.
  */
 class StarGetItem : public AbstractAchievementItem
 {
@@ -80,8 +99,8 @@ private:
 };
 
 /**
- * @brief A class of items used in achievement widget to show the highest score
- * the user has got in rotate classic game.
+ * @brief A class of items used to show the highest score the user has got in
+ * rotate classic game.
  */
 class RotateClassicPointItem : public AbstractAchievementItem
 {
@@ -100,8 +119,8 @@ private:
 };
 
 /**
- * @brief A class of items used in achievement widget to show the highest score
- * the user has got in timing game.
+ * @brief A class of items used to show the highest score the user has got in
+ * timing game.
  */
 class TimingPointItem : public AbstractAchievementItem
 {
@@ -120,8 +139,8 @@ private:
 };
 
 /**
- * @brief A class of items used in achievement widget to show the stages
- * finished in rotate puzzle game.
+ * @brief A class of items used to show the stages finished in rotate puzzle
+ * game.
  */
 class RotatePuzzleFinishedItem : public AbstractAchievementItem
 {
