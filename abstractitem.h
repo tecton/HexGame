@@ -18,7 +18,6 @@ public:
   /**
    *@brief Paint the item.
    *
-   * Some detailed comment.
    *@param painter The QPainter to do the paint.
    *@param width The width of the whole QPaintDevice.
    *@param height The height of the whole QPaintDevice.
@@ -72,7 +71,14 @@ public:
            mousePos.y() - centerPos.y() > -height() / 2;
   }
 
+  /**
+   *@brief Get the width of the item(used in "in").
+   */
   virtual double width()=0;
+
+  /**
+   *@brief Get the height of the item(used in "in").
+   */
   virtual double height()=0;
 };
 
@@ -92,6 +98,9 @@ public:
     return distanceOfTwoPoints(mousePos, centerPos) <= r();
   }
 
+  /**
+   *@brief Get the radius of the item(used in "in").
+   */
   virtual double r()=0;
 };
 

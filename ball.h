@@ -51,41 +51,53 @@ public:
    */
   Ball(Ball::Color theColor = Ball::Red);
 
-  //@{
-  /** Set and get the color of the ball. */
+  /**
+   *@brief Set the color of the ball.
+   */
   inline void setColor(Ball::Color theColor)
   {color = theColor;}
 
+  /**
+   *@brief Get the color of the ball.
+   */
   inline Ball::Color getColor()
   {return color;}
-  //@}
 
-  //@{
-  /** Set and get the state of the ball. */
+  /**
+   *@brief Set the state of the ball.
+   */
   inline void setState(Ball::State theState)
   {state = theState;}
 
+  /**
+   *@brief Get the state of the ball.
+   */
   inline Ball::State getState()
   {return state;}
-  //@}
 
-  //@{
-  /** Set and get whether the ball is locked. */
+  /**
+   *@brief Set whether the ball is locked.
+   */
   inline void setLocked(bool isLocked)
   {locked = isLocked;}
 
+  /**
+   *@brief Get whether the ball is locked.
+   */
   inline bool getLocked()
   {return locked;}
-  //@}
 
-  //@{
-  /** Set and get the position of the ball. */
+  /**
+   *@brief Set the position of the ball.
+   */
   inline void setPos(QPointF pos)
   {position = pos;}
 
+  /**
+   *@brief Get the position of the ball.
+   */
   inline QPointF pos()
   {return position;}
-  //@}
 
   /**
    *@brief Advance the ball, may change the position and state.

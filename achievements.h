@@ -26,6 +26,9 @@ public:
    */
   Achievements();
 
+  /**
+   * @brief Paint the newly got achievements on the screen.
+   */
   virtual void paint(QPainter *painter, int width, int height);
 
   /**

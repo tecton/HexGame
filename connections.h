@@ -92,6 +92,12 @@ public:
    */
   int ballCount;
 
+  /**
+   * @brief Connections of the balls with the index.
+   *
+   * Three directions, center of a circle, six position on the circle.
+   * Ten pointers of QVector<int> in all.
+   */
   QVector<QVector<int> *> *connectionsOfIndex;
 
   /**

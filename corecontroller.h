@@ -210,26 +210,35 @@ private:
   bool check(Ball** copiedBalls, int tryingIndex);
 
 signals:
-  // Emitted when "testStableEliminate" is called.
-  // A game can get this signal and know which balls will
-  // be eliminated and the structure of the connections.
+  /**
+   * @brief Emitted when "testStableEliminate" is called.
+   * A game can get this signal and know which balls will
+   * be eliminated and the structure of the connections.
+   */
   void stableEliminateTested(Connections connections);
 
-  // Emitted when "testUserMovingEliminate" is called.
-  // A game can get this signal and know which balls will
-  // be eliminated if user ends the gesture and the
-  // structure of the connections.
+  /**
+   * @brief Emitted when "testUserMovingEliminate" is called.
+   * A game can get this signal and know which balls will
+   * be eliminated if user ends the gesture and the
+   * structure of the connections.
+   */
   void userMovingEliminateTested(Connections connections);
 
-  // Emitted when "eliminate" is called.
-  // A game can get this signal and know how many balls
-  // were eliminated.
+  /**
+   * @brief Emitted when "eliminate" is called.
+   * A game can get this signal and know how many balls were eliminated.
+   */
   void eliminated(int count);
 
-  // Emitted when a good move is made.
+  /**
+   * @brief Emitted when a good move is made.
+   */
   void goodMove();
 
-  // Emitted when a bad move is made.
+  /**
+   * @brief Emitted when a bad move is made.
+   */
   void badMove();
 };
 

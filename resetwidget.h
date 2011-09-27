@@ -10,6 +10,8 @@ class AbstractItem;
 
 /**
  * @brief A class to show the reset widget.
+ *
+ * In fact, the name "ConfirmOrCancelWidget" is better.
  */
 class ResetWidget : public AbstractPixmapWidget
 {
@@ -69,9 +71,14 @@ private:
   AbstractItem *itemAtPressPos;
 
 signals:
-  //@{
-  /** Two signals to show the result. */
+  /**
+   * @brief Confirm.
+   */
   void confirm();
+
+  /**
+   * @brief Cancel.
+   */
   void cancel();
   //@}
 };

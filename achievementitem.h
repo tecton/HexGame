@@ -66,6 +66,9 @@ private:
 class FlameGetItem : public AbstractAchievementItem
 {
 public:
+  /**
+   * @brief Constructor.
+   */
   FlameGetItem(int theLevel, int theCurrent);
 
   virtual void paint(QPainter *painter, int width, int height, int frame);
@@ -85,6 +88,9 @@ private:
 class StarGetItem : public AbstractAchievementItem
 {
 public:
+  /**
+   * @brief Constructor.
+   */
   StarGetItem(int theLevel, int theCurrent);
 
   virtual void paint(QPainter *painter, int width, int height, int frame);
@@ -105,6 +111,9 @@ private:
 class RotateClassicPointItem : public AbstractAchievementItem
 {
 public:
+  /**
+   * @brief Constructor.
+   */
   RotateClassicPointItem(int theLevel, int theCurrent);
 
   virtual void paint(QPainter *painter, int width, int height, int frame);
@@ -125,6 +134,9 @@ private:
 class TimingPointItem : public AbstractAchievementItem
 {
 public:
+  /**
+   * @brief Constructor.
+   */
   TimingPointItem(int theLevel, int theCurrent);
 
   virtual void paint(QPainter *painter, int width, int height, int frame);
@@ -145,6 +157,9 @@ private:
 class RotatePuzzleFinishedItem : public AbstractAchievementItem
 {
 public:
+  /**
+   * @brief Constructor.
+   */
   RotatePuzzleFinishedItem(int theFinished, int theTotal);
 
   virtual void paint(QPainter *painter, int width, int height, int frame);

@@ -47,8 +47,17 @@ public:
   virtual void dealReleased(QPointF mousePos, Qt::MouseButton button);
   virtual void getForcus()=0;
 
+  /**
+   * @brief Get the type(including the theme and advanced or not) of the stage
+   * menu.
+   */
   virtual int getType()=0;
+
+  /**
+   * @brief Switch the type(advanced or not) of the stage menu.
+   */
   virtual AbstractStageMenuWidget *switchType(int currentType)=0;
+
   int stageCount;
   int type;
   StageMenuItem **stageItem;
@@ -61,7 +70,14 @@ class ExchangeStageMenuWidget : public AbstractStageMenuWidget
 {
   Q_OBJECT
 public:
+  /**
+   * @brief Constructor.
+   */
   ExchangeStageMenuWidget(int stageType);
+
+  /**
+   * @brief Destructor.
+   */
   ~ExchangeStageMenuWidget();
 
   virtual void makePixmap(
@@ -112,7 +128,14 @@ class UniteStageMenuWidget : public AbstractStageMenuWidget
 {
   Q_OBJECT
 public:
+  /**
+   * @brief Constructor.
+   */
   UniteStageMenuWidget(int stageType);
+
+  /**
+   * @brief Destructor.
+   */
   ~UniteStageMenuWidget();
 
   virtual void makePixmap(
@@ -163,7 +186,14 @@ class LockStageMenuWidget : public AbstractStageMenuWidget
 {
   Q_OBJECT
 public:
+  /**
+   * @brief Constructor.
+   */
   LockStageMenuWidget(int stageType);
+
+  /**
+   * @brief Destructor.
+   */
   ~LockStageMenuWidget();
 
   virtual void makePixmap(

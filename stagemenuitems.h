@@ -35,6 +35,9 @@ public:
 
   virtual double r();
 
+  /**
+   * @brief Get whether the item is locked.
+   */
   inline bool getLocked()
   {return lock;}
 

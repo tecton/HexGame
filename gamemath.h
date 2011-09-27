@@ -9,11 +9,16 @@
 #include <QPointF>
 
 // PI
+#ifndef PI
 #define PI                                      3.14159265358979
+#endif
 
 /**
  *@brief Returns the angle of the point acording to the origin.
  *
+ *Up will be the positive direction of y.
+ *Right will be the positive direction of x.
+ *The angle will be counterclockwise.
  *@param point The point.
  *@param origin The origin.
  *@return The angle(in [0, 2*PI)).
@@ -23,6 +28,9 @@ qreal angle(QPointF point, QPointF origin);
 /**
  *@brief Returns the position acording to the angle, radius and origin.
  *
+ *Up will be the positive direction of y.
+ *Right will be the positive direction of x.
+ *The angle will be counterclockwise.
  *@param a The angle.
  *@param r The radius.
  *@param origin The origin.

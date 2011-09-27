@@ -247,6 +247,9 @@ private:
 class ButtonItem : public AbstractRectItem
 {
 public:
+  /**
+   * @brief Constructor.
+   */
   ButtonItem(QString str);
 
   virtual void paint(QPainter *painter, int width, int height, int frame);
