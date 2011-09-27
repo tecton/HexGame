@@ -1,0 +1,10 @@
+<RCC>
+    <qresource prefix="/">
+        <file>images/buttons/cancel01.png</file>
+        <file>images/buttons/confirm01.png</file>
+        <file>images/buttons/exit01.png</file>
+        <file>images/buttons/hint01.png</file>
+        <file>images/buttons/pause01.png</file>
+        <file>images/buttons/reset01.png</file>
+    </qresource>
+</RCC>

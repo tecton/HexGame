@@ -42,13 +42,14 @@ void initBallsPixmaps()
 }
 
 // Total background number
-const static int kBackgroundTotalColors = 5;
+const static int kBackgroundTotalColors = 6;
 const static char * kBackgroundColorPaths[] =
 {":/images/backgrounds/mainmenubackground.png",
  ":/images/backgrounds/puzzlemenubackground.png",
  ":/images/backgrounds/mainmenubackground.png",
  ":/images/backgrounds/37gamebackground.png",
- ":/images/backgrounds/61gamebackground.png"};
+ ":/images/backgrounds/61gamebackground.png",
+ ":/images/backgrounds/helpbackgroundwithbutton.png"};
 
 // Pixmaps of the backgrounds
 QVector<QVector<QPixmap> > backgroundPixmaps;

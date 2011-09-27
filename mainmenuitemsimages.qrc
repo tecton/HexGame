@@ -1,0 +1,13 @@
+<RCC>
+    <qresource prefix="/">
+        <file>images/mainmenuitems/exit01.png</file>
+        <file>images/mainmenuitems/help01.png</file>
+        <file>images/mainmenuitems/puzzlegame01.png</file>
+        <file>images/mainmenuitems/rotateclassicgame01.png</file>
+        <file>images/mainmenuitems/rotateendlessgame01.png</file>
+        <file>images/mainmenuitems/rotatetiminggame01.png</file>
+        <file>images/mainmenuitems/swapclassicgame01.png</file>
+        <file>images/mainmenuitems/swapendlessgame01.png</file>
+        <file>images/mainmenuitems/swaptiminggame01.png</file>
+    </qresource>
+</RCC>

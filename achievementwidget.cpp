@@ -28,16 +28,14 @@ AchievementWidget::AchievementWidget() :
     achievementItems[i]->setPos(
         QPointF(0.25,
                 Y_FROM / LOGICAL_HEIGHT +
-                (Y_TO - Y_FROM) * i / (achievementItems.size() - 1) / LOGICAL_HEIGHT));
+                (Y_TO - Y_FROM) * i / (achievementItems.size() - 1) /
+                LOGICAL_HEIGHT));
     achievementItems[i]->loseDescriptionFocus();
   }
-
-
 
   // No items was chosen
   itemAtPressPos = NULL;
 }
-
 
 void AchievementWidget::makePixmap(
 #ifdef USE_PIXMAP

@@ -7,7 +7,7 @@
 #include "mainmenuitems.h"
 #include "puzzlemenuwidget.h"
 #include "othergameinit.h"
-#include "helpwidget.h"
+#include "helpwidget2.h"
 
 #define LOGICAL_WIDTH  1024
 #define LOGICAL_HEIGHT 600
@@ -160,7 +160,7 @@ void MainMenuWidget::dealPressed(QPointF mousePos, Qt::MouseButton button)
   // Go to help if neccessary
   else if (items[7]->in(mousePos, LOGICAL_WIDTH, LOGICAL_HEIGHT))
   {
-    AbstractPixmapWidget *helpWidget = new HelpWidget();
+    AbstractPixmapWidget *helpWidget = new HelpWidget2();
     emit giveControlTo(helpWidget, false);
     return;
   }

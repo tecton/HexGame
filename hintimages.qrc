@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/">
+        <file>images/hint/arrow.png</file>
+        <file>images/hint/rotate.png</file>
+    </qresource>
+</RCC>

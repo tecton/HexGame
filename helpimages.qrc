@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/">
+        <file>images/help/about.png</file>
+        <file>images/help/mode.png</file>
+    </qresource>
+</RCC>

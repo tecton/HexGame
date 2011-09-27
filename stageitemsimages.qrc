@@ -1,44 +1,5 @@
 <RCC>
     <qresource prefix="/">
-        <file>images/backgrounds/37gamebackground.png</file>
-        <file>images/backgrounds/61gamebackground.png</file>
-        <file>images/backgrounds/mainmenubackground.png</file>
-        <file>images/backgrounds/puzzlemenubackground.png</file>
-        <file>images/balls/blue01.png</file>
-        <file>images/balls/brown01.png</file>
-        <file>images/balls/green01.png</file>
-        <file>images/balls/lock01.png</file>
-        <file>images/balls/oringe01.png</file>
-        <file>images/balls/purple01.png</file>
-        <file>images/balls/red01.png</file>
-        <file>images/balls/white01.png</file>
-        <file>images/balls/yellow01.png</file>
-        <file>images/bonus/flame.png</file>
-        <file>images/bonus/star.png</file>
-        <file>images/buttons/cancel01.png</file>
-        <file>images/buttons/confirm01.png</file>
-        <file>images/buttons/exit01.png</file>
-        <file>images/buttons/hint01.png</file>
-        <file>images/buttons/pause01.png</file>
-        <file>images/buttons/reset01.png</file>
-        <file>images/gamecommonitems/bar1.png</file>
-        <file>images/gamecommonitems/bar2.png</file>
-        <file>images/gamecommonitems/label.png</file>
-        <file>images/helpwidget/helpwidget.png</file>
-        <file>images/hint/arrow.png</file>
-        <file>images/hint/rotate.png</file>
-        <file>images/mainmenuitems/exit01.png</file>
-        <file>images/mainmenuitems/help01.png</file>
-        <file>images/mainmenuitems/puzzlegame01.png</file>
-        <file>images/mainmenuitems/rotateclassicgame01.png</file>
-        <file>images/mainmenuitems/rotateendlessgame01.png</file>
-        <file>images/mainmenuitems/rotatetiminggame01.png</file>
-        <file>images/mainmenuitems/swapclassicgame01.png</file>
-        <file>images/mainmenuitems/swapendlessgame01.png</file>
-        <file>images/mainmenuitems/swaptiminggame01.png</file>
-        <file>images/puzzlemenuitems/exchange_theme.png</file>
-        <file>images/puzzlemenuitems/lock_theme.png</file>
-        <file>images/puzzlemenuitems/unite_theme.png</file>
         <file>images/stageitems/button_advanced.png</file>
         <file>images/stageitems/button_exit.png</file>
         <file>images/stageitems/button_normal.png</file>

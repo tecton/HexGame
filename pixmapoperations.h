@@ -24,6 +24,12 @@ void initPixmaps(int count,
                  const char **paths,
                  QVector<QVector<QPixmap> >& pixmaps,
                  QVector<int>& frameCounts);
+/**
+ * @brief Init pixmaps of some things.
+ */
+void initPixmaps(QVector<QString> paths,
+                 QVector<QVector<QPixmap> >& pixmaps,
+                 QVector<int>& frameCounts);
 
 /**
  * @brief Draw a pixmap with some options.

@@ -3,6 +3,7 @@
 #include <QPainter>
 #include <QColor>
 #include "achievements.h"
+#include "pixmapoperations.h"
 
 #define LOGICAL_WIDTH       1024
 #define LOGICAL_HEIGHT      600
@@ -19,6 +20,28 @@ double AbstractAchievementItem::width()
 double AbstractAchievementItem::height()
 {
   return ITEM_HEIGHT;
+}
+
+void AbstractAchievementItem::paint(QPainter *painter,
+                                    int width,
+                                    int height,
+                                    int frame)
+{
+  double x = getPos().x() * width;
+  double y = getPos().y() * height;
+  double xRate = 1.0 * width / LOGICAL_WIDTH;
+  double yRate = 1.0 * height / LOGICAL_HEIGHT;
+
+  drawPixmapAt(painter,
+               getBackground(frame),
+               xRate,
+               yRate,
+               QPointF(x, y),
+               true,
+               true);
+
+  painter->setPen(QColor(255,0,0));
+  painter->drawText(x, y, getTitle());
 }
 
 void AbstractAchievementItem::paintDescription(QPainter *painter,
@@ -41,19 +64,14 @@ FlameGetItem::FlameGetItem(int theLevel, int theCurrent) :
     description = QObject::tr("Level %1\nIt's already the MAX LEVEL").arg(level);
 }
 
-void FlameGetItem::paint(QPainter *painter,
-                         int width,
-                         int height,
-                         int frame)
+const QPixmap& FlameGetItem::getBackground(int frame)
 {
-  // Calculate values to locate
-  double x = getPos().x() * width;
-  double y = getPos().y() * height;
-  double xRate = 1.0 * width / LOGICAL_WIDTH;
-  double yRate = 1.0 * height / LOGICAL_HEIGHT;
-  painter->setPen(QColor(255,0,0));
-  painter->drawText(x, y, "Flame");
+  return QPixmap();
+}
 
+const QString& FlameGetItem::getTitle()
+{
+  return "flame";
 }
 
 StarGetItem::StarGetItem(int theLevel, int theCurrent) :
@@ -67,19 +85,14 @@ StarGetItem::StarGetItem(int theLevel, int theCurrent) :
     description = QObject::tr("Level %1\nIt's already the MAX LEVEL").arg(level);
 }
 
-void StarGetItem::paint(QPainter *painter,
-                        int width,
-                        int height,
-                        int frame)
+const QPixmap& StarGetItem::getBackground(int frame)
 {
-  // Calculate values to locate
-  double x = getPos().x() * width;
-  double y = getPos().y() * height;
-  double xRate = 1.0 * width / LOGICAL_WIDTH;
-  double yRate = 1.0 * height / LOGICAL_HEIGHT;
-  painter->setPen(QColor(255,0,0));
-  painter->drawText(x, y, "Star");
+  return QPixmap();
+}
 
+const QString& StarGetItem::getTitle()
+{
+  return "star";
 }
 
 RotateClassicPointItem::RotateClassicPointItem(int theLevel, int theCurrent) :
@@ -93,18 +106,14 @@ RotateClassicPointItem::RotateClassicPointItem(int theLevel, int theCurrent) :
     description = QObject::tr("Level %1\nIt's already the MAX LEVEL").arg(level);
 }
 
-void RotateClassicPointItem::paint(QPainter *painter,
-                                   int width,
-                                   int height,
-                                   int frame)
+const QPixmap& RotateClassicPointItem::getBackground(int frame)
 {
-  // Calculate values to locate
-  double x = getPos().x() * width;
-  double y = getPos().y() * height;
-  double xRate = 1.0 * width / LOGICAL_WIDTH;
-  double yRate = 1.0 * height / LOGICAL_HEIGHT;
-  painter->setPen(QColor(255,0,0));
-  painter->drawText(x, y, "Rotate classic game");
+  return QPixmap();
+}
+
+const QString& RotateClassicPointItem::getTitle()
+{
+  return "RotateClassicPoint";
 }
 
 TimingPointItem::TimingPointItem(int theLevel, int theCurrent) :
@@ -118,18 +127,14 @@ TimingPointItem::TimingPointItem(int theLevel, int theCurrent) :
     description = QObject::tr("Level %1\nIt's already the MAX LEVEL").arg(level);
 }
 
-void TimingPointItem::paint(QPainter *painter,
-                            int width,
-                            int height,
-                            int frame)
+const QPixmap& TimingPointItem::getBackground(int frame)
 {
-  // Calculate values to locate
-  double x = getPos().x() * width;
-  double y = getPos().y() * height;
-  double xRate = 1.0 * width / LOGICAL_WIDTH;
-  double yRate = 1.0 * height / LOGICAL_HEIGHT;
-  painter->setPen(QColor(255,0,0));
-  painter->drawText(x, y, "Timing game");
+  return QPixmap();
+}
+
+const QString& TimingPointItem::getTitle()
+{
+  return "TimingPoint";
 }
 
 RotatePuzzleFinishedItem::RotatePuzzleFinishedItem(int theFinished,
@@ -143,16 +148,12 @@ RotatePuzzleFinishedItem::RotatePuzzleFinishedItem(int theFinished,
     description = QObject::tr("All %1 puzzles cleared ").arg(total);
 }
 
-void RotatePuzzleFinishedItem::paint(QPainter *painter,
-                                     int width,
-                                     int height,
-                                     int frame)
+const QPixmap& RotatePuzzleFinishedItem::getBackground(int frame)
 {
-  // Calculate values to locate
-  double x = getPos().x() * width;
-  double y = getPos().y() * height;
-  double xRate = 1.0 * width / LOGICAL_WIDTH;
-  double yRate = 1.0 * height / LOGICAL_HEIGHT;
-  painter->setPen(QColor(255,0,0));
-  painter->drawText(x, y, "Rotate puzzle game");
+  return QPixmap();
+}
+
+const QString& RotatePuzzleFinishedItem::getTitle()
+{
+  return "RotatePuzzleFinished";
 }

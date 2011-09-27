@@ -42,10 +42,6 @@ public:
   {return lock;}
 
 private:
-  // The position of the item
-  // (The position is relative one, NOT absolute one!)
-  QPointF position;
-
   // The pixmap's vector of the item
   QVector<QPixmap> pixmaps;
 

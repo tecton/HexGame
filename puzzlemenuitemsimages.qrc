@@ -1,0 +1,7 @@
+<RCC>
+    <qresource prefix="/">
+        <file>images/puzzlemenuitems/exchange_theme.png</file>
+        <file>images/puzzlemenuitems/lock_theme.png</file>
+        <file>images/puzzlemenuitems/unite_theme.png</file>
+    </qresource>
+</RCC>

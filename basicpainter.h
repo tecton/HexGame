@@ -27,7 +27,8 @@ public:
                      StageMenu,
                      Game37,
                      Game61,
-                     PuzzleGame=Game61};
+                     PuzzleGame=Game61,
+                     Help=5};
 
   /**
    *@brief Paint the background.

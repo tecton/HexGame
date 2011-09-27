@@ -45,7 +45,10 @@ SOURCES += main.cpp\
     statistic.cpp \
     achievements.cpp \
     achievementwidget.cpp \
-    puzzlegamerecord.cpp
+    puzzlegamerecord.cpp \
+    helpmainpartwidget.cpp \
+    helpwidget2.cpp \
+    helpitem.cpp
 
 HEADERS  += ball.h \
     corecontroller.h \
@@ -87,9 +90,21 @@ HEADERS  += ball.h \
     statistic.h \
     achievements.h \
     achievementwidget.h \
-    puzzlegamerecord.h
+    puzzlegamerecord.h \
+    helpmainpartwidget.h \
+    helpwidget2.h \
+    helpitem.h
 
 RESOURCES += \
-    images.qrc \
     puzzlegames.qrc \
-    sounds.qrc
+    sounds.qrc \
+    stageitemsimages.qrc \
+    puzzlemenuitemsimages.qrc \
+    mainmenuitemsimages.qrc \
+    hintimages.qrc \
+    helpimages.qrc \
+    gamecommonitemsimages.qrc \
+    buttonsimages.qrc \
+    bonusimages.qrc \
+    ballsimages.qrc \
+    backgroundsimages.qrc

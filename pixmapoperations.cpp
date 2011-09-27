@@ -44,6 +44,33 @@ void initPixmaps(int count,
   }
 }
 
+void initPixmaps(QVector<QString> paths,
+                 QVector<QVector<QPixmap> >& pixmaps,
+                 QVector<int>& frameCounts)
+{
+  int count = paths.size();
+  pixmaps.clear();
+  pixmaps.reserve(count);
+  frameCounts.clear();
+  frameCounts.reserve(count);
+  for (int i = 0;i < count;++i)
+  {
+    QVector<QPixmap> current;
+    QString path(paths[i]);
+    QFileInfo fi(path);
+    int count = QDir(fi.path(), fi.fileName()).entryList().size();
+    current.reserve(count);
+    // For each file of the color
+    foreach (QString entry, QDir(fi.path(), fi.fileName()).entryList())
+    {
+      // Get the pixmap of the path
+      current << QPixmap(fi.path() + "/" + entry);
+    }
+    pixmaps << current;
+    frameCounts << count;
+  }
+}
+
 void drawPixmapAt(QPainter *painter,
                   const QPixmap& pixmap,
                   double xRate,

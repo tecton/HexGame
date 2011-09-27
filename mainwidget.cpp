@@ -14,6 +14,7 @@
 #include "config.h"
 #include "achievements.h"
 #include "achievementwidget.h"
+#include "helpwidget2.h"
 
 extern Achievements achievements;
 
@@ -24,9 +25,11 @@ MainWidget::MainWidget(QWidget *parent) :
   // Set the curser(abandoned)
 //  setCursor(QCursor(QPixmap(":/images/cursor.png")));
   // Create the main menu widget and push it into the stack
-  MainMenuWidget *mainMenu = new MainMenuWidget();
-//  AchievementWidget *mainMenu = new AchievementWidget();
+  AbstractPixmapWidget *mainMenu = new MainMenuWidget();
   widgets.push_back(mainMenu);
+//  AbstractPixmapWidget *mainMenu = new AchievementWidget();
+//  mainMenu = new HelpWidget2();
+//  widgets.push_back(mainMenu);
 
   // Connect the signal and slot
   connect(mainMenu,
