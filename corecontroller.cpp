@@ -574,7 +574,7 @@ void CoreController::fillAllBlanks()
           lockedIndexes.push_back(index);
       }
     }
-  } while (false/*rule->endlessFill() && hint() < 0*/);
+  } while (rule->endlessFill() && (!blankIndexes.isEmpty()) && hint() < 0);
 
   // Set the balls to the correct position
   foreach (index, blankIndexes)
