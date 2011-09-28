@@ -2,8 +2,8 @@
     <qresource prefix="/">
         <file>images/backgrounds/37gamebackground.png</file>
         <file>images/backgrounds/61gamebackground.png</file>
-        <file>images/backgrounds/helpbackgroundwithbutton.png</file>
         <file>images/backgrounds/mainmenubackground.png</file>
         <file>images/backgrounds/puzzlemenubackground.png</file>
+        <file>images/backgrounds/helpbackgroundwithbutton.png</file>
     </qresource>
 </RCC>

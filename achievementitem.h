@@ -36,33 +36,60 @@ public:
   virtual double width();
   virtual double height();
 
+  /**
+   * @brief Advance the description.
+   */
   inline void advanceDescription()
   {
     if (descriptionAge < DESCRIPTION_AGE_LIMIT)
       ++descriptionAge;
   }
 
+  /**
+   * @brief Lose the description.
+   */
   inline void loseDescriptionFocus()
   {descriptionAge = 0;}
 
+  /**
+   * @brief Get the age of description.
+   */
   inline int getDescriptionAge()
   {return descriptionAge;}
 
+  /**
+   * @brief Set the age of description.
+   */
   inline void setDescriptionAge(int v)
   {descriptionAge = v;}
 
+  /**
+   * @brief Get the title.
+   */
   inline QString getTitle()
   {return title;}
 
+  /**
+   * @brief Set the title.
+   */
   inline void setTitle(QString str)
   {title = str;}
 
+  /**
+   * @brief Get the description.
+   */
   inline void setDescription(QString str)
   {description = str;}
 
+  /**
+   * @brief Set the description.
+   */
   inline QString getDescription()
   {return description;}
 
+  /**
+   * @brief Set the background.
+   */
   inline void setBackground(const QPixmap& pixmap)
   {background = pixmap;}
 

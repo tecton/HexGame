@@ -31,9 +31,13 @@ HelpWidget2::HelpWidget2() :
   exitItem->setPos(QPointF(0.113, 0.92));
   myItems.push_back(exitItem);
 
-  QPointF positions[2];
+  QPointF positions[6];
   positions[0] = QPointF(0.113, 0.09);
-  positions[1] = QPointF(0.113, 0.78);
+  positions[1] = QPointF(0.113, 0.218);
+  positions[2] = QPointF(0.113, 0.358);
+  positions[3] = QPointF(0.113, 0.494);
+  positions[4] = QPointF(0.113, 0.63);
+  positions[5] = QPointF(0.113, 0.778);
 
   helpThemeItems = new HelpItem *[HelpItem::totalItems()];
   helpThemeWidgets = new HelpMainPartWidget *[HelpItem::totalItems()];

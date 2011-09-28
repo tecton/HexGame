@@ -2,5 +2,9 @@
     <qresource prefix="/">
         <file>images/help/about.png</file>
         <file>images/help/mode.png</file>
+        <file>images/help/gesture.png</file>
+        <file>images/help/items.png</file>
+        <file>images/help/score.png</file>
+        <file>images/help/puzzle.png</file>
     </qresource>
 </RCC>

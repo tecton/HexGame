@@ -10,7 +10,7 @@
 #define BUTTON_LOGICAL_WIDTH  190
 #define BUTTON_LOGICAL_HEIGHT 50
 
-const static int helpItemCount = 2;
+const static int helpItemCount = 6;
 
 QVector<QString> mainPartBackGroundPaths;
 QVector<QVector<QPointF> > mainPartAnimCenterss;
@@ -19,6 +19,18 @@ QVector<QVector<QString> > mainPartAnimPathss;
 void initThingsAboutmainPart()
 {
   mainPartBackGroundPaths.push_back(":/images/help/mode.png");
+  mainPartAnimCenterss.push_back(QVector<QPointF>());
+  mainPartAnimPathss.push_back(QVector<QString>());
+  mainPartBackGroundPaths.push_back(":/images/help/gesture.png");
+  mainPartAnimCenterss.push_back(QVector<QPointF>());
+  mainPartAnimPathss.push_back(QVector<QString>());
+  mainPartBackGroundPaths.push_back(":/images/help/score.png");
+  mainPartAnimCenterss.push_back(QVector<QPointF>());
+  mainPartAnimPathss.push_back(QVector<QString>());
+  mainPartBackGroundPaths.push_back(":/images/help/items.png");
+  mainPartAnimCenterss.push_back(QVector<QPointF>());
+  mainPartAnimPathss.push_back(QVector<QString>());
+  mainPartBackGroundPaths.push_back(":/images/help/puzzle.png");
   mainPartAnimCenterss.push_back(QVector<QPointF>());
   mainPartAnimPathss.push_back(QVector<QString>());
   mainPartBackGroundPaths.push_back(":/images/help/about.png");
