@@ -144,7 +144,7 @@ Connections CoreController::testEliminate(
           gameBoardInfo->chainAroundIndex(i);
       if (chain.size() == 6)
       {
-        if (balls[chain[0]])
+        if (ballAt(chain[0], includingUserMoving))
         {
           Ball *firstBall = balls[chain[0]];
           for (int j = 0;j < 6;++j)
@@ -152,16 +152,16 @@ Connections CoreController::testEliminate(
             // A complex condition to judge whether the
             // ball can be in a connection and whether the
             // ball has the same color with the first ball
-            if (!balls[chain[j]] ||
-                !firstBall->sameColor(balls[chain[j]]) ||
-                !(balls[chain[j]]->getState() ==
+            if (!ballAt(chain[j], includingUserMoving) ||
+                !firstBall->sameColor(ballAt(chain[j], includingUserMoving)) ||
+                !(ballAt(chain[j], includingUserMoving)->getState() ==
                   Ball::Stable ||
-                  balls[chain[j]]->getState() ==
+                  ballAt(chain[j], includingUserMoving)->getState() ==
                   Ball::AlmostStable ||
-                  balls[chain[j]]->getState() ==
+                  ballAt(chain[j], includingUserMoving)->getState() ==
                   Ball::UserReleased ||
                   (includingUserMoving &&
-                   balls[chain[j]]->getState() ==
+                   ballAt(chain[j], includingUserMoving)->getState() ==
                    Ball::UserMoving)))
             {
               chainCanBeEliminated = false;
