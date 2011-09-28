@@ -48,7 +48,8 @@ SOURCES += main.cpp\
     puzzlegamerecord.cpp \
     helpmainpartwidget.cpp \
     helpwidget2.cpp \
-    helpitem.cpp
+    helpitem.cpp \
+    nextstagewidget.cpp
 
 HEADERS  += ball.h \
     corecontroller.h \
@@ -93,7 +94,8 @@ HEADERS  += ball.h \
     puzzlegamerecord.h \
     helpmainpartwidget.h \
     helpwidget2.h \
-    helpitem.h
+    helpitem.h \
+    nextstagewidget.h
 
 RESOURCES += \
     puzzlegames.qrc \

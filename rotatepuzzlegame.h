@@ -83,6 +83,7 @@ private:
   int *completeIndex;
   int type;
   int index;
+  bool nextStageChoice;
 
   // hint information
   IntegerItem *currentSteps;
@@ -101,6 +102,7 @@ private:
 private slots:
   void advance();
   void successMoved();
+  void nextStage();
 };
 
 #endif // ROTATEPUZZLEGAME_H

@@ -17,6 +17,7 @@
 #include "gamemath.h"
 #include "gamecommonitems.h"
 #include "puzzlegamerecord.h"
+#include "nextstagewidget.h"
 
 RotatePuzzleGame::RotatePuzzleGame(int ballIndex[],
                                    int toBeIndex[],
@@ -24,7 +25,8 @@ RotatePuzzleGame::RotatePuzzleGame(int ballIndex[],
                                    int gameType,
                                    int minSteps) :
     direction(0),
-    targetSize(1)
+    targetSize(1),
+    nextStageChoice(false)
 {
     rule = new RotatePuzzleGameRule();
     gameboardInfo = new SixtyOneGameBoardInfo();
@@ -298,13 +300,13 @@ void RotatePuzzleGame::advance()
     else
       direction = 0;
     break;
-
   }
 
     ++frameCount;
     controller->advance();
+
     Ball **balls = controller->balls;
-//    delete balls;
+  //    delete balls;
     int i;
     for (i = 0; i < gameboardInfo->totalBallCounts(); ++i)
     {
@@ -313,24 +315,39 @@ void RotatePuzzleGame::advance()
             || (balls[i]->getLocked() && (completeIndex[i] == -1))))
         break;
     }
-    if (i == gameboardInfo->totalBallCounts())
+    if (i == gameboardInfo->totalBallCounts() && !nextStageChoice)
     {
-      int stageCount = PuzzleGameRecord::totalStages(type);
-      if (index + 1 < stageCount)
-      {
-        RotatePuzzleGame* nextStage =
-            PuzzleGameInit::initRotatePuzzleGame(index + 1, type);
-        PuzzleGameRecord::testLeastSteps(type, index, currentSteps->getValue());
-        emit giveControlTo(nextStage, true);
-        delete this;
-        return;
-      }
-      else
-      {
-        PuzzleGameRecord::testLeastSteps(type, index, currentSteps->getValue());
-        emit giveControlTo(NULL, true);
-        delete this;
-        return;
-      }
+      // set the bool to true
+      nextStageChoice = true;
+
+      // Create the next stage widget
+      NextStageWidget *w = new NextStageWidget();
+
+      // Connect
+      connect(w, SIGNAL(confirm()), this, SLOT(nextStage()));
+
+      // Give control to it
+      emit giveControlTo(w, true);
     }
+}
+
+void RotatePuzzleGame::nextStage()
+{
+  int stageCount = PuzzleGameRecord::totalStages(type);
+  if (index + 1 < stageCount)
+  {
+    RotatePuzzleGame* nextStage =
+        PuzzleGameInit::initRotatePuzzleGame(index + 1, type);
+    PuzzleGameRecord::testLeastSteps(type, index, currentSteps->getValue());
+    emit giveControlTo(nextStage, true);
+    delete this;
+    return;
+  }
+  else
+  {
+    PuzzleGameRecord::testLeastSteps(type, index, currentSteps->getValue());
+    emit giveControlTo(NULL, true);
+    delete this;
+    return;
+  }
 }
