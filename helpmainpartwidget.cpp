@@ -4,6 +4,8 @@
 #include "pixmapoperations.h"
 #include "gamemath.h"
 
+#define FADE_IN_FRAMES  10
+
 HelpMainPartWidget::HelpMainPartWidget(QString backgroundPath,
                                        QVector<QPointF> animCenters,
                                        QVector<QString> animPaths) :
@@ -18,6 +20,9 @@ void HelpMainPartWidget::paint(QPainter *painter,
                                int height,
                                int frame)
 {
+  if (frame < FADE_IN_FRAMES)
+    painter->setOpacity(1.0 * frame / FADE_IN_FRAMES);
+
   double xRate;
   double yRate;
   {
@@ -46,4 +51,6 @@ void HelpMainPartWidget::paint(QPainter *painter,
                  true,
                  true);
   }
+
+  painter->setOpacity(1);
 }

@@ -25,27 +25,8 @@ public:
                 RotateClassic,
                 Timing,
                 RotatePuzzle};
-  /**
-   * @brief Get the background of the achievement.
-   */
-  virtual const QPixmap& getBackground(int frame = 0)=0;
-
-  /**
-   * @brief Get the title of the achievement.
-   */
-  virtual const QString& getTitle()=0;
 
   virtual void paint(QPainter *painter, int width, int height, int frame);
-
-  /**
-   * @brief Get the description of the achievement.
-   */
-  virtual const QString& getDescription()=0;
-
-//  /**
-//   * @brief Get the background of the description.
-//   */
-//  virtual QPixmap getDescriptionBackground()=0;
 
   /**
    * @brief Paint the description of the achievement in the given rect.
@@ -70,8 +51,26 @@ public:
   inline void setDescriptionAge(int v)
   {descriptionAge = v;}
 
+  inline QString getTitle()
+  {return title;}
+
+  inline void setTitle(QString str)
+  {title = str;}
+
+  inline void setDescription(QString str)
+  {description = str;}
+
+  inline QString getDescription()
+  {return description;}
+
+  inline void setBackground(const QPixmap& pixmap)
+  {background = pixmap;}
+
 private:
   int descriptionAge;
+  QString title;
+  QString description;
+  QPixmap background;
 };
 
 /**
@@ -85,16 +84,10 @@ public:
    */
   FlameGetItem(int theLevel, int theCurrent);
 
-  virtual const QPixmap& getBackground(int frame = 0);
-  virtual const QString& getTitle();
-  virtual const QString& getDescription()
-  {return description;}
-
 private:
   int level;
   int current;
   int next;
-  QString description;
 };
 
 /**
@@ -108,16 +101,10 @@ public:
    */
   StarGetItem(int theLevel, int theCurrent);
 
-  virtual const QPixmap& getBackground(int frame = 0);
-  virtual const QString& getTitle();
-  virtual const QString& getDescription()
-  {return description;}
-
 private:
   int level;
   int current;
   int next;
-  QString description;
 };
 
 /**
@@ -132,16 +119,10 @@ public:
    */
   RotateClassicPointItem(int theLevel, int theCurrent);
 
-  virtual const QPixmap& getBackground(int frame = 0);
-  virtual const QString& getTitle();
-  virtual const QString& getDescription()
-  {return description;}
-
 private:
   int level;
   int current;
   int next;
-  QString description;
 };
 
 /**
@@ -156,16 +137,10 @@ public:
    */
   TimingPointItem(int theLevel, int theCurrent);
 
-  virtual const QPixmap& getBackground(int frame = 0);
-  virtual const QString& getTitle();
-  virtual const QString& getDescription()
-  {return description;}
-
 private:
   int level;
   int current;
   int next;
-  QString description;
 };
 
 /**
@@ -180,17 +155,9 @@ public:
    */
   RotatePuzzleFinishedItem(int theFinished, int theTotal);
 
-  virtual const QPixmap& getBackground(int frame = 0);
-  virtual const QString& getTitle();
-  virtual const QString& getDescription()
-  {return description;}
-
 private:
   int finished;
   int total;
-  QString description;
 };
-
-
 
 #endif // ACHIEVEMENTITEM_H
