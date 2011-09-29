@@ -85,6 +85,8 @@ void AchievementWidget::makeBasicPixmap(
   painter->fillRect(0,0,width,height,QColor(0,0,0));
 #endif
 
+  BasicPainter::paintBackGround(BasicPainter::Achievement, painter, width, height, 0);
+
   // Paint the items
   BasicPainter::paintItems(painter,
                            myItems,
@@ -92,7 +94,7 @@ void AchievementWidget::makeBasicPixmap(
                            height,
                            0);
 
-  QRectF rect = QRectF(0.55 * width, 0.1 * height, 0.4 * width, 0.7 * height);
+  QRect rect = QRect(0.55 * width, 0.1 * height, 0.4 * width, 0.7 * height);
   achievementItems[activeAchievementIndex]->paintDescription(painter, rect, 0);
 
 #ifdef USE_PIXMAP

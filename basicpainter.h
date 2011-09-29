@@ -28,7 +28,8 @@ public:
                      Game37,
                      Game61,
                      PuzzleGame=Game61,
-                     Help=5};
+                     Help=5,
+                     Achievement};
 
   /**
    *@brief Paint the background.

@@ -48,7 +48,7 @@ void AbstractAchievementItem::paint(QPainter *painter,
 }
 
 void AbstractAchievementItem::paintDescription(QPainter *painter,
-                                               QRectF rect,
+                                               QRect rect,
                                                int frame)
 {
   double fontScale = qMin(1.0 * rect.width() / DESCRIPTION_WIDTH,
@@ -60,7 +60,7 @@ void AbstractAchievementItem::paintDescription(QPainter *painter,
   f.setBold(true);
   f.setPointSize(FONT_DIGIT_SIZE * fontScale);
   painter->setFont(f);;
-  painter->setPen(QColor(255, 255, 255));
+  painter->setPen(QColor(61, 20, 20));
   painter->drawRoundRect(rect, 25 * rect.width() / DESCRIPTION_WIDTH, 25 * rect.height() / DESCRIPTION_HEIGHT);
   painter->drawText(rect, Qt::AlignCenter, description);
   painter->setOpacity(1);

@@ -39,12 +39,14 @@ RotatePuzzleGame::RotatePuzzleGame(int ballIndex[],
       {
         balls[i] = new Ball((Ball::Color)6);
         balls[i]->setPos(gameboardInfo->positionOfIndex(i));
+        balls[i]->setState(Ball::Stable);
         balls[i]->setLocked(true);
       }
       else if (ballIndex[i] != 0)
       {
         balls[i] = new Ball((Ball::Color)ballIndex[i]);
         balls[i]->setPos(gameboardInfo->positionOfIndex(i));
+        balls[i]->setState(Ball::Stable);
       }
       else
       {
