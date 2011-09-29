@@ -15,7 +15,7 @@
 #define ITEM_R              90
 
 #define FONT_FAMILY         ""
-#define FONT_DIGIT_SIZE     20
+#define FONT_DIGIT_SIZE     30
 
 double AbstractAchievementItem::r()
 {
@@ -60,7 +60,7 @@ void AbstractAchievementItem::paintDescription(QPainter *painter,
   f.setBold(true);
   f.setPointSize(FONT_DIGIT_SIZE * fontScale);
   painter->setFont(f);;
-  painter->setPen(QColor(255,0,0));
+  painter->setPen(QColor(255, 255, 255));
   painter->drawRoundRect(rect, 25 * rect.width() / DESCRIPTION_WIDTH, 25 * rect.height() / DESCRIPTION_HEIGHT);
   painter->drawText(rect, Qt::AlignCenter, description);
   painter->setOpacity(1);

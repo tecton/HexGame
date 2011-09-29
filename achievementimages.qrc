@@ -1,8 +1,19 @@
 <RCC>
     <qresource prefix="/">
+        <file>images/achievementitems/flamebronze.png</file>
+        <file>images/achievementitems/flamegold.png</file>
+        <file>images/achievementitems/flamesilver.png</file>
         <file>images/achievementitems/none.png</file>
+        <file>images/achievementitems/rotatebronze.png</file>
+        <file>images/achievementitems/rotategold.png</file>
+        <file>images/achievementitems/rotatesilver.png</file>
         <file>images/achievementitems/starbronze.png</file>
         <file>images/achievementitems/stargold.png</file>
         <file>images/achievementitems/starsilver.png</file>
+        <file>images/achievementitems/timingbronze.png</file>
+        <file>images/achievementitems/timinggold.png</file>
+        <file>images/achievementitems/timingsilver.png</file>
+        <file>images/achievementitems/puzzleall.png</file>
+        <file>images/achievementitems/puzzlehalf.png</file>
     </qresource>
 </RCC>

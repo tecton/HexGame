@@ -18,9 +18,9 @@ static const char *kFlameGetTitle[] =
 static const char *kFlameGetPaths[] =
 {
 ":/images/achievementitems/none.png",
-":/images/achievementitems/starbronze.png",
-":/images/achievementitems/starsilver.png",
-":/images/achievementitems/stargold.png"
+":/images/achievementitems/flamebronze.png",
+":/images/achievementitems/flamesilver.png",
+":/images/achievementitems/flamegold.png"
 };
 static const int kStarGetStage[] =       {10, 100, 1000, -1};
 static const char *kStarGetTitle[] =
@@ -48,9 +48,9 @@ static const char *kRotateClassicTitle[] =
 static const char *kRotateClassicPaths[] =
 {
 ":/images/achievementitems/none.png",
-":/images/achievementitems/starbronze.png",
-":/images/achievementitems/starsilver.png",
-":/images/achievementitems/stargold.png"
+":/images/achievementitems/rotatebronze.png",
+":/images/achievementitems/rotatesilver.png",
+":/images/achievementitems/rotategold.png"
 };
 static const int kTimingStage[] =        {400, 700, 1000, -1};
 static const char *kTimingTitle[] =
@@ -63,18 +63,20 @@ static const char *kTimingTitle[] =
 static const char *kTimingPaths[] =
 {
 ":/images/achievementitems/none.png",
-":/images/achievementitems/starbronze.png",
-":/images/achievementitems/starsilver.png",
-":/images/achievementitems/stargold.png"
+":/images/achievementitems/timingbronze.png",
+":/images/achievementitems/timingsilver.png",
+":/images/achievementitems/timinggold.png"
 };
 static const char *kRotatePuzzleTitle[] =
-{"Rotate Puzzle"};
+{
+"Rotate Puzzle",
+"Rotate Puzzle Half",
+"Rotate Puzzle Finished"};
 static const char *kRotatePuzzlePaths[] =
 {
 ":/images/achievementitems/none.png",
-":/images/achievementitems/starbronze.png",
-":/images/achievementitems/starsilver.png",
-":/images/achievementitems/stargold.png"
+":/images/achievementitems/puzzlehalf.png",
+":/images/achievementitems/puzzleall.png"
 };
 
 

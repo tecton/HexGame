@@ -152,6 +152,15 @@ int Achievements::getAchievementLevel(AbstractAchievementItem::ItemType type,
       value = qMax(statistic.getStatistic(Statistic::SwapTimingPoint),
                    statistic.getStatistic(Statistic::RotateTimingPoint));
       break;
+    case AbstractAchievementItem::RotatePuzzle:
+      if (statistic.getStatistic(Statistic::RotatePuzzleFinished) == 0)
+        value = 0;
+      else if (statistic.getStatistic(Statistic::RotatePuzzleFinished) ==
+               statistic.getStatistic(Statistic::RotatePuzzleTotal))
+        value = 2;
+      else
+        value = 1;
+      break;
     default:
       return 0;
       break;
