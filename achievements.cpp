@@ -4,8 +4,9 @@
 
 #define LAST_TIME 100
 #define ANIM_TIME 20
-#define MAX_X     0.25
-#define Y         0.2
+
+#define MAX_X     0.7578
+#define MAX_Y     0.2
 
 extern Statistic statistic;
 
@@ -30,14 +31,14 @@ void Achievements::advance()
   }
   if (!items.isEmpty())
   {
-    double x;
+    double y;
     if (count < ANIM_TIME)
-      x = MAX_X * 2 * count / ANIM_TIME - MAX_X;
+      y = MAX_Y * 2 * count / ANIM_TIME - MAX_Y;
     else if (count > LAST_TIME - ANIM_TIME)
-      x = MAX_X * 2 * (LAST_TIME - count) / ANIM_TIME - MAX_X;
+      y = MAX_Y * 2 * (LAST_TIME - count) / ANIM_TIME - MAX_Y;
     else
-      x = MAX_X;
-    items[0]->setPos(QPointF(x, Y));
+      y = MAX_Y;
+    items[0]->setPos(QPointF(MAX_X, y));
     ++count;
   }
   else
@@ -124,7 +125,10 @@ void Achievements::statisticChanged(Statistic::StatisticType type,
   {
     AbstractAchievementItem *item = getAchievementItem(itemType);
     if (item != NULL)
+    {
+      item->setPos(QPointF(MAX_X, -MAX_Y));
       items.push_back(item);
+    }
   }
 }
 

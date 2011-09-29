@@ -2,6 +2,7 @@
 
 #include <QPainter>
 #include <QPixmap>
+#include <QTimer>
 #include "basicpainter.h"
 #include "gamecommonitems.h"
 #include "achievements.h"
@@ -38,6 +39,11 @@ AchievementWidget::AchievementWidget() :
 
   // No items was chosen
   itemAtPressPos = NULL;
+
+  t = new QTimer();
+  t->setInterval(30);
+  connect(t, SIGNAL(timeout()), this, SLOT(advance()));
+  t->start();
 }
 
 void AchievementWidget::makePixmap(
@@ -87,7 +93,6 @@ void AchievementWidget::makeBasicPixmap(
                            0);
 
   QRectF rect = QRectF(0.55 * width, 0.1 * height, 0.4 * width, 0.7 * height);
-  achievementItems[activeAchievementIndex]->advanceDescription();
   achievementItems[activeAchievementIndex]->paintDescription(painter, rect, 0);
 
 #ifdef USE_PIXMAP
@@ -137,11 +142,11 @@ void AchievementWidget::dealMoved(QPointF mousePos, Qt::MouseButton button)
   for (int i = 0;i < achievementItems.size();++i)
     if (achievementItems[i]->in(mousePos, LOGICAL_WIDTH, LOGICAL_HEIGHT))
     {
-    if (activeAchievementIndex != i)
-    {
-      achievementItems[i]->loseDescriptionFocus();
-      activeAchievementIndex = i;
-    }
+      if (activeAchievementIndex != i)
+      {
+        achievementItems[i]->loseDescriptionFocus();
+        activeAchievementIndex = i;
+      }
       break;
     }
 }
@@ -160,8 +165,15 @@ void AchievementWidget::dealReleased(QPointF mousePos, Qt::MouseButton button)
   itemAtPressPos = NULL;
 }
 
+void AchievementWidget::advance()
+{
+  achievementItems[activeAchievementIndex]->advanceDescription();
+}
+
 AchievementWidget::~AchievementWidget()
 {
+  t->stop();
+  delete t;
   // Release the space
   for (int i = 0;i < myItems.size();++i)
     delete myItems[i];

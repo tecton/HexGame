@@ -25,8 +25,8 @@ RotatePuzzleGame::RotatePuzzleGame(int ballIndex[],
                                    int gameType,
                                    int minSteps) :
     direction(0),
-    targetSize(1),
-    nextStageChoice(false)
+    nextStageChoice(false),
+    targetSize(1)
 {
     rule = new RotatePuzzleGameRule();
     gameboardInfo = new SixtyOneGameBoardInfo();

@@ -6,6 +6,7 @@
 #include <QVector>
 
 // Forward declaration
+class QTimer;
 class AbstractAchievementItem;
 class AbstractItem;
 
@@ -14,6 +15,7 @@ class AbstractItem;
  */
 class AchievementWidget : public AbstractPixmapWidget
 {
+  Q_OBJECT
 public:
   /**
    * @brief Constructor.
@@ -56,6 +58,8 @@ public:
   virtual void getForcus(){}
 
 private:
+  QTimer *t;
+
   AbstractItem *exitItem;
 
   QVector<AbstractAchievementItem *> achievementItems;
@@ -66,6 +70,8 @@ private:
 
   int activeAchievementIndex;
 
+private slots:
+  void advance();
 };
 
 #endif // ACHIEVEMENTWIDGET_H
