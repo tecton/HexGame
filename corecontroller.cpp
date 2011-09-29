@@ -307,7 +307,8 @@ void CoreController::rotateBegin(int theCenterIndex,
   // the gesture will be a bad one
   for (int i = 0;i < gestureInfluencedIndexs.size();++i)
     if ((!balls[gestureInfluencedIndexs[i]]) ||
-        (balls[gestureInfluencedIndexs[i]]->getLocked()))
+        (balls[gestureInfluencedIndexs[i]]->getLocked()) ||
+        balls[gestureInfluencedIndexs[i]]->getState() != Ball::Stable)
     {
       gesture =  AbstractRule::BadGesture;
       gestureInfluencedIndexs.clear();
@@ -744,6 +745,7 @@ void CoreController::moveToNewPos()
 
 void CoreController::rotateRollBack()
 {
+  gesture = AbstractRule::BadGesture;
   for (int i = 0;i < gestureInfluencedIndexs.size();++i)
   {
     int currentIndex = gestureInfluencedIndexs[i];

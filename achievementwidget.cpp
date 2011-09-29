@@ -22,14 +22,17 @@ AchievementWidget::AchievementWidget() :
 
   achievementItems = Achievements::getAchievementItems();
 
+  QPointF positions[5];
+  positions[0] = QPointF(0.15, 0.2);
+  positions[1] = QPointF(0.45, 0.2);
+  positions[2] = QPointF(0.15, 0.8);
+  positions[3] = QPointF(0.45, 0.8);
+  positions[4] = QPointF(0.3, 0.5);
+
   for (int i = 0;i < achievementItems.size();++i)
   {
     myItems.push_back(achievementItems[i]);
-    achievementItems[i]->setPos(
-        QPointF(0.25,
-                Y_FROM / LOGICAL_HEIGHT +
-                (Y_TO - Y_FROM) * i / (achievementItems.size() - 1) /
-                LOGICAL_HEIGHT));
+    achievementItems[i]->setPos(positions[i]);
     achievementItems[i]->loseDescriptionFocus();
   }
 
@@ -122,7 +125,7 @@ void AchievementWidget::dealPressed(QPointF mousePos, Qt::MouseButton button)
     {
       if (activeAchievementIndex != i)
       {
-        achievementItems[i]->setDescriptionAge(0);
+        achievementItems[i]->loseDescriptionFocus();
         activeAchievementIndex = i;
       }
       break;
@@ -136,7 +139,7 @@ void AchievementWidget::dealMoved(QPointF mousePos, Qt::MouseButton button)
     {
     if (activeAchievementIndex != i)
     {
-      achievementItems[i]->setDescriptionAge(0);
+      achievementItems[i]->loseDescriptionFocus();
       activeAchievementIndex = i;
     }
       break;

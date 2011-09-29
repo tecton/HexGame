@@ -15,6 +15,13 @@ static const char *kFlameGetTitle[] =
 "Flame Getter 2",
 "Flame Getter 3"
 };
+static const char *kFlameGetPaths[] =
+{
+":/images/achievementitems/none.png",
+":/images/achievementitems/starbronze.png",
+":/images/achievementitems/starsilver.png",
+":/images/achievementitems/stargold.png"
+};
 static const int kStarGetStage[] =       {10, 100, 1000, -1};
 static const char *kStarGetTitle[] =
 {
@@ -22,6 +29,13 @@ static const char *kStarGetTitle[] =
 "Star Getter 1",
 "Star Getter 2",
 "Star Getter 3"
+};
+static const char *kStarGetPaths[] =
+{
+":/images/achievementitems/none.png",
+":/images/achievementitems/starbronze.png",
+":/images/achievementitems/starsilver.png",
+":/images/achievementitems/stargold.png"
 };
 static const int kRotateClassicStage[] = {500, 1000, 2000, -1};
 static const char *kRotateClassicTitle[] =
@@ -31,6 +45,13 @@ static const char *kRotateClassicTitle[] =
 "RotateClassic 2",
 "RotateClassic 3"
 };
+static const char *kRotateClassicPaths[] =
+{
+":/images/achievementitems/none.png",
+":/images/achievementitems/starbronze.png",
+":/images/achievementitems/starsilver.png",
+":/images/achievementitems/stargold.png"
+};
 static const int kTimingStage[] =        {400, 700, 1000, -1};
 static const char *kTimingTitle[] =
 {
@@ -39,8 +60,22 @@ static const char *kTimingTitle[] =
 "Timing 2",
 "Timing 3"
 };
+static const char *kTimingPaths[] =
+{
+":/images/achievementitems/none.png",
+":/images/achievementitems/starbronze.png",
+":/images/achievementitems/starsilver.png",
+":/images/achievementitems/stargold.png"
+};
 static const char *kRotatePuzzleTitle[] =
 {"Rotate Puzzle"};
+static const char *kRotatePuzzlePaths[] =
+{
+":/images/achievementitems/none.png",
+":/images/achievementitems/starbronze.png",
+":/images/achievementitems/starsilver.png",
+":/images/achievementitems/stargold.png"
+};
 
 
 class QPainter;

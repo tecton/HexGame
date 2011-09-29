@@ -14,7 +14,7 @@
  * @brief An abstract class of items used to show brief infomation about an
  * achievement.
  */
-class AbstractAchievementItem : public AbstractRectItem
+class AbstractAchievementItem : public AbstractCircleItem
 {
 public:
   /**
@@ -33,23 +33,24 @@ public:
    */
   void paintDescription(QPainter *painter, QRectF rect, int frame);
 
-  virtual double width();
-  virtual double height();
+  virtual double r();
 
   /**
    * @brief Advance the description.
    */
   inline void advanceDescription()
   {
-    if (descriptionAge < DESCRIPTION_AGE_LIMIT)
-      ++descriptionAge;
+    ++descriptionAge;
   }
 
   /**
    * @brief Lose the description.
    */
   inline void loseDescriptionFocus()
-  {descriptionAge = 0;}
+  {
+    rotation += descriptionAge;
+    descriptionAge = 0;
+  }
 
   /**
    * @brief Get the age of description.
@@ -93,7 +94,20 @@ public:
   inline void setBackground(const QPixmap& pixmap)
   {background = pixmap;}
 
+  /**
+   * @brief Set the description.
+   */
+  inline int getRotation()
+  {return rotation;}
+
+  /**
+   * @brief Set the background.
+   */
+  inline void setRotation(double theRotation)
+  {rotation = theRotation;}
+
 private:
+  int rotation;
   int descriptionAge;
   QString title;
   QString description;

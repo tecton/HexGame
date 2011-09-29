@@ -109,4 +109,5 @@ RESOURCES += \
     buttonsimages.qrc \
     bonusimages.qrc \
     ballsimages.qrc \
-    backgroundsimages.qrc
+    backgroundsimages.qrc \
+    achievementimages.qrc
