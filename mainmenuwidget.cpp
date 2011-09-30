@@ -3,8 +3,10 @@
 #include <QTimer>
 #include <QPixmap>
 #include <QPainter>
+#include "achievementwidget.h"
 #include "basicpainter.h"
 #include "mainmenuitems.h"
+#include "gamecommonitems.h"
 #include "puzzlemenuwidget.h"
 #include "othergameinit.h"
 #include "helpwidget2.h"
@@ -34,13 +36,16 @@ MainMenuWidget::MainMenuWidget()/* :
   items[6] = new MainMenuGameItem(AbstractMainMenuItem::RotatePuzzleItem);
   items[6]->setPos(QPointF(0.605, 0.5));
 
-  items[7] = new MainMenuButtonItem(AbstractMainMenuItem::HelpItem);
-  items[7]->setPos(QPointF(0.1, 0.7));
+  items[7] = new ButtonItem("Achievement");
+  items[7]->setPos(QPointF(0.1, 0.55));
 
-  items[8] = new MainMenuButtonItem(AbstractMainMenuItem::ExitItem);
-  items[8]->setPos(QPointF(0.1, 0.8));
+  items[8] = new ButtonItem("Help");
+  items[8]->setPos(QPointF(0.1, 0.65));
 
-  for (int i = 0;i < 9;++i)
+  items[9] = new ButtonItem("Exit");
+  items[9]->setPos(QPointF(0.1, 0.8));
+
+  for (int i = 0;i < 10;++i)
     myItems.push_back(items[i]);
 
 //  // Create the timer and connect signals and slots
@@ -157,15 +162,22 @@ void MainMenuWidget::dealPressed(QPointF mousePos, Qt::MouseButton button)
     emit giveControlTo(puzzleMenu, false);
     return;
   }
-  // Go to help if neccessary
+  // Go to achievement if neccessary
   else if (items[7]->in(mousePos, LOGICAL_WIDTH, LOGICAL_HEIGHT))
+  {
+    AbstractPixmapWidget *achievementWidget = new AchievementWidget();
+    emit giveControlTo(achievementWidget, false);
+    return;
+  }
+  // Go to help if neccessary
+  else if (items[8]->in(mousePos, LOGICAL_WIDTH, LOGICAL_HEIGHT))
   {
     AbstractPixmapWidget *helpWidget = new HelpWidget2();
     emit giveControlTo(helpWidget, false);
     return;
   }
   // Exit if neccessary
-  else if (items[8]->in(mousePos, LOGICAL_WIDTH, LOGICAL_HEIGHT))
+  else if (items[9]->in(mousePos, LOGICAL_WIDTH, LOGICAL_HEIGHT))
   {
     emit giveControlTo(NULL, true);
     delete this;

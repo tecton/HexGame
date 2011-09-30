@@ -6,5 +6,6 @@
         <file>images/buttons/hint01.png</file>
         <file>images/buttons/pause01.png</file>
         <file>images/buttons/reset01.png</file>
+        <file>images/buttons/buttonbackground.png</file>
     </qresource>
 </RCC>

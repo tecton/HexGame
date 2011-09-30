@@ -67,6 +67,9 @@ int calculateLevel(AbstractAchievementItem::ItemType type, int value)
     count = 3;
     stages = kTimingStage;
     break;
+  case AbstractAchievementItem::RotatePuzzle:
+    return value;
+    break;
   default:
     return 0;
     break;

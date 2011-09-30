@@ -7,6 +7,7 @@
 #include <QPointF>
 #include <QString>
 #include <QVector>
+#include <QPainterPath>
 
 #define DESCRIPTION_AGE_LIMIT 30
 
@@ -31,7 +32,7 @@ public:
   /**
    * @brief Paint the description of the achievement in the given rect.
    */
-  void paintDescription(QPainter *painter, QRect rect, int frame);
+  void paintDescription(QPainter *painter, int frame);
 
   virtual double r();
 
@@ -77,16 +78,16 @@ public:
   {title = str;}
 
   /**
-   * @brief Get the description.
-   */
-  inline void setDescription(QString str)
-  {description = str;}
-
-  /**
    * @brief Set the description.
    */
-  inline QString getDescription()
-  {return description;}
+  inline void setDescriptionPath(QPainterPath path)
+  {descriptionPath = path;}
+
+  /**
+   * @brief Get the description.
+   */
+  inline QPainterPath getDescriptionPath()
+  {return descriptionPath;}
 
   /**
    * @brief Set the background.
@@ -110,8 +111,8 @@ private:
   int rotation;
   int descriptionAge;
   QString title;
-  QString description;
   QPixmap background;
+  QPainterPath descriptionPath;
 };
 
 /**

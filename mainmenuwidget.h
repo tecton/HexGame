@@ -62,7 +62,7 @@ private:
 //  QTimer *t;
 
   // Items of the game
-  AbstractItem *items[9];
+  AbstractItem *items[10];
   QVector <AbstractItem *> myItems;
 //  int frameCount;
 

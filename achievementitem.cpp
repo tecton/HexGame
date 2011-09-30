@@ -22,6 +22,21 @@ double AbstractAchievementItem::r()
   return ITEM_R;
 }
 
+QFont descriptionFont()
+{
+  QFont f;
+  f.setFamily(FONT_FAMILY);
+  f.setBold(true);
+  f.setPointSize(FONT_DIGIT_SIZE);
+  return f;
+}
+
+void addText(QPainterPath& path, QString str, double y)
+{
+  double x = 250 - FONT_DIGIT_SIZE * str.length() / 3;
+  path.addText(x, y, descriptionFont(), str);
+}
+
 void AbstractAchievementItem::paint(QPainter *painter,
                                     int width,
                                     int height,
@@ -48,21 +63,20 @@ void AbstractAchievementItem::paint(QPainter *painter,
 }
 
 void AbstractAchievementItem::paintDescription(QPainter *painter,
-                                               QRect rect,
                                                int frame)
 {
-  double fontScale = qMin(1.0 * rect.width() / DESCRIPTION_WIDTH,
-                          1.0 * rect.height() / DESCRIPTION_HEIGHT);
   if (descriptionAge < FADE_IN_FRAMES)
     painter->setOpacity(1.0 * descriptionAge / FADE_IN_FRAMES);
-  QFont f;
-  f.setFamily(FONT_FAMILY);
-  f.setBold(true);
-  f.setPointSize(FONT_DIGIT_SIZE * fontScale);
-  painter->setFont(f);;
-  painter->setPen(QColor(61, 20, 20));
-  painter->drawRoundRect(rect, 25 * rect.width() / DESCRIPTION_WIDTH, 25 * rect.height() / DESCRIPTION_HEIGHT);
-  painter->drawText(rect, Qt::AlignCenter, description);
+  QPen pen = QPen(QColor(255, 255, 255));
+  pen.setWidth(3);
+  painter->setPen(pen);
+  QRect rect = QRect(0,
+                     0,
+                     DESCRIPTION_WIDTH,
+                     DESCRIPTION_HEIGHT);
+  painter->drawRoundRect(rect, 25, 25);
+  painter->drawPath(descriptionPath);
+  painter->fillPath(descriptionPath, QBrush(QColor(0, 0, 0)));
   painter->setOpacity(1);
 }
 
@@ -73,10 +87,21 @@ FlameGetItem::FlameGetItem(int theLevel, int theCurrent) :
   next = kFlameGetStage[level];
   setTitle(kFlameGetTitle[level]);
   setBackground(QPixmap(kFlameGetPaths[theLevel]));
+  QPainterPath path;
   if (next != -1)
-    setDescription(QObject::tr("Level %1\n\nYou've got %2 flames\n\nGet %3 flames\nto reach next stage\n").arg(level).arg(current).arg(next-current));
+  {
+    addText(path, QObject::tr("Level %1").arg(level), 90);
+    addText(path, QObject::tr("You've got %1 flames").arg(current), 190);
+    addText(path, QObject::tr("Get %1 flames").arg(next-current), 290);
+    addText(path, QObject::tr("to reach next stage"), 390);
+  }
   else
-    setDescription(QObject::tr("Level %1\n\nIt's already the\nMAX LEVEL").arg(level));
+  {
+    addText(path, QObject::tr("Level %1").arg(level), 140);
+    addText(path, QObject::tr("It's already the"), 240);
+    addText(path, QObject::tr("MAX LEVEL"), 340);
+  }
+  setDescriptionPath(path);
 }
 
 StarGetItem::StarGetItem(int theLevel, int theCurrent) :
@@ -87,10 +112,21 @@ StarGetItem::StarGetItem(int theLevel, int theCurrent) :
   setTitle(kStarGetTitle[level]);
   setBackground(QPixmap(kStarGetPaths[theLevel]));
   setRotation(0);
+  QPainterPath path;
   if (next != -1)
-    setDescription(QObject::tr("Level %1\n\nYou've got %2 stars\n\nGet %3 stars\nto reach next stage\n").arg(level).arg(current).arg(next-current));
+  {
+    addText(path, QObject::tr("Level %1").arg(level), 90);
+    addText(path, QObject::tr("You've got %1 stars").arg(current), 190);
+    addText(path, QObject::tr("Get %1 stars").arg(next-current), 290);
+    addText(path, QObject::tr("to reach next stage"), 390);
+  }
   else
-    setDescription(QObject::tr("Level %1\n\nIt's already the\nMAX LEVEL").arg(level));
+  {
+    addText(path, QObject::tr("Level %1").arg(level), 140);
+    addText(path, QObject::tr("It's already the"), 240);
+    addText(path, QObject::tr("MAX LEVEL"), 340);
+  }
+  setDescriptionPath(path);
 }
 
 RotateClassicPointItem::RotateClassicPointItem(int theLevel, int theCurrent) :
@@ -101,10 +137,21 @@ RotateClassicPointItem::RotateClassicPointItem(int theLevel, int theCurrent) :
   setTitle(kRotateClassicTitle[level]);
   setBackground(QPixmap(kRotateClassicPaths[theLevel]));
   setRotation(0);
+  QPainterPath path;
   if (next != -1)
-    setDescription(QObject::tr("Level %1\n\nGet %2 points\nin rotate classic game\nto reach next level\n").arg(level).arg(next));
+  {
+    addText(path, QObject::tr("Level %1").arg(level), 90);
+    addText(path, QObject::tr("Get %1 points").arg(next), 190);
+    addText(path, QObject::tr("in rotate classic game"), 290);
+    addText(path, QObject::tr("to reach next level"), 390);
+  }
   else
-    setDescription(QObject::tr("Level %1\n\nIt's already the\nMAX LEVEL").arg(level));
+  {
+    addText(path, QObject::tr("Level %1").arg(level), 140);
+    addText(path, QObject::tr("It's already the"), 240);
+    addText(path, QObject::tr("MAX LEVEL"), 340);
+  }
+  setDescriptionPath(path);
 }
 
 TimingPointItem::TimingPointItem(int theLevel, int theCurrent) :
@@ -115,10 +162,21 @@ TimingPointItem::TimingPointItem(int theLevel, int theCurrent) :
   setTitle(kTimingTitle[level]);
   setBackground(QPixmap(kTimingPaths[theLevel]));
   setRotation(0);
+  QPainterPath path;
   if (next != -1)
-    setDescription(QObject::tr("Level %1\n\nGet %2 points\nin timing game\nto reach next level\n").arg(level).arg(next));
+  {
+    addText(path, QObject::tr("Level %1").arg(level), 90);
+    addText(path, QObject::tr("Get %1 points").arg(next), 190);
+    addText(path, QObject::tr("in timing game"), 290);
+    addText(path, QObject::tr("to reach next level"), 390);
+  }
   else
-    setDescription(QObject::tr("Level %1\n\nIt's already the\nMAX LEVEL").arg(level));
+  {
+    addText(path, QObject::tr("Level %1").arg(level), 140);
+    addText(path, QObject::tr("It's already the"), 240);
+    addText(path, QObject::tr("MAX LEVEL"), 340);
+  }
+  setDescriptionPath(path);
 }
 
 RotatePuzzleFinishedItem::RotatePuzzleFinishedItem(int theFinished,
@@ -137,8 +195,21 @@ RotatePuzzleFinishedItem::RotatePuzzleFinishedItem(int theFinished,
     index = 1;
 
   setBackground(QPixmap(kRotatePuzzlePaths[index]));
-  if (theFinished != theTotal)
-    setDescription(QObject::tr("%1 of %2\npuzzle(s) cleared ").arg(finished).arg(total));
-  else
-    setDescription(QObject::tr("All %1\npuzzles cleared ").arg(total));
+  QPainterPath path;
+  switch (index)
+  {
+  case 0:
+    addText(path, QObject::tr("New to"), 190);
+    addText(path, QObject::tr("rotate puzzle game"), 290);
+    break;
+  case 1:
+    addText(path, QObject::tr("%1 of %2").arg(finished).arg(total), 190);
+    addText(path, QObject::tr("puzzle(s) cleared"), 290);
+    break;
+  case 2:
+    addText(path, QObject::tr("All %1").arg(total), 190);
+    addText(path, QObject::tr("puzzles cleared"), 290);
+    break;
+  }
+  setDescriptionPath(path);
 }

@@ -10,6 +10,17 @@
 #define LOGICAL_WIDTH  1024
 #define LOGICAL_HEIGHT 600
 
+
+#define DESCRIPTION_X         500
+#define DESCRIPTION_Y         50
+#define DESCRIPTION_WIDTH     500
+#define DESCRIPTION_HEIGHT    450
+
+#define VIEW_X         (-DESCRIPTION_X)
+#define VIEW_Y         (-DESCRIPTION_Y)
+#define VIEW_WIDTH     LOGICAL_WIDTH
+#define VIEW_HEIGHT    LOGICAL_HEIGHT
+
 #define Y_FROM         100.0
 #define Y_TO           500.0
 
@@ -25,10 +36,10 @@ AchievementWidget::AchievementWidget() :
 
   QPointF positions[5];
   positions[0] = QPointF(0.15, 0.2);
-  positions[1] = QPointF(0.45, 0.2);
+  positions[1] = QPointF(0.35, 0.2);
   positions[2] = QPointF(0.15, 0.8);
-  positions[3] = QPointF(0.45, 0.8);
-  positions[4] = QPointF(0.3, 0.5);
+  positions[3] = QPointF(0.35, 0.8);
+  positions[4] = QPointF(0.25, 0.5);
 
   for (int i = 0;i < achievementItems.size();++i)
   {
@@ -85,17 +96,21 @@ void AchievementWidget::makeBasicPixmap(
   painter->fillRect(0,0,width,height,QColor(0,0,0));
 #endif
 
-  BasicPainter::paintBackGround(BasicPainter::Achievement, painter, width, height, 0);
+  painter->setWindow(0, 0, LOGICAL_WIDTH, LOGICAL_HEIGHT);
+
+  BasicPainter::paintBackGround(BasicPainter::Achievement, painter, LOGICAL_WIDTH, LOGICAL_HEIGHT, 0);
 
   // Paint the items
   BasicPainter::paintItems(painter,
                            myItems,
-                           width,
-                           height,
+                           LOGICAL_WIDTH,
+                           LOGICAL_HEIGHT,
                            0);
 
-  QRect rect = QRect(0.55 * width, 0.1 * height, 0.4 * width, 0.7 * height);
-  achievementItems[activeAchievementIndex]->paintDescription(painter, rect, 0);
+  painter->setWindow(VIEW_X, VIEW_Y, VIEW_WIDTH, VIEW_HEIGHT);
+  achievementItems[activeAchievementIndex]->paintDescription(painter, 0);
+
+  painter->setWindow(0, 0, width, height);
 
 #ifdef USE_PIXMAP
   // End the paint and release the space

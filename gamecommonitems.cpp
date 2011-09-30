@@ -11,7 +11,7 @@
 #define LOGICAL_WIDTH  1024
 #define LOGICAL_HEIGHT 600
 
-#define BUTTON_LOGICAL_WIDTH  120
+#define BUTTON_LOGICAL_WIDTH  160
 #define BUTTON_LOGICAL_HEIGHT 60
 
 #define HINT 0
@@ -303,7 +303,7 @@ void StarItem::paintInfluencedArea(int index,
 ButtonItem::ButtonItem(QString str)
 {
   caption = str;
-  background = QPixmap(""/*":/images/gamecommonitems/buttonbackground.png"*/);
+  background = QPixmap(":/images/buttons/buttonbackground.png");
 }
 
 void ButtonItem::paint(QPainter *painter, int width, int height, int frame)

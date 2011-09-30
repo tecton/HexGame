@@ -13,8 +13,6 @@
 #include "publicgamesounds.h"
 #include "config.h"
 #include "achievements.h"
-#include "achievementwidget.h"
-#include "helpwidget2.h"
 
 extern Achievements achievements;
 
@@ -26,15 +24,6 @@ MainWidget::MainWidget(QWidget *parent) :
 //  setCursor(QCursor(QPixmap(":/images/cursor.png")));
   // Create the main menu widget and push it into the stack
   AbstractPixmapWidget *mainMenu = new MainMenuWidget();
-  widgets.push_back(mainMenu);
-  // Connect the signal and slot
-  connect(mainMenu,
-          SIGNAL(giveControlTo(AbstractPixmapWidget*,bool)),
-          this,
-          SLOT(changeControl(AbstractPixmapWidget*,bool)));
-
-/*  AbstractPixmapWidget **/mainMenu = new AchievementWidget();
-//  mainMenu = new HelpWidget2();
   widgets.push_back(mainMenu);
 
   // Connect the signal and slot

@@ -94,11 +94,11 @@ TimingGameWidget::TimingGameWidget(AbstractRule::Gesture gesture) :
   myItems.push_back(hint);
 
   resetItem = new ButtonItem("Reset");
-  resetItem->setPos(QPointF(0.1, 0.7));
+  resetItem->setPos(QPointF(0.1, 0.8));
   myItems.push_back(resetItem);
 
   pauseItem = new ButtonItem("Pause");
-  pauseItem->setPos(QPointF(0.1, 0.8));
+  pauseItem->setPos(QPointF(0.1, 0.7));
   myItems.push_back(pauseItem);
 
   exitItem = new ButtonItem("Exit");
