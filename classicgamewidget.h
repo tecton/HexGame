@@ -96,8 +96,8 @@ private:
   // Count of the frame which may used to paint
   int frameCount;
 
-  // A value used to judge whether the game is over
-  int noSolutionCount;
+  // A value used to judge whether the anim is over
+  int endAnimCount;
 
   // Items of the game
   IntegerItem *hightestScore;
@@ -123,6 +123,9 @@ private:
 
   // Show the hint
   void showHint();
+
+  // Add effects before game over
+  void preGameOver();
 
   // Game over
   void gameOver();

@@ -418,7 +418,7 @@ void CoreController::rotateEnd()
                          gameBoardInfo->
                          positionOfIndex(index),
                          2,
-                         false);
+                         true);
     }
     // Emit a good move signal
     emit goodMove();
@@ -822,6 +822,8 @@ void CoreController::translateABallTo(Ball *ball,
                                       int steps,
                                       bool plain)
 {
+  QVector<QPointF> stopPositions;
+
   if (!ball)
     return;
 
@@ -833,10 +835,21 @@ void CoreController::translateABallTo(Ball *ball,
   double toX = des.x();
   double toY = des.y();
 
+  double dis = distanceOfTwoPoints(fromPos, des);
+
   for (int i = 0;i < steps;++i)
-    ball->stopPositions.push_back(
+  {
+    double dy = 0;
+    if (!plain)
+      dy = dis * 3 * bridgeY(1.0 * (steps - i) / steps);
+    stopPositions.push_back(
         QPointF((fromX * i + toX * (steps - i)) / steps,
-                (fromY * i + toY * (steps - i)) / steps));
+                (fromY * i + toY * (steps - i)) / steps - dy));
+  }
+
+  for (int i = 0;i < ball->stopPositions.size();++i)
+    stopPositions.push_back(ball->stopPositions[i]);
+  ball->stopPositions = stopPositions;
 }
 
 

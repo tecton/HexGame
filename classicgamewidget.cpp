@@ -24,7 +24,7 @@ extern Statistic statistic;
 
 ClassicGameWidget::ClassicGameWidget(AbstractRule::Gesture gesture) :
     frameCount(0),
-    noSolutionCount(0)
+    endAnimCount(-1)
 {
   // Create the rule
   if (gesture == AbstractRule::Swap)
@@ -322,10 +322,45 @@ void ClassicGameWidget::showHint()
     gameOver();
 }
 
-void ClassicGameWidget::gameOver()
+void ClassicGameWidget::preGameOver()
 {
   // Add sound effect
   PublicGameSounds::addSound(PublicGameSounds::GameOver);
+
+  endAnimCount = 20;
+
+  int dxs[] = {1, 2, 3, 4, 4, 4, 4, 4};
+
+  double y = gameboardInfo->height() + gameboardInfo->ballR();
+  double centerX = gameboardInfo->centerPos().x();
+
+  for (int i = 0;i < gameboardInfo->totalBallCounts();++i)
+    if (controller->balls[i])
+    {
+      double cx = controller->balls[i]->pos().x();
+      double cy = controller->balls[i]->pos().y();
+      double dx = rand() % gameboardInfo->width() / 2 - gameboardInfo->width() / 4;
+
+      for (int j = 0; j < 6;++j)
+      {
+        int positive = 1;
+        if (j % 2 == i % 2)
+          positive = -1;
+        controller->translateABallTo(controller->balls[i],
+                                     QPointF(cx + positive * dxs[j], cy),
+                                     1,
+                                     true);
+      }
+
+      controller->translateABallTo(controller->balls[i],
+                                   QPointF(centerX + dx, y),
+                                   endAnimCount - 6,
+                                   false);
+    }
+}
+
+void ClassicGameWidget::gameOver()
+{
 
   // Clear the game record
   OtherGameInit::clearGame(getIndex());
@@ -364,6 +399,8 @@ void ClassicGameWidget::quitGame()
 void ClassicGameWidget::dealPressed(QPointF mousePos,
                                     Qt::MouseButton button)
 {
+  if (endAnimCount != -1)
+    return;
   // Choose the correct item at press position
   currentPos = mousePos;
   if (flame->in(mousePos, gameboardInfo->width(), gameboardInfo->height()))
@@ -398,6 +435,9 @@ void ClassicGameWidget::dealPressed(QPointF mousePos,
 void ClassicGameWidget::dealMoved(QPointF mousePos,
                                   Qt::MouseButton button)
 {
+  if (endAnimCount != -1)
+    return;
+
   // Record the current position
   currentPos = mousePos;
 
@@ -410,6 +450,9 @@ void ClassicGameWidget::dealMoved(QPointF mousePos,
 
 void ClassicGameWidget::dealReleased(QPointF mousePos, Qt::MouseButton button)
 {
+  if (endAnimCount != -1)
+    return;
+
   if (itemAtPressPos != NULL)
   {
     if (itemAtPressPos == flame && flame->notEmpty())
@@ -508,30 +551,46 @@ void ClassicGameWidget::getForcus()
 
 void ClassicGameWidget::advance()
 {
-  // Go to next stage if the score has been reached
-  if (progressBar->getCurrent() >= progressBar->getMax())
-  {
-    nextStage();
-    return;
-  }
-
   // Add the frame count
   ++frameCount;
 
-  // Record the no solution count
-  if (flame->getCurrent() > 0 ||
-      star->getCurrent() > 0 ||
-      controller->hint() >= 0)
-    noSolutionCount = 0;
+  if (endAnimCount == -1)
+  {
+  // Go to next stage if the score has been reached
+    if (progressBar->getCurrent() >= progressBar->getMax())
+    {
+      nextStage();
+      return;
+    }
+
+    // Advance the controller
+    controller->advance();
+
+    // Record the no solution count
+    if (flame->getCurrent() == 0 && star->getCurrent() == 0)
+    {
+      bool allStable = true;
+      for (int i = 0;i < gameboardInfo->totalBallCounts();++i)
+        if ((!controller->balls[i]) ||
+            controller->balls[i]->getState() != Ball::Stable)
+        {
+          allStable = false;
+          break;
+        }
+
+      if (allStable && controller->hint() < 0)
+        preGameOver();
+    }
+  }
   else
-    ++noSolutionCount;
-
-  // Advance the controller
-  controller->advance();
-
-  // if there have no solution, the game over
-  if (noSolutionCount > 30)
-    gameOver();
+  {
+    --endAnimCount;
+    for (int i = 0;i < gameboardInfo->totalBallCounts();++i)
+      if (controller->balls[i])
+        controller->balls[i]->advance();
+    if (endAnimCount == 0)
+      gameOver();
+  }
 }
 
 void ClassicGameWidget::dealStableEliminate

@@ -104,6 +104,18 @@ public:
    */
   Ball **balls;
 
+
+  /**
+   * @brief Translate a ball to a position.
+   *
+   * @param steps The steps the anim takes.
+   * @param plain Whether the ball move directly to the position.
+   */
+  void translateABallTo(Ball *ball,
+                        QPointF des,
+                        int steps,
+                        bool plain = true);
+
 private:
   // Infomation of the gameboard
   AbstractGameBoardInfo *gameBoardInfo;
@@ -179,12 +191,6 @@ private:
   // When a wrong swap gesture is made, it is called to
   // roll back the balls
   void swapRollBack(int from, int to);
-
-  // Translate a ball to a position
-  void translateABallTo(Ball *ball,
-                        QPointF des,
-                        int steps,
-                        bool plain = false);
 
   // Rotate a ball to a position
   void rotateABallTo(Ball *ball,
