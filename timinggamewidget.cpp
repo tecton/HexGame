@@ -31,6 +31,12 @@ extern Statistic statistic;
 #define START_ANIM_LAST_TIME  60
 #define START_ANIM_SEP_TIME   (START_ANIM_LAST_TIME * 2/ 3)
 
+#define END_ANIM_INTERVAL     4
+#define END_ANIM_LAST_TIME    9
+
+#define FLAME_SCORE           7
+#define STAR_SCORE            19
+
 /**
  * @brief Get the font of a description.
  */
@@ -46,8 +52,7 @@ QFont font(double size)
 TimingGameWidget::TimingGameWidget(AbstractRule::Gesture gesture) :
     frameCount(0),
     startAnimCount(0),
-    timeUp(false),
-    endCheck(false)
+    timeUp(false)
 {
   // Create the rule
   if (gesture == AbstractRule::Swap)
@@ -103,12 +108,12 @@ TimingGameWidget::TimingGameWidget(AbstractRule::Gesture gesture) :
   myItems.push_back(timeBar);
 
   flame = new FlameItem();
-  flame->setPos(QPointF(0.1, 0.375));
+  flame->setPos(QPointF(0.065, 0.45));
   flame->setCurrent(0);
   myItems.push_back(flame);
 
   star = new StarItem();
-  star->setPos(QPointF(0.1, 0.5));
+  star->setPos(QPointF(0.135, 0.45));
   star->setCurrent(0);
   myItems.push_back(star);
 
@@ -335,6 +340,27 @@ void TimingGameWidget::addEffect(
     painter->setWindow(0, 0, width, height);
   }
 
+  if (timeUp)
+  {
+    for (QList<int>::Iterator itr1 = endAnimCount.begin(),
+                              itr2 = endAnimBonusKind.begin();
+         itr1 != endAnimCount.end();
+         ++itr1, ++itr2)
+    {
+      painter->setOpacity(1.0 * (END_ANIM_LAST_TIME - *itr1) / END_ANIM_LAST_TIME);
+      AbstractBonusItem *bonusItem = ((*itr2) == 0) ? flame : star;
+      pos.setX((currentScore->getPos().x() * (*itr1) +
+                bonusItem->getPos().x() * (END_ANIM_LAST_TIME - *itr1)) /
+               END_ANIM_LAST_TIME *
+               width);
+      pos.setY((currentScore->getPos().y() * (*itr1) +
+                bonusItem->getPos().y() * (END_ANIM_LAST_TIME - *itr1)) /
+               END_ANIM_LAST_TIME *
+               height);
+      bonusItem->paintLocatingIcon(painter, width, height, pos, frameCount);
+    }
+  }
+
   ++startAnimCount;
 
 #ifdef USE_PIXMAP
@@ -386,6 +412,9 @@ void TimingGameWidget::quitGame()
 
 void TimingGameWidget::dealPressed(QPointF mousePos, Qt::MouseButton button)
 {
+  if (timeUp)
+    return;
+
   // Choose the correct item at press position
   currentPos = mousePos;
   if (flame->in(mousePos, gameboardInfo->width(), gameboardInfo->height()))
@@ -423,6 +452,9 @@ void TimingGameWidget::dealPressed(QPointF mousePos, Qt::MouseButton button)
 
 void TimingGameWidget::dealMoved(QPointF mousePos, Qt::MouseButton button)
 {
+  if (timeUp)
+    return;
+
   // Record the current position
   currentPos = mousePos;
 
@@ -435,6 +467,9 @@ void TimingGameWidget::dealMoved(QPointF mousePos, Qt::MouseButton button)
 
 void TimingGameWidget::dealReleased(QPointF mousePos, Qt::MouseButton button)
 {
+  if (timeUp)
+    return;
+
   if (itemAtPressPos != NULL)
   {
     if (itemAtPressPos == flame && flame->notEmpty())
@@ -556,71 +591,73 @@ void TimingGameWidget::advance()
 
   if (timeUp)
   {
-    bool allStable = true;
-    for (int i = 0;i < gameboardInfo->totalBallCounts();++i)
-      if ((!controller->balls[i]) ||
-          controller->balls[i]->getState() != Ball::Stable)
-      {
-        allStable = false;
-        break;
-      }
+    for (QList<int>::Iterator itr = endAnimCount.begin();
+         itr != endAnimCount.end();
+         ++itr)
+      ++(*itr);
 
-    if (allStable)
+    if (!endAnimCount.isEmpty())
+      if (endAnimCount[0] >= END_ANIM_LAST_TIME)
+      {
+        currentScore->setValue(currentScore->getValue() +
+                               ((endAnimBonusKind[0] == 0) ?
+                                FLAME_SCORE :
+                                STAR_SCORE));
+        endAnimCount.pop_front();
+        endAnimBonusKind.pop_front();
+      }
+    if (endAnimCount.isEmpty())
     {
       if (flame->getCurrent() > 0)
       {
-        // Add sound effect
-        PublicGameSounds::addSound(PublicGameSounds::UseFlame);
-
-        // Tell the controller to eliminate the balls
-        controller->flameAt(gameboardInfo->totalBallCounts() / 2);
-
-        // Add effects to effect painter
-        effectPainter->explodeAt(gameboardInfo->totalBallCounts() / 2);
-        effectPainter->flash();
-
-        // Minus the value of the flame
         flame->minusOne();
-
-        statistic.changeStatistic(Statistic::FlameUsedCount, 1, true);
-
-        endCheck = false;
+        endAnimCount.push_back(0);
+        endAnimBonusKind.push_back(0);
       }
       else if (star->getCurrent() > 0)
       {
-        // Add sound effect
-        PublicGameSounds::addSound(PublicGameSounds::UseStar);
-
-        // Tell the controller to eliminate the balls
-        controller->starAt(gameboardInfo->totalBallCounts() / 2);
-
-        // Add effects to effect painter
-        effectPainter->lightningAt(gameboardInfo->totalBallCounts() / 2);
-        effectPainter->flash();
-
-        // Minus the value of the flame
         star->minusOne();
-
-        statistic.changeStatistic(Statistic::StarUsedCount, 1, true);
-
-        endCheck = false;
-      }
-      else if (!endCheck)
-      {
-        endCheck = true;
+        endAnimCount.push_back(0);
+        endAnimBonusKind.push_back(1);
       }
       else
       {
-        gameOver();
-        return;
+
+        bool allStable = true;
+        for (int i = 0;i < gameboardInfo->totalBallCounts();++i)
+          if ((!controller->balls[i]) ||
+              controller->balls[i]->getState() != Ball::Stable)
+          {
+            allStable = false;
+            break;
+          }
+
+        if (allStable)
+        {
+          gameOver();
+          return;
+        }
       }
-
     }
-
-
-
+    else
+    {
+      if (endAnimCount.last() == END_ANIM_INTERVAL)
+      {
+        if (flame->getCurrent() > 0)
+        {
+          flame->minusOne();
+          endAnimCount.push_back(0);
+          endAnimBonusKind.push_back(0);
+        }
+        else if (star->getCurrent() > 0)
+        {
+          star->minusOne();
+          endAnimCount.push_back(0);
+          endAnimBonusKind.push_back(1);
+        }
+      }
+    }
   }
-
 }
 
 void TimingGameWidget::eliminated(int count)

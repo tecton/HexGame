@@ -7,6 +7,7 @@
 
 // File must include
 #include <QPointF>
+#include <QList>
 
 // Forward declaration
 class QPainter;
@@ -128,8 +129,11 @@ private:
   // Whether it's time up
   bool timeUp;
 
-  // Pause for the check in the end
-  bool endCheck;
+  // Count of the end anim for each bonus item
+  QList<int> endAnimCount;
+
+  // The kind of bonus item in end anim
+  QList<int> endAnimBonusKind;
 
   // Show the hint
   void showHint();
