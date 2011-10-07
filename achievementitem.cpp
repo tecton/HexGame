@@ -48,7 +48,7 @@ void AbstractAchievementItem::paint(QPainter *painter,
   double yRate = 1.0 * ITEM_R * 2 / background.height() * height / LOGICAL_HEIGHT;
 
   painter->translate(x, y);
-  painter->rotate(rotation + descriptionAge);
+  painter->rotate(-rotation - descriptionAge);
 
   drawPixmapAt(painter,
                background,
@@ -58,7 +58,7 @@ void AbstractAchievementItem::paint(QPainter *painter,
                true,
                true);
 
-  painter->rotate(-rotation - descriptionAge);
+  painter->rotate(rotation + descriptionAge);
   painter->translate(-x, -y);
 }
 

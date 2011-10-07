@@ -559,7 +559,19 @@ void ClassicGameWidget::advance()
   // Go to next stage if the score has been reached
     if (progressBar->getCurrent() >= progressBar->getMax())
     {
-      nextStage();
+      bool allStable = true;
+      for (int i = 0;i < gameboardInfo->totalBallCounts();++i)
+        if ((!controller->balls[i]) ||
+            controller->balls[i]->getState() != Ball::Stable)
+        {
+          allStable = false;
+          break;
+        }
+
+      if (allStable)
+        nextStage();
+      else
+        controller->advance();
       return;
     }
 
