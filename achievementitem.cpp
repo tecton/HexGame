@@ -22,6 +22,9 @@ double AbstractAchievementItem::r()
   return ITEM_R;
 }
 
+/**
+ * @brief Get the font of a description.
+ */
 QFont descriptionFont()
 {
   QFont f;
@@ -31,6 +34,9 @@ QFont descriptionFont()
   return f;
 }
 
+/**
+ * @brief Add text to a painter path.
+ */
 void addText(QPainterPath& path, QString str, double y)
 {
   double x = 250 - FONT_DIGIT_SIZE * str.length() / 3;

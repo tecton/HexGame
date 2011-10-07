@@ -470,6 +470,12 @@ void EndlessGameWidget::getForcus()
 
 void EndlessGameWidget::advance()
 {
+  // Add the frame count
+  ++frameCount;
+
+  // Advance the controller
+  controller->advance();
+
   // Go to next stage if the score has been reached
   if (progressBar->getCurrent() >= progressBar->getMax())
   {
@@ -484,16 +490,8 @@ void EndlessGameWidget::advance()
 
     if (allStable)
       nextStage();
-    else
-      controller->advance();
     return;
   }
-
-  // Add the frame count
-  ++frameCount;
-
-  // Advance the controller
-  controller->advance();
 }
 
 void EndlessGameWidget::eliminated(int count)

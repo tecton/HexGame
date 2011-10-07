@@ -4,6 +4,8 @@
 #include <QPixmap>
 #include <QPointF>
 #include <QTimer>
+#include <QFont>
+#include <QPainterPath>
 #include "effectpainter.h"
 #include "rules.h"
 //#include "sixtyonegameboardinfo.h"
@@ -23,8 +25,29 @@
 
 extern Statistic statistic;
 
+#define FONT_FAMILY           ""
+#define FONT_DIGIT_SIZE       60
+
+#define START_ANIM_LAST_TIME  60
+#define START_ANIM_SEP_TIME   (START_ANIM_LAST_TIME * 2/ 3)
+
+/**
+ * @brief Get the font of a description.
+ */
+QFont font(double size)
+{
+  QFont f;
+  f.setFamily(FONT_FAMILY);
+  f.setBold(true);
+  f.setPointSize(size);
+  return f;
+}
+
 TimingGameWidget::TimingGameWidget(AbstractRule::Gesture gesture) :
-    frameCount(0)
+    frameCount(0),
+    startAnimCount(0),
+    timeUp(false),
+    endCheck(false)
 {
   // Create the rule
   if (gesture == AbstractRule::Swap)
@@ -285,6 +308,35 @@ void TimingGameWidget::addEffect(
                        1.0 /
                        gameboardInfo->height());
 
+  if (startAnimCount <= START_ANIM_LAST_TIME)
+  {
+    QPointF center = gameboardInfo->centerPos();
+    double size = qMax(1,
+                       qMin(FONT_DIGIT_SIZE *
+                            startAnimCount /
+                            START_ANIM_SEP_TIME,
+                            FONT_DIGIT_SIZE));
+    double opacity = startAnimCount < START_ANIM_SEP_TIME ?
+                     1.0 * startAnimCount / START_ANIM_SEP_TIME :
+                     1 - 1.0 * (startAnimCount - START_ANIM_SEP_TIME) /
+                     (START_ANIM_LAST_TIME - START_ANIM_SEP_TIME);
+    painter->setOpacity(opacity);
+    QPainterPath path;
+    path.addText(- size * 2 / 3, 0, font(size), "GO");
+    painter->setWindow(0, 0, gameboardInfo->width(), gameboardInfo->height());
+    painter->translate(center);
+    QPen pen = QPen(QColor(  0, 255, 255));
+    pen.setWidth(3);
+    painter->setPen(pen);
+    painter->drawPath(path);
+    painter->fillPath(path, QBrush(QColor(0, 0, 0)));
+    painter->setOpacity(1);
+    painter->translate(-center.x(), -center.y());
+    painter->setWindow(0, 0, width, height);
+  }
+
+  ++startAnimCount;
+
 #ifdef USE_PIXMAP
   // End the paint and release the space
   painter->end();
@@ -501,6 +553,74 @@ void TimingGameWidget::advance()
 
   // Advance the controller
   controller->advance();
+
+  if (timeUp)
+  {
+    bool allStable = true;
+    for (int i = 0;i < gameboardInfo->totalBallCounts();++i)
+      if ((!controller->balls[i]) ||
+          controller->balls[i]->getState() != Ball::Stable)
+      {
+        allStable = false;
+        break;
+      }
+
+    if (allStable)
+    {
+      if (flame->getCurrent() > 0)
+      {
+        // Add sound effect
+        PublicGameSounds::addSound(PublicGameSounds::UseFlame);
+
+        // Tell the controller to eliminate the balls
+        controller->flameAt(gameboardInfo->totalBallCounts() / 2);
+
+        // Add effects to effect painter
+        effectPainter->explodeAt(gameboardInfo->totalBallCounts() / 2);
+        effectPainter->flash();
+
+        // Minus the value of the flame
+        flame->minusOne();
+
+        statistic.changeStatistic(Statistic::FlameUsedCount, 1, true);
+
+        endCheck = false;
+      }
+      else if (star->getCurrent() > 0)
+      {
+        // Add sound effect
+        PublicGameSounds::addSound(PublicGameSounds::UseStar);
+
+        // Tell the controller to eliminate the balls
+        controller->starAt(gameboardInfo->totalBallCounts() / 2);
+
+        // Add effects to effect painter
+        effectPainter->lightningAt(gameboardInfo->totalBallCounts() / 2);
+        effectPainter->flash();
+
+        // Minus the value of the flame
+        star->minusOne();
+
+        statistic.changeStatistic(Statistic::StarUsedCount, 1, true);
+
+        endCheck = false;
+      }
+      else if (!endCheck)
+      {
+        endCheck = true;
+      }
+      else
+      {
+        gameOver();
+        return;
+      }
+
+    }
+
+
+
+  }
+
 }
 
 void TimingGameWidget::eliminated(int count)
@@ -632,8 +752,10 @@ void TimingGameWidget::oneSecond()
 
   // Game over when time up
   if (timeBar->getCurrent() <= 0)
-    gameOver();
-
+  {
+    timeUp = true;
+    oneSecondTimer->stop();
+  }
 }
 
 void TimingGameWidget::resume()

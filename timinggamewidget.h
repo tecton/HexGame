@@ -122,6 +122,15 @@ private:
   // used to show the hints
   QPointF currentPos;
 
+  // Count of the start anim
+  int startAnimCount;
+
+  // Whether it's time up
+  bool timeUp;
+
+  // Pause for the check in the end
+  bool endCheck;
+
   // Show the hint
   void showHint();
 

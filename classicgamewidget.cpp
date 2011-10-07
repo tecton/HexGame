@@ -554,8 +554,12 @@ void ClassicGameWidget::advance()
   // Add the frame count
   ++frameCount;
 
+
   if (endAnimCount == -1)
   {
+    // Advance the controller
+    controller->advance();
+
   // Go to next stage if the score has been reached
     if (progressBar->getCurrent() >= progressBar->getMax())
     {
@@ -570,13 +574,8 @@ void ClassicGameWidget::advance()
 
       if (allStable)
         nextStage();
-      else
-        controller->advance();
       return;
     }
-
-    // Advance the controller
-    controller->advance();
 
     // Record the no solution count
     if (flame->getCurrent() == 0 && star->getCurrent() == 0)
