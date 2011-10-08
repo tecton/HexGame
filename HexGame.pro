@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui phonon
+QT       += core gui
 
 TARGET = HexGame
 TEMPLATE = app
@@ -49,7 +49,8 @@ SOURCES += main.cpp\
     helpmainpartwidget.cpp \
     helpwidget2.cpp \
     helpitem.cpp \
-    nextstagewidget.cpp
+    nextstagewidget.cpp \
+    soundplayer.cpp
 
 HEADERS  += ball.h \
     corecontroller.h \
@@ -95,7 +96,8 @@ HEADERS  += ball.h \
     helpmainpartwidget.h \
     helpwidget2.h \
     helpitem.h \
-    nextstagewidget.h
+    nextstagewidget.h \
+    soundplayer.h
 
 RESOURCES += \
     puzzlegames.qrc \
@@ -111,3 +113,11 @@ RESOURCES += \
     ballsimages.qrc \
     backgroundsimages.qrc \
     achievementimages.qrc
+
+LIBS += -lgstreamer-0.10
+
+INCLUDEPATH +=/usr/include/glib-2.0/ \
+	      /usr/include/glib-2.0/glib/ \
+	      /usr/include/gstreamer-0.10/ \
+	      /usr/lib/glib-2.0/include/ \
+	      /usr/include/libxml2/

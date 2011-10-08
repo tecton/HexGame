@@ -5,6 +5,7 @@
 #include <QDir>
 
 #include "config.h"
+#include "soundplayer.h"
 
 #ifdef MOBILITY
 #include <QMediaPlayer>

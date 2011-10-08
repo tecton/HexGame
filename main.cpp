@@ -6,6 +6,7 @@
 #include "gamerecord.h"
 #include "statistic.h"
 #include "achievements.h"
+#include "soundplayer.h"
 
 GameRecord gameRecord;
 Statistic statistic;
