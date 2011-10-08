@@ -2,6 +2,7 @@
  * soundplayer.cpp
  */
 
+#ifdef GSTREAMER
 #include "soundplayer.h"
 #include <stdio.h>
 
@@ -99,3 +100,4 @@ SoundPlayer::~SoundPlayer()
     }
     delete []songPaths;
 }
+#endif

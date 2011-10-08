@@ -1,6 +1,12 @@
 /*
  * soundplayer.h
  */
+#include "config.h"
+
+#ifdef GSTREAMER
+#ifndef SOUNDPLAYER_H
+#define SOUNDPLAYER_H
+
 #include <gst/gst.h>
 #include <stdbool.h>
 
@@ -27,3 +33,6 @@ public:
     void stopSound();
     ~SoundPlayer();
 };
+
+#endif
+#endif

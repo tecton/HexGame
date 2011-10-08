@@ -5,7 +5,11 @@
 #include <QDir>
 
 #include "config.h"
+
+#ifdef GSTREAMER
 #include "soundplayer.h"
+SoundPlayer player;
+#endif
 
 #ifdef MOBILITY
 #include <QMediaPlayer>
@@ -51,6 +55,9 @@ const static int kEliminateMax = 3;
 
 void PublicGameSounds::tryToReleaseSpace()
 {
+#ifdef GSTREAMER
+#endif
+
 #ifdef PHONON
   if (publicGameSounds.size() < 10)
     return;
@@ -86,6 +93,9 @@ void PublicGameSounds::tryToReleaseSpace()
 
 void PublicGameSounds::clear()
 {
+#ifdef GSTREAMER
+  player.stopSound();
+#endif
 #ifdef PHONON
   // Delete all the sounds
   MediaObject *sound;
@@ -103,6 +113,7 @@ void PublicGameSounds::clear()
   foreach (sound, publicGameSounds)
   {
     sound->stop();
+
     delete sound;
   }
   publicGameSounds.clear();
@@ -111,6 +122,10 @@ void PublicGameSounds::clear()
 
 void PublicGameSounds::addSound(GameSounds gamesound)
 {
+#ifdef GSTREAMER
+  if (gamesound != -1)
+    player.playSound((int)gamesound);
+#endif
 #ifdef PHONON
   tryToReleaseSpace();
 
@@ -144,37 +159,38 @@ void PublicGameSounds::addSound(GameSounds gamesound)
 
 void PublicGameSounds::addEliminate(int count)
 {
-#ifdef PHONON
-  tryToReleaseSpace();
-  int index = qMax(kEliminateMin, qMin(kEliminateMax, count));
-  --index;
+  PublicGameSounds::addSound(PublicGameSounds::Eliminate);
+//#ifdef PHONON
+//  tryToReleaseSpace();
+//  int index = qMax(kEliminateMin, qMin(kEliminateMax, count));
+//  --index;
 
-  // Create the sound
-  MediaObject *sound =
-      createPlayer(MusicCategory,
-                   MediaSource(kEliminateSoundsPaths[index]));
+//  // Create the sound
+//  MediaObject *sound =
+//      createPlayer(MusicCategory,
+//                   MediaSource(kEliminateSoundsPaths[index]));
 
-  // Play the sound
-  sound->play();
+//  // Play the sound
+//  sound->play();
 
-  // Record the sound
-  publicGameSounds.push_back(sound);
-#endif
+//  // Record the sound
+//  publicGameSounds.push_back(sound);
+//#endif
 
-#ifdef MOBILITY
-  tryToReleaseSpace();
-  int index = qMax(kEliminateMin, qMin(kEliminateMax, count));
-  --index;
+//#ifdef MOBILITY
+//  tryToReleaseSpace();
+//  int index = qMax(kEliminateMin, qMin(kEliminateMax, count));
+//  --index;
 
-  // Create the sound
-  QMediaPlayer *sound = new QMediaPlayer;
-  sound->setMedia(QUrl::fromLocalFile(kEliminateSoundsPaths[index]));
-  sound->setVolume(50);
+//  // Create the sound
+//  QMediaPlayer *sound = new QMediaPlayer;
+//  sound->setMedia(QUrl::fromLocalFile(kEliminateSoundsPaths[index]));
+//  sound->setVolume(50);
 
-  // Play the sound
-  sound->play();
+//  // Play the sound
+//  sound->play();
 
-  // Record the sound
-  publicGameSounds.push_back(sound);
-#endif
+//  // Record the sound
+//  publicGameSounds.push_back(sound);
+//#endif
 }

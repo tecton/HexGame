@@ -117,7 +117,7 @@ RESOURCES += \
 LIBS += -lgstreamer-0.10
 
 INCLUDEPATH +=/usr/include/glib-2.0/ \
-	      /usr/include/glib-2.0/glib/ \
-	      /usr/include/gstreamer-0.10/ \
-	      /usr/lib/glib-2.0/include/ \
-	      /usr/include/libxml2/
+             /usr/include/glib-2.0/glib/ \
+             /usr/include/gstreamer-0.10/ \
+             /usr/lib/glib-2.0/include/ \
+             /usr/include/libxml2/
