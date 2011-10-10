@@ -32,7 +32,10 @@ public:
   /**
    * @brief Paint the description of the achievement in the given rect.
    */
-  void paintDescription(QPainter *painter, int frame);
+  void paintDescription(QPainter *painter,
+                        double width,
+                        double height,
+                        int frame);
 
   virtual double r();
 

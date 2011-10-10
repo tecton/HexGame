@@ -69,8 +69,12 @@ void AbstractAchievementItem::paint(QPainter *painter,
 }
 
 void AbstractAchievementItem::paintDescription(QPainter *painter,
+                                               double width,
+                                               double height,
                                                int frame)
 {
+  painter->scale(width / DESCRIPTION_WIDTH,
+                 height / DESCRIPTION_HEIGHT);
   if (descriptionAge < FADE_IN_FRAMES)
     painter->setOpacity(1.0 * descriptionAge / FADE_IN_FRAMES);
   QPen pen = QPen(QColor(255, 255, 255));
@@ -84,6 +88,8 @@ void AbstractAchievementItem::paintDescription(QPainter *painter,
   painter->drawPath(descriptionPath);
   painter->fillPath(descriptionPath, QBrush(QColor(0, 0, 0)));
   painter->setOpacity(1);
+  painter->scale(DESCRIPTION_WIDTH / width,
+                 DESCRIPTION_HEIGHT / height);
 }
 
 FlameGetItem::FlameGetItem(int theLevel, int theCurrent) :

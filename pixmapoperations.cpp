@@ -96,9 +96,12 @@ void drawPixmapAt(QPainter *painter,
     leftUp.setY(leftUp.y() - height / 2);
   }
 
+  painter->translate(leftUp.x(), leftUp.y());
+  painter->scale(xRate, yRate);
+
   // Draw the pixmap
-  if (resize)
-    painter->drawPixmap(leftUp.x(), leftUp.y(), width, height, pixmap);
-  else
-    painter->drawPixmap(leftUp.x(), leftUp.y(), pixmap);
+  painter->drawPixmap(0, 0, pixmap);
+
+  painter->scale(1.0 / xRate, 1.0 / yRate);
+  painter->translate(-leftUp.x(), -leftUp.y());
 }

@@ -109,11 +109,14 @@ void HelpWidget2::makeBasicPixmap(
 
   if (HelpItem::totalItems() > 0)
   {
-    painter->setWindow(VIEW_X, VIEW_Y, VIEW_WIDTH, VIEW_HEIGHT);
+    painter->translate(MAIN_X * width / LOGICAL_WIDTH,
+                       MAIN_Y * height / LOGICAL_HEIGHT);
     helpThemeWidgets[currentItemIndex]->paint(painter,
-                                              MAIN_WIDTH,
-                                              MAIN_HEIGHT,
+                                              MAIN_WIDTH * width / LOGICAL_WIDTH,
+                                              MAIN_HEIGHT * height / LOGICAL_HEIGHT,
                                               mainPartFrameCount);
+    painter->translate(-MAIN_X * width / LOGICAL_WIDTH,
+                       -MAIN_Y * height / LOGICAL_HEIGHT);
   }
 
   ++mainPartFrameCount;

@@ -96,7 +96,8 @@ void AchievementWidget::makeBasicPixmap(
   painter->fillRect(0,0,width,height,QColor(0,0,0));
 #endif
 
-  painter->setWindow(0, 0, LOGICAL_WIDTH, LOGICAL_HEIGHT);
+  painter->scale(1.0 * width / LOGICAL_WIDTH,
+                 1.0 * height / LOGICAL_HEIGHT);
 
   BasicPainter::paintBackGround(BasicPainter::Achievement, painter, LOGICAL_WIDTH, LOGICAL_HEIGHT, 0);
 
@@ -107,10 +108,17 @@ void AchievementWidget::makeBasicPixmap(
                            LOGICAL_HEIGHT,
                            0);
 
-  painter->setWindow(VIEW_X, VIEW_Y, VIEW_WIDTH, VIEW_HEIGHT);
-  achievementItems[activeAchievementIndex]->paintDescription(painter, 0);
+  painter->translate(DESCRIPTION_X, DESCRIPTION_Y);
 
-  painter->setWindow(0, 0, width, height);
+  achievementItems[activeAchievementIndex]->paintDescription(painter,
+                                                             DESCRIPTION_WIDTH,
+                                                             DESCRIPTION_HEIGHT,
+                                                             0);
+
+  painter->translate(-DESCRIPTION_X, -DESCRIPTION_Y);
+
+  painter->scale(1.0 * width / LOGICAL_WIDTH,
+                 1.0 * height / LOGICAL_HEIGHT);
 
 #ifdef USE_PIXMAP
   // End the paint and release the space

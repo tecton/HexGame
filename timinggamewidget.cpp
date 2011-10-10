@@ -26,7 +26,9 @@
 extern Statistic statistic;
 
 #define FONT_FAMILY           ""
-#define FONT_DIGIT_SIZE       60
+#define FONT_DIGIT_SIZE       90
+
+#define PEN_WIDTH             10
 
 #define START_ANIM_LAST_TIME  60
 #define START_ANIM_SEP_TIME   (START_ANIM_LAST_TIME * 2/ 3)
@@ -330,8 +332,8 @@ void TimingGameWidget::addEffect(
     path.addText(- size * 2 / 3, 0, font(size), "GO");
     painter->setWindow(0, 0, gameboardInfo->width(), gameboardInfo->height());
     painter->translate(center);
-    QPen pen = QPen(QColor(  0, 255, 255));
-    pen.setWidth(3);
+    QPen pen = QPen(QColor( 50, 255, 255, 100));
+    pen.setWidth(PEN_WIDTH * startAnimCount / START_ANIM_SEP_TIME);
     painter->setPen(pen);
     painter->drawPath(path);
     painter->fillPath(path, QBrush(QColor(0, 0, 0)));

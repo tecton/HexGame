@@ -27,8 +27,8 @@ void HelpMainPartWidget::paint(QPainter *painter,
   double yRate;
   {
     const QPixmap& p = backgroundPixmaps[frame % backgroundFrameCounts];
-    xRate = 1.0 * p.width() / width;
-    yRate = 1.0 * p.height() / height;
+    xRate = 1.0 * width / p.width();
+    yRate = 1.0 * height / p.height();
     drawPixmapAt(painter,
                  p,
                  xRate,

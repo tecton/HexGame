@@ -57,33 +57,45 @@ void MainWidget::paintEvent(QPaintEvent *event)
   // Get the painter
   QPainter *painter = new QPainter(this);
 
+  int widthToPaint = width();
+  int heightToPaint = height();
+
+  if (height() > width())
+  {
+    int tmp = widthToPaint;
+    widthToPaint = heightToPaint;
+    heightToPaint = tmp;
+    painter->translate(0, height());
+    painter->rotate(-90);
+  }
+
   if (coolDown > 0)
   {
     // Paint last pixmap
-    painter->drawPixmap(0,0,width(), height(), lastPixmap);
+    painter->drawPixmap(0,0,widthToPaint, heightToPaint, lastPixmap);
 #ifdef USE_PIXMAP
     // Let the widget to make a pixmap
-    widgets[widgets.size() - 1]->makePixmap(pixmap, width(), height());
-    painter->drawPixmap(0,0,width(),height()-coolDown * height() / 20, pixmap, 0, coolDown * pixmap.height() / 20,pixmap.width(),(20-coolDown) * pixmap.height() / 20);
+    widgets[widgets.size() - 1]->makePixmap(pixmap, widthToPaint, heightToPaint);
+    painter->drawPixmap(0,0,widthToPaint,heightToPaint-coolDown * heightToPaint / 20, pixmap, 0, coolDown * pixmap.height() / 20,pixmap.width(),(20-coolDown) * pixmap.height() / 20);
 #else
     painter->translate(0, -coolDown * height() / 20);
-    widgets[widgets.size() - 1]->makePixmap(painter, width(), height());
+    widgets[widgets.size() - 1]->makePixmap(painter, widthToPaint, heightToPaint);
 #endif
   }
   else
   {
 #ifdef USE_PIXMAP
     // Let the widget to make a pixmap
-    widgets[widgets.size() - 1]->makePixmap(pixmap, width(), height());
+    widgets[widgets.size() - 1]->makePixmap(pixmap, widthToPaint, heightToPaint);
 
     painter->drawPixmap(0,0/*,width(), height()*/, pixmap);
 #else
-    widgets[widgets.size() - 1]->makePixmap(painter, width(), height());
+    widgets[widgets.size() - 1]->makePixmap(painter, widthToPaint, heightToPaint);
 #endif
 
   }
 
-  achievements.paint(painter, width(), height());
+  achievements.paint(painter, widthToPaint, heightToPaint);
   achievements.advance();
 
   // End the paint and release the space
@@ -94,8 +106,18 @@ void MainWidget::paintEvent(QPaintEvent *event)
 
 QPointF MainWidget::toScene(QPointF mousePosition)
 {
-  double xRate = mousePosition.x() / width();
-  double yRate = mousePosition.y() / height();
+  double xRate;
+  double yRate;
+  if (height() > width())
+  {
+    xRate = (height() - mousePosition.y()) / height();
+    yRate = mousePosition.x() / width();
+  }
+  else
+  {
+    xRate = mousePosition.x() / width();
+    yRate = mousePosition.y() / height();
+  }
   return widgets[widgets.size() - 1]->toScene(xRate, yRate);
 }
 
