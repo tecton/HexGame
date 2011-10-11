@@ -2,6 +2,9 @@
  * soundplayer.cpp
  */
 
+#include "config.h"
+#include <QTimer>
+
 #ifdef GSTREAMER
 #include "soundplayer.h"
 #include <stdio.h>
@@ -35,24 +38,28 @@ SoundPlayer::SoundPlayer()
     currentSong = -1;
     songPaths = new char*[9];
     // path should be corresponding to sound files.
-    songPaths[0] = "file:///media/shared/goodmove.wav";
-    songPaths[1] = "file:///media/shared/badmove.wav";
-    songPaths[2] = "file:///media/shared/eliminate.wav";
-    songPaths[3] = "file:///media/shared/getflame.wav";
-    songPaths[4] = "file:///media/shared/getstar.wav";
-    songPaths[5] = "file:///media/shared/useflame.wav";
-    songPaths[6] = "file:///media/shared/usestar.wav";
-    songPaths[7] = "file:///media/shared/nextstage.wav";
-    songPaths[8] = "file:///media/shared/gameover.wav";
+    songPaths[0] = "file:///media/shared/gameover.wav";
+    songPaths[1] = "file:///media/shared/nextstage.wav";
+    songPaths[2] = "file:///media/shared/getflame.wav";
+    songPaths[3] = "file:///media/shared/getstar.wav";
+    songPaths[4] = "file:///media/shared/useflame.wav";
+    songPaths[5] = "file:///media/shared/usestar.wav";
+    songPaths[6] = "file:///media/shared/eliminate.wav";
+    songPaths[7] = "file:///media/shared/badmove.wav";
     // init gstreamer
     gst_init(NULL, NULL);
     loop = g_main_loop_new(NULL, FALSE);
     pipeline = gst_element_factory_make("playbin", "player");
     bus = NULL;
+    timer = new QTimer();
+    timer->setInterval(800);
+    connect(timer, SIGNAL(timeout()), this, SLOT(setSong()));
 }
 
 void SoundPlayer::playSound(int number)
 {
+    if (number < currentSong)
+	return;
     if (currentSong != -1) {
         // stop the current playing sound.
         stopSound();
@@ -64,6 +71,7 @@ void SoundPlayer::playSound(int number)
     
     gst_element_set_state(GST_ELEMENT(pipeline), GST_STATE_PLAYING);
     g_main_loop_run(loop);
+    timer->start();
 }
 
 void SoundPlayer::stopSound()
@@ -73,6 +81,12 @@ void SoundPlayer::stopSound()
     // set state
     gst_element_set_state(GST_ELEMENT(pipeline), GST_STATE_NULL);
     currentSong = -1;
+}
+
+void SoundPlayer::setSong()
+{
+    currentSong = -1;
+    timer->stop();
 }
 
 SoundPlayer::~SoundPlayer()
@@ -87,6 +101,8 @@ SoundPlayer::~SoundPlayer()
         gst_element_set_state(GST_ELEMENT(pipeline), GST_STATE_NULL);
         gst_object_unref(GST_OBJECT(pipeline));
     }
+    timer->stop();
+    delete timer;
     delete []songPaths;
 }
 #endif
