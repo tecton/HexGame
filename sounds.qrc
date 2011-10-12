@@ -1,6 +1,13 @@
 <RCC>
     <qresource prefix="/">
-        <file>commonsounds/1.wav</file>
-        <file>commonsounds/2.wav</file>
+        <file>commonsounds/badmove.wav</file>
+        <file>commonsounds/eliminate.wav</file>
+        <file>commonsounds/gameover.wav</file>
+        <file>commonsounds/getflame.wav</file>
+        <file>commonsounds/getstar.wav</file>
+        <file>commonsounds/goodmove.wav</file>
+        <file>commonsounds/nextstage.wav</file>
+        <file>commonsounds/useflame.wav</file>
+        <file>commonsounds/usestar.wav</file>
     </qresource>
 </RCC>

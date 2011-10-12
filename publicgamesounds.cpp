@@ -9,6 +9,41 @@
 #ifdef GSTREAMER
 #include "soundplayer.h"
 SoundPlayer player;
+
+SoundPlayer::GameSounds soundMap(PublicGameSounds::GameSounds sound)
+{
+  switch (sound)
+  {
+  case PublicGameSounds::GoodMove:
+    return SoundPlayer::GoodMove;
+    break;
+  case PublicGameSounds::BadMove:
+    return SoundPlayer::BadMove;
+    break;
+  case PublicGameSounds::Eliminate:
+    return SoundPlayer::Eliminate;
+    break;
+  case PublicGameSounds::GetFlame:
+    return SoundPlayer::GetFlame;
+    break;
+  case PublicGameSounds::GetStar:
+    return SoundPlayer::GetStar;
+    break;
+  case PublicGameSounds::UseFlame:
+    return SoundPlayer::UseFlame;
+    break;
+  case PublicGameSounds::UseStar:
+    return SoundPlayer::UseStar;
+    break;
+  case PublicGameSounds::NextStage:
+    return SoundPlayer::NextStage;
+    break;
+  case PublicGameSounds::GameOver:
+    return SoundPlayer::GameOver;
+    break;
+  }
+  return (SoundPlayer::GameSounds) -1;
+}
 #endif
 
 #ifdef MOBILITY
@@ -26,14 +61,14 @@ QList <MediaObject *> publicGameSounds;
 
 // The path of the sounds
 const static char * kPublicGameSoundsPaths[] =
-{":/commonsounds/1.wav",
- ":/commonsounds/1.wav",
- ":/commonsounds/1.wav",
- ":/commonsounds/1.wav",
- ":/commonsounds/1.wav",
- ":/commonsounds/2.wav",
- ":/commonsounds/1.wav",
- ":/commonsounds/1.wav",
+{"C:/badmove.wav",
+ ":/commonsounds/eliminate.wav",
+ ":/commonsounds/getflame.wav",
+ ":/commonsounds/getstar.wav",
+ ":/commonsounds/useflame.wav",
+ ":/commonsounds/usestar.wav",
+ ":/commonsounds/nextstage.wav",
+ ":/commonsounds/gameover.wav",
  ":/commonsounds/1.wav",
  ":/commonsounds/1.wav",
  ":/commonsounds/1.wav",
@@ -124,7 +159,7 @@ void PublicGameSounds::addSound(GameSounds gamesound)
 {
 #ifdef GSTREAMER
   if (gamesound != -1)
-    player.playSound((int)gamesound);
+    player.playSound((int) soundMap(gamesound);
 #endif
 #ifdef PHONON
   tryToReleaseSpace();

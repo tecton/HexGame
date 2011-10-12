@@ -25,7 +25,7 @@ class SwapClassicGameRule;
 class SwapClassicGameSavedInfo;
 
 /**
- * @brief A class to play an endless game.
+ * @brief A class to play a timing game.
  */
 class TimingGameWidget : public AbstractPixmapWidget
 {
@@ -73,6 +73,9 @@ public:
   virtual void dealReleased(QPointF mousePos,
                             Qt::MouseButton button);
   virtual void getForcus();
+
+  void setDoNotStop(bool b)
+  {doNotStop = b;}
 
 private:
   // Rule of the game
@@ -129,6 +132,9 @@ private:
   // Whether it's time up
   bool timeUp;
 
+  // Whether a user can't pause or reset
+  bool doNotStop;
+
   // Count of the end anim for each bonus item
   QList<int> endAnimCount;
 
@@ -150,9 +156,11 @@ private:
   // Get the index of this game
   int getIndex();
 
-private slots:
+public slots:
   // Advance
   void advance();
+
+private slots:
 
   // Reset
   void reset();
@@ -180,6 +188,9 @@ private slots:
 
   // Call after a bad move is made
   void badMove();
+
+signals:
+  void totalScore(TimingGameWidget *whoAmI, int score);
 };
 
 #endif // TIMINGGAMEWIDGET_H

@@ -54,7 +54,8 @@ QFont font(double size)
 TimingGameWidget::TimingGameWidget(AbstractRule::Gesture gesture) :
     frameCount(0),
     startAnimCount(0),
-    timeUp(false)
+    timeUp(false),
+    doNotStop(false)
 {
   // Create the rule
   if (gesture == AbstractRule::Swap)
@@ -330,7 +331,8 @@ void TimingGameWidget::addEffect(
     painter->setOpacity(opacity);
     QPainterPath path;
     path.addText(- size * 2 / 3, 0, font(size), "GO");
-    painter->setWindow(0, 0, gameboardInfo->width(), gameboardInfo->height());
+    painter->scale(1.0 * gameboardInfo->width() / width,
+                   1.0 * gameboardInfo->height() / height);
     painter->translate(center);
     QPen pen = QPen(QColor( 50, 255, 255, 100));
     pen.setWidth(PEN_WIDTH * startAnimCount / START_ANIM_SEP_TIME);
@@ -339,7 +341,8 @@ void TimingGameWidget::addEffect(
     painter->fillPath(path, QBrush(QColor(0, 0, 0)));
     painter->setOpacity(1);
     painter->translate(-center.x(), -center.y());
-    painter->setWindow(0, 0, width, height);
+    painter->scale(1.0 * width / gameboardInfo->width(),
+                   1.0 * height / gameboardInfo->height());
   }
 
   if (timeUp)
@@ -400,14 +403,17 @@ void TimingGameWidget::gameOver()
   OtherGameInit::testHighest(getIndex(), currentScore->getValue());
 
   // Create the game over widget and give control to it
-  GameOverWidget *w = new GameOverWidget(getIndex(),
+  GameOverWidget *w = doNotStop ? NULL :
+                      new GameOverWidget(getIndex(),
                                          currentScore->getValue());
+  emit totalScore(this, currentScore->getValue());
   emit giveControlTo(w, true);
   delete this;
 }
 
 void TimingGameWidget::quitGame()
 {
+  emit totalScore(this, currentScore->getValue());
   emit giveControlTo(NULL, true);
   delete this;
 }
@@ -533,6 +539,9 @@ void TimingGameWidget::dealReleased(QPointF mousePos, Qt::MouseButton button)
                            gameboardInfo->width(),
                            gameboardInfo->height()))
     {
+      if (doNotStop)
+        return;
+
       // Pause
       t->stop();
       oneSecondTimer->stop();
@@ -548,6 +557,9 @@ void TimingGameWidget::dealReleased(QPointF mousePos, Qt::MouseButton button)
                            gameboardInfo->width(),
                            gameboardInfo->height()))
     {
+      if (doNotStop)
+        return;
+
       // Pause
       t->stop();
       oneSecondTimer->stop();
@@ -780,6 +792,7 @@ void TimingGameWidget::reset()
     resetGame = new TimingGameWidget(AbstractRule::Swap);
   else
     resetGame = new TimingGameWidget(AbstractRule::Rotate);
+  emit totalScore(this, currentScore->getValue());
   emit giveControlTo(resetGame, true);
   delete this;
 }

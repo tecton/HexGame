@@ -20,8 +20,8 @@ public:
   /**
    * @brief Type of common sounds.
    */
-  enum GameSounds {GoodMove = 0,
-                   BadMove,
+  enum GameSounds {GoodMove = -1,
+                   BadMove = 0,
                    Eliminate,
                    GetFlame,
                    GetStar,
