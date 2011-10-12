@@ -363,6 +363,7 @@ void TimingGameWidget::addEffect(
                END_ANIM_LAST_TIME *
                height);
       bonusItem->paintLocatingIcon(painter, width, height, pos, frameCount);
+      painter->setOpacity(1);
     }
   }
 

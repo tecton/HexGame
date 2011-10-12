@@ -8,6 +8,8 @@
 // File must include
 #include <QPointF>
 #include <QList>
+#include <QPixmap>
+#include <QPainterPath>
 
 // Forward declaration
 class QPainter;
@@ -66,9 +68,12 @@ public:
 
 private:
   TimingGameWidget *game1, *game2;
+  QPixmap game1End, game2End;
+  QPainterPath youWin, youLose, drawGame;
   int result1, result2;
   int beginAnim;
   int endAnim;
+  int frameCount;
 
   AbstractRule::Gesture ges;
 

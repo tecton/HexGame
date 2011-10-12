@@ -1,7 +1,11 @@
 #include "twoplayertiminggamewidget.h"
 
+#include <QBrush>
+#include <QColor>
+#include <QLinearGradient>
 #include <QPainter>
 #include <QTimer>
+#include <QFont>
 #include "timinggamewidget.h"
 #include "pixmapoperations.h"
 
@@ -19,7 +23,12 @@
 #define GAME2_HEIGHT     (GAME2_X_TO - GAME2_X_FROM)
 
 #define END_ENIM_LAST    40
-#define BEGIN_ENIM_LAST  40
+#define BEGIN_ENIM_LAST  1
+
+#define FONT_DIGIT_SIZE  40
+
+#define LINENEAR_COLOR_0 QColor( 50, 255, 255, 200)
+#define LINENEAR_COLOR_1 QColor(250, 255, 255, 200)
 
 TwoPlayerTimingGameWidget::TwoPlayerTimingGameWidget
     (AbstractRule::Gesture gesture) :
@@ -29,8 +38,16 @@ TwoPlayerTimingGameWidget::TwoPlayerTimingGameWidget
     result2(-1),
     beginAnim(BEGIN_ENIM_LAST),
     endAnim(-1),
-    ges(gesture)
+    ges(gesture),
+    frameCount(0)
 {
+  QFont f;
+  f.setPixelSize(FONT_DIGIT_SIZE);
+
+  youWin.addText(- FONT_DIGIT_SIZE * 9 / 4, 0, f, "You Win~~");
+  youLose.addText(- FONT_DIGIT_SIZE * 11 / 4, 0, f, "You Lose-.-");
+  drawGame.addText(- FONT_DIGIT_SIZE * 9 / 4, 0, f, "Draw Game");
+
   // Create the timers and connect signals and slots
   t = new QTimer();
   t->setInterval(75);
@@ -92,14 +109,18 @@ void TwoPlayerTimingGameWidget::makeBasicPixmap(
 #else
   painter->fillRect(0,0,width,height,QColor(0,0,0));
 #endif
+
+  painter->scale(1.0 * width / LOGICAL_WIDTH,
+                 1.0 * height / LOGICAL_HEIGHT);
+
   if (beginAnim > 0)
-  {
-  }
-  else if (endAnim > 0)
   {
   }
   else
   {
+    if (endAnim >= 0)
+      painter->setOpacity(0.5);
+
     painter->translate(GAME1_X_TO, 0);
     painter->rotate(90);
     if (game1)
@@ -114,6 +135,7 @@ void TwoPlayerTimingGameWidget::makeBasicPixmap(
     }
     else
     {
+      painter->drawPixmap(0, 0, game1End);
     }
     painter->rotate(-90);
     painter->translate(-GAME1_X_TO, 0);
@@ -131,13 +153,77 @@ void TwoPlayerTimingGameWidget::makeBasicPixmap(
       game2->makePixmap(painter, GAME2_WIDTH, GAME2_HEIGHT);
 #endif
     }
-    else
     {
+      painter->drawPixmap(0, 0, game2End);
     }
 
     painter->rotate(90);
     painter->translate(-GAME2_X_FROM, -LOGICAL_HEIGHT);
+
+    if (endAnim >= 0)
+    {
+      painter->setOpacity(qMin(1.0, 1.0 * (END_ENIM_LAST - endAnim) * 2 / END_ENIM_LAST));
+      QPointF gFrom = QPointF(frameCount, 0);
+      QPointF gTo = QPointF(frameCount - 100, -100);
+      QLinearGradient gradient = QLinearGradient(gFrom, gTo);
+      gradient.setColorAt(0, LINENEAR_COLOR_0);
+      gradient.setColorAt(1, LINENEAR_COLOR_1);
+      gradient.setSpread(QGradient::ReflectSpread);
+      QBrush brush = QBrush(gradient);
+      painter->setPen(QPen(brush, 4));
+
+      painter->translate((GAME1_X_FROM + GAME1_X_TO) / 2,
+                         LOGICAL_HEIGHT / 2);
+      painter->rotate(90);
+      if (result1 > result2)
+      {
+        painter->drawPath(youWin);
+        painter->fillPath(youWin, brush);
+      }
+      else if (result1 < result2)
+      {
+        painter->drawPath(youLose);
+        painter->fillPath(youLose, brush);
+      }
+      else
+      {
+        painter->drawPath(drawGame);
+        painter->fillPath(drawGame, brush);
+      }
+      painter->rotate(-90);
+      painter->translate(-(GAME1_X_FROM + GAME1_X_TO) / 2,
+                         -LOGICAL_HEIGHT / 2);
+
+      painter->translate((GAME2_X_FROM + GAME2_X_TO) / 2,
+                         LOGICAL_HEIGHT / 2);
+      painter->rotate(-90);
+      if (result2 > result1)
+      {
+        painter->drawPath(youWin);
+        painter->fillPath(youWin, brush);
+      }
+      else if (result2 < result1)
+      {
+        painter->drawPath(youLose);
+        painter->fillPath(youLose, brush);
+      }
+      else
+      {
+        painter->drawPath(drawGame);
+        painter->fillPath(drawGame, brush);
+      }
+      painter->rotate(90);
+      painter->translate(-(GAME2_X_FROM + GAME2_X_TO) / 2,
+                         -LOGICAL_HEIGHT / 2);
+    }
+
+    painter->setOpacity(1);
   }
+
+  ++frameCount;
+
+  painter->scale(1.0 * LOGICAL_WIDTH / width,
+                 1.0 * LOGICAL_HEIGHT / height);
 
 #ifdef USE_PIXMAP
   // End the paint and release the space
@@ -228,6 +314,13 @@ void TwoPlayerTimingGameWidget::dealMoved(QPointF mousePos,
 void TwoPlayerTimingGameWidget::dealReleased(QPointF mousePos,
                           Qt::MouseButton button)
 {
+  if (endAnim == 0)
+  {
+    emit giveControlTo(NULL, true);
+    delete this;
+    return;
+  }
+
   switch (whichGame(mousePos))
   {
   case 1:
@@ -279,12 +372,6 @@ void TwoPlayerTimingGameWidget::advance()
   else if (endAnim > 0)
   {
     --endAnim;
-    if (beginAnim == 0)
-    {
-      emit giveControlTo(NULL, true);
-      delete this;
-      return;
-    }
   }
 }
 
@@ -294,11 +381,37 @@ void TwoPlayerTimingGameWidget::totalScore(TimingGameWidget *whoAmI,
 {
   if (whoAmI == game1)
   {
+    // Record the last pixmap
+  #ifdef USE_PIXMAP
+    game1->makePixmap(game1End, GAME1_WIDTH, GAME1_HEIGHT);
+  #else
+    game1End = QPixmap(GAME1_WIDTH, GAME1_HEIGHT);
+
+    QPainter *painter = new QPainter(&game1End);
+    game1->makePixmap(painter, GAME1_WIDTH, GAME1_HEIGHT);
+
+    // End the paint and release the space
+    painter->end();
+    delete painter;
+  #endif
     result1 = score;
     game1 = NULL;
   }
   else
   {
+    // Record the last pixmap
+  #ifdef USE_PIXMAP
+    game2->makePixmap(game2End, GAME2_WIDTH, GAME2_HEIGHT);
+  #else
+    game2End = QPixmap(GAME2_WIDTH, GAME2_HEIGHT);
+
+    QPainter *painter = new QPainter(&game2End);
+    game2->makePixmap(painter, GAME2_WIDTH, GAME2_HEIGHT);
+
+    // End the paint and release the space
+    painter->end();
+    delete painter;
+  #endif
     result2 = score;
     game2 = NULL;
   }

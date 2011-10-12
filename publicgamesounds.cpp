@@ -15,7 +15,7 @@ SoundPlayer::GameSounds soundMap(PublicGameSounds::GameSounds sound)
   switch (sound)
   {
   case PublicGameSounds::GoodMove:
-    return SoundPlayer::GoodMove;
+    return (SoundPlayer::GameSounds) -1;
     break;
   case PublicGameSounds::BadMove:
     return SoundPlayer::BadMove;
@@ -159,7 +159,7 @@ void PublicGameSounds::addSound(GameSounds gamesound)
 {
 #ifdef GSTREAMER
   if (gamesound != -1)
-    player.playSound((int) soundMap(gamesound);
+    player.playSound((int) soundMap(gamesound));
 #endif
 #ifdef PHONON
   tryToReleaseSpace();
