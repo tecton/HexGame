@@ -80,6 +80,9 @@ private:
   // A timer to send signals to advance the game
   QTimer *t;
 
+  // A timer to send one signal every one second
+  QTimer *oneSecondTimer;
+
   void start();
 
   QPointF gamePos(QPointF mousePos, int gameIndex);

@@ -77,6 +77,8 @@ public:
   void setDoNotStop(bool b)
   {doNotStop = b;}
 
+  void useGivenTimer(QTimer *aTimer, QTimer *oTimer);
+
 private:
   // Rule of the game
   AbstractRule *rule;

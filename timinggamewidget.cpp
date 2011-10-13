@@ -596,6 +596,21 @@ void TimingGameWidget::getForcus()
   oneSecondTimer->start();
 }
 
+void TimingGameWidget::useGivenTimer(QTimer *aTimer, QTimer *oTimer)
+{
+  t->stop();
+  delete t;
+
+  oneSecondTimer->stop();
+  delete oneSecondTimer;
+
+  t = aTimer;
+  connect(t, SIGNAL(timeout()), this, SLOT(advance()));
+
+  oneSecondTimer = oTimer;
+  connect(oneSecondTimer, SIGNAL(timeout()), this, SLOT(oneSecond()));
+}
+
 void TimingGameWidget::advance()
 {
   // Add the frame count

@@ -22,7 +22,7 @@
 #define GAME2_WIDTH      LOGICAL_HEIGHT
 #define GAME2_HEIGHT     (GAME2_X_TO - GAME2_X_FROM)
 
-#define END_ENIM_LAST    40
+#define END_ENIM_LAST    30
 #define BEGIN_ENIM_LAST  1
 
 #define FONT_DIGIT_SIZE  40
@@ -52,12 +52,17 @@ TwoPlayerTimingGameWidget::TwoPlayerTimingGameWidget
   t = new QTimer();
   t->setInterval(75);
   connect(t, SIGNAL(timeout()), this, SLOT(advance()));
+
+  oneSecondTimer = new QTimer();
+  oneSecondTimer->setInterval(1000);
 }
 
 TwoPlayerTimingGameWidget::~TwoPlayerTimingGameWidget()
 {
   t->stop();
   delete t;
+  oneSecondTimer->stop();
+  delete oneSecondTimer;
   if (game1)
   {
     delete game1;
@@ -118,9 +123,6 @@ void TwoPlayerTimingGameWidget::makeBasicPixmap(
   }
   else
   {
-    if (endAnim >= 0)
-      painter->setOpacity(0.5);
-
     painter->translate(GAME1_X_TO, 0);
     painter->rotate(90);
     if (game1)
@@ -135,7 +137,9 @@ void TwoPlayerTimingGameWidget::makeBasicPixmap(
     }
     else
     {
+      painter->setOpacity(0.5);
       painter->drawPixmap(0, 0, game1End);
+      painter->setOpacity(1);
     }
     painter->rotate(-90);
     painter->translate(-GAME1_X_TO, 0);
@@ -154,7 +158,9 @@ void TwoPlayerTimingGameWidget::makeBasicPixmap(
 #endif
     }
     {
+      painter->setOpacity(0.5);
       painter->drawPixmap(0, 0, game2End);
+      painter->setOpacity(1);
     }
 
     painter->rotate(90);
@@ -163,8 +169,8 @@ void TwoPlayerTimingGameWidget::makeBasicPixmap(
     if (endAnim >= 0)
     {
       painter->setOpacity(qMin(1.0, 1.0 * (END_ENIM_LAST - endAnim) * 2 / END_ENIM_LAST));
-      QPointF gFrom = QPointF(frameCount, 0);
-      QPointF gTo = QPointF(frameCount - 100, -100);
+      QPointF gFrom = QPointF(frameCount * 3, 0);
+      QPointF gTo = QPointF(frameCount * 3 - 100, -100);
       QLinearGradient gradient = QLinearGradient(gFrom, gTo);
       gradient.setColorAt(0, LINENEAR_COLOR_0);
       gradient.setColorAt(1, LINENEAR_COLOR_1);
@@ -216,8 +222,6 @@ void TwoPlayerTimingGameWidget::makeBasicPixmap(
       painter->translate(-(GAME2_X_FROM + GAME2_X_TO) / 2,
                          -LOGICAL_HEIGHT / 2);
     }
-
-    painter->setOpacity(1);
   }
 
   ++frameCount;
@@ -345,6 +349,8 @@ void TwoPlayerTimingGameWidget::start()
 {
   game1 = new TimingGameWidget(ges);
   game2 = new TimingGameWidget(ges);
+  game1->useGivenTimer(t, oneSecondTimer);
+  game2->useGivenTimer(t, oneSecondTimer);
   connect(game1,
           SIGNAL(totalScore(TimingGameWidget*,int)),
           this,
@@ -418,6 +424,6 @@ void TwoPlayerTimingGameWidget::totalScore(TimingGameWidget *whoAmI,
   if ((!game1) && (!game2))
   {
     endAnim = END_ENIM_LAST;
-
+    oneSecondTimer->stop();
   }
 }
