@@ -3,6 +3,7 @@
 #include <QFileInfo>
 #include <QDir>
 #include <QPainter>
+#include "config.h"
 
 void initPixmaps(QString path, QVector<QPixmap>& pixmaps, int& frameCounts)
 {
@@ -95,7 +96,7 @@ void drawPixmapAt(QPainter *painter,
     leftUp.setX(leftUp.x() - width / 2);
     leftUp.setY(leftUp.y() - height / 2);
   }
-
+#ifdef USE_TRANSLATE_AND_SCALE
   painter->translate(leftUp.x(), leftUp.y());
   painter->scale(xRate, yRate);
 
@@ -104,4 +105,7 @@ void drawPixmapAt(QPainter *painter,
 
   painter->scale(1.0 / xRate, 1.0 / yRate);
   painter->translate(-leftUp.x(), -leftUp.y());
+#else
+  painter->drawPixmap(leftUp.x(), leftUp.y(), width, height, pixmap);
+#endif
 }

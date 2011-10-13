@@ -4,6 +4,9 @@
 // Use QPixmap to paint or paint directly on the painter
 //#define USE_PIXMAP
 
+// Use translate and scale of the QPainter instead of resize the pixmap
+//#define USE_TRANSLATE_AND_SCALE
+
 // Use which one to deal with sound.
 // Only one of them should be chosen.
 // And you may also change the .pro file.
