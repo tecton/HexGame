@@ -137,6 +137,9 @@ private:
   // Whether a user can't pause or reset
   bool doNotStop;
 
+  // Whether the timers are my own
+  bool myOwnTimers;
+
   // Count of the end anim for each bonus item
   QList<int> endAnimCount;
 

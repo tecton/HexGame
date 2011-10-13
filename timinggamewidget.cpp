@@ -55,7 +55,8 @@ TimingGameWidget::TimingGameWidget(AbstractRule::Gesture gesture) :
     frameCount(0),
     startAnimCount(0),
     timeUp(false),
-    doNotStop(false)
+    doNotStop(false),
+    myOwnTimers(true)
 {
   // Create the rule
   if (gesture == AbstractRule::Swap)
@@ -105,7 +106,7 @@ TimingGameWidget::TimingGameWidget(AbstractRule::Gesture gesture) :
 
   timeBar = new VerticalProgressBarItem();
   timeBar->setPos(QPointF(0.25, 0.5));
-  timeBar->setCurrent(60);
+  timeBar->setCurrent(2);
   timeBar->setMin(0);
   timeBar->setMax(60);
   myItems.push_back(timeBar);
@@ -192,12 +193,15 @@ void TimingGameWidget::makePixmap(
 
 TimingGameWidget::~TimingGameWidget()
 {
-  // Stop the timer
-  t->stop();
-  oneSecondTimer->stop();
-  // Release the space
-  delete t;
-  delete oneSecondTimer;
+  if (myOwnTimers)
+  {
+    // Stop the timer
+    t->stop();
+    oneSecondTimer->stop();
+    // Release the space
+    delete t;
+    delete oneSecondTimer;
+  }
   for (int i = 0;i < myItems.size();++i)
     delete myItems[i];
   delete controller;
@@ -598,6 +602,8 @@ void TimingGameWidget::getForcus()
 
 void TimingGameWidget::useGivenTimer(QTimer *aTimer, QTimer *oTimer)
 {
+  myOwnTimers = false;
+
   t->stop();
   delete t;
 
