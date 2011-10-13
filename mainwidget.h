@@ -46,6 +46,14 @@ protected:
    */
   void mouseReleaseEvent(QMouseEvent *event);
 
+  /**
+   * @brief All the events.
+   *
+   * I overloaded this function to catch touch event in order to use two mouses
+   * (if supported) on a touch screen.
+   */
+  bool event(QEvent *event);
+
 private:
   // The timer to repaint
   QTimer *refreshTimer;
@@ -61,6 +69,9 @@ private:
 
   // The CD used when change the control
   int coolDown;
+
+  // Whether the widget can get touch event
+  bool canGetTouch;
 
   // A function to calculate the position
   QPointF toScene(QPointF mousePosition);

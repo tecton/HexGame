@@ -9,6 +9,6 @@
 // And you may also change the .pro file.
 //#define MOBILITY
 //#define PHONON
-#define GSTREAMER
+//#define GSTREAMER
 
 #endif // CONFIG_H

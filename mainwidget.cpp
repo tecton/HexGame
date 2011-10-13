@@ -8,6 +8,8 @@
 #include <QPaintEvent>
 //#include <QCursor>
 #include <QPixmap>
+#include <QTouchEvent>
+#include <QMouseEvent>
 #include "abstractpixmapwidget.h"
 #include "mainmenuwidget.h"
 #include "publicgamesounds.h"
@@ -21,13 +23,14 @@ extern Achievements achievements;
 
 MainWidget::MainWidget(QWidget *parent) :
     QWidget(parent),
-    coolDown(0)
+    coolDown(0),
+    canGetTouch(false)
 {
   // Set the curser(abandoned)
 //  setCursor(QCursor(QPixmap(":/images/cursor.png")));
   // Create the main menu widget and push it into the stack
-  AbstractPixmapWidget *mainMenu = new MainMenuWidget();
-//  AbstractPixmapWidget *mainMenu = new TwoPlayerTimingGameWidget(AbstractRule::Swap);
+//  AbstractPixmapWidget *mainMenu = new MainMenuWidget();
+  AbstractPixmapWidget *mainMenu = new TwoPlayerTimingGameWidget(AbstractRule::Swap);
   widgets.push_back(mainMenu);
 
   // Connect the signal and slot
@@ -125,6 +128,67 @@ QPointF MainWidget::toScene(QPointF mousePosition)
     yRate = mousePosition.y() / height();
   }
   return widgets[widgets.size() - 1]->toScene(xRate, yRate);
+}
+
+bool MainWidget::event(QEvent *event)
+{
+  switch (event->type())
+  {
+  case QEvent::TouchBegin:
+  case QEvent::TouchUpdate:
+  case QEvent::TouchEnd:
+  {
+#ifndef Q_WS_MAC
+    canGetTouch = true;
+    QTouchEvent *touchEvent = static_cast<QTouchEvent *>(event);
+
+    QTouchEvent::TouchPoint touchPoint;
+
+    foreach (touchPoint, touchEvent->touchPoints())
+    {
+      QEvent::Type eventType = QEvent::None;
+      switch (touchPoint.state())
+      {
+      case Qt::TouchPointPressed:
+        eventType = QEvent::MouseButtonPress;
+        break;
+      case Qt::TouchPointMoved:
+        eventType = QEvent::MouseMove;
+        break;
+      case Qt::TouchPointReleased:
+        eventType = QEvent::MouseButtonRelease;
+        break;
+
+      }
+      if (eventType != QEvent::None)
+      {
+        QMouseEvent mouseEvent(eventType,
+                               touchPoint.pos().toPoint(),
+                               touchPoint.screenPos().toPoint(),
+                               Qt::LeftButton,
+                               Qt::LeftButton,
+                               touchEvent->modifiers());
+        (void) QApplication::sendEvent(this, &mouseEvent);
+      }
+    }
+#endif // Q_WS_MAC
+      break;
+  }
+  case QEvent::MouseMove:
+    mouseMoveEvent((QMouseEvent*)event);
+    break;
+  case QEvent::MouseButtonPress:
+    mousePressEvent((QMouseEvent*)event);
+    break;
+  case QEvent::MouseButtonRelease:
+    mouseReleaseEvent((QMouseEvent*)event);
+    break;
+  default:
+    QWidget::event(event);
+    break;
+  }
+
+  return true;
 }
 
 void MainWidget::mousePressEvent(QMouseEvent *event)
