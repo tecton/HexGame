@@ -10,6 +10,7 @@
 #include "puzzlemenuwidget.h"
 #include "othergameinit.h"
 #include "helpwidget2.h"
+#include "twoplayertiminggamewidget.h"
 
 #define LOGICAL_WIDTH  1024
 #define LOGICAL_HEIGHT 600
@@ -45,7 +46,10 @@ MainMenuWidget::MainMenuWidget()/* :
   items[9] = new ButtonItem("Exit");
   items[9]->setPos(QPointF(0.1, 0.8));
 
-  for (int i = 0;i < 10;++i)
+  items[10] = new MainMenuGameItem(AbstractMainMenuItem::TwoPlayerTimingGame);
+  items[10]->setPos(QPointF(0, 0));
+
+  for (int i = 0;i < 11;++i)
     myItems.push_back(items[i]);
 
 //  // Create the timer and connect signals and slots
@@ -181,6 +185,13 @@ void MainMenuWidget::dealPressed(QPointF mousePos, Qt::MouseButton button)
   {
     emit giveControlTo(NULL, true);
     delete this;
+    return;
+  }
+  // Two players timing game
+  else if (items[10]->in(mousePos, LOGICAL_WIDTH, LOGICAL_HEIGHT))
+  {
+    AbstractPixmapWidget *game = new TwoPlayerTimingGameWidget(AbstractRule::Swap);
+    emit giveControlTo(game, false);
     return;
   }
 

@@ -26,7 +26,8 @@ public:
                 RotateTimingItem,
                 RotatePuzzleItem,
                 HelpItem,
-                ExitItem};
+                ExitItem,
+                TwoPlayerTimingGame};
 
   /**
    * @brief A function returns the pixmap of an item.

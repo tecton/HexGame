@@ -14,7 +14,7 @@
 #define BUTTON_LOGICAL_HEIGHT 60
 
 // Total color number of the items
-const static int kTotalItems = 9;
+const static int kTotalItems = 10;
 
 // File path of the items
 // (The last two are the same as two before them, may make
@@ -28,7 +28,8 @@ const static char * kItemPaths[] =
  ":/images/mainmenuitems/rotatetiminggame*.png",
  ":/images/mainmenuitems/puzzlegame*.png",
  ":/images/mainmenuitems/help*.png",
- ":/images/mainmenuitems/exit*.png"};
+ ":/images/mainmenuitems/exit*.png",
+ ""};
 
 // Pixmaps of the items
 QVector<QVector<QPixmap> > mainMenuItemPixmaps;

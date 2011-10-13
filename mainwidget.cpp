@@ -16,8 +16,8 @@
 #include "config.h"
 #include "achievements.h"
 
-#include "twoplayertiminggamewidget.h"
-#include "rules.h"
+//#include "twoplayertiminggamewidget.h"
+//#include "rules.h"
 
 extern Achievements achievements;
 
@@ -28,8 +28,8 @@ MainWidget::MainWidget(QWidget *parent) :
   // Set the curser(abandoned)
 //  setCursor(QCursor(QPixmap(":/images/cursor.png")));
   // Create the main menu widget and push it into the stack
-//  AbstractPixmapWidget *mainMenu = new MainMenuWidget();
-  AbstractPixmapWidget *mainMenu = new TwoPlayerTimingGameWidget(AbstractRule::Swap);
+  AbstractPixmapWidget *mainMenu = new MainMenuWidget();
+//  AbstractPixmapWidget *mainMenu = new TwoPlayerTimingGameWidget(AbstractRule::Swap);
   widgets.push_back(mainMenu);
 
   // Connect the signal and slot
