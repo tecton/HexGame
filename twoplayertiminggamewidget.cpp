@@ -38,8 +38,8 @@ TwoPlayerTimingGameWidget::TwoPlayerTimingGameWidget
     result2(-1),
     beginAnim(BEGIN_ENIM_LAST),
     endAnim(-1),
-    ges(gesture),
-    frameCount(0)
+    frameCount(0),
+    ges(gesture)
 {
   QFont f;
   f.setPixelSize(FONT_DIGIT_SIZE);
@@ -115,59 +115,60 @@ void TwoPlayerTimingGameWidget::makeBasicPixmap(
   painter->fillRect(0,0,width,height,QColor(0,0,0));
 #endif
 
-  painter->scale(1.0 * width / LOGICAL_WIDTH,
-                 1.0 * height / LOGICAL_HEIGHT);
+  double xRate = 1.0 * width / LOGICAL_WIDTH;
+  double yRate = 1.0 * height / LOGICAL_HEIGHT;
 
   if (beginAnim > 0)
   {
   }
   else
   {
-    painter->translate(GAME1_X_TO, 0);
+    painter->translate(GAME1_X_TO * xRate, 0);
     painter->rotate(90);
     if (game1)
     {
 #ifdef USE_PIXMAP
       QPixmap tmp;
-      game1->makePixmap(tmp, GAME1_WIDTH, GAME1_HEIGHT);
+      game1->makePixmap(tmp, GAME1_WIDTH * yRate, GAME1_HEIGHT * xRate);
       painter->drawPixmap(0, 0, tmp);
 #else
-      game1->makePixmap(painter, GAME1_WIDTH, GAME1_HEIGHT);
+      game1->makePixmap(painter, GAME1_WIDTH * yRate, GAME1_HEIGHT * xRate);
 #endif
     }
     else
     {
       painter->setOpacity(0.5);
-      painter->drawPixmap(0, 0, game1End);
+      drawPixmapAt(painter, game1End, yRate, xRate, QPointF(0, 0), true, false);
       painter->setOpacity(1);
     }
     painter->rotate(-90);
-    painter->translate(-GAME1_X_TO, 0);
+    painter->translate(-GAME1_X_TO * xRate, 0);
 
-    painter->translate(GAME2_X_FROM, LOGICAL_HEIGHT);
+    painter->translate(GAME2_X_FROM * xRate, LOGICAL_HEIGHT * yRate);
     painter->rotate(-90);
 
     if (game2)
     {
 #ifdef USE_PIXMAP
       QPixmap tmp;
-      game2->makePixmap(tmp, GAME2_WIDTH, GAME2_HEIGHT);
+      game2->makePixmap(tmp, GAME2_WIDTH * yRate, GAME2_HEIGHT * xRate);
       painter->drawPixmap(0, 0, tmp);
 #else
-      game2->makePixmap(painter, GAME2_WIDTH, GAME2_HEIGHT);
+      game2->makePixmap(painter, GAME2_WIDTH * yRate, GAME2_HEIGHT * xRate);
 #endif
     }
     {
       painter->setOpacity(0.5);
-      painter->drawPixmap(0, 0, game2End);
+      drawPixmapAt(painter, game2End, yRate, xRate, QPointF(0, 0), true, false);
       painter->setOpacity(1);
     }
 
     painter->rotate(90);
-    painter->translate(-GAME2_X_FROM, -LOGICAL_HEIGHT);
+    painter->translate(-GAME2_X_FROM * xRate, -LOGICAL_HEIGHT * yRate);
 
     if (endAnim >= 0)
     {
+      painter->scale(xRate, yRate);
       painter->setOpacity(qMin(1.0, 1.0 * (END_ENIM_LAST - endAnim) * 2 / END_ENIM_LAST));
       QPointF gFrom = QPointF(frameCount * 3, 0);
       QPointF gTo = QPointF(frameCount * 3 - 100, -100);
@@ -221,13 +222,11 @@ void TwoPlayerTimingGameWidget::makeBasicPixmap(
       painter->rotate(90);
       painter->translate(-(GAME2_X_FROM + GAME2_X_TO) / 2,
                          -LOGICAL_HEIGHT / 2);
+      painter->scale(1.0 / xRate, 1.0 / yRate);
     }
   }
 
   ++frameCount;
-
-  painter->scale(1.0 * LOGICAL_WIDTH / width,
-                 1.0 * LOGICAL_HEIGHT / height);
 
 #ifdef USE_PIXMAP
   // End the paint and release the space
@@ -259,6 +258,7 @@ int whichGame(QPointF mousePos)
     return 1;
   if (x >= GAME2_X_FROM && x <= GAME2_X_TO)
     return 2;
+  return 0;
 }
 
 QPointF TwoPlayerTimingGameWidget::gamePos(QPointF mousePos, int gameIndex)
