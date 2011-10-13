@@ -23,8 +23,7 @@ extern Achievements achievements;
 
 MainWidget::MainWidget(QWidget *parent) :
     QWidget(parent),
-    coolDown(0),
-    canGetTouch(false)
+    coolDown(0)
 {
   // Set the curser(abandoned)
 //  setCursor(QCursor(QPixmap(":/images/cursor.png")));
@@ -40,6 +39,9 @@ MainWidget::MainWidget(QWidget *parent) :
           SLOT(changeControl(AbstractPixmapWidget*,bool)));
 
   mainMenu->getForcus();
+
+  // Accept touch event so that we can
+  setAttribute(Qt::WA_AcceptTouchEvents);
 
   // Create the timer
   refreshTimer = new QTimer();
@@ -138,91 +140,63 @@ bool MainWidget::event(QEvent *event)
   case QEvent::TouchUpdate:
   case QEvent::TouchEnd:
   {
+    if (coolDown > 0)
+      break;
 #ifndef Q_WS_MAC
-    canGetTouch = true;
     QTouchEvent *touchEvent = static_cast<QTouchEvent *>(event);
 
     QTouchEvent::TouchPoint touchPoint;
 
     foreach (touchPoint, touchEvent->touchPoints())
     {
-      QEvent::Type eventType = QEvent::None;
+      QPointF pos = toScene(touchPoint.pos());
       switch (touchPoint.state())
       {
       case Qt::TouchPointPressed:
-        eventType = QEvent::MouseButtonPress;
+        widgets[widgets.size() - 1]->dealPressed(toScene(pos), Qt::LeftButton);
+        event->accept();
+        return true;
         break;
       case Qt::TouchPointMoved:
-        eventType = QEvent::MouseMove;
+        widgets[widgets.size() - 1]->dealMoved(toScene(pos), Qt::LeftButton);
+        event->accept();
+        return true;
         break;
       case Qt::TouchPointReleased:
-        eventType = QEvent::MouseButtonRelease;
+        widgets[widgets.size() - 1]->dealReleased(toScene(pos), Qt::LeftButton);
+        event->accept();
+        return true;
         break;
-
-      }
-      if (eventType != QEvent::None)
-      {
-        QMouseEvent mouseEvent(eventType,
-                               touchPoint.pos().toPoint(),
-                               touchPoint.screenPos().toPoint(),
-                               Qt::LeftButton,
-                               Qt::LeftButton,
-                               touchEvent->modifiers());
-        (void) QApplication::sendEvent(this, &mouseEvent);
       }
     }
 #endif // Q_WS_MAC
       break;
   }
-  case QEvent::MouseMove:
-    mouseMoveEvent((QMouseEvent*)event);
-    break;
   case QEvent::MouseButtonPress:
-    mousePressEvent((QMouseEvent*)event);
+    widgets[widgets.size() - 1]->dealPressed
+        (toScene(((QMouseEvent*)event)->posF()),
+         ((QMouseEvent*)event)->button());
+    event->accept();
+    return true;
+    break;
+  case QEvent::MouseMove:
+    widgets[widgets.size() - 1]->dealMoved
+        (toScene(((QMouseEvent*)event)->posF()),
+         ((QMouseEvent*)event)->button());
+    event->accept();
+    return true;
     break;
   case QEvent::MouseButtonRelease:
-    mouseReleaseEvent((QMouseEvent*)event);
+    widgets[widgets.size() - 1]->dealReleased
+        (toScene(((QMouseEvent*)event)->posF()),
+         ((QMouseEvent*)event)->button());
+    event->accept();
+    return true;
     break;
   default:
-    QWidget::event(event);
     break;
   }
-
-  return true;
-}
-
-void MainWidget::mousePressEvent(QMouseEvent *event)
-{
-  if (coolDown > 0)
-    return;
-
-  // Tell the widget if neccessary
-  QPointF pos = toScene(event->posF());
-  widgets[widgets.size() - 1]->dealPressed(pos, event->button());
-
-  event->accept();
-}
-
-void MainWidget::mouseMoveEvent(QMouseEvent *event)
-{
-  if (coolDown > 0)
-    return;
-
-  // Tell the widget if neccessary
-  QPointF pos = toScene(event->posF());
-  widgets[widgets.size() - 1]->dealMoved(pos, event->button());
-  event->accept();
-}
-
-void MainWidget::mouseReleaseEvent(QMouseEvent *event)
-{
-  if (coolDown > 0)
-    return;
-
-  // Tell the widget if neccessary
-  QPointF pos = toScene(event->posF());
-  widgets[widgets.size() - 1]->dealReleased(pos, event->button());
-  event->accept();
+  return QWidget::event(event);
 }
 
 void MainWidget::changeControl(AbstractPixmapWidget *target,
