@@ -16,6 +16,8 @@
 #include "config.h"
 #include "achievements.h"
 
+#include <QDebug>
+
 //#include "twoplayertiminggamewidget.h"
 //#include "rules.h"
 
@@ -142,6 +144,8 @@ bool MainWidget::event(QEvent *event)
 #ifndef Q_WS_MAC
     QTouchEvent *touchEvent = static_cast<QTouchEvent *>(event);
 
+    qDebug() << "Touch Points Count:" << touchEvent->touchPoints().size();
+
     QTouchEvent::TouchPoint touchPoint;
 
     foreach (touchPoint, touchEvent->touchPoints())
@@ -150,16 +154,19 @@ bool MainWidget::event(QEvent *event)
       switch (touchPoint.state())
       {
       case Qt::TouchPointPressed:
+        qDebug() <<  "Touch Pressed" << touchPoint.lastPos();
         widgets[widgets.size() - 1]->dealPressed(toScene(pos), Qt::LeftButton);
         event->accept();
         return true;
         break;
       case Qt::TouchPointMoved:
+        qDebug() <<  "Touch Moved" << touchPoint.lastPos();
         widgets[widgets.size() - 1]->dealMoved(toScene(pos), Qt::LeftButton);
         event->accept();
         return true;
         break;
       case Qt::TouchPointReleased:
+        qDebug() <<  "Touch Released" << touchPoint.lastPos();
         widgets[widgets.size() - 1]->dealReleased(toScene(pos), Qt::LeftButton);
         event->accept();
         return true;

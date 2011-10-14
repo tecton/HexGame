@@ -13,6 +13,13 @@
 
 #define LIGHTNING_WIDTH 60
 
+#define NON_FLASH       0
+#define FLASH           1
+
+#define FLASH_LIMIT     2
+
+static int flashCount = 0;
+
 /**
  * @brief An abstract class of effects.
  */
@@ -32,6 +39,12 @@ public:
                      QPainter *painter,
                      double xRate,
                      double yRate)=0;
+
+  /**
+   *@brief The id of the effect.
+   */
+  virtual int effectId()
+  {return NON_FLASH;}
 };
 
 /**
@@ -565,8 +578,16 @@ public:
    */
   FlashInfo()
   {
+    ++flashCount;
     setAge(0);
     setLimit(12);
+  }
+  /**
+   * @brief Destructor.
+   */
+  ~FlashInfo()
+  {
+    --flashCount;
   }
 
   virtual void paint(AbstractGameBoardInfo *theGameboardInfo,
@@ -585,6 +606,9 @@ public:
                       theGameboardInfo->width() * xRate,
                       theGameboardInfo->height() * yRate);
   }
+
+  virtual int effectId()
+  {return FLASH;}
 };
 
 EffectPainter::EffectPainter(
@@ -694,6 +718,21 @@ void EffectPainter::wordsAt(QPointF pos, QString str, double size)
 
 void EffectPainter::flash()
 {
+  if (flashCount >= FLASH_LIMIT)
+  {
+
+    AbstractAgingEffect *effect;
+    foreach (effect, agingEffects)
+    {
+      if (effect->effectId() == FLASH)
+      {
+        delete effect;
+        agingEffects.removeOne(effect);
+        break;
+      }
+    }
+  }
+
   // Create the effect and record it
   FlashInfo *info = new FlashInfo();
   agingEffects.push_back(info);
