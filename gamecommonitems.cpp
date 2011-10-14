@@ -86,11 +86,11 @@ void VerticalProgressBarItem::paint(QPainter *painter,
   double percentage = qMax(0.0, qMin(1.0, 1.0 * (getCurrent() - getMin()) / (getMax() - getMin())));
   double xRate = 1.0 * width / LOGICAL_WIDTH;
   double yRate = 1.0 * height / LOGICAL_HEIGHT;
-  int innerBottom = y + 540 * yRate / 2;
+  int innerBottom = y + (1.0 * foreground.height() / 2 - 10.0) * yRate;
   int innerTop = y + (1.0 * foreground.height() / 2 - 10.0 - percentage * 482.0) * yRate;
 
   // Paint the background of the progress bar
-  painter->drawPixmap(x - background.width() * xRate / 2,
+  painter->drawPixmap(x - background.width() * xRate / 2 + 5 * xRate,
                       y - background.height() * yRate / 2,
                       background.width() * xRate,
                       background.height() * yRate,
@@ -101,7 +101,7 @@ void VerticalProgressBarItem::paint(QPainter *painter,
                       background.height());
 
   // Paint the foreground of the progress bar
-  painter->drawPixmap(x - foreground.width() * xRate / 2,
+  painter->drawPixmap(x - foreground.width() * xRate / 2 + 5 * xRate,
                       innerTop,
                       foreground.width() * xRate,
                       innerBottom - innerTop,
