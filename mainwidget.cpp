@@ -16,22 +16,17 @@
 #include "config.h"
 #include "achievements.h"
 
-#include <QDebug>
-
-//#include "twoplayertiminggamewidget.h"
-//#include "rules.h"
-
 extern Achievements achievements;
 
 MainWidget::MainWidget(QWidget *parent) :
     QWidget(parent),
-    coolDown(0)
+    coolDown(0),
+    canGetTouch(false)
 {
   // Set the curser(abandoned)
 //  setCursor(QCursor(QPixmap(":/images/cursor.png")));
   // Create the main menu widget and push it into the stack
   AbstractPixmapWidget *mainMenu = new MainMenuWidget();
-//  AbstractPixmapWidget *mainMenu = new TwoPlayerTimingGameWidget(AbstractRule::Swap);
   widgets.push_back(mainMenu);
 
   // Connect the signal and slot
@@ -139,12 +134,11 @@ bool MainWidget::event(QEvent *event)
   case QEvent::TouchUpdate:
   case QEvent::TouchEnd:
   {
+    canGetTouch = true;
     if (coolDown > 0)
       break;
 #ifndef Q_WS_MAC
     QTouchEvent *touchEvent = static_cast<QTouchEvent *>(event);
-
-    qDebug() << "Touch Points Count:" << touchEvent->touchPoints().size();
 
     QTouchEvent::TouchPoint touchPoint;
 
@@ -154,29 +148,26 @@ bool MainWidget::event(QEvent *event)
       switch (touchPoint.state())
       {
       case Qt::TouchPointPressed:
-        qDebug() <<  "Touch Pressed" << touchPoint.lastPos();
         widgets[widgets.size() - 1]->dealPressed(toScene(pos), Qt::LeftButton);
-        event->accept();
-        return true;
+        //event->accept();
         break;
       case Qt::TouchPointMoved:
-        qDebug() <<  "Touch Moved" << touchPoint.lastPos();
         widgets[widgets.size() - 1]->dealMoved(toScene(pos), Qt::LeftButton);
-        event->accept();
-        return true;
+        //event->accept();
         break;
       case Qt::TouchPointReleased:
-        qDebug() <<  "Touch Released" << touchPoint.lastPos();
         widgets[widgets.size() - 1]->dealReleased(toScene(pos), Qt::LeftButton);
-        event->accept();
-        return true;
+        //event->accept();
         break;
       }
     }
 #endif // Q_WS_MAC
-      break;
+    return true;
+    break;
   }
   case QEvent::MouseButtonPress:
+    if (canGetTouch)
+      break;
     widgets[widgets.size() - 1]->dealPressed
         (toScene(((QMouseEvent*)event)->posF()),
          ((QMouseEvent*)event)->button());
@@ -184,6 +175,8 @@ bool MainWidget::event(QEvent *event)
     return true;
     break;
   case QEvent::MouseMove:
+    if (canGetTouch)
+      break;
     widgets[widgets.size() - 1]->dealMoved
         (toScene(((QMouseEvent*)event)->posF()),
          ((QMouseEvent*)event)->button());
@@ -191,6 +184,8 @@ bool MainWidget::event(QEvent *event)
     return true;
     break;
   case QEvent::MouseButtonRelease:
+    if (canGetTouch)
+      break;
     widgets[widgets.size() - 1]->dealReleased
         (toScene(((QMouseEvent*)event)->posF()),
          ((QMouseEvent*)event)->button());

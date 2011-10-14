@@ -55,6 +55,8 @@ private:
   // The CD used when change the control
   int coolDown;
 
+  bool canGetTouch;
+
   // A function to calculate the position
   QPointF toScene(QPointF mousePosition);
 signals:
