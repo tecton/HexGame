@@ -137,7 +137,7 @@ ExchangeStageMenuWidget::ExchangeStageMenuWidget(int stageType) :
 
   int *leastSteps;
   int size;
-  PuzzleGameRecord::minSteps(type, leastSteps, size);
+  PuzzleGameRecord::minSteps(getType(), leastSteps, size);
 
   for (int i = 0; i < stageCount; ++i)
   {
@@ -206,7 +206,7 @@ UniteStageMenuWidget::UniteStageMenuWidget(int stageType) :
 
   int *leastSteps;
   int size;
-  PuzzleGameRecord::minSteps(type, leastSteps, size);
+  PuzzleGameRecord::minSteps(getType(), leastSteps, size);
 
   for (int i = 0; i < stageCount; ++i)
   {
@@ -330,7 +330,7 @@ LockStageMenuWidget::LockStageMenuWidget(int stageType) :
 
   int *leastSteps;
   int size;
-  PuzzleGameRecord::minSteps(type, leastSteps, size);
+  PuzzleGameRecord::minSteps(getType(), leastSteps, size);
 
   for (int i = 0; i < stageCount; ++i)
   {

@@ -319,6 +319,8 @@ void RotatePuzzleGame::advance()
     }
     if (i == gameboardInfo->totalBallCounts() && !nextStageChoice)
     {
+      PuzzleGameRecord::testLeastSteps(type, index, currentSteps->getValue());
+
       // set the bool to true
       nextStageChoice = true;
 
@@ -340,14 +342,12 @@ void RotatePuzzleGame::nextStage()
   {
     RotatePuzzleGame* nextStage =
         PuzzleGameInit::initRotatePuzzleGame(index + 1, type);
-    PuzzleGameRecord::testLeastSteps(type, index, currentSteps->getValue());
     emit giveControlTo(nextStage, true);
     delete this;
     return;
   }
   else
   {
-    PuzzleGameRecord::testLeastSteps(type, index, currentSteps->getValue());
     emit giveControlTo(NULL, true);
     delete this;
     return;
