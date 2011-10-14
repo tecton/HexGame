@@ -127,7 +127,7 @@ public:
   /**
    * @brief Constructor.
    */
-  FlameGetItem(int theLevel, int theCurrent);
+  FlameGetItem(int theLevel, int theCurrent, QPainter *painter=NULL);
 
 private:
   int level;
@@ -144,7 +144,7 @@ public:
   /**
    * @brief Constructor.
    */
-  StarGetItem(int theLevel, int theCurrent);
+  StarGetItem(int theLevel, int theCurrent, QPainter *painter=NULL);
 
 private:
   int level;
@@ -162,7 +162,7 @@ public:
   /**
    * @brief Constructor.
    */
-  RotateClassicPointItem(int theLevel, int theCurrent);
+  RotateClassicPointItem(int theLevel, int theCurrent, QPainter *painter=NULL);
 
 private:
   int level;
@@ -180,7 +180,7 @@ public:
   /**
    * @brief Constructor.
    */
-  TimingPointItem(int theLevel, int theCurrent);
+  TimingPointItem(int theLevel, int theCurrent, QPainter *painter=NULL);
 
 private:
   int level;
@@ -198,7 +198,7 @@ public:
   /**
    * @brief Constructor.
    */
-  RotatePuzzleFinishedItem(int theFinished, int theTotal);
+  RotatePuzzleFinishedItem(int theFinished, int theTotal, QPainter *painter=NULL);
 
 private:
   int finished;

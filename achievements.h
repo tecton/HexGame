@@ -108,12 +108,12 @@ public:
    * @brief Get the pointer of the item of the achievement.
    */
   static AbstractAchievementItem *getAchievementItem
-      (AbstractAchievementItem::ItemType type);
+      (AbstractAchievementItem::ItemType type, QPainter *painter=NULL);
 
   /**
    * @brief Get the pointers of all the items.
    */
-  static QVector<AbstractAchievementItem *> getAchievementItems();
+  static QVector<AbstractAchievementItem *> getAchievementItems(QPainter *painter=NULL);
 
   /**
    * @brief Get the level of the achievement.

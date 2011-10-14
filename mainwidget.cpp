@@ -40,9 +40,6 @@ MainWidget::MainWidget(QWidget *parent) :
 
   mainMenu->getForcus();
 
-  // Accept touch event so that we can
-  setAttribute(Qt::WA_AcceptTouchEvents);
-
   // Create the timer
   refreshTimer = new QTimer();
   refreshTimer->setInterval(30);

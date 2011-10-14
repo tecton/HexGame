@@ -32,7 +32,12 @@ AchievementWidget::AchievementWidget() :
   exitItem->setPos(QPointF(0.75, 0.9));
   myItems.push_back(exitItem);
 
-  achievementItems = Achievements::getAchievementItems();
+  QPixmap p = QPixmap(1, 1);
+  QPainter *tmp = new QPainter(&p);
+
+  achievementItems = Achievements::getAchievementItems(tmp);
+
+  delete tmp;
 
   QPointF positions[5];
   positions[0] = QPointF(0.15, 0.2);

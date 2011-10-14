@@ -173,7 +173,7 @@ int Achievements::getAchievementLevel(AbstractAchievementItem::ItemType type,
 }
 
 AbstractAchievementItem *Achievements::getAchievementItem
-      (AbstractAchievementItem::ItemType type)
+      (AbstractAchievementItem::ItemType type, QPainter *painter)
 {
   AbstractAchievementItem *item = NULL;
   switch (type)
@@ -181,28 +181,33 @@ AbstractAchievementItem *Achievements::getAchievementItem
   case AbstractAchievementItem::FlameGet:
     item = new FlameGetItem
            (getAchievementLevel(AbstractAchievementItem::FlameGet),
-            statistic.getStatistic(Statistic::FlameGetCount));
+            statistic.getStatistic(Statistic::FlameGetCount),
+            painter);
     break;
   case AbstractAchievementItem::StarGet:
     item = new StarGetItem
            (getAchievementLevel(AbstractAchievementItem::StarGet),
-            statistic.getStatistic(Statistic::StarGetCount));
+            statistic.getStatistic(Statistic::StarGetCount),
+            painter);
     break;
   case AbstractAchievementItem::RotateClassic:
     item = new RotateClassicPointItem
            (getAchievementLevel(AbstractAchievementItem::RotateClassic),
-            statistic.getStatistic(Statistic::RotateClassicPoint));
+            statistic.getStatistic(Statistic::RotateClassicPoint),
+            painter);
     break;
   case AbstractAchievementItem::Timing:
     item = new TimingPointItem
            (getAchievementLevel(AbstractAchievementItem::Timing),
             qMax(statistic.getStatistic(Statistic::SwapTimingPoint),
-                 statistic.getStatistic(Statistic::RotateTimingPoint)));
+                 statistic.getStatistic(Statistic::RotateTimingPoint)),
+            painter);
     break;
   case AbstractAchievementItem::RotatePuzzle:
     item = new RotatePuzzleFinishedItem
            (statistic.getStatistic(Statistic::RotatePuzzleFinished),
-            statistic.getStatistic(Statistic::RotatePuzzleTotal));
+            statistic.getStatistic(Statistic::RotatePuzzleTotal),
+            painter);
     break;
   default:
     break;
@@ -210,13 +215,18 @@ AbstractAchievementItem *Achievements::getAchievementItem
   return item;
 }
 
-QVector<AbstractAchievementItem *> Achievements::getAchievementItems()
+QVector<AbstractAchievementItem *> Achievements::getAchievementItems(QPainter *painter)
 {
   QVector<AbstractAchievementItem *> result;
-  result.push_back(getAchievementItem(AbstractAchievementItem::FlameGet));
-  result.push_back(getAchievementItem(AbstractAchievementItem::StarGet));
-  result.push_back(getAchievementItem(AbstractAchievementItem::RotateClassic));
-  result.push_back(getAchievementItem(AbstractAchievementItem::Timing));
-  result.push_back(getAchievementItem(AbstractAchievementItem::RotatePuzzle));
+  result.push_back(getAchievementItem(AbstractAchievementItem::FlameGet,
+                                      painter));
+  result.push_back(getAchievementItem(AbstractAchievementItem::StarGet,
+                                      painter));
+  result.push_back(getAchievementItem(AbstractAchievementItem::RotateClassic,
+                                      painter));
+  result.push_back(getAchievementItem(AbstractAchievementItem::Timing,
+                                      painter));
+  result.push_back(getAchievementItem(AbstractAchievementItem::RotatePuzzle,
+                                      painter));
   return result;
 }

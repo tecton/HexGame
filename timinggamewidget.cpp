@@ -106,7 +106,7 @@ TimingGameWidget::TimingGameWidget(AbstractRule::Gesture gesture) :
 
   timeBar = new VerticalProgressBarItem();
   timeBar->setPos(QPointF(0.25, 0.5));
-  timeBar->setCurrent(2);
+  timeBar->setCurrent(60);
   timeBar->setMin(0);
   timeBar->setMax(60);
   myItems.push_back(timeBar);
