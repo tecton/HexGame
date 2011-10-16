@@ -6,8 +6,10 @@ Ball::Ball(Ball::Color theColor) :
            locked(false)
 {}
 
-void Ball::advance()
+bool Ball::advance()
 {
+  Ball::State lastState = state;
+
   // If there is a position to stop
   if (!stopPositions.empty())
   {
@@ -28,4 +30,6 @@ void Ball::advance()
     if (stopPositions.size() == 0)
       state = Stable;
   }
+
+  return state != lastState;
 }

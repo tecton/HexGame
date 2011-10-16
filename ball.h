@@ -102,7 +102,7 @@ public:
   /**
    *@brief Advance the ball, may change the position and state.
    */
-  void advance();
+  bool advance();
 
   /**
    *@brief Whether two balls have the same color.
