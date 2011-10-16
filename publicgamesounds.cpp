@@ -9,42 +9,7 @@
 
 #ifdef GSTREAMER
 #include "soundplayer.h"
-SoundPlayer player;
-
-SoundPlayer::GameSounds soundMap(PublicGameSounds::GameSounds sound)
-{
-  switch (sound)
-  {
-  case PublicGameSounds::GoodMove:
-    return (SoundPlayer::GameSounds) -1;
-    break;
-  case PublicGameSounds::BadMove:
-    return SoundPlayer::BadMove;
-    break;
-  case PublicGameSounds::Eliminate:
-    return SoundPlayer::Eliminate;
-    break;
-  case PublicGameSounds::GetFlame:
-    return SoundPlayer::GetFlame;
-    break;
-  case PublicGameSounds::GetStar:
-    return SoundPlayer::GetStar;
-    break;
-  case PublicGameSounds::UseFlame:
-    return SoundPlayer::UseFlame;
-    break;
-  case PublicGameSounds::UseStar:
-    return SoundPlayer::UseStar;
-    break;
-  case PublicGameSounds::NextStage:
-    return SoundPlayer::NextStage;
-    break;
-  case PublicGameSounds::GameOver:
-    return SoundPlayer::GameOver;
-    break;
-  }
-  return (SoundPlayer::GameSounds) -1;
-}
+QList <SingleSound *> soundsPlaying;
 #endif
 
 #ifdef MOBILITY
@@ -104,16 +69,27 @@ void PublicGameSounds::init()
 
 #ifdef MOBILITY
 #endif
-
 }
 
 void PublicGameSounds::tryToReleaseSpace()
 {
 #ifdef GSTREAMER
+  if (soundsPlaying.size() < 5)
+    return;
+
+  SingleSound *sound;
+  foreach (sound, soundsPlaying)
+  {
+    if (sound->isEnd())
+    {
+      delete sound;
+      soundsPlaying.removeOne(sound);
+    }
+  }
 #endif
 
 #ifdef PHONON
-  if (soundsPlaying.size() < 10)
+  if (soundsPlaying.size() < 5)
     return;
 
   // Delete the finished sounds
@@ -148,7 +124,10 @@ void PublicGameSounds::tryToReleaseSpace()
 void PublicGameSounds::clear()
 {
 #ifdef GSTREAMER
-  player.stopSound();
+  SingleSound *sound;
+  foreach (sound, soundsPlaying)
+    delete sound;
+  soundsPlaying.clear();
 #endif
 #ifdef PHONON
   // Delete all the sounds
@@ -178,7 +157,12 @@ void PublicGameSounds::addSound(GameSounds gamesound)
 {
 #ifdef GSTREAMER
   if (gamesound != -1)
-    player.playSound((int) soundMap(gamesound));
+  {
+    tryToReleaseSpace();
+    SingleSound *sound = new SingleSound(soundSources[gamesound]);
+    sound->start();
+    soundsPlaying.push_back(sound);
+  }
 #endif
 #ifdef PHONON
   tryToReleaseSpace();
@@ -218,37 +202,4 @@ void PublicGameSounds::addSound(GameSounds gamesound)
 void PublicGameSounds::addEliminate(int count)
 {
   PublicGameSounds::addSound(PublicGameSounds::Eliminate);
-//#ifdef PHONON
-//  tryToReleaseSpace();
-//  int index = qMax(kEliminateMin, qMin(kEliminateMax, count));
-//  --index;
-
-//  // Create the sound
-//  MediaObject *sound =
-//      createPlayer(MusicCategory,
-//                   MediaSource(kEliminateSoundsPaths[index]));
-
-//  // Play the sound
-//  sound->play();
-
-//  // Record the sound
-//  soundsPlaying.push_back(sound);
-//#endif
-
-//#ifdef MOBILITY
-//  tryToReleaseSpace();
-//  int index = qMax(kEliminateMin, qMin(kEliminateMax, count));
-//  --index;
-
-//  // Create the sound
-//  QMediaPlayer *sound = new QMediaPlayer;
-//  sound->setMedia(QUrl::fromLocalFile(kEliminateSoundsPaths[index]));
-//  sound->setVolume(50);
-
-//  // Play the sound
-//  sound->play();
-
-//  // Record the sound
-//  soundsPlaying.push_back(sound);
-//#endif
 }

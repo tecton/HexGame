@@ -2,7 +2,8 @@
  *  singlesound.cpp
  */  
 
-
+#include "config.h"
+#ifdef GSTREAMER
 #include <stdio.h>
 #include "singlesound.h"
 
@@ -68,3 +69,5 @@ SingleSound::~SingleSound()
     gst_object_unref(bus);
     gst_object_unref(GST_OBJECT(pipeline));
 }
+
+#endif

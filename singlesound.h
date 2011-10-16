@@ -5,6 +5,10 @@
 #ifndef SINGLESOUND_H
 #define SINGLESOUND_H
 
+#include "config.h"
+
+#ifdef GSTREAMER
+
 #include <gst/gst.h>
 #include <stdbool.h>
 #include <QObject>
@@ -28,4 +32,5 @@ public:
     ~SingleSound();
 };
 
+#endif
 #endif
