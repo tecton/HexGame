@@ -3,7 +3,6 @@
  */  
 
 
-#include <QTimer>
 #include <stdio.h>
 #include "singlesound.h"
 
@@ -39,10 +38,7 @@ SingleSound::SingleSound(char* uri)
     bus = NULL;
     end = false;
     songUri = uri;
-    timer = new QTimer();
-    timer->setInterval(1500);
-    connect(timer, SIGNAL(timeout()), this, SLOT(setEnd()));
-    printf("uri: %s\n", songUri);
+    createdTime = time(NULL);
 }
 
 void SingleSound::start()
@@ -54,18 +50,13 @@ void SingleSound::start()
     
     gst_element_set_state(GST_ELEMENT(pipeline), GST_STATE_PLAYING);
     g_main_loop_run(loop);
-    timer->start();
+    createdTime = time(NULL);
 }
 
 bool SingleSound::isEnd()
 {
-    return end;
-}
-
-void SingleSound::setEnd()
-{
-    end = true;
-    timer->stop();
+    time_t currentTime = time(NULL);
+    return (currentTime - createdTime) > 2;
 }
 
 SingleSound::~SingleSound()
@@ -76,7 +67,4 @@ SingleSound::~SingleSound()
     // unref objects
     gst_object_unref(bus);
     gst_object_unref(GST_OBJECT(pipeline));
-    // release timer
-    timer->stop();
-    delete timer;
 }

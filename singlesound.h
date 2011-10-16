@@ -8,8 +8,8 @@
 #include <gst/gst.h>
 #include <stdbool.h>
 #include <QObject>
-
-class QTimer;
+#include <ctime>
+using namespace std;
 
 class SingleSound : public QObject
 {
@@ -19,10 +19,8 @@ private:
     GstElement *pipeline;
     GstBus *bus;
     bool end;
-    QTimer *timer;
+    time_t createdTime;
     char* songUri;
-private slots:
-    void setEnd();
 public:
     SingleSound(char* uri);
     void start();
