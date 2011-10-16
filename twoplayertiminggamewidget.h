@@ -65,6 +65,7 @@ public:
   virtual void dealReleased(QPointF mousePos,
                             Qt::MouseButton button);
   virtual void getForcus();
+  virtual void loseForcus(){}
 
 private:
   TimingGameWidget *game1, *game2;

@@ -105,6 +105,12 @@ public:
    */
   virtual void getForcus()=0;
 
+  /**
+   *@brief Should be called when the widget lose focus, used to stop the
+   * timer(s).
+   */
+  virtual void loseForcus()=0;
+
 signals:
   /**
    *@brief A signal which tell the main widget to change the controller.

@@ -600,6 +600,22 @@ void TimingGameWidget::getForcus()
   oneSecondTimer->start();
 }
 
+void TimingGameWidget::loseForcus()
+{
+  if (doNotStop)
+    return;
+
+  // Pause
+  t->stop();
+  oneSecondTimer->stop();
+
+  // Show pause widget
+  PauseWidget *w = new PauseWidget();
+  connect(w, SIGNAL(resume()), this, SLOT(resume()));
+  emit giveControlTo(w, false);
+  return;
+}
+
 void TimingGameWidget::useGivenTimer(QTimer *aTimer, QTimer *oTimer)
 {
   myOwnTimers = false;

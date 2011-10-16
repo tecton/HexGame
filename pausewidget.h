@@ -55,6 +55,7 @@ public:
   virtual void dealMoved(QPointF mousePos, Qt::MouseButton button);
   virtual void dealReleased(QPointF mousePos, Qt::MouseButton button);
   virtual void getForcus(){}
+  virtual void loseForcus(){}
 
 private:
   // Items of the game

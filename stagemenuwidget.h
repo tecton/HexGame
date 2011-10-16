@@ -46,6 +46,7 @@ public:
   virtual void dealMoved(QPointF mousePos, Qt::MouseButton button);
   virtual void dealReleased(QPointF mousePos, Qt::MouseButton button);
   virtual void getForcus()=0;
+  virtual void loseForcus(){}
 
   /**
    * @brief Get the type(including the theme and advanced or not) of the stage

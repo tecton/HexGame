@@ -192,6 +192,12 @@ bool MainWidget::event(QEvent *event)
     event->accept();
     return true;
     break;
+  case QEvent::WindowActivate:
+    widgets[widgets.size() - 1]->getForcus();
+    break;
+  case QEvent::WindowDeactivate:
+    widgets[widgets.size() - 1]->loseForcus();
+    break;
   default:
     break;
   }

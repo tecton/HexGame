@@ -73,6 +73,7 @@ public:
   virtual void dealReleased(QPointF mousePos,
                             Qt::MouseButton button);
   virtual void getForcus();
+  virtual void loseForcus();
 
   void setDoNotStop(bool b)
   {doNotStop = b;}
