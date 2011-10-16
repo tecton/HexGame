@@ -30,7 +30,7 @@ gboolean bus_call(GstBus *bus, GstMessage *msg, void *user_data)
 	return true;
 }
 
-SingleSound::SingleSound(char* uri)
+SingleSound::SingleSound(char* uri) : songUri(uri)
 {
     // init gstreamer
     gst_init(NULL, NULL);
@@ -38,7 +38,6 @@ SingleSound::SingleSound(char* uri)
     pipeline = gst_element_factory_make("playbin", "player");
     bus = NULL;
     end = false;
-    songUri = uri;
     createdTime = time(NULL);
 }
 

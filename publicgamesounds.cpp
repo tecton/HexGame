@@ -8,7 +8,7 @@
 #include "config.h"
 
 #ifdef GSTREAMER
-#include "soundplayer.h"
+#include "singlesound.h"
 QList <SingleSound *> soundsPlaying;
 #endif
 
@@ -60,6 +60,7 @@ const static int kEliminateMax = 3;
 void PublicGameSounds::init()
 {
 #ifdef GSTREAMER
+  gst_init(NULL,NULL);
 #endif
 
 #ifdef PHONON
@@ -159,11 +160,12 @@ void PublicGameSounds::addSound(GameSounds gamesound)
   if (gamesound != -1)
   {
     tryToReleaseSpace();
-    SingleSound *sound = new SingleSound(soundSources[gamesound]);
+    SingleSound *sound = new SingleSound(kSoundPaths[gamesound]);
     sound->start();
     soundsPlaying.push_back(sound);
   }
 #endif
+
 #ifdef PHONON
   tryToReleaseSpace();
 

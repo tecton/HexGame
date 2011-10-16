@@ -24,7 +24,7 @@ private:
     GstBus *bus;
     bool end;
     time_t createdTime;
-    char* songUri;
+    const char* songUri;
 public:
     SingleSound(char* uri);
     void start();
