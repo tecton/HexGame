@@ -23,8 +23,8 @@ bool Ball::advance()
     stopPositions.pop_back();
 
     // Currently not used, may be used later to speed up
-      if (stopPositions.size() < 4)
-        state = AlmostStable;
+    if (stopPositions.size() < 2)
+      state = AlmostStable;
 
     // Change the state
     if (stopPositions.size() == 0)

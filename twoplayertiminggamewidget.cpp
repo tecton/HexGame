@@ -157,6 +157,7 @@ void TwoPlayerTimingGameWidget::makeBasicPixmap(
       game2->makePixmap(painter, GAME2_WIDTH * yRate, GAME2_HEIGHT * xRate);
 #endif
     }
+    else
     {
       painter->setOpacity(0.5);
       drawPixmapAt(painter, game2End, yRate, xRate, QPointF(0, 0), true, false);
