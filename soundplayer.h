@@ -7,27 +7,16 @@
 #ifndef SOUNDPLAYER_H
 #define SOUNDPLAYER_H
 
-#include <gst/gst.h>
-#include <stdbool.h>
-
-class QTimer;
+#include "singlesound.h"
 
 /**
  * @brief A class to play sounds.
  */
-class SoundPlayer : public QObject
+class SoundPlayer
 {
-Q_OBJECT
 private:
     int currentSong;
     char **songPaths;
-    // needed by gstreamer
-    GMainLoop *loop;
-    GstElement *pipeline;
-	GstBus *bus;
-	QTimer *timer;
-private slots:
-    void setSong();
 public:
     enum GameSounds {GameOver = 0,
         NextStage,
@@ -35,11 +24,12 @@ public:
         GetStar,
         UseFlame,
         UseStar,
-	Eliminate,
+        Eliminate,
         BadMove};
     SoundPlayer();
-    void playSound(int number);
-    void stopSound();
+    void tryToReleaseSpace();
+    void clear();
+    void addSound(int number);
     ~SoundPlayer();
 };
 
