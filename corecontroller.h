@@ -156,6 +156,8 @@ private:
   // The gesture used in the game
   AbstractRule::Gesture gesture;
 
+  bool needTestStatbleEliminate;
+
   // Reset ballsCurrentIndexToOriginalIndex and
   //       ballsOriginalIndexToCurrentIndex
   void resetCToOAndOToC();

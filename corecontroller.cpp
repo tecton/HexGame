@@ -19,7 +19,8 @@ CoreController::CoreController(
   gameBoardInfo(theGameBoardInfo),
   rule(theRule),
   ballCount(theGameBoardInfo->totalBallCounts()),
-  gestureCoolDown(0)
+  gestureCoolDown(0),
+  needTestStatbleEliminate(true)
 {
   // Create the space for the ball array if neccessary
   if (balls == NULL)
@@ -682,7 +683,7 @@ void CoreController::advance()
   // Advance each ball
   for (int i = 0;i < ballCount;++i)
     if (balls[i])
-      balls[i]->advance();
+      needTestStatbleEliminate = balls[i]->advance() || needTestStatbleEliminate;
 
   if (rule->gameStepAllowed(AbstractRule::Eliminate) ==
       false)
@@ -697,16 +698,21 @@ void CoreController::advance()
   recyclingBalls[RECYCLE_STEPS - 1] =
       new QVector<Ball *>();
 
-  // Test the stable eliminations
-  Connections connections = testStableEliminate();
-  QVector <int> toEliminate;
-  for (int i = 0;i < gameBoardInfo->totalBallCounts();++i)
-    if (balls[i])
-      if (connections.isInAChain(i))
-        toEliminate.push_back(i);
+  if (needTestStatbleEliminate)
+  {
+    // Test the stable eliminations
+    Connections connections = testStableEliminate();
+    QVector <int> toEliminate;
+    for (int i = 0;i < gameBoardInfo->totalBallCounts();++i)
+      if (balls[i])
+        if (connections.isInAChain(i))
+          toEliminate.push_back(i);
 
-  // Eliminate the balls
-  eliminate(toEliminate);
+    // Eliminate the balls
+    eliminate(toEliminate);
+
+    needTestStatbleEliminate = false;
+  }
 
   // Fill all blanks
   fillAllBlanks();
