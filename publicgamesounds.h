@@ -8,6 +8,11 @@ class PublicGameSounds
 {
 public:
   /**
+   * @brief Init the sounds, load them to memory.
+   */
+  static void init();
+
+  /**
    * @brief Try to release space, delete the sounds which has been finished.
    */
   static void tryToReleaseSpace();

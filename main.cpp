@@ -7,6 +7,7 @@
 #include "statistic.h"
 #include "achievements.h"
 #include "soundplayer.h"
+#include "publicgamesounds.h"
 
 GameRecord gameRecord;
 Statistic statistic;
@@ -14,6 +15,8 @@ Achievements achievements;
 
 int main(int argc, char *argv[])
 {
+  PublicGameSounds::init();
+
   srand ( time(NULL) );
 
   QTextCodec *codec = QTextCodec::codecForName("utf8");

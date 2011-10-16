@@ -22,7 +22,7 @@
 // On linux, we suggest you to use USE_TRANSLATE_AND_SCALE and GSTREAMER
 // On meego tablet, we suggest you to use GSTREAMER
 // On some devices, MOBILITY may be used, but I'm not sure whether it works
-// correct or not because I don't have a such device.
+// correctly or not because I don't have a such device.
 // On other system, I haven't do any test, you can try it by yourself.
 
 #endif // CONFIG_H

@@ -1,6 +1,7 @@
 #include "publicgamesounds.h"
 
 #include <QList>
+#include <QVector>
 #include <QString>
 #include <QDir>
 
@@ -48,7 +49,7 @@ SoundPlayer::GameSounds soundMap(PublicGameSounds::GameSounds sound)
 
 #ifdef MOBILITY
 #include <QMediaPlayer>
-QList <QMediaPlayer *> publicGameSounds;
+QList <QMediaPlayer *> soundsPlaying;
 #endif
 
 #ifdef PHONON
@@ -56,37 +57,55 @@ QList <QMediaPlayer *> publicGameSounds;
 // Set the name space
 using namespace Phonon;
 // The list to store the sounds
-QList <MediaObject *> publicGameSounds;
+QList <MediaObject *> soundsPlaying;
+QVector <MediaSource> soundSources;
 #endif
 
+const static int kSoundCount = 8;
+
 // The path of the sounds
-const static char * kPublicGameSoundsPaths[] =
-{"C:/badmove.wav",
- ":/commonsounds/eliminate.wav",
- ":/commonsounds/getflame.wav",
- ":/commonsounds/getstar.wav",
- ":/commonsounds/useflame.wav",
- ":/commonsounds/usestar.wav",
- ":/commonsounds/nextstage.wav",
- ":/commonsounds/gameover.wav",
- ":/commonsounds/1.wav",
- ":/commonsounds/1.wav",
- ":/commonsounds/1.wav",
- ":/commonsounds/1.wav",
- ":/commonsounds/1.wav",
- ":/commonsounds/1.wav",
- ":/commonsounds/1.wav"};
+const static char * kSoundPaths[] =
+{"C:/sounds/badmove.wav",
+ "C:/sounds/eliminate.wav",
+ "C:/sounds/getflame.wav",
+ "C:/sounds/getstar.wav",
+ "C:/sounds/useflame.wav",
+ "C:/sounds/usestar.wav",
+ "C:/sounds/nextstage.wav",
+ "C:/sounds/gameover.wav",
+ "C:/sounds/1.wav",
+ "C:/sounds/1.wav",
+ "C:/sounds/1.wav",
+ "C:/sounds/1.wav",
+ "C:/sounds/1.wav",
+ "C:/sounds/1.wav",
+ "C:/sounds/1.wav"};
 
 // The path of the sounds
 const static char * kEliminateSoundsPaths[] =
-{":/commonsounds/1.wav",
- ":/commonsounds/1.wav",
- ":/commonsounds/1.wav",
- ":/commonsounds/1.wav"};
+{"C:/sounds/1.wav",
+ "C:/sounds/1.wav",
+ "C:/sounds/1.wav",
+ "C:/sounds/1.wav"};
 
 // Some value may be used
 const static int kEliminateMin = 3;
 const static int kEliminateMax = 3;
+
+void PublicGameSounds::init()
+{
+#ifdef GSTREAMER
+#endif
+
+#ifdef PHONON
+  for (int i = 0;i < kSoundCount;++i)
+    soundSources.push_back(MediaSource(kSoundPaths[i]));
+#endif
+
+#ifdef MOBILITY
+#endif
+
+}
 
 void PublicGameSounds::tryToReleaseSpace()
 {
@@ -94,33 +113,33 @@ void PublicGameSounds::tryToReleaseSpace()
 #endif
 
 #ifdef PHONON
-  if (publicGameSounds.size() < 10)
+  if (soundsPlaying.size() < 10)
     return;
 
   // Delete the finished sounds
   MediaObject *mediaObject;
-  foreach (mediaObject, publicGameSounds)
+  foreach (mediaObject, soundsPlaying)
   {
     if (mediaObject->remainingTime() == 0)
     {
       delete mediaObject;
-      publicGameSounds.removeOne(mediaObject);
+      soundsPlaying.removeOne(mediaObject);
     }
   }
 #endif
 
 #ifdef MOBILITY
-  if (publicGameSounds.size() < 10)
+  if (soundsPlaying.size() < 10)
     return;
 
   // Delete the finished sounds
   QMediaPlayer *mediaObject;
-  foreach (mediaObject, publicGameSounds)
+  foreach (mediaObject, soundsPlaying)
   {
     if (mediaObject->mediaStatus() < 2 || mediaObject->mediaStatus() > 6)
     {
       delete mediaObject;
-      publicGameSounds.removeOne(mediaObject);
+      soundsPlaying.removeOne(mediaObject);
     }
   }
 #endif
@@ -134,24 +153,24 @@ void PublicGameSounds::clear()
 #ifdef PHONON
   // Delete all the sounds
   MediaObject *sound;
-  foreach (sound, publicGameSounds)
+  foreach (sound, soundsPlaying)
   {
     sound->stop();
     delete sound;
   }
-  publicGameSounds.clear();
+  soundsPlaying.clear();
 #endif
 
 #ifdef MOBILITY
   // Delete all the sounds
   QMediaPlayer *sound;
-  foreach (sound, publicGameSounds)
+  foreach (sound, soundsPlaying)
   {
     sound->stop();
 
     delete sound;
   }
-  publicGameSounds.clear();
+  soundsPlaying.clear();
 #endif
 }
 
@@ -164,16 +183,20 @@ void PublicGameSounds::addSound(GameSounds gamesound)
 #ifdef PHONON
   tryToReleaseSpace();
 
-  // Create the sound
-  MediaObject *sound =
-      createPlayer(MusicCategory,
-                   MediaSource(kPublicGameSoundsPaths[gamesound]));
 
-  // Play the sound
-  sound->play();
+  if (gamesound != -1)
+  {
+    // Create the sound
+    MediaObject *sound =
+        createPlayer(MusicCategory,
+                     soundSources[gamesound]);
 
-  // Record the sound
-  publicGameSounds.push_back(sound);
+    // Play the sound
+    sound->play();
+
+    // Record the sound
+    soundsPlaying.push_back(sound);
+  }
 #endif
 
 #ifdef MOBILITY
@@ -181,14 +204,14 @@ void PublicGameSounds::addSound(GameSounds gamesound)
 
   // Create the sound
   QMediaPlayer *sound = new QMediaPlayer;
-  sound->setMedia(QUrl::fromLocalFile(kPublicGameSoundsPaths[gamesound]));
+  sound->setMedia(QUrl::fromLocalFile(kSoundPaths[gamesound]));
   sound->setVolume(50);
 
   // Play the sound
   sound->play();
 
   // Record the sound
-  publicGameSounds.push_back(sound);
+  soundsPlaying.push_back(sound);
 #endif
 }
 
@@ -209,7 +232,7 @@ void PublicGameSounds::addEliminate(int count)
 //  sound->play();
 
 //  // Record the sound
-//  publicGameSounds.push_back(sound);
+//  soundsPlaying.push_back(sound);
 //#endif
 
 //#ifdef MOBILITY
@@ -226,6 +249,6 @@ void PublicGameSounds::addEliminate(int count)
 //  sound->play();
 
 //  // Record the sound
-//  publicGameSounds.push_back(sound);
+//  soundsPlaying.push_back(sound);
 //#endif
 }
