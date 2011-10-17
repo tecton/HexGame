@@ -74,8 +74,13 @@ TimingGameWidget::TimingGameWidget(AbstractRule::Gesture gesture) :
   // Move the balls to the correct position
   // and avoid elimination at the beginning
   controller->fillAllBlanks();
-  for (int i = 0;i < 100;++i)
-    controller->advance();
+  do
+  {
+    controller->setNeedTestStableEliminate(true);
+    for (int i = 0;i < gameboardInfo->totalBallCounts();++i)
+      if (controller->balls[i])
+        controller->balls[i]->moveToStablePos();
+  } while (controller->advance());
 
   for (int i = 0;i < gameboardInfo->totalBallCounts();++i)
     if (controller->balls[i])

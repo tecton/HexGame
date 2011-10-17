@@ -33,3 +33,13 @@ bool Ball::advance()
 
   return state != lastState;
 }
+
+void Ball::moveToStablePos()
+{
+  if (!stopPositions.empty())
+  {
+    position = stopPositions[0];
+    stopPositions.clear();
+  }
+  state = Stable;
+}

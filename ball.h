@@ -105,6 +105,11 @@ public:
   bool advance();
 
   /**
+   *@brief Move the ball to the last position and change the state to stable.
+   */
+  void moveToStablePos();
+
+  /**
    *@brief Whether two balls have the same color.
    *
    *@param anotherBall Pointer of another ball.

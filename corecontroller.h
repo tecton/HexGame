@@ -90,12 +90,14 @@ public:
   /**
    * @brief Advance the controller.
    *
-   * @return The index of the key ball.(-1 when no solution)
+   * @return Whether anything has been changed.
    */
-  void advance();
+  bool advance();
 
   /**
    * @brief The hint of the balls.
+   *
+   * @return The index of the key ball.(-1 when no solution)
    */
   int hint();
 
@@ -115,6 +117,9 @@ public:
                         QPointF des,
                         int steps,
                         bool plain = true);
+
+  inline void setNeedTestStableEliminate(bool b)
+  {needTestStableEliminate = b;}
 
 private:
   // Infomation of the gameboard
@@ -156,7 +161,7 @@ private:
   // The gesture used in the game
   AbstractRule::Gesture gesture;
 
-  bool needTestStatbleEliminate;
+  bool needTestStableEliminate;
 
   // Reset ballsCurrentIndexToOriginalIndex and
   //       ballsOriginalIndexToCurrentIndex
