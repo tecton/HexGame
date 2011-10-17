@@ -15,8 +15,9 @@
 
 #define ITEM_R              90
 
-#define FONT_FAMILY         ""
 #define FONT_DIGIT_SIZE     30
+
+#define LONGEST_STRING      "in rotate classic game"
 
 double AbstractAchievementItem::r()
 {
@@ -24,24 +25,31 @@ double AbstractAchievementItem::r()
 }
 
 /**
- * @brief Get the font of a description.
+ * @brief Set the font of a description to a painter.
  */
-QFont descriptionFont()
+void setDescriptionFont(QPainter *painter)
 {
   QFont f;
-  f.setFamily(FONT_FAMILY);
   f.setBold(true);
   f.setPointSize(FONT_DIGIT_SIZE);
-  return f;
+  painter->setFont(f);
+  double width = painter->fontMetrics().width(LONGEST_STRING);
+  if (width > DESCRIPTION_WIDTH)
+    f.setPointSize(FONT_DIGIT_SIZE * DESCRIPTION_WIDTH / width);
+  painter->setFont(f);
 }
 
 /**
  * @brief Add text to a painter path.
  */
-void addText(QFontMetrics& fontMetrics, QPainterPath& path, QString str, double y)
+void addText(QPainter *painter,
+             QFontMetrics& fontMetrics,
+             QPainterPath& path,
+             QString str,
+             double y)
 {
   double x = 250 - fontMetrics.width(str) / 2;
-  path.addText(x, y, descriptionFont(), str);
+  path.addText(x, y, painter->font(), str);
 }
 
 void AbstractAchievementItem::paint(QPainter *painter,
@@ -102,21 +110,21 @@ FlameGetItem::FlameGetItem(int theLevel, int theCurrent, QPainter *painter) :
   setBackground(QPixmap(kFlameGetPaths[theLevel]));
   if (!painter)
     return;
-  painter->setFont(descriptionFont());
+  setDescriptionFont(painter);
   QFontMetrics fontMetrics = painter->fontMetrics();
   QPainterPath path;
   if (next != -1)
   {
-    addText(fontMetrics, path, QObject::tr("Level %1").arg(level), 90);
-    addText(fontMetrics, path, QObject::tr("You've got %1 flames").arg(current), 190);
-    addText(fontMetrics, path, QObject::tr("Get %1 flames").arg(next-current), 290);
-    addText(fontMetrics, path, QObject::tr("to reach next stage"), 390);
+    addText(painter, fontMetrics, path, QObject::tr("Level %1").arg(level), 90);
+    addText(painter, fontMetrics, path, QObject::tr("You've got %1 flames").arg(current), 190);
+    addText(painter, fontMetrics, path, QObject::tr("Get %1 flames").arg(next-current), 290);
+    addText(painter, fontMetrics, path, QObject::tr("to reach next stage"), 390);
   }
   else
   {
-    addText(fontMetrics, path, QObject::tr("Level %1").arg(level), 140);
-    addText(fontMetrics, path, QObject::tr("It's already the"), 240);
-    addText(fontMetrics, path, QObject::tr("MAX LEVEL"), 340);
+    addText(painter, fontMetrics, path, QObject::tr("Level %1").arg(level), 140);
+    addText(painter, fontMetrics, path, QObject::tr("It's already the"), 240);
+    addText(painter, fontMetrics, path, QObject::tr("MAX LEVEL"), 340);
   }
   setDescriptionPath(path);
 }
@@ -131,21 +139,21 @@ StarGetItem::StarGetItem(int theLevel, int theCurrent, QPainter *painter) :
   setRotation(0);
   if (!painter)
     return;
-  painter->setFont(descriptionFont());
+  setDescriptionFont(painter);
   QFontMetrics fontMetrics = painter->fontMetrics();
   QPainterPath path;
   if (next != -1)
   {
-    addText(fontMetrics, path, QObject::tr("Level %1").arg(level), 90);
-    addText(fontMetrics, path, QObject::tr("You've got %1 stars").arg(current), 190);
-    addText(fontMetrics, path, QObject::tr("Get %1 stars").arg(next-current), 290);
-    addText(fontMetrics, path, QObject::tr("to reach next stage"), 390);
+    addText(painter, fontMetrics, path, QObject::tr("Level %1").arg(level), 90);
+    addText(painter, fontMetrics, path, QObject::tr("You've got %1 stars").arg(current), 190);
+    addText(painter, fontMetrics, path, QObject::tr("Get %1 stars").arg(next-current), 290);
+    addText(painter, fontMetrics, path, QObject::tr("to reach next stage"), 390);
   }
   else
   {
-    addText(fontMetrics, path, QObject::tr("Level %1").arg(level), 140);
-    addText(fontMetrics, path, QObject::tr("It's already the"), 240);
-    addText(fontMetrics, path, QObject::tr("MAX LEVEL"), 340);
+    addText(painter, fontMetrics, path, QObject::tr("Level %1").arg(level), 140);
+    addText(painter, fontMetrics, path, QObject::tr("It's already the"), 240);
+    addText(painter, fontMetrics, path, QObject::tr("MAX LEVEL"), 340);
   }
   setDescriptionPath(path);
 }
@@ -160,21 +168,21 @@ RotateClassicPointItem::RotateClassicPointItem(int theLevel, int theCurrent, QPa
   setRotation(0);
   if (!painter)
     return;
-  painter->setFont(descriptionFont());
+  setDescriptionFont(painter);
   QFontMetrics fontMetrics = painter->fontMetrics();
   QPainterPath path;
   if (next != -1)
   {
-    addText(fontMetrics, path, QObject::tr("Level %1").arg(level), 90);
-    addText(fontMetrics, path, QObject::tr("Get %1 points").arg(next), 190);
-    addText(fontMetrics, path, QObject::tr("in rotate classic game"), 290);
-    addText(fontMetrics, path, QObject::tr("to reach next level"), 390);
+    addText(painter, fontMetrics, path, QObject::tr("Level %1").arg(level), 90);
+    addText(painter, fontMetrics, path, QObject::tr("Get %1 points").arg(next), 190);
+    addText(painter, fontMetrics, path, QObject::tr("in rotate classic game"), 290);
+    addText(painter, fontMetrics, path, QObject::tr("to reach next level"), 390);
   }
   else
   {
-    addText(fontMetrics, path, QObject::tr("Level %1").arg(level), 140);
-    addText(fontMetrics, path, QObject::tr("It's already the"), 240);
-    addText(fontMetrics, path, QObject::tr("MAX LEVEL"), 340);
+    addText(painter, fontMetrics, path, QObject::tr("Level %1").arg(level), 140);
+    addText(painter, fontMetrics, path, QObject::tr("It's already the"), 240);
+    addText(painter, fontMetrics, path, QObject::tr("MAX LEVEL"), 340);
   }
   setDescriptionPath(path);
 }
@@ -189,21 +197,21 @@ TimingPointItem::TimingPointItem(int theLevel, int theCurrent, QPainter *painter
   setRotation(0);
   if (!painter)
     return;
-  painter->setFont(descriptionFont());
+  setDescriptionFont(painter);
   QFontMetrics fontMetrics = painter->fontMetrics();
   QPainterPath path;
   if (next != -1)
   {
-    addText(fontMetrics, path, QObject::tr("Level %1").arg(level), 90);
-    addText(fontMetrics, path, QObject::tr("Get %1 points").arg(next), 190);
-    addText(fontMetrics, path, QObject::tr("in timing game"), 290);
-    addText(fontMetrics, path, QObject::tr("to reach next level"), 390);
+    addText(painter, fontMetrics, path, QObject::tr("Level %1").arg(level), 90);
+    addText(painter, fontMetrics, path, QObject::tr("Get %1 points").arg(next), 190);
+    addText(painter, fontMetrics, path, QObject::tr("in timing game"), 290);
+    addText(painter, fontMetrics, path, QObject::tr("to reach next level"), 390);
   }
   else
   {
-    addText(fontMetrics, path, QObject::tr("Level %1").arg(level), 140);
-    addText(fontMetrics, path, QObject::tr("It's already the"), 240);
-    addText(fontMetrics, path, QObject::tr("MAX LEVEL"), 340);
+    addText(painter, fontMetrics, path, QObject::tr("Level %1").arg(level), 140);
+    addText(painter, fontMetrics, path, QObject::tr("It's already the"), 240);
+    addText(painter, fontMetrics, path, QObject::tr("MAX LEVEL"), 340);
   }
   setDescriptionPath(path);
 }
@@ -227,22 +235,22 @@ RotatePuzzleFinishedItem::RotatePuzzleFinishedItem(int theFinished,
   setBackground(QPixmap(kRotatePuzzlePaths[index]));
   if (!painter)
     return;
-  painter->setFont(descriptionFont());
+  setDescriptionFont(painter);
   QFontMetrics fontMetrics = painter->fontMetrics();
   QPainterPath path;
   switch (index)
   {
   case 0:
-    addText(fontMetrics, path, QObject::tr("New to"), 190);
-    addText(fontMetrics, path, QObject::tr("rotate puzzle game"), 290);
+    addText(painter, fontMetrics, path, QObject::tr("New to"), 190);
+    addText(painter, fontMetrics, path, QObject::tr("rotate puzzle game"), 290);
     break;
   case 1:
-    addText(fontMetrics, path, QObject::tr("%1 of %2").arg(finished).arg(total), 190);
-    addText(fontMetrics, path, QObject::tr("puzzle(s) cleared"), 290);
+    addText(painter, fontMetrics, path, QObject::tr("%1 of %2").arg(finished).arg(total), 190);
+    addText(painter, fontMetrics, path, QObject::tr("puzzle(s) cleared"), 290);
     break;
   case 2:
-    addText(fontMetrics, path, QObject::tr("All %1").arg(total), 190);
-    addText(fontMetrics, path, QObject::tr("puzzles cleared"), 290);
+    addText(painter, fontMetrics, path, QObject::tr("All %1").arg(total), 190);
+    addText(painter, fontMetrics, path, QObject::tr("puzzles cleared"), 290);
     break;
   }
   setDescriptionPath(path);
