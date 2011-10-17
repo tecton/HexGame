@@ -56,7 +56,8 @@ TimingGameWidget::TimingGameWidget(AbstractRule::Gesture gesture) :
     startAnimCount(0),
     timeUp(false),
     doNotStop(false),
-    myOwnTimers(true)
+    myOwnTimers(true),
+    haveBackground(true)
 {
   // Create the rule
   if (gesture == AbstractRule::Swap)
@@ -234,11 +235,12 @@ void TimingGameWidget::makeBasicPixmap(
   Ball **balls = controller->balls;
 
   // Paint the background
-  BasicPainter::paintBackGround(BasicPainter::Game37,
-                                painter,
-                                width,
-                                height,
-                                frameCount);
+  if (haveBackground)
+    BasicPainter::paintBackGround(BasicPainter::Game37,
+                                  painter,
+                                  width,
+                                  height,
+                                  frameCount);
 
   // Paint the basic balls
   BasicPainter::paintBasicBalls

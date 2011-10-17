@@ -352,6 +352,8 @@ void TwoPlayerTimingGameWidget::start()
   game2 = new TimingGameWidget(ges);
   game1->useGivenTimer(t, oneSecondTimer);
   game2->useGivenTimer(t, oneSecondTimer);
+  game1->setHaveBackground(false);
+  game2->setHaveBackground(false);
   connect(game1,
           SIGNAL(totalScore(TimingGameWidget*,int)),
           this,
@@ -360,6 +362,9 @@ void TwoPlayerTimingGameWidget::start()
           SIGNAL(totalScore(TimingGameWidget*,int)),
           this,
           SLOT(totalScore(TimingGameWidget*,int)));
+  // Restart the timer to ensure enough time for the players
+  oneSecondTimer->stop();
+  oneSecondTimer->start();
   endAnim = -1;
   result1 = 0;
   result2 = 0;

@@ -80,6 +80,9 @@ public:
 
   void useGivenTimer(QTimer *aTimer, QTimer *oTimer);
 
+  void setHaveBackground(bool b)
+  {haveBackground = b;}
+
 private:
   // Rule of the game
   AbstractRule *rule;
@@ -140,6 +143,9 @@ private:
 
   // Whether the timers are my own
   bool myOwnTimers;
+
+  // Whether to paint the background
+  bool haveBackground;
 
   // Count of the end anim for each bonus item
   QList<int> endAnimCount;
