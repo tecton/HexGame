@@ -162,9 +162,6 @@ private:
   // Quit game
   void quitGame();
 
-  // Next stage
-  void nextStage();
-
   // Get the index of this game
   int getIndex();
 

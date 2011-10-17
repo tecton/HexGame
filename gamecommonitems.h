@@ -126,7 +126,7 @@ public:
   {return max;}
 
   /**
-   * @brief Add one and minus one, may be used frequently.
+   * @brief Add one, may be used frequently.
    */
   inline void addOne()
   {
@@ -135,7 +135,7 @@ public:
   }
 
   /**
-   * @brief Minus one and minus one, may be used frequently.
+   * @brief Minus one, may be used frequently.
    */
   inline void minusOne()
   {
@@ -261,60 +261,6 @@ private:
   QString caption;
   QPixmap background;
 };
-
-///**
-// * @brief A class of an item of a button with "HINT".
-// */
-//class HintItem : public AbstractItem
-//{
-//public:
-//  virtual void paint(QPainter *painter, int width, int height, int frame);
-//};
-
-///**
-// * @brief A class of an item of a button with "EXIT".
-// */
-//class ExitItem : public AbstractItem
-//{
-//public:
-//  virtual void paint(QPainter *painter, int width, int height, int frame);
-//};
-
-///**
-// * @brief A class of an item of a button with "RESET".
-// */
-//class ResetItem : public AbstractItem
-//{
-//public:
-//  virtual void paint(QPainter *painter, int width, int height, int frame);
-//};
-
-///**
-// * @brief A class of an item of a button with "PAUSE".
-// */
-//class PauseItem : public AbstractItem
-//{
-//public:
-//  virtual void paint(QPainter *painter, int width, int height, int frame);
-//};
-
-///**
-// * @brief A class of an item of a button with "CONFIRM".
-// */
-//class ConfirmItem : public AbstractItem
-//{
-//public:
-//  virtual void paint(QPainter *painter, int width, int height, int frame);
-//};
-
-///**
-// * @brief A class of an item of a button with "CANCEL".
-// */
-//class CancelItem : public AbstractItem
-//{
-//public:
-//  virtual void paint(QPainter *painter, int width, int height, int frame);
-//};
 
 /**
  * @brief A class of an item to show an integer and a string to describe it.

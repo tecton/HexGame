@@ -48,13 +48,13 @@ public:
   void clearBonusEliminationHints();
 
   /**
-   * @brief Function to show the elimintation if user confirm the use of bonus.
+   * @brief Function to show the elimintation if user confirm the gesture.
    */
   void userMovingEliminationHintAt(int index);
 
   /**
    * @brief Function to clear the effect which shows the elimintation if user
-   * confirm the use of bonus.
+   * confirm the gesture.
    */
   void clearUserMovingEliminationHints();
 
@@ -112,7 +112,7 @@ private:
   // Infomation of the gameboard
   AbstractGameBoardInfo *gameboardInfo;
 
-  // 3 lists of different effects
+  // 4 lists of different effects
   QList<AbstractAgingEffect *> agingEffects;
   QList<AbstractLongLastingEffect *> selectionEffects;
   QList<AbstractLongLastingEffect *> bonusEliminateEffects;

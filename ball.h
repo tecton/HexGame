@@ -28,20 +28,18 @@ public:
    * @brief State of the ball.
    *
    * Currently there are 6 states.
-   *   STABLE:
+   *   Stable:
    *     Item is on a stable position.
    *   AlmostStable:
    *     Item will be on a stable position soon.
-   *   USER_MOVING:
+   *   UserMoving:
    *     Item is moved by the user.
    *   UserReleased:
    *     Item is released by the user.
-   *   SYSTEM_MOVING:
+   *   SystemMoving:
    *     Item is moved by the system.
-   *   JUST_CREATED:
+   *   JustCreated:
    *     Item has just been created wating for additional operations.
-   * @warning AlmostStable aren't used, but you can use it if you turn a
-   * comment in ball.cpp be code.
    */
   enum State{Stable, AlmostStable, UserMoving,
              UserReleased, SystemMoving, JustCreated};
@@ -101,6 +99,8 @@ public:
 
   /**
    *@brief Advance the ball, may change the position and state.
+   *
+   *@return Whether the state is changed.
    */
   bool advance();
 

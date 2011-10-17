@@ -81,7 +81,6 @@ signals:
    * @brief Cancel.
    */
   void cancel();
-  //@}
 };
 
 #endif // NEXTSTAGEWIDGET_H

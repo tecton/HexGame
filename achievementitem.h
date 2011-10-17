@@ -99,13 +99,13 @@ public:
   {background = pixmap;}
 
   /**
-   * @brief Set the description.
+   * @brief Get the rotation.
    */
   inline int getRotation()
   {return rotation;}
 
   /**
-   * @brief Set the background.
+   * @brief Set the rotation.
    */
   inline void setRotation(double theRotation)
   {rotation = theRotation;}

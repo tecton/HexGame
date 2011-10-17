@@ -123,7 +123,7 @@ private slots:
 };
 
 /**
- * @brief A class of stage menu widget of sunit serial.
+ * @brief A class of stage menu widget of stage serial.
  */
 class UniteStageMenuWidget : public AbstractStageMenuWidget
 {

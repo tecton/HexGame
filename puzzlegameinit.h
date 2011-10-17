@@ -11,7 +11,7 @@ class PuzzleGameInit
 {
 public:
   /**
-   * @brief Init a game with the index, type, and min step.
+   * @brief Init a game with the index and type.
    */
   static RotatePuzzleGame* initRotatePuzzleGame(int index,
                                                 int type);

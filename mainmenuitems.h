@@ -57,7 +57,7 @@ private:
 };
 
 /**
- * @brief A class of items used in main menu which is buttons in a circle.
+ * @brief A class of items used in main menu which is buttons in a rectangle.
  */
 class MainMenuButtonItem  : public AbstractRectItem
 {

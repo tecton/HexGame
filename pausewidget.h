@@ -10,7 +10,7 @@ class AbstractItem;
 class StringItem;
 
 /**
- * @brief A class to show the pause widget..
+ * @brief A class to show the pause widget.
  */
 class PauseWidget : public AbstractPixmapWidget
 {

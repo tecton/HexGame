@@ -1,10 +1,11 @@
 #ifndef ROTATEPUZZLEGAME_H
 #define ROTATEPUZZLEGAME_H
 
+// File must include
 #include "abstractpixmapwidget.h"
 #include "connections.h"
 
-
+// Forward declaration
 class QPainter;
 class QTimer;
 class Ball;

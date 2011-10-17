@@ -10,7 +10,7 @@
 // File must include
 #include <QPointF>
 
-// File must include
+// Forward declaration
 class QPixmap;
 
 /**

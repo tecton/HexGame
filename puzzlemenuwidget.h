@@ -3,8 +3,10 @@
 
 #include "abstractpixmapwidget.h"
 
+// File must include
 #include <QVector>
 
+// Forward declaration
 class QTimer;
 class AbstractItem;
 class AbstractPuzzleMenuItem;

@@ -17,7 +17,7 @@ class QTimer;
 class TimingGameWidget;
 
 /**
- * @brief A class to play an endless game.
+ * @brief A class to play timing games with two players
  */
 class TwoPlayerTimingGameWidget : public AbstractPixmapWidget
 {

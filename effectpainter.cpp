@@ -53,9 +53,6 @@ public:
 class AbstractAgingEffect : public AbstractEffect
 {
 public:
-  /**
-   * @brief Function most overloaded(still a pure virtual one).
-   */
   virtual void paint(AbstractGameBoardInfo *theGameboardInfo,
                      QPainter *painter,
                      double xRate,
