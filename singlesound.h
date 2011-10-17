@@ -25,6 +25,7 @@ private:
     bool end;
     time_t createdTime;
     const char* songUri;
+    int timeout;
 public:
     SingleSound(char* uri);
     void start();

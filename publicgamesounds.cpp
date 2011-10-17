@@ -46,6 +46,17 @@ const static char * kSoundPaths[] =
  "C:/sounds/1.wav",
  "C:/sounds/1.wav"};
 
+// The timeout of the sounds
+const static int timeout[] =
+{   2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2};
+
 // The path of the sounds
 const static char * kEliminateSoundsPaths[] =
 {"C:/sounds/1.wav",
@@ -160,7 +171,7 @@ void PublicGameSounds::addSound(GameSounds gamesound)
   if (gamesound != -1)
   {
     tryToReleaseSpace();
-    SingleSound *sound = new SingleSound(kSoundPaths[gamesound]);
+    SingleSound *sound = new SingleSound(kSoundPaths[gamesound], timeout[gamesound]);
     sound->start();
     soundsPlaying.push_back(sound);
   }

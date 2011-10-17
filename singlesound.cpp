@@ -30,7 +30,7 @@ gboolean bus_call(GstBus *bus, GstMessage *msg, void *user_data)
 	return true;
 }
 
-SingleSound::SingleSound(char* uri) : songUri(uri)
+SingleSound::SingleSound(char* uri, int time) : songUri(uri), timeout(time)
 {
     // init gstreamer
     gst_init(NULL, NULL);
@@ -56,7 +56,7 @@ void SingleSound::start()
 bool SingleSound::isEnd()
 {
     time_t currentTime = time(NULL);
-    return (currentTime - createdTime) > 2;
+    return (currentTime - createdTime) > timeout;
 }
 
 SingleSound::~SingleSound()
