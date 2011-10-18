@@ -159,6 +159,11 @@ QPointF MainWidget::toScene(QPointF mousePosition)
 
 bool MainWidget::event(QEvent *event)
 {
+  if (widgets.isEmpty())
+  {
+    qApp->exit();
+    return true;
+  }
   switch (event->type())
   {
   case QEvent::TouchBegin:
@@ -272,13 +277,7 @@ void MainWidget::changeControl(AbstractPixmapWidget *target,
             SLOT(changeControl(AbstractPixmapWidget*,bool)));
   }
   // Exit
-  if (widgets.isEmpty())
-  {
-    qApp->exit();
-//    delete this;
-    //something wrong with it, even I write ~MainWidget, it still goes wrong
-  }
-  else
+  if (!widgets.isEmpty())
   {
     refreshTimer->setInterval(widgets[widgets.size() - 1]->suggestInterval());
 
