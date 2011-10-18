@@ -1,5 +1,5 @@
-#ifndef TIMINGGAMEWIDGET_H
-#define TIMINGGAMEWIDGET_H
+#ifndef TWOPLAYERTIMINGGAMEWIDGET2_H
+#define TWOPLAYERTIMINGGAMEWIDGET2_H
 
 #include "abstractpixmapwidget.h"
 #include "abstractrule.h"
@@ -8,6 +8,7 @@
 // File must include
 #include <QPointF>
 #include <QList>
+#include <QPainterPath>
 
 // Forward declaration
 class QPainter;
@@ -22,22 +23,21 @@ class AbstractItem;
 class AbstractBonusItem;
 class IntegerItem;
 
-/**
- * @brief A class to play a timing game.
- */
-class TimingGameWidget : public AbstractPixmapWidget
+class TwoPlayerTimingGameWidget2 : public AbstractPixmapWidget
 {
+public:
+
   Q_OBJECT
 public:
   /**
    * @brief Constructor with the gesture.
    */
-  TimingGameWidget(AbstractRule::Gesture gesture);
+  TwoPlayerTimingGameWidget2(AbstractRule::Gesture gesture);
 
   /**
    * @brief Destructor.
    */
-  ~TimingGameWidget();
+  ~TwoPlayerTimingGameWidget2();
 
   virtual void makePixmap(
 #ifdef USE_PIXMAP
@@ -73,14 +73,6 @@ public:
   virtual void getForcus();
   virtual void loseForcus();
 
-  void setDoNotStop(bool b)
-  {doNotStop = b;}
-
-  void useGivenTimer(QTimer *aTimer, QTimer *oTimer);
-
-  void setHaveBackground(bool b)
-  {haveBackground = b;}
-
 private:
   // Rule of the game
   AbstractRule *rule;
@@ -89,14 +81,18 @@ private:
   AbstractGameBoardInfo *gameboardInfo;
 
   // Core controller which controls the balls
-  CoreController *controller;
+  CoreController *controller1;
+
+  // Core controller which controls the balls
+  CoreController *controller2;
 
   // Gesture controller which connects the gesture
   // of the user to the core controller
-  GestureController *gestureController;
+  GestureController *gestureController1;
 
-  // A painter to paint the effects of the game
-  EffectPainter *effectPainter;
+  // Gesture controller which connects the gesture
+  // of the user to the core controller
+  GestureController *gestureController2;
 
   // A timer to send signals to advance the game
   QTimer *t;
@@ -108,12 +104,13 @@ private:
   int frameCount;
 
   // Items of the game
-  IntegerItem *hightestScore;
-  IntegerItem *currentScore;
+  IntegerItem *currentScore1;
+  IntegerItem *currentScore2;
   AbstractProgressBarItem *timeBar;
-  AbstractBonusItem *flame;
-  AbstractBonusItem *star;
-  AbstractItem *hint;
+  AbstractBonusItem *flame1;
+  AbstractBonusItem *flame2;
+  AbstractBonusItem *star1;
+  AbstractBonusItem *star2;
   AbstractItem *resetItem;
   AbstractItem *pauseItem;
   AbstractItem *exitItem;
@@ -124,35 +121,45 @@ private:
 
   // A value records the item at the
   // position which user press
+  AbstractItem *itemAtPressPos1;
+
+  // A value records the item at the
+  // position which user press
+  AbstractItem *itemAtPressPos2;
+
+  // A value records the item at the
+  // position which user press
   AbstractItem *itemAtPressPos;
 
   // Current position of the mouse,
   // used to show the hints
-  QPointF currentPos;
+  QPointF currentPos1;
+
+  // Current position of the mouse,
+  // used to show the hints
+  QPointF currentPos2;
 
   // Count of the start anim
   int startAnimCount;
 
+  int endAnimCount;
+
   // Whether it's time up
   bool timeUp;
 
-  // Whether a user can't pause or reset
-  bool doNotStop;
-
-  // Whether the timers are my own
-  bool myOwnTimers;
-
-  // Whether to paint the background
-  bool haveBackground;
+  // Count of the end anim for each bonus item
+  QList<int> endAnimCount1;
 
   // Count of the end anim for each bonus item
-  QList<int> endAnimCount;
+  QList<int> endAnimCount2;
 
   // The kind of bonus item in end anim
-  QList<int> endAnimBonusKind;
+  QList<int> endAnimBonusKind1;
 
-  // Show the hint
-  void showHint();
+  // The kind of bonus item in end anim
+  QList<int> endAnimBonusKind2;
+
+  QPainterPath youWin, youLose, drawGame;
 
   // Game over
   void gameOver();
@@ -160,29 +167,30 @@ private:
   // Quit game
   void quitGame();
 
-  // Get the index of this game
-  int getIndex();
+  QPointF game1ToGlobal(QPointF pos);
+  QPointF game2ToGlobal(QPointF pos);
 
 public slots:
   // Advance
   void advance();
 
 private slots:
-
   // Reset
   void reset();
 
   // Deal stable eliminate
   // The connections are the balls which will be eliminated
-  void dealStableEliminate(Connections connections);
+  void dealStableEliminate1(Connections connections);
 
-  // Deal user moving eliminate
+  // Deal stable eliminate
   // The connections are the balls which will be eliminated
-  // if user release the mouse
-  void dealUserMovingEliminate(Connections connections);
+  void dealStableEliminate2(Connections connections);
 
   // Called when some balls are eliminated
-  void eliminated(int count);
+  void eliminated1(int count);
+
+  // Called when some balls are eliminated
+  void eliminated2(int count);
 
   // Called every one second
   void oneSecond();
@@ -196,8 +204,6 @@ private slots:
   // Call after a bad move is made
   void badMove();
 
-signals:
-  void totalScore(TimingGameWidget *whoAmI, int score);
 };
 
-#endif // TIMINGGAMEWIDGET_H
+#endif // TWOPLAYERTIMINGGAMEWIDGET2_H

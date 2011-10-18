@@ -3,6 +3,7 @@
 
 // File must include
 #include <QVector>
+#include <QPointF>
 
 // Forward declaration
 class Ball;
@@ -64,6 +65,25 @@ public:
                               double xRate,
                               double yRate,
                               int frame);
+  /**
+   *@brief Paint the basic balls.
+   *
+   *@param gameboard The gameboard.
+   *@param balls The balls.
+   *@param totalCount Count of the balls.
+   *@param painter The painter.
+   *@param xRate The scale in X direction.
+   *@param yRate The scale in Y direction.
+   *@param frame The index of the frame to show.
+   */
+  static void paintBasicBalls(Ball **balls,
+                              int totalCount,
+                              QPainter *painter,
+                              double xRate,
+                              double yRate,
+                              int frame,
+                              QPointF *positions,
+                              bool clockwise);
 
   /**
    *@brief Paint the small balls in the puzzle mode.

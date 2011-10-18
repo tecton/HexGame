@@ -47,12 +47,16 @@ double wordWidth(QPainter *painter, QString text)
 
 // Draw the text at the given place
 // The point (x,y) is the center of the text
-void drawTextAt(double x, double y, QPainter *painter, QString text)
+void drawTextAt(double x, double y, QPainter *painter, QString text, int rotation = 0)
 {
+  painter->translate(x, y);
+  painter->rotate(rotation);
   QFontMetrics fm = painter->fontMetrics();
-  QPoint pt(x - fm.width(text) / 2,
-            y - (fm.ascent() + fm.descent()) / 2 + fm.ascent());
+  QPoint pt(-fm.width(text) / 2,
+            -(fm.ascent() + fm.descent()) / 2 + fm.ascent());
   painter->drawText(pt,text);
+  painter->rotate(-rotation);
+  painter->translate(-x, -y);
 }
 
 void initButtonsPixmaps()
@@ -144,6 +148,13 @@ FlameItem::FlameItem()
   // Set the 2 values
   setMax(99);
   setCurrent(0);
+  setRotation(0);
+}
+
+void FlameItem::setRotation(int r)
+{
+  AbstractBonusItem::setRotation(r);
+  p = QPixmap(":/images/bonus/flame.png");
 }
 
 void FlameItem::paint(QPainter *painter,
@@ -179,7 +190,7 @@ void FlameItem::paint(QPainter *painter,
 
   // Draw the count
   QString text = QObject::tr("%1").arg(getCurrent());
-  drawTextAt(x, y, painter, text);
+  drawTextAt(x, y, painter, text, getRotation());
 
   // Set the font to the original one
   painter->setFont(originalFont);
@@ -224,8 +235,14 @@ StarItem::StarItem()
   // Set the 2 values
   setMax(99);
   setCurrent(0);
+  setRotation(0);
 }
 
+void StarItem::setRotation(int r)
+{
+  AbstractBonusItem::setRotation(r);
+  p = QPixmap(":/images/bonus/star.png");
+}
 
 void StarItem::paint(QPainter *painter,
                      int width,
@@ -257,7 +274,7 @@ void StarItem::paint(QPainter *painter,
 
   // Draw the count
   QString text = QObject::tr("%1").arg(getCurrent());
-  drawTextAt(x, y, painter, text);
+  drawTextAt(x, y, painter, text, getRotation());
 
   // Set the font to the original one
   painter->setFont(originalFont);

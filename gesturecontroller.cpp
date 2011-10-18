@@ -54,7 +54,8 @@ void GestureController::testGesture(const QPointF& pos)
 
     // Clear
     gestureIndexes.clear();
-    effectPainter->clearSelectionHints();
+    if (effectPainter)
+      effectPainter->clearSelectionHints();
 
     // If the center is valid
     if (gameboardInfo->canBeRotateCenter(center))
@@ -82,7 +83,8 @@ void GestureController::testGesture(const QPointF& pos)
 
     // Clear
     gestureIndexes.clear();
-    effectPainter->clearSelectionHints();
+    if (effectPainter)
+      effectPainter->clearSelectionHints();
 
     // If the swap is valid
     if (isNextTo)
@@ -98,7 +100,8 @@ void GestureController::dealPressed(const QPointF& pos)
 {
   // Clear
   gestureIndexes.clear();
-  effectPainter->clearSelectionHints();
+  if (effectPainter)
+    effectPainter->clearSelectionHints();
 
   // Record the press
   gestureState = ChooseGesture;
@@ -108,13 +111,15 @@ void GestureController::dealPressed(const QPointF& pos)
     if (controller->balls[index] && !controller->balls[index]->getLocked())
     {
       gestureIndexes.push_back(index);
-      effectPainter->selectAt(index);
+      if (effectPainter)
+        effectPainter->selectAt(index);
     }
     else
     {
       // Clear
       gestureIndexes.clear();
-      effectPainter->clearSelectionHints();
+      if (effectPainter)
+        effectPainter->clearSelectionHints();
     }
   }
   else
@@ -136,13 +141,15 @@ void GestureController::dealMoved(const QPointF& pos)
         if (controller->balls[index] && !controller->balls[index]->getLocked())
         {
           gestureIndexes.push_back(index);
-          effectPainter->selectAt(index);
+          if (effectPainter)
+            effectPainter->selectAt(index);
         }
         else
         {
           // Clear
           gestureIndexes.clear();
-          effectPainter->clearSelectionHints();
+          if (effectPainter)
+            effectPainter->clearSelectionHints();
         }
       }
     }
@@ -164,5 +171,6 @@ void GestureController::dealReleased(const QPointF& pos)
 
   // Clear
   gestureIndexes.clear();
-  effectPainter->clearSelectionHints();
+  if (effectPainter)
+    effectPainter->clearSelectionHints();
 }

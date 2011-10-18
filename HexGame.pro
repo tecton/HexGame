@@ -52,7 +52,8 @@ SOURCES += main.cpp\
     helpitem.cpp \
     nextstagewidget.cpp \
     twoplayertiminggamewidget.cpp \
-    singlesound.cpp
+    singlesound.cpp \
+    twoplayertiminggamewidget2.cpp
 
 HEADERS  += ball.h \
     corecontroller.h \
@@ -100,7 +101,8 @@ HEADERS  += ball.h \
     helpitem.h \
     nextstagewidget.h \
     twoplayertiminggamewidget.h \
-    singlesound.h
+    singlesound.h \
+    twoplayertiminggamewidget2.h
 
 RESOURCES += \
     puzzlegames.qrc \

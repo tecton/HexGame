@@ -181,10 +181,17 @@ public:
 
   virtual double r();
 
+  virtual void setRotation(int r)
+  {rotation = r;}
+
+  inline int getRotation()
+  {return rotation;}
+
 private:
   // 2 key values of a bonus item
   int max;
   int count;
+  int rotation;
 };
 
 /**
@@ -208,6 +215,7 @@ public:
                                    AbstractGameBoardInfo *gameBoard,
                                    EffectPainter *effectPainter,
                                    int frame);
+  virtual void setRotation(int r);
 
 private:
   // The icon of the item
@@ -235,6 +243,7 @@ public:
                                    AbstractGameBoardInfo *gameBoard,
                                    EffectPainter *effectPainter,
                                    int frame);
+  virtual void setRotation(int r);
 
 private:
   // The icon of the item

@@ -120,9 +120,6 @@ void BasicPainter::paintBasicBalls(AbstractGameBoardInfo *
 
   }
 
-  // Set the pen
-  painter->setPen(QColor(255,255,255,255));
-
   // For each ball
   for (int i = 0;i < totalCount;++i)
   {
@@ -136,6 +133,78 @@ void BasicPainter::paintBasicBalls(AbstractGameBoardInfo *
           [frame % ballsFrameCounts[colorIndex]];
       // Get the position of the ball
       QPointF pos = balls[i]->pos();
+      // Reset the position according to the rate
+      pos.setX(pos.x() * xRate);
+      pos.setY(pos.y() * yRate);
+      // Draw the pixmap
+      drawPixmapAt(painter,
+                   p,
+                   size / p.width() * xRate,
+                   size / p.height() * yRate,
+                   pos,
+                   true,
+                   true);
+
+      // If the ball is locked
+      if (balls[i]->getLocked())
+      {
+        // Get the pixmap
+        const QPixmap& p2 = ballsLockPixmaps
+            [frame % ballsLockPixmaps.size()];
+
+        // Draw the pixmap
+        drawPixmapAt(painter,
+                     p2,
+                     size / p2.width() * xRate * 0.75,
+                     size / p2.height() * yRate * 0.75,
+                     pos,
+                     true,
+                     true);
+      }
+    }
+  }
+}
+
+void BasicPainter::paintBasicBalls(Ball **balls,
+                                   int totalCount,
+                                   QPainter *painter,
+                                   double xRate,
+                                   double yRate,
+                                   int frame,
+                                   QPointF *positions,
+                                   bool clockwise)
+{
+  // Size of the ball
+  double size = 40;
+
+  // Init balls if neccessary
+  if (ballsPixmaps.isEmpty())
+    initBallsPixmaps();
+
+  // Init lock if neccessary
+  if (ballsLockPixmaps.isEmpty())
+  {
+    // A value which won't be used
+    int tmp;
+    initPixmaps(":/images/balls/lock*.png",
+                ballsLockPixmaps,
+                tmp);
+
+  }
+
+  // For each ball
+  for (int i = 0;i < totalCount;++i)
+  {
+    // If the ball exists
+    if (balls[i])
+    {
+      // Get the color
+      int colorIndex = balls[i]->getColor();
+      // Get the pixmap
+      const QPixmap& p = ballsPixmaps[colorIndex]
+          [frame % ballsFrameCounts[colorIndex]];
+      // Get the position of the ball
+      QPointF pos = positions[i];
       // Reset the position according to the rate
       pos.setX(pos.x() * xRate);
       pos.setY(pos.y() * yRate);
