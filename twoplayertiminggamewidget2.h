@@ -72,6 +72,8 @@ public:
                             Qt::MouseButton button);
   virtual void getForcus();
   virtual void loseForcus();
+  virtual int suggestInterval()
+  {return 60;}
 
 private:
   // Rule of the game

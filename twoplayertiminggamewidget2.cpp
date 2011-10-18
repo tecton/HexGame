@@ -31,7 +31,7 @@ extern Statistic statistic;
 
 #define PEN_WIDTH             10
 
-#define START_ANIM_LAST_TIME  60
+#define START_ANIM_LAST_TIME  5
 #define START_ANIM_SEP_TIME   (START_ANIM_LAST_TIME * 2/ 3)
 
 #define END_BONUS_ANIM_INTERVAL     4
@@ -75,12 +75,12 @@ TwoPlayerTimingGameWidget2::TwoPlayerTimingGameWidget2(AbstractRule::Gesture ges
     endAnimCount(-1),
     timeUp(false)
 {
-  QFont f;
-  f.setPixelSize(FONT_DIGIT_SIZE);
+//  QFont f;
+//  f.setPixelSize(FONT_DIGIT_SIZE);
 
-  youWin.addText(- FONT_DIGIT_SIZE * 9 / 4, 0, f, "You Win~~");
-  youLose.addText(- FONT_DIGIT_SIZE * 11 / 4, 0, f, "You Lose-.-");
-  drawGame.addText(- FONT_DIGIT_SIZE * 9 / 4, 0, f, "Draw Game");
+//  youWin.addText(- FONT_DIGIT_SIZE * 9 / 4, 0, f, "You Win~~");
+//  youLose.addText(- FONT_DIGIT_SIZE * 11 / 4, 0, f, "You Lose-.-");
+//  drawGame.addText(- FONT_DIGIT_SIZE * 9 / 4, 0, f, "Draw Game");
 
   // Create the rule
   if (gesture == AbstractRule::Swap)
@@ -157,14 +157,14 @@ TwoPlayerTimingGameWidget2::TwoPlayerTimingGameWidget2(AbstractRule::Gesture ges
 
   timeBar = new VerticalProgressBarItem();
   timeBar->setPos(QPointF(0.5, 0.45));
-  timeBar->setCurrent(3);
+  timeBar->setCurrent(60);
   timeBar->setMin(0);
   timeBar->setMax(60);
   myItems.push_back(timeBar);
 
   flame1 = new FlameItem();
   flame1->setPos(QPointF(0.175, 0.15));
-  flame1->setCurrent(3);
+  flame1->setCurrent(0);
   flame1->setRotation(90);
   myItems.push_back(flame1);
 
@@ -371,54 +371,54 @@ void TwoPlayerTimingGameWidget2::addEffect(
   QPainter *painter = new QPainter(&pixmap);
 #endif
 
-  if (startAnimCount <= START_ANIM_LAST_TIME)
-  {
-    QPointF center = gameboardInfo->centerPos();
-    double size = qMax(1,
-                       qMin(FONT_DIGIT_SIZE *
-                            startAnimCount /
-                            START_ANIM_SEP_TIME,
-                            FONT_DIGIT_SIZE));
-    double opacity = startAnimCount < START_ANIM_SEP_TIME ?
-                     1.0 * startAnimCount / START_ANIM_SEP_TIME :
-                     1 - 1.0 * (startAnimCount - START_ANIM_SEP_TIME) /
-                     (START_ANIM_LAST_TIME - START_ANIM_SEP_TIME);
-    painter->setOpacity(opacity);
-    QPainterPath path;
-    path.addText(- size * 2 / 3, 0, goFont(size), "GO");
+//  if (startAnimCount <= START_ANIM_LAST_TIME)
+//  {
+//    QPointF center = gameboardInfo->centerPos();
+//    double size = qMax(1,
+//                       qMin(FONT_DIGIT_SIZE *
+//                            startAnimCount /
+//                            START_ANIM_SEP_TIME,
+//                            FONT_DIGIT_SIZE));
+//    double opacity = startAnimCount < START_ANIM_SEP_TIME ?
+//                     1.0 * startAnimCount / START_ANIM_SEP_TIME :
+//                     1 - 1.0 * (startAnimCount - START_ANIM_SEP_TIME) /
+//                     (START_ANIM_LAST_TIME - START_ANIM_SEP_TIME);
+//    painter->setOpacity(opacity);
+//    QPainterPath path;
+//    path.addText(- size * 2 / 3, 0, goFont(size), "GO");
 
-    painter->scale(1.0 * gameboardInfo->width() / width,
-                   1.0 * gameboardInfo->height() / height);
+//    painter->scale(1.0 * gameboardInfo->width() / width,
+//                   1.0 * gameboardInfo->height() / height);
 
-    QPen pen = QPen(QColor( 50, 255, 255, 100));
-    pen.setWidth(PEN_WIDTH * startAnimCount / START_ANIM_SEP_TIME);
-    painter->setPen(pen);
+//    QPen pen = QPen(QColor( 50, 255, 255, 100));
+//    pen.setWidth(PEN_WIDTH * startAnimCount / START_ANIM_SEP_TIME);
+//    painter->setPen(pen);
 
-    QPointF pos1 = game1ToGlobal(center);
-    painter->translate(pos1.x(), pos1.y());
-    painter->rotate(90);
+//    QPointF pos1 = game1ToGlobal(center);
+//    painter->translate(pos1.x(), pos1.y());
+//    painter->rotate(90);
 
-    painter->drawPath(path);
-    painter->fillPath(path, QBrush(QColor(0, 0, 0)));
+//    painter->drawPath(path);
+//    painter->fillPath(path, QBrush(QColor(0, 0, 0)));
 
-    painter->rotate(-90);
-    painter->translate(-pos1.x(), -pos1.y());
+//    painter->rotate(-90);
+//    painter->translate(-pos1.x(), -pos1.y());
 
-    pos1 = game2ToGlobal(center);
-    painter->translate(pos1.x(), pos1.y());
-    painter->rotate(-90);
+//    pos1 = game2ToGlobal(center);
+//    painter->translate(pos1.x(), pos1.y());
+//    painter->rotate(-90);
 
-    painter->drawPath(path);
-    painter->fillPath(path, QBrush(QColor(0, 0, 0)));
+//    painter->drawPath(path);
+//    painter->fillPath(path, QBrush(QColor(0, 0, 0)));
 
-    painter->rotate(90);
-    painter->translate(-pos1.x(), -pos1.y());
+//    painter->rotate(90);
+//    painter->translate(-pos1.x(), -pos1.y());
 
-    painter->setOpacity(1);
+//    painter->setOpacity(1);
 
-    painter->scale(1.0 * width / gameboardInfo->width(),
-                   1.0 * height / gameboardInfo->height());
-  }
+//    painter->scale(1.0 * width / gameboardInfo->width(),
+//                   1.0 * height / gameboardInfo->height());
+//  }
 
   if (timeUp)
   {
