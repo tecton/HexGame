@@ -694,7 +694,7 @@ void TwoPlayerTimingGameWidget2::dealReleased(QPointF mousePos, Qt::MouseButton 
           statistic.changeStatistic(Statistic::FlameUsedCount, 1, true);
         }
       }
-      else if (itemAtPressPos == star1 && star1->notEmpty())
+      else if (itemAtPressPos1 == star1 && star1->notEmpty())
       {
         int index = gameboardInfo->indexOfPosition(pos);
         if (index != -1)
@@ -723,7 +723,7 @@ void TwoPlayerTimingGameWidget2::dealReleased(QPointF mousePos, Qt::MouseButton 
     {
       QPointF pos = toScene(1 - mousePos.y() / LOGICAL_HEIGHT,
                             (mousePos.x() - GAME2_X_FROM) / GAME2_HEIGHT);
-      if (itemAtPressPos1 == flame2 && flame2->notEmpty())
+      if (itemAtPressPos2 == flame2 && flame2->notEmpty())
       {
         int index = gameboardInfo->indexOfPosition(pos);
         if (index != -1)
@@ -740,7 +740,7 @@ void TwoPlayerTimingGameWidget2::dealReleased(QPointF mousePos, Qt::MouseButton 
           statistic.changeStatistic(Statistic::FlameUsedCount, 1, true);
         }
       }
-      else if (itemAtPressPos == star2 && star2->notEmpty())
+      else if (itemAtPressPos2 == star2 && star2->notEmpty())
       {
         int index = gameboardInfo->indexOfPosition(pos);
         if (index != -1)
