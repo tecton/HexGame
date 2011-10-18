@@ -23,7 +23,7 @@
 #define GAME2_HEIGHT     (GAME2_X_TO - GAME2_X_FROM)
 
 #define END_ENIM_LAST    30
-#define BEGIN_ENIM_LAST  1
+#define BEGIN_ENIM_LAST  10
 
 #define FONT_DIGIT_SIZE  40
 
@@ -55,6 +55,8 @@ TwoPlayerTimingGameWidget::TwoPlayerTimingGameWidget
 
   oneSecondTimer = new QTimer();
   oneSecondTimer->setInterval(1000);
+
+  start();
 }
 
 TwoPlayerTimingGameWidget::~TwoPlayerTimingGameWidget()
@@ -118,10 +120,10 @@ void TwoPlayerTimingGameWidget::makeBasicPixmap(
   double xRate = 1.0 * width / LOGICAL_WIDTH;
   double yRate = 1.0 * height / LOGICAL_HEIGHT;
 
-  if (beginAnim > 0)
-  {
-  }
-  else
+//  if (beginAnim > 0)
+//  {
+//  }
+//  else
   {
     painter->translate(GAME1_X_TO * xRate, 0);
     painter->rotate(90);
@@ -368,8 +370,6 @@ void TwoPlayerTimingGameWidget::start()
   endAnim = -1;
   result1 = 0;
   result2 = 0;
-  game1->getForcus();
-  game2->getForcus();
 }
 
 // Advance
@@ -379,7 +379,12 @@ void TwoPlayerTimingGameWidget::advance()
   {
     --beginAnim;
     if (beginAnim == 0)
-      start();
+    {
+      if (game1)
+        game1->getForcus();
+      if (game2)
+        game2->getForcus();
+    }
   }
   else if (endAnim > 0)
   {

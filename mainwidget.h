@@ -4,6 +4,7 @@
 // File must include
 #include <QWidget>
 #include <QVector>
+#include <QTime>
 
 // Forward declaration
 class QTimer;
@@ -52,10 +53,15 @@ private:
   // The stack of the widgets
   QVector<AbstractPixmapWidget *> widgets;
 
+  // Intervals
+  QVector<int> intervals;
+
   // The CD used when change the control
   int coolDown;
 
   bool canGetTouch;
+
+  QTime lastTime;
 
   // A function to calculate the position
   QPointF toScene(QPointF mousePosition);

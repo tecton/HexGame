@@ -388,6 +388,12 @@ void TimingGameWidget::addEffect(
 
   // Advance the effect painter
   effectPainter->advance();
+
+  if (!myOwnTimers)
+  {
+    for (int i = 0;i < t->interval() / 30;++i)
+      effectPainter->advance();
+  }
 }
 
 QPointF TimingGameWidget::toScene(double xRate, double yRate)

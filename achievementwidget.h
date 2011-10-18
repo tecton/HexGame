@@ -57,6 +57,8 @@ public:
   virtual void dealReleased(QPointF mousePos, Qt::MouseButton button);
   virtual void getForcus(){}
   virtual void loseForcus(){}
+  virtual int suggestInterval()
+  {return 50;}
 
 private:
   QTimer *t;

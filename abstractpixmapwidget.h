@@ -111,6 +111,9 @@ public:
    */
   virtual void loseForcus()=0;
 
+  virtual int suggestInterval()
+  {return 30;}
+
 signals:
   /**
    *@brief A signal which tell the main widget to change the controller.

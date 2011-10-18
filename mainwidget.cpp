@@ -16,13 +16,22 @@
 #include "config.h"
 #include "achievements.h"
 
+#include <QDebug>
+
+#define MAX_CD (600 / widgets[widgets.size() - 1]->suggestInterval())
+
+#define INTERVAL_EXAMPLE_MAX 10
+
 extern Achievements achievements;
 
 MainWidget::MainWidget(QWidget *parent) :
     QWidget(parent),
     coolDown(0),
-    canGetTouch(false)
+    canGetTouch(false),
+    lastTime(QTime::currentTime())
 {
+  intervals.reserve(INTERVAL_EXAMPLE_MAX);
+
   // Set the curser(abandoned)
 //  setCursor(QCursor(QPixmap(":/images/cursor.png")));
   // Create the main menu widget and push it into the stack
@@ -39,7 +48,7 @@ MainWidget::MainWidget(QWidget *parent) :
 
   // Create the timer
   refreshTimer = new QTimer();
-  refreshTimer->setInterval(30);
+  refreshTimer->setInterval(mainMenu->suggestInterval());
 
   // Connect the signal and slot
   connect(refreshTimer, SIGNAL(timeout()),this, SLOT(update()));
@@ -50,6 +59,28 @@ MainWidget::MainWidget(QWidget *parent) :
 
 void MainWidget::paintEvent(QPaintEvent *event)
 {
+  int interval = lastTime.msecsTo(QTime::currentTime());
+  if (intervals.size() < INTERVAL_EXAMPLE_MAX)
+  {
+    //qDebug() << "-.-";
+    intervals.push_back(interval);
+  }
+  else
+  {
+    int intervalToSet = 0;
+    for (int i = 0;i < INTERVAL_EXAMPLE_MAX;++i)
+      intervalToSet += intervals[i];
+    intervalToSet = intervalToSet / INTERVAL_EXAMPLE_MAX;
+    //qDebug() << intervalToSet;
+    if (intervalToSet <= refreshTimer->interval() * 0.9 &&
+        intervalToSet >= refreshTimer->interval() * 1.1)
+    {
+      refreshTimer->setInterval(intervalToSet);
+    }
+    intervals.clear();
+  }
+  lastTime = QTime::currentTime();
+
   // Calculate CD
   if (coolDown > 0)
   {
@@ -81,9 +112,9 @@ void MainWidget::paintEvent(QPaintEvent *event)
 #ifdef USE_PIXMAP
     // Let the widget to make a pixmap
     widgets[widgets.size() - 1]->makePixmap(pixmap, widthToPaint, heightToPaint);
-    painter->drawPixmap(0,0,widthToPaint,heightToPaint-coolDown * heightToPaint / 20, pixmap, 0, coolDown * pixmap.height() / 20,pixmap.width(),(20-coolDown) * pixmap.height() / 20);
+    painter->drawPixmap(0,0,widthToPaint,heightToPaint-coolDown * heightToPaint / (), pixmap, 0, coolDown * pixmap.height() / MAX_CD,pixmap.width(),(MAX_CD-coolDown) * pixmap.height() / MAX_CD);
 #else
-    painter->translate(0, -coolDown * height() / 20);
+    painter->translate(0, -coolDown * height() / MAX_CD);
     widgets[widgets.size() - 1]->makePixmap(painter, widthToPaint, heightToPaint);
 #endif
   }
@@ -221,9 +252,6 @@ void MainWidget::changeControl(AbstractPixmapWidget *target,
   delete painter;
 #endif
 
-  // Set CD
-  coolDown = 20;
-
   // Pop
   if (deleteMySelf)
     widgets.pop_back();
@@ -249,5 +277,12 @@ void MainWidget::changeControl(AbstractPixmapWidget *target,
     qApp->exit();
 //    delete this;
     //something wrong with it, even I write ~MainWidget, it still goes wrong
+  }
+  else
+  {
+    refreshTimer->setInterval(widgets[widgets.size() - 1]->suggestInterval());
+
+    // Set CD
+    coolDown = 600 / widgets[widgets.size() - 1]->suggestInterval();
   }
 }

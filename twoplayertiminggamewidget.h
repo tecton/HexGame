@@ -66,6 +66,8 @@ public:
                             Qt::MouseButton button);
   virtual void getForcus();
   virtual void loseForcus(){}
+  virtual int suggestInterval()
+  {return 120;}
 
 private:
   TimingGameWidget *game1, *game2;
@@ -87,7 +89,6 @@ private:
   void start();
 
   QPointF gamePos(QPointF mousePos, int gameIndex);
-
 private slots:
   // Advance
   void advance();
