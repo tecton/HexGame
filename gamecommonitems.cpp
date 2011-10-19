@@ -464,7 +464,6 @@ void IntegerItem::paint(QPainter *painter,
   f.setBold(true);
   f.setPixelSize(20 * width / LOGICAL_WIDTH);
   painter->setFont(f);
-  painter->setPen(QPen(QColor(255, 120, 0, 255)));
 
   QString text1 = QObject::tr("%1").arg(getValue());
 
@@ -484,6 +483,7 @@ void IntegerItem::paint(QPainter *painter,
                  true,
                  true);
 
+    painter->setPen(QPen(QColor(255, 120, 0, 255)));
     // Draw the text
     drawTextAt(x, y - 10 * width / LOGICAL_WIDTH, painter, text1);
 
@@ -505,6 +505,7 @@ void IntegerItem::paint(QPainter *painter,
                  true,
                  true);
 
+    painter->setPen(QPen(QColor(  0,   0,  0, 255)));
     // Draw the text
     drawTextAt(x, y, painter, text1, rotation);
   }

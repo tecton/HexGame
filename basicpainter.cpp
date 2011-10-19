@@ -170,14 +170,14 @@ void BasicPainter::paintBasicBalls(AbstractGameBoardInfo *
 // (The last two are the same as two before them, may make
 //  cause some bug later)
 const static char * kLeftBallsColorPaths[] =
-{":/images/balls/red_small_left*.png",
- ":/images/balls/blue_small_left*.png",
- ":/images/balls/green_small_left*.png",
- ":/images/balls/yellow_small_left*.png",
- ":/images/balls/purple_small_left*.png",
- ":/images/balls/white_small_left*.png",
- ":/images/balls/purple_small_left*.png",
- ":/images/balls/white_small_left*.png"};
+{":/images/balls/red_left*.png",
+ ":/images/balls/blue_left*.png",
+ ":/images/balls/green_left*.png",
+ ":/images/balls/yellow_left*.png",
+ ":/images/balls/purple_left*.png",
+ ":/images/balls/white_left*.png",
+ ":/images/balls/purple_left*.png",
+ ":/images/balls/white_left*.png"};
 
 // Pixmaps of the balls
 QVector<QVector<QPixmap> > leftBallsPixmaps;
@@ -196,14 +196,14 @@ void initLeftBallsPixmaps()
 // (The last two are the same as two before them, may make
 //  cause some bug later)
 const static char * kRightBallsColorPaths[] =
-{":/images/balls/red_small_right*.png",
- ":/images/balls/blue_small_right*.png",
- ":/images/balls/green_small_right*.png",
- ":/images/balls/yellow_small_right*.png",
- ":/images/balls/purple_small_right*.png",
- ":/images/balls/white_small_right*.png",
- ":/images/balls/purple_small_right*.png",
- ":/images/balls/white_small_right*.png"};
+{":/images/balls/red_right*.png",
+ ":/images/balls/blue_right*.png",
+ ":/images/balls/green_right*.png",
+ ":/images/balls/yellow_right*.png",
+ ":/images/balls/purple_right*.png",
+ ":/images/balls/white_right*.png",
+ ":/images/balls/purple_right*.png",
+ ":/images/balls/white_right*.png"};
 
 // Pixmaps of the balls
 QVector<QVector<QPixmap> > rightBallsPixmaps;
