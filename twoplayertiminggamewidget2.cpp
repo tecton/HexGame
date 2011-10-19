@@ -23,8 +23,6 @@
 #include "ball.h"
 #include "statistic.h"
 
-#include <QDebug>
-
 extern Statistic statistic;
 
 #define FONT_DIGIT_SIZE       90
@@ -45,14 +43,14 @@ extern Statistic statistic;
 #define LOGICAL_WIDTH    1024
 #define LOGICAL_HEIGHT   600
 
-#define GAME1_X_FROM     50
-#define GAME1_X_TO       400
-#define GAME1_Y_FROM     0
-#define GAME1_Y_TO       LOGICAL_HEIGHT
-#define GAME2_X_FROM     624
-#define GAME2_X_TO       974
-#define GAME2_Y_FROM     0
-#define GAME2_Y_TO       LOGICAL_HEIGHT
+#define GAME1_X_FROM     29
+#define GAME1_X_TO       460
+#define GAME1_Y_FROM     (-119)
+#define GAME1_Y_TO       619
+#define GAME2_X_FROM     (LOGICAL_WIDTH - GAME1_X_TO)
+#define GAME2_X_TO       (LOGICAL_WIDTH - GAME1_X_FROM)
+#define GAME2_Y_FROM     (LOGICAL_HEIGHT - GAME1_Y_TO)
+#define GAME2_Y_TO       (LOGICAL_HEIGHT - GAME1_Y_FROM)
 
 #define GAME1_WIDTH      (GAME1_Y_TO - GAME1_Y_FROM)
 #define GAME1_HEIGHT     (GAME1_X_TO - GAME1_X_FROM)
@@ -82,7 +80,7 @@ QPointF game1ToGlobal(QPointF pos)
 QPointF game2ToGlobal(QPointF pos)
 {
   return QPointF(GAME2_X_FROM + pos.y() * GAME2_HEIGHT / LOGICAL_HEIGHT,
-                 GAME1_Y_TO - GAME2_WIDTH * pos.x() / LOGICAL_WIDTH);
+                 GAME2_Y_TO - GAME2_WIDTH * pos.x() / LOGICAL_WIDTH);
 }
 
 QPointF globalToGame1(QPointF pos)
@@ -187,8 +185,8 @@ TwoPlayerTimingGameWidget2::TwoPlayerTimingGameWidget2(AbstractRule::Gesture ges
   currentScore2->setHint("Current Score");
   myItems.push_back(currentScore2);
 
-  timeBar = new VerticalProgressBarItem();
-  timeBar->setPos(QPointF(0.5, 0.45));
+  timeBar = new VerticalProgressBarItem2();
+  timeBar->setPos(QPointF(0.5, 0.5));
   timeBar->setCurrent(60);
   timeBar->setMin(0);
   timeBar->setMax(60);
@@ -389,7 +387,7 @@ void TwoPlayerTimingGameWidget2::makeBasicPixmap(
        height * 1.0 / gameboardInfo->height(),
        frameCount,
        game2ToGlobal,
-       true);
+       false);
 
   // Paint the items
   BasicPainter::paintItems(painter,
@@ -1254,7 +1252,6 @@ void TwoPlayerTimingGameWidget2::oneSecond()
 {
   // Set the time
   timeBar->setCurrent(timeBar->getCurrent() - 1);
-
   // Game over when time up
   if (timeBar->getCurrent() <= 0)
   {

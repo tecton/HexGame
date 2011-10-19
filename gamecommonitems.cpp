@@ -138,6 +138,32 @@ void VerticalProgressBarItem::paint(QPainter *painter,
   painter->setFont(originalFont);
 }
 
+VerticalProgressBarItem2::VerticalProgressBarItem2()
+{
+  // Set the 3 values
+  setMin(0);
+  setMax(30);
+  setCurrent(0);
+}
+
+void VerticalProgressBarItem2::paint(QPainter *painter,
+                                     int width,
+                                     int height,
+                                     int frame)
+{
+  double x = getPos().x() * width;
+  double y = getPos().y() * height;
+
+  double percentage = qMax(0.0, qMin(1.0, 1.0 * (getCurrent() - getMin()) / (getMax() - getMin())));
+  int barFrom = (1 - percentage) * height;
+  int barTo = height;
+
+  int xFrom = x - 19 * width / LOGICAL_WIDTH;
+  painter->setPen(QColor( 255 * (1 - percentage), 255 * percentage,  50));
+  painter->setBrush(QColor( 255 * (1 - percentage), 255 * percentage,  50));
+  painter->drawRect(xFrom, barFrom, 37 * width / LOGICAL_WIDTH, barTo - barFrom);
+}
+
 double AbstractBonusItem::r()
 {
   return 35;

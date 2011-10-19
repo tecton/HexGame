@@ -88,6 +88,20 @@ private:
 };
 
 /**
+ * @brief A class of an item of a vertical progress bar in 2 player game.
+ */
+class VerticalProgressBarItem2 : public AbstractProgressBarItem
+{
+public:
+  /**
+   * @brief Constructor.
+   */
+  VerticalProgressBarItem2();
+
+  virtual void paint(QPainter *painter, int width, int height, int frame);
+};
+
+/**
  * @brief An abstract class of an item of a bonus.
  */
 class AbstractBonusItem : public AbstractCircleItem
