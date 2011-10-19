@@ -31,9 +31,9 @@ private:
     int timeout;
 public:
     /**
-     * @brief Constructor with the path of the sound file.
+     * @brief Constructor with the path of the sound file and the time of the sound.
      */
-    SingleSound(char* uri);
+    SingleSound(const char* uri, const int outTime);
 
     /**
      * @brief Start the sound.

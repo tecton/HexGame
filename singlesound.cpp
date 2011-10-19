@@ -1,7 +1,3 @@
-/*
- *  singlesound.cpp
- */  
-
 #include "config.h"
 #ifdef GSTREAMER
 #include <stdio.h>
@@ -9,7 +5,7 @@
 
 gboolean bus_call(GstBus *bus, GstMessage *msg, void *user_data)
 {
-	switch (GST_MESSAGE_TYPE(msg)) {
+  switch (GST_MESSAGE_TYPE(msg)) {
         case GST_MESSAGE_EOS: {
             g_main_loop_quit((GMainLoop*)user_data);
             break;
@@ -19,18 +15,18 @@ gboolean bus_call(GstBus *bus, GstMessage *msg, void *user_data)
             gst_message_parse_error(msg, &err, NULL);
             g_error("%s", err->message);
             g_error_free(err);
-            
+
             g_main_loop_quit((GMainLoop*)user_data);
             break;
         }
         default:
             g_main_loop_quit((GMainLoop*)user_data);
             break;
-	}
-	return true;
+  }
+  return true;
 }
 
-SingleSound::SingleSound(char* uri, int time) : songUri(uri), timeout(time)
+SingleSound::SingleSound(const char* uri, const int outTime) : songUri(uri), timeout(outTime)
 {
     // init gstreamer
     gst_init(NULL, NULL);
@@ -47,7 +43,7 @@ void SingleSound::start()
     g_object_set(G_OBJECT(pipeline), "uri", songUri, NULL);
     bus = gst_pipeline_get_bus(GST_PIPELINE(pipeline));
     gst_bus_add_watch(bus, bus_call, loop);
-    
+
     gst_element_set_state(GST_ELEMENT(pipeline), GST_STATE_PLAYING);
     g_main_loop_run(loop);
     createdTime = time(NULL);
