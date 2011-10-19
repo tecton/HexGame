@@ -19,14 +19,14 @@ const static int kBallsTotalColors = 8;
 // (The last two are the same as two before them, may make
 //  cause some bug later)
 const static char * kBallsColorPaths[] =
-{":/images/balls/red*.png",
- ":/images/balls/blue*.png",
- ":/images/balls/green*.png",
- ":/images/balls/yellow*.png",
- ":/images/balls/purple*.png",
- ":/images/balls/white*.png",
- ":/images/balls/purple*.png",
- ":/images/balls/white*.png"};
+{":/images/balls/red0*.png",
+ ":/images/balls/blue0*.png",
+ ":/images/balls/green0*.png",
+ ":/images/balls/yellow0*.png",
+ ":/images/balls/purple0*.png",
+ ":/images/balls/white0*.png",
+ ":/images/balls/purple0*.png",
+ ":/images/balls/white0*.png"};
 
 // Pixmaps of the balls
 QVector<QVector<QPixmap> > ballsPixmaps;
@@ -227,9 +227,6 @@ void BasicPainter::paintBasicBalls(Ball **balls,
                                    QPointF (*positionTranslater)(QPointF),
                                    bool clockwise)
 {
-  // Size of the ball
-  double size = 40;
-
   // Init balls if neccessary
   if (leftBallsPixmaps.isEmpty())
     initLeftBallsPixmaps();
@@ -255,11 +252,12 @@ void BasicPainter::paintBasicBalls(Ball **balls,
       // Reset the position according to the rate
       pos.setX(pos.x() * xRate);
       pos.setY(pos.y() * yRate);
+
       // Draw the pixmap
       drawPixmapAt(painter,
                    p,
-                   size / p.width() * xRate,
-                   size / p.height() * yRate,
+                   xRate,
+                   yRate,
                    pos,
                    true,
                    true);
