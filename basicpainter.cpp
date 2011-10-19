@@ -42,7 +42,7 @@ void initBallsPixmaps()
 }
 
 // Total background number
-const static int kBackgroundTotalColors = 7;
+const static int kBackgroundTotalColors = 8;
 const static char * kBackgroundColorPaths[] =
 {":/images/backgrounds/mainmenubackground.png",
  ":/images/backgrounds/puzzlemenubackground.png",
@@ -50,7 +50,8 @@ const static char * kBackgroundColorPaths[] =
  ":/images/backgrounds/37gamebackground.png",
  ":/images/backgrounds/61gamebackground.png",
  ":/images/backgrounds/helpbackgroundwithbutton.png",
- ":/images/backgrounds/achievementbackground.png"};
+ ":/images/backgrounds/achievementbackground.png",
+ ":/images/backgrounds/37twoplayergamebackground.png"};
 
 // Pixmaps of the backgrounds
 QVector<QVector<QPixmap> > backgroundPixmaps;
@@ -165,32 +166,77 @@ void BasicPainter::paintBasicBalls(AbstractGameBoardInfo *
   }
 }
 
+// File path of the balls
+// (The last two are the same as two before them, may make
+//  cause some bug later)
+const static char * kLeftBallsColorPaths[] =
+{":/images/balls/red_small_left*.png",
+ ":/images/balls/blue_small_left*.png",
+ ":/images/balls/green_small_left*.png",
+ ":/images/balls/yellow_small_left*.png",
+ ":/images/balls/purple_small_left*.png",
+ ":/images/balls/white_small_left*.png",
+ ":/images/balls/purple_small_left*.png",
+ ":/images/balls/white_small_left*.png"};
+
+// Pixmaps of the balls
+QVector<QVector<QPixmap> > leftBallsPixmaps;
+
+// Total frame count of the balls
+QVector<int> leftBallsFrameCounts;
+void initLeftBallsPixmaps()
+{
+  initPixmaps(kBallsTotalColors,
+              kLeftBallsColorPaths,
+              leftBallsPixmaps,
+              leftBallsFrameCounts);
+}
+
+// File path of the balls
+// (The last two are the same as two before them, may make
+//  cause some bug later)
+const static char * kRightBallsColorPaths[] =
+{":/images/balls/red_small_right*.png",
+ ":/images/balls/blue_small_right*.png",
+ ":/images/balls/green_small_right*.png",
+ ":/images/balls/yellow_small_right*.png",
+ ":/images/balls/purple_small_right*.png",
+ ":/images/balls/white_small_right*.png",
+ ":/images/balls/purple_small_right*.png",
+ ":/images/balls/white_small_right*.png"};
+
+// Pixmaps of the balls
+QVector<QVector<QPixmap> > rightBallsPixmaps;
+
+// Total frame count of the balls
+QVector<int> rightBallsFrameCounts;
+void initRightBallsPixmaps()
+{
+  initPixmaps(kBallsTotalColors,
+              kRightBallsColorPaths,
+              rightBallsPixmaps,
+              rightBallsFrameCounts);
+}
+
 void BasicPainter::paintBasicBalls(Ball **balls,
                                    int totalCount,
                                    QPainter *painter,
                                    double xRate,
                                    double yRate,
                                    int frame,
-                                   QPointF *positions,
+                                   QPointF (*positionTranslater)(QPointF),
                                    bool clockwise)
 {
   // Size of the ball
   double size = 40;
 
   // Init balls if neccessary
-  if (ballsPixmaps.isEmpty())
-    initBallsPixmaps();
+  if (leftBallsPixmaps.isEmpty())
+    initLeftBallsPixmaps();
 
-  // Init lock if neccessary
-  if (ballsLockPixmaps.isEmpty())
-  {
-    // A value which won't be used
-    int tmp;
-    initPixmaps(":/images/balls/lock*.png",
-                ballsLockPixmaps,
-                tmp);
-
-  }
+  // Init balls if neccessary
+  if (rightBallsPixmaps.isEmpty())
+    initRightBallsPixmaps();
 
   // For each ball
   for (int i = 0;i < totalCount;++i)
@@ -201,10 +247,11 @@ void BasicPainter::paintBasicBalls(Ball **balls,
       // Get the color
       int colorIndex = balls[i]->getColor();
       // Get the pixmap
-      const QPixmap& p = ballsPixmaps[colorIndex]
-          [frame % ballsFrameCounts[colorIndex]];
+      const QPixmap& p = clockwise ?
+                         leftBallsPixmaps[colorIndex][frame % leftBallsFrameCounts[colorIndex]] :
+                         rightBallsPixmaps[colorIndex][frame % rightBallsFrameCounts[colorIndex]];
       // Get the position of the ball
-      QPointF pos = positions[i];
+      QPointF pos = positionTranslater(balls[i]->pos());
       // Reset the position according to the rate
       pos.setX(pos.x() * xRate);
       pos.setY(pos.y() * yRate);
@@ -216,23 +263,6 @@ void BasicPainter::paintBasicBalls(Ball **balls,
                    pos,
                    true,
                    true);
-
-      // If the ball is locked
-      if (balls[i]->getLocked())
-      {
-        // Get the pixmap
-        const QPixmap& p2 = ballsLockPixmaps
-            [frame % ballsLockPixmaps.size()];
-
-        // Draw the pixmap
-        drawPixmapAt(painter,
-                     p2,
-                     size / p2.width() * xRate * 0.75,
-                     size / p2.height() * yRate * 0.75,
-                     pos,
-                     true,
-                     true);
-      }
     }
   }
 }

@@ -30,7 +30,8 @@ public:
                      Game61,
                      PuzzleGame=Game61,
                      Help=5,
-                     Achievement};
+                     Achievement,
+                     TwoPlayerGame};
 
   /**
    *@brief Paint the background.
@@ -82,7 +83,7 @@ public:
                               double xRate,
                               double yRate,
                               int frame,
-                              QPointF *positions,
+                              QPointF (*positionTranslater)(QPointF),
                               bool clockwise);
 
   /**

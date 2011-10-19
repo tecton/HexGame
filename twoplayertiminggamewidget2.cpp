@@ -69,6 +69,18 @@ QFont goFont(double size)
   return f;
 }
 
+QPointF game1ToGlobal(QPointF pos)
+{
+  return QPointF(GAME1_X_TO - pos.y() * GAME1_HEIGHT / LOGICAL_HEIGHT,
+                 pos.x() * GAME1_WIDTH / LOGICAL_WIDTH);
+}
+
+QPointF game2ToGlobal(QPointF pos)
+{
+  return QPointF(GAME2_X_FROM + pos.y() * GAME2_HEIGHT / LOGICAL_HEIGHT,
+                 LOGICAL_HEIGHT - pos.x() * GAME1_WIDTH / LOGICAL_WIDTH);
+}
+
 TwoPlayerTimingGameWidget2::TwoPlayerTimingGameWidget2(AbstractRule::Gesture gesture) :
     frameCount(0),
     startAnimCount(0),
@@ -129,7 +141,7 @@ TwoPlayerTimingGameWidget2::TwoPlayerTimingGameWidget2(AbstractRule::Gesture ges
     if (controller2->balls[i])
       controller2->balls[i]->setState(Ball::JustCreated);
 
-  controller1->autoRotate();
+  controller2->autoRotate();
 
   // Create the gesture controller
   gestureController1 = new GestureController(rule,
@@ -146,12 +158,14 @@ TwoPlayerTimingGameWidget2::TwoPlayerTimingGameWidget2(AbstractRule::Gesture ges
   currentScore1 = new IntegerItem();
   currentScore1->setPos(QPointF(0.275, 0.15));
   currentScore1->setValue(0);
+  currentScore1->setRotation(90);
   currentScore1->setHint("Current Score");
   myItems.push_back(currentScore1);
 
   currentScore2 = new IntegerItem();
   currentScore2->setPos(QPointF(0.725, 0.85));
   currentScore2->setValue(0);
+  currentScore2->setRotation(-90);
   currentScore2->setHint("Current Score");
   myItems.push_back(currentScore2);
 
@@ -186,17 +200,35 @@ TwoPlayerTimingGameWidget2::TwoPlayerTimingGameWidget2(AbstractRule::Gesture ges
   star2->setRotation(-90);
   myItems.push_back(star2);
 
-  resetItem = new ButtonItem("Reset");
-  resetItem->setPos(QPointF(0.5, 0.875));
-  myItems.push_back(resetItem);
+  resetItem1 = new ButtonItem("Reset");
+  resetItem1->setPos(QPointF(0.5, 0.875));
+  resetItem1->setRotation(90);
+  myItems.push_back(resetItem1);
 
-  pauseItem = new ButtonItem("Pause");
-  pauseItem->setPos(QPointF(0.5, 0.8));
-  myItems.push_back(pauseItem);
+  resetItem2 = new ButtonItem("Reset");
+  resetItem2->setPos(QPointF(0.5, 0.875));
+  resetItem2->setRotation(-90);
+  myItems.push_back(resetItem2);
 
-  exitItem = new ButtonItem("Exit");
-  exitItem->setPos(QPointF(0.5, 0.95));
-  myItems.push_back(exitItem);
+  pauseItem1 = new ButtonItem("Pause");
+  pauseItem1->setPos(QPointF(0.5, 0.8));
+  pauseItem1->setRotation(-90);
+  myItems.push_back(pauseItem1);
+
+  pauseItem2 = new ButtonItem("Pause");
+  pauseItem2->setPos(QPointF(0.5, 0.8));
+  pauseItem2->setRotation(-90);
+  myItems.push_back(pauseItem2);
+
+  exitItem1 = new ButtonItem("Exit");
+  exitItem1->setPos(QPointF(0.5, 0.95));
+  exitItem1->setRotation(-90);
+  myItems.push_back(exitItem1);
+
+  exitItem2 = new ButtonItem("Exit");
+  exitItem2->setPos(QPointF(0.5, 0.95));
+  exitItem2->setRotation(-90);
+  myItems.push_back(exitItem2);
 
   // No items was chosen
   itemAtPressPos1 = NULL;
@@ -311,36 +343,34 @@ void TwoPlayerTimingGameWidget2::makeBasicPixmap(
   // Get the balls
   Ball **balls = controller1->balls;
 
-  QPointF *positions = new QPointF[gameboardInfo->totalBallCounts()];
-  for (int i = 0;i < gameboardInfo->totalBallCounts();++i)
-    if (balls[i])
-      positions[i] = game1ToGlobal(balls[i]->pos());
+  BasicPainter::paintBackGround(BasicPainter::TwoPlayerGame,
+                                painter,
+                                width,
+                                height,
+                                frameCount);
 
   // Paint the basic balls
   BasicPainter::paintBasicBalls
       (balls,
        gameboardInfo->totalBallCounts(),
        painter,
-       1,
-       1,
+       width * 1.0 / gameboardInfo->width(),
+       height * 1.0 / gameboardInfo->height(),
        frameCount,
-       positions,
+       game1ToGlobal,
        true);
 
   balls = controller2->balls;
-  for (int i = 0;i < gameboardInfo->totalBallCounts();++i)
-    if (balls[i])
-      positions[i] = game2ToGlobal(balls[i]->pos());
 
   // Paint the basic balls
   BasicPainter::paintBasicBalls
       (balls,
        gameboardInfo->totalBallCounts(),
        painter,
-       1,
-       1,
+       width * 1.0 / gameboardInfo->width(),
+       height * 1.0 / gameboardInfo->height(),
        frameCount,
-       positions,
+       game2ToGlobal,
        true);
 
   // Paint the items
@@ -566,18 +596,6 @@ int whichGame2(QPointF mousePos)
   return 0;
 }
 
-QPointF TwoPlayerTimingGameWidget2::game1ToGlobal(QPointF pos)
-{
-  return QPointF(GAME1_X_TO - pos.y() * GAME1_HEIGHT / gameboardInfo->height(),
-                 pos.x() * GAME1_WIDTH / gameboardInfo->width());
-}
-
-QPointF TwoPlayerTimingGameWidget2::game2ToGlobal(QPointF pos)
-{
-  return QPointF(GAME2_X_FROM + pos.y() * GAME2_HEIGHT / gameboardInfo->height(),
-                 LOGICAL_HEIGHT - pos.x() * GAME1_WIDTH / gameboardInfo->width());
-}
-
 void TwoPlayerTimingGameWidget2::dealPressed(QPointF mousePos, Qt::MouseButton button)
 {
   // Quit if it's a right button
@@ -600,14 +618,14 @@ void TwoPlayerTimingGameWidget2::dealPressed(QPointF mousePos, Qt::MouseButton b
   switch (whichGame2(mousePos))
   {
   case 0:
-    if (resetItem->in(mousePos, gameboardInfo->width(), gameboardInfo->height()))
-      itemAtPressPos = resetItem;
-    else if (pauseItem->in(mousePos, gameboardInfo->width(), gameboardInfo->height()))
-      itemAtPressPos = pauseItem;
-    else if (exitItem->in(mousePos, gameboardInfo->width(), gameboardInfo->height()))
-      itemAtPressPos = exitItem;
-    else
-      itemAtPressPos = NULL;
+//    if (resetItem->in(mousePos, gameboardInfo->width(), gameboardInfo->height()))
+//      itemAtPressPos = resetItem;
+//    else if (pauseItem->in(mousePos, gameboardInfo->width(), gameboardInfo->height()))
+//      itemAtPressPos = pauseItem;
+//    else if (exitItem->in(mousePos, gameboardInfo->width(), gameboardInfo->height()))
+//      itemAtPressPos = exitItem;
+//    else
+//      itemAtPressPos = NULL;
     break;
   case 1:
     currentPos1 = mousePos;
@@ -615,6 +633,12 @@ void TwoPlayerTimingGameWidget2::dealPressed(QPointF mousePos, Qt::MouseButton b
       itemAtPressPos1 = flame1;
     else if (star1->in(mousePos, gameboardInfo->width(), gameboardInfo->height()))
       itemAtPressPos1 = star1;
+    else if (resetItem1->in(mousePos, gameboardInfo->width(), gameboardInfo->height()))
+      itemAtPressPos1 = resetItem1;
+    else if (pauseItem1->in(mousePos, gameboardInfo->width(), gameboardInfo->height()))
+      itemAtPressPos1 = pauseItem1;
+    else if (exitItem1->in(mousePos, gameboardInfo->width(), gameboardInfo->height()))
+      itemAtPressPos1 = exitItem1;
     else
       itemAtPressPos1 = NULL;
     gestureController1->dealPressed(toScene(mousePos.y() / LOGICAL_HEIGHT,
@@ -626,6 +650,12 @@ void TwoPlayerTimingGameWidget2::dealPressed(QPointF mousePos, Qt::MouseButton b
       itemAtPressPos2 = flame2;
     else if (star2->in(mousePos, gameboardInfo->width(), gameboardInfo->height()))
       itemAtPressPos2 = star2;
+    else if (resetItem2->in(mousePos, gameboardInfo->width(), gameboardInfo->height()))
+      itemAtPressPos2 = resetItem2;
+    else if (pauseItem2->in(mousePos, gameboardInfo->width(), gameboardInfo->height()))
+      itemAtPressPos2 = pauseItem2;
+    else if (exitItem2->in(mousePos, gameboardInfo->width(), gameboardInfo->height()))
+      itemAtPressPos2 = exitItem2;
     else
       itemAtPressPos2 = NULL;
     gestureController2->dealPressed(toScene(1 - mousePos.y() / LOGICAL_HEIGHT,
@@ -711,6 +741,44 @@ void TwoPlayerTimingGameWidget2::dealReleased(QPointF mousePos, Qt::MouseButton 
           statistic.changeStatistic(Statistic::StarUsedCount, 1, true);
         }
       }
+      else if (itemAtPressPos1 == pauseItem1 &&
+               pauseItem1->in(mousePos,
+                              gameboardInfo->width(),
+                              gameboardInfo->height()))
+      {
+        // Pause
+        t->stop();
+        oneSecondTimer->stop();
+
+        // Show pause widget
+        PauseWidget *w = new PauseWidget();
+        connect(w, SIGNAL(resume()), this, SLOT(resume()));
+        emit giveControlTo(w, false);
+        return;
+      }
+      else if (itemAtPressPos1 == resetItem1 &&
+               resetItem1->in(mousePos,
+                              gameboardInfo->width(),
+                              gameboardInfo->height()))
+      {
+        // Pause
+        t->stop();
+        oneSecondTimer->stop();
+
+        // Show reset widget
+        ResetWidget *w = new ResetWidget();
+        connect(w, SIGNAL(confirm()), this, SLOT(reset()));
+        emit giveControlTo(w, false);
+      }
+      else if (itemAtPressPos1 == exitItem1 &&
+               exitItem1->in(mousePos,
+                             gameboardInfo->width(),
+                             gameboardInfo->height()))
+      {
+        // Quit game
+        quitGame();
+        return;
+      }
 
       itemAtPressPos1 = NULL;
 
@@ -757,20 +825,10 @@ void TwoPlayerTimingGameWidget2::dealReleased(QPointF mousePos, Qt::MouseButton 
           statistic.changeStatistic(Statistic::StarUsedCount, 1, true);
         }
       }
-
-      itemAtPressPos2 = NULL;
-
-      // Let the gesture controller to deal the release event
-      gestureController2->dealReleased(pos);
-      break;
-    }
-  case 0:
-    if (itemAtPressPos != NULL)
-    {
-      if (itemAtPressPos == pauseItem &&
-               pauseItem->in(mousePos,
-                             gameboardInfo->width(),
-                             gameboardInfo->height()))
+      else if (itemAtPressPos2 == pauseItem2 &&
+               pauseItem2->in(mousePos,
+                              gameboardInfo->width(),
+                              gameboardInfo->height()))
       {
         // Pause
         t->stop();
@@ -782,10 +840,10 @@ void TwoPlayerTimingGameWidget2::dealReleased(QPointF mousePos, Qt::MouseButton 
         emit giveControlTo(w, false);
         return;
       }
-      else if (itemAtPressPos == resetItem &&
-               resetItem->in(mousePos,
-                             gameboardInfo->width(),
-                             gameboardInfo->height()))
+      else if (itemAtPressPos2 == resetItem2 &&
+               resetItem2->in(mousePos,
+                              gameboardInfo->width(),
+                              gameboardInfo->height()))
       {
         // Pause
         t->stop();
@@ -796,19 +854,67 @@ void TwoPlayerTimingGameWidget2::dealReleased(QPointF mousePos, Qt::MouseButton 
         connect(w, SIGNAL(confirm()), this, SLOT(reset()));
         emit giveControlTo(w, false);
       }
-      else if (itemAtPressPos == exitItem &&
-               exitItem->in(mousePos,
-                            gameboardInfo->width(),
-                            gameboardInfo->height()))
+      else if (itemAtPressPos2 == exitItem2 &&
+               exitItem2->in(mousePos,
+                             gameboardInfo->width(),
+                             gameboardInfo->height()))
       {
         // Quit game
         quitGame();
         return;
       }
+
+      itemAtPressPos2 = NULL;
+
+      // Let the gesture controller to deal the release event
+      gestureController2->dealReleased(pos);
+      break;
     }
-      break;
+  case 0:
+//    if (itemAtPressPos != NULL)
+//    {
+//      if (itemAtPressPos == pauseItem &&
+//               pauseItem->in(mousePos,
+//                             gameboardInfo->width(),
+//                             gameboardInfo->height()))
+//      {
+//        // Pause
+//        t->stop();
+//        oneSecondTimer->stop();
+
+//        // Show pause widget
+//        PauseWidget *w = new PauseWidget();
+//        connect(w, SIGNAL(resume()), this, SLOT(resume()));
+//        emit giveControlTo(w, false);
+//        return;
+//      }
+//      else if (itemAtPressPos == resetItem &&
+//               resetItem->in(mousePos,
+//                             gameboardInfo->width(),
+//                             gameboardInfo->height()))
+//      {
+//        // Pause
+//        t->stop();
+//        oneSecondTimer->stop();
+
+//        // Show reset widget
+//        ResetWidget *w = new ResetWidget();
+//        connect(w, SIGNAL(confirm()), this, SLOT(reset()));
+//        emit giveControlTo(w, false);
+//      }
+//      else if (itemAtPressPos == exitItem &&
+//               exitItem->in(mousePos,
+//                            gameboardInfo->width(),
+//                            gameboardInfo->height()))
+//      {
+//        // Quit game
+//        quitGame();
+//        return;
+//      }
+//    }
+    break;
   default:
-      break;
+    break;
   }
 }
 

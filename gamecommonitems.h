@@ -266,9 +266,16 @@ public:
   virtual double width();
   virtual double height();
 
+  void setRotation(int r);
+
+  inline int getRotation()
+  {return rotation;}
+
+
 private:
   QString caption;
   QPixmap background;
+  int rotation;
 };
 
 /**
@@ -312,6 +319,11 @@ public:
   virtual bool in(QPointF mousePos, int windowWidth, int windowHeight)
   {return false;}
 
+  void setRotation(int r);
+
+  inline int getRotation()
+  {return rotation;}
+
 private:
   // The background of the item
   QPixmap p;
@@ -321,6 +333,8 @@ private:
 
   // The integer
   int value;
+
+  int rotation;
 };
 
 /**

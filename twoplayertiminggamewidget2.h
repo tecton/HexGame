@@ -21,6 +21,7 @@ class AbstractGameBoardInfo;
 class AbstractProgressBarItem;
 class AbstractItem;
 class AbstractBonusItem;
+class ButtonItem;
 class IntegerItem;
 
 class TwoPlayerTimingGameWidget2 : public AbstractPixmapWidget
@@ -113,9 +114,12 @@ private:
   AbstractBonusItem *flame2;
   AbstractBonusItem *star1;
   AbstractBonusItem *star2;
-  AbstractItem *resetItem;
-  AbstractItem *pauseItem;
-  AbstractItem *exitItem;
+  ButtonItem *resetItem1;
+  ButtonItem *resetItem2;
+  ButtonItem *pauseItem1;
+  ButtonItem *pauseItem2;
+  ButtonItem *exitItem1;
+  ButtonItem *exitItem2;
 
   // A vector stores the items,
   // used to paint and release the space
@@ -168,9 +172,6 @@ private:
 
   // Quit game
   void quitGame();
-
-  QPointF game1ToGlobal(QPointF pos);
-  QPointF game2ToGlobal(QPointF pos);
 
 public slots:
   // Advance
