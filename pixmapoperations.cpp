@@ -84,6 +84,9 @@ void drawPixmapAt(QPainter *painter,
   double width = pixmap.width();
   double height = pixmap.height();
 
+  if (width < 1 || height < 1)
+    return;
+
   if (xRate >= 0.999 &&
       xRate <= 1.001 &&
       yRate >= 0.999 &&
