@@ -28,18 +28,23 @@ QVector <MediaSource> soundSources;
 
 const static int kSoundCount = 8;
 
+#ifdef GSTREAMER
+#define SOUNDPATH "file:///media/shared/"
+#else
+#define SOUNDPATH "sounds/"
+#endif
 // The path of the sounds
 const static char * kSoundPaths[] =
-{"C:/sounds/badmove.wav",
- "C:/sounds/eliminate.wav",
- "C:/sounds/getflame.wav",
- "C:/sounds/getstar.wav",
- "C:/sounds/useflame.wav",
- "C:/sounds/usestar.wav",
- "C:/sounds/nextstage.wav",
- "C:/sounds/gameover.wav",
- "C:/sounds/1.wav",
- "C:/sounds/1.wav",
+{SOUNDPATH "badmove.wav",
+ SOUNDPATH "eliminate.wav",
+ SOUNDPATH "getflame.wav",
+ SOUNDPATH "getstar.wav",
+ SOUNDPATH "useflame.wav",
+ SOUNDPATH "usestar.wav",
+ SOUNDPATH "nextstage.wav",
+ SOUNDPATH "gameover.wav",
+ SOUNDPATH "1.wav",
+ SOUNDPATH "1.wav",
  "C:/sounds/1.wav",
  "C:/sounds/1.wav",
  "C:/sounds/1.wav",
