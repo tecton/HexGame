@@ -23,6 +23,8 @@
 #include "ball.h"
 #include "statistic.h"
 
+#include <QDebug>
+
 extern Statistic statistic;
 
 #define FONT_DIGIT_SIZE       90
@@ -103,12 +105,12 @@ TwoPlayerTimingGameWidget2::TwoPlayerTimingGameWidget2(AbstractRule::Gesture ges
     endAnimCount(-1),
     timeUp(false)
 {
-//  QFont f;
-//  f.setPixelSize(FONT_DIGIT_SIZE);
+  QFont f;
+  f.setPixelSize(FONT_DIGIT_SIZE);
 
-//  youWin.addText(- FONT_DIGIT_SIZE * 9 / 4, 0, f, "You Win~~");
-//  youLose.addText(- FONT_DIGIT_SIZE * 11 / 4, 0, f, "You Lose-.-");
-//  drawGame.addText(- FONT_DIGIT_SIZE * 9 / 4, 0, f, "Draw Game");
+  youWin.addText(- FONT_DIGIT_SIZE * 9 / 4, 0, f, "You Win~~");
+  youLose.addText(- FONT_DIGIT_SIZE * 11 / 4, 0, f, "You Lose-.-");
+  drawGame.addText(- FONT_DIGIT_SIZE * 9 / 4, 0, f, "Draw Game");
 
   // Create the rule
   if (gesture == AbstractRule::Swap)
@@ -567,7 +569,7 @@ void TwoPlayerTimingGameWidget2::addEffect(
     painter->rotate(90);
     painter->translate(-(GAME2_X_FROM + GAME2_X_TO) / 2,
                        -LOGICAL_HEIGHT / 2);
-    painter->scale(1.0 / xRate, 1.0 / yRate);
+    painter->scale(1 / xRate, 1 / yRate);
   }
 
   if (endAnimCount != -1)
