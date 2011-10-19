@@ -49,14 +49,18 @@ MainMenuWidget::MainMenuWidget()/* :
   items[10] = new MainMenuGameItem(AbstractMainMenuItem::TwoPlayerTimingGame);
   items[10]->setPos(QPointF(0, 0));
 
+  AbstractItem *board = new RotatingCircleItem();
+  board->setPos(QPointF(0.600, 0.495));
+  myItems.push_back(board);
+
   for (int i = 0;i < 11;++i)
     myItems.push_back(items[i]);
 
-//  // Create the timer and connect signals and slots
-//  t = new QTimer();
-//  t->setInterval(75);
-//  connect(t, SIGNAL(timeout()), this, SLOT(advance()));
-//  t->start();
+  // Create the timer and connect signals and slots
+  t = new QTimer();
+  t->setInterval(75);
+  connect(t, SIGNAL(timeout()), this, SLOT(advance()));
+  t->start();
 }
 
 void MainMenuWidget::makePixmap(
@@ -101,14 +105,14 @@ void MainMenuWidget::makeBasicPixmap(
                                 painter,
                                 width,
                                 height,
-                                0/*frameCount*/);
+                                frameCount);
 
   // Paint the basic balls
   BasicPainter::paintItems(painter,
                            myItems,
                            width,
                            height,
-                           0/*frameCount*/);
+                           frameCount);
 
 #ifdef USE_PIXMAP
   // End the paint and release the space
@@ -206,11 +210,11 @@ void MainMenuWidget::dealReleased(QPointF mousePos, Qt::MouseButton button)
 {
 }
 
-//void MainMenuWidget::advance()
-//{
-//  ++frameCount;
-//  frameCount = frameCount;
-//}
+void MainMenuWidget::advance()
+{
+  ++frameCount;
+  frameCount = frameCount;
+}
 
 MainMenuWidget::~MainMenuWidget()
 {

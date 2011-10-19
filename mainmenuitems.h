@@ -5,6 +5,7 @@
 
 // File must include
 #include <QPointF>
+#include <QPixmap>
 
 // Forward declaration
 class QPixmap;
@@ -59,7 +60,7 @@ private:
 /**
  * @brief A class of items used in main menu which is buttons in a rectangle.
  */
-class MainMenuButtonItem  : public AbstractRectItem
+class MainMenuButtonItem : public AbstractRectItem
 {
 public:
   /**
@@ -76,6 +77,25 @@ public:
 private:
   // The type of the item
   AbstractMainMenuItem::ItemType type;
+};
+
+/**
+ * @brief A class of item used in main menu which is a rotating circle
+ */
+class RotatingCircleItem : public AbstractItem
+{
+public:
+  /**
+   * @brief Constructor with the type of the item.
+   */
+  RotatingCircleItem();
+
+  virtual void paint(QPainter *painter, int width, int height, int frame);
+  virtual bool in(QPointF mousePos, int width, int height)
+  {return false;}
+
+private:
+  QPixmap p;
 };
 
 #endif // MAINMENUITEMS_H

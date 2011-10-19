@@ -7,7 +7,7 @@
 #include <QVector>
 
 // Forward declaration
-//class QTimer;
+class QTimer;
 class AbstractItem;
 
 /**
@@ -59,16 +59,15 @@ public:
   virtual void loseForcus(){}
 
 private:
-  // The timer(currently not used)
-//  QTimer *t;
+  QTimer *t;
 
   // Items of the game
   AbstractItem *items[11];
   QVector <AbstractItem *> myItems;
-//  int frameCount;
+  int frameCount;
 
 private slots:
-//  void advance();
+  void advance();
 };
 
 #endif // MAINMENUWIDGET_H

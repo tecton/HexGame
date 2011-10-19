@@ -29,7 +29,7 @@ const static char * kItemPaths[] =
  ":/images/mainmenuitems/puzzlegame*.png",
  ":/images/mainmenuitems/help*.png",
  ":/images/mainmenuitems/exit*.png",
- ""};
+ ":/images/mainmenuitems/swapclassicgame*.png"};
 
 // Pixmaps of the items
 QVector<QVector<QPixmap> > mainMenuItemPixmaps;
@@ -64,10 +64,8 @@ void MainMenuGameItem::paint(QPainter *painter,
   // Calculate the values to locate
   double x = getPos().x() * width;
   double y = getPos().y() * height;
-  double xRate = 1.0 * width * BUTTON_LOGICAL_WIDTH / LOGICAL_WIDTH /
-                 p.width();
-  double yRate = 1.0 * height * BUTTON_LOGICAL_HEIGHT / LOGICAL_HEIGHT /
-                 p.height();
+  double xRate = 1.0 * width / LOGICAL_WIDTH;
+  double yRate = 1.0 * height / LOGICAL_HEIGHT;
 
   // draw the pixmap
   drawPixmapAt(painter,
@@ -119,4 +117,36 @@ double MainMenuButtonItem::width()
 double MainMenuButtonItem::height()
 {
   return BUTTON_LOGICAL_HEIGHT;
+}
+
+RotatingCircleItem::RotatingCircleItem()
+{
+  p = QPixmap(":/images/mainmenuitems/circle.png");
+}
+
+void RotatingCircleItem::paint(QPainter *painter,
+                               int width,
+                               int height,
+                               int frame)
+{
+  // Calculate the values to locate
+  double x = getPos().x() * width;
+  double y = getPos().y() * height;
+  double xRate = 1.0 * width  / LOGICAL_WIDTH;
+  double yRate = 1.0 * height / LOGICAL_HEIGHT;
+
+  // draw the pixmap
+  painter->translate(x, y);
+  painter->rotate(- frame * 3);
+
+  drawPixmapAt(painter,
+               p,
+               xRate,
+               yRate,
+               QPointF(0, 0),
+               true,
+               true);
+
+  painter->rotate(frame * 3);
+  painter->translate(-x, -y);
 }
