@@ -16,8 +16,12 @@ class QPainter;
 class QTimer;
 class TimingGameWidget;
 
+
 /**
- * @brief A class to play timing games with two players
+ * @brief A class to play timing games with two players reusing
+ * TwoPlayerTimingGameWidget(ABANDONED).
+ *
+ * We do not use it because of the efficiency.
  */
 class TwoPlayerTimingGameWidget : public AbstractPixmapWidget
 {

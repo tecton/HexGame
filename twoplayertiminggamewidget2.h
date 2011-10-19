@@ -24,6 +24,9 @@ class AbstractBonusItem;
 class ButtonItem;
 class IntegerItem;
 
+/**
+ * @brief A class to play timing games with two players.
+ */
 class TwoPlayerTimingGameWidget2 : public AbstractPixmapWidget
 {
 public:

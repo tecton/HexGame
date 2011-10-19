@@ -67,15 +67,16 @@ public:
                               double yRate,
                               int frame);
   /**
-   *@brief Paint the basic balls.
+   *@brief Paint the basic balls in two player mode.
    *
-   *@param gameboard The gameboard.
    *@param balls The balls.
    *@param totalCount Count of the balls.
    *@param painter The painter.
    *@param xRate The scale in X direction.
    *@param yRate The scale in Y direction.
    *@param frame The index of the frame to show.
+   *@param positionTranslater A function to translate the position of the ball.
+   *@param clockwise Whether it's clockwise.
    */
   static void paintBasicBalls(Ball **balls,
                               int totalCount,
