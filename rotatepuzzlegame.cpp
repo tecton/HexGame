@@ -331,7 +331,7 @@ void RotatePuzzleGame::advance()
       connect(w, SIGNAL(confirm()), this, SLOT(nextStage()));
 
       // Give control to it
-      emit giveControlTo(w, true);
+      emit giveControlTo(w, false);
     }
 }
 
