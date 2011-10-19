@@ -42,18 +42,22 @@ extern Statistic statistic;
 #define FLAME_SCORE           7
 #define STAR_SCORE            19
 
-#define GAME1_X_FROM     50
-#define GAME1_X_TO       400
-#define GAME2_X_FROM     624
-#define GAME2_X_TO       974
-
-#define GAME1_WIDTH      LOGICAL_HEIGHT
-#define GAME1_HEIGHT     (GAME1_X_TO - GAME1_X_FROM)
-#define GAME2_WIDTH      LOGICAL_HEIGHT
-#define GAME2_HEIGHT     (GAME2_X_TO - GAME2_X_FROM)
-
 #define LOGICAL_WIDTH    1024
 #define LOGICAL_HEIGHT   600
+
+#define GAME1_X_FROM     50
+#define GAME1_X_TO       400
+#define GAME1_Y_FROM     0
+#define GAME1_Y_TO       LOGICAL_HEIGHT
+#define GAME2_X_FROM     624
+#define GAME2_X_TO       974
+#define GAME2_Y_FROM     0
+#define GAME2_Y_TO       LOGICAL_HEIGHT
+
+#define GAME1_WIDTH      (GAME1_Y_TO - GAME1_Y_FROM)
+#define GAME1_HEIGHT     (GAME1_X_TO - GAME1_X_FROM)
+#define GAME2_WIDTH      (GAME2_Y_TO - GAME2_Y_FROM)
+#define GAME2_HEIGHT     (GAME2_X_TO - GAME2_X_FROM)
 
 #define LINENEAR_COLOR_0 QColor( 50, 255, 255, 200)
 #define LINENEAR_COLOR_1 QColor(250, 255, 255, 200)
@@ -72,14 +76,28 @@ QFont goFont(double size)
 QPointF game1ToGlobal(QPointF pos)
 {
   return QPointF(GAME1_X_TO - pos.y() * GAME1_HEIGHT / LOGICAL_HEIGHT,
-                 pos.x() * GAME1_WIDTH / LOGICAL_WIDTH);
+                 GAME1_Y_FROM + GAME1_WIDTH * pos.x() / LOGICAL_WIDTH);
 }
 
 QPointF game2ToGlobal(QPointF pos)
 {
   return QPointF(GAME2_X_FROM + pos.y() * GAME2_HEIGHT / LOGICAL_HEIGHT,
-                 LOGICAL_HEIGHT - pos.x() * GAME1_WIDTH / LOGICAL_WIDTH);
+                 GAME1_Y_TO - GAME2_WIDTH * pos.x() / LOGICAL_WIDTH);
 }
+
+QPointF globalToGame1(QPointF pos)
+{
+  return QPointF((pos.y() - GAME1_Y_FROM) * LOGICAL_WIDTH / GAME1_WIDTH,
+                 (GAME1_X_TO - pos.x()) * LOGICAL_HEIGHT / GAME1_HEIGHT );
+}
+
+QPointF globalToGame2(QPointF pos)
+{
+  return QPointF((GAME2_Y_TO - pos.y()) * LOGICAL_WIDTH / GAME2_WIDTH,
+                 (pos.x() - GAME2_X_FROM) * LOGICAL_HEIGHT / GAME2_HEIGHT);
+}
+
+
 
 TwoPlayerTimingGameWidget2::TwoPlayerTimingGameWidget2(AbstractRule::Gesture gesture) :
     frameCount(0),
@@ -156,14 +174,14 @@ TwoPlayerTimingGameWidget2::TwoPlayerTimingGameWidget2(AbstractRule::Gesture ges
                                              NULL);
 
   currentScore1 = new IntegerItem();
-  currentScore1->setPos(QPointF(0.275, 0.15));
+  currentScore1->setPos(QPointF(0.38, 0.125));
   currentScore1->setValue(0);
   currentScore1->setRotation(90);
   currentScore1->setHint("Current Score");
   myItems.push_back(currentScore1);
 
   currentScore2 = new IntegerItem();
-  currentScore2->setPos(QPointF(0.725, 0.85));
+  currentScore2->setPos(QPointF(0.62, 0.875));
   currentScore2->setValue(0);
   currentScore2->setRotation(-90);
   currentScore2->setHint("Current Score");
@@ -177,56 +195,56 @@ TwoPlayerTimingGameWidget2::TwoPlayerTimingGameWidget2(AbstractRule::Gesture ges
   myItems.push_back(timeBar);
 
   flame1 = new FlameItem();
-  flame1->setPos(QPointF(0.175, 0.15));
+  flame1->setPos(QPointF(0.3, 0.08));
   flame1->setCurrent(0);
   flame1->setRotation(90);
   myItems.push_back(flame1);
 
   flame2 = new FlameItem();
-  flame2->setPos(QPointF(0.825, 0.85));
+  flame2->setPos(QPointF(0.7, 0.92));
   flame2->setCurrent(0);
   flame2->setRotation(-90);
   myItems.push_back(flame2);
 
   star1 = new StarItem();
-  star1->setPos(QPointF(0.1, 0.15));
+  star1->setPos(QPointF(0.3, 0.17));
   star1->setCurrent(0);
   star1->setRotation(90);
   myItems.push_back(star1);
 
   star2 = new StarItem();
-  star2->setPos(QPointF(0.9, 0.85));
+  star2->setPos(QPointF(0.7, 0.83));
   star2->setCurrent(0);
   star2->setRotation(-90);
   myItems.push_back(star2);
 
   resetItem1 = new ButtonItem("Reset");
-  resetItem1->setPos(QPointF(0.5, 0.875));
+  resetItem1->setPos(QPointF(0.165, 0.15));
   resetItem1->setRotation(90);
   myItems.push_back(resetItem1);
 
   resetItem2 = new ButtonItem("Reset");
-  resetItem2->setPos(QPointF(0.5, 0.875));
+  resetItem2->setPos(QPointF(0.835, 0.85));
   resetItem2->setRotation(-90);
   myItems.push_back(resetItem2);
 
   pauseItem1 = new ButtonItem("Pause");
-  pauseItem1->setPos(QPointF(0.5, 0.8));
-  pauseItem1->setRotation(-90);
+  pauseItem1->setPos(QPointF(0.115, 0.15));
+  pauseItem1->setRotation(90);
   myItems.push_back(pauseItem1);
 
   pauseItem2 = new ButtonItem("Pause");
-  pauseItem2->setPos(QPointF(0.5, 0.8));
+  pauseItem2->setPos(QPointF(0.885, 0.85));
   pauseItem2->setRotation(-90);
   myItems.push_back(pauseItem2);
 
   exitItem1 = new ButtonItem("Exit");
-  exitItem1->setPos(QPointF(0.5, 0.95));
-  exitItem1->setRotation(-90);
+  exitItem1->setPos(QPointF(0.065, 0.15));
+  exitItem1->setRotation(90);
   myItems.push_back(exitItem1);
 
   exitItem2 = new ButtonItem("Exit");
-  exitItem2->setPos(QPointF(0.5, 0.95));
+  exitItem2->setPos(QPointF(0.935, 0.85));
   exitItem2->setRotation(-90);
   myItems.push_back(exitItem2);
 
@@ -641,8 +659,7 @@ void TwoPlayerTimingGameWidget2::dealPressed(QPointF mousePos, Qt::MouseButton b
       itemAtPressPos1 = exitItem1;
     else
       itemAtPressPos1 = NULL;
-    gestureController1->dealPressed(toScene(mousePos.y() / LOGICAL_HEIGHT,
-                                            (GAME1_X_TO - mousePos.x()) / GAME1_HEIGHT));
+    gestureController1->dealPressed(globalToGame1(mousePos));
     break;
   case 2:
     currentPos2 = mousePos;
@@ -658,8 +675,7 @@ void TwoPlayerTimingGameWidget2::dealPressed(QPointF mousePos, Qt::MouseButton b
       itemAtPressPos2 = exitItem2;
     else
       itemAtPressPos2 = NULL;
-    gestureController2->dealPressed(toScene(1 - mousePos.y() / LOGICAL_HEIGHT,
-                                            (mousePos.x() - GAME2_X_FROM) / GAME2_HEIGHT));
+    gestureController2->dealPressed(globalToGame2(mousePos));
     break;
   default:
     break;
@@ -680,12 +696,10 @@ void TwoPlayerTimingGameWidget2::dealMoved(QPointF mousePos, Qt::MouseButton but
   switch (whichGame2(mousePos))
   {
   case 1:
-    gestureController1->dealMoved(toScene(mousePos.y() / LOGICAL_HEIGHT,
-                                          (GAME1_X_TO - mousePos.x()) / GAME1_HEIGHT));
+    gestureController1->dealMoved(globalToGame1(mousePos));
     break;
   case 2:
-    gestureController2->dealMoved(toScene(1 - mousePos.y() / LOGICAL_HEIGHT,
-                                          (mousePos.x() - GAME2_X_FROM) / GAME2_HEIGHT));
+    gestureController2->dealMoved(globalToGame2(mousePos));
     break;
   default:
     break;
@@ -705,8 +719,7 @@ void TwoPlayerTimingGameWidget2::dealReleased(QPointF mousePos, Qt::MouseButton 
   case 1:
     if (itemAtPressPos1 != NULL)
     {
-      QPointF pos = toScene(mousePos.y() / LOGICAL_HEIGHT,
-                            (GAME1_X_TO - mousePos.x()) / GAME1_HEIGHT);
+      QPointF pos = globalToGame1(mousePos);
       if (itemAtPressPos1 == flame1 && flame1->notEmpty())
       {
         int index = gameboardInfo->indexOfPosition(pos);
@@ -789,8 +802,7 @@ void TwoPlayerTimingGameWidget2::dealReleased(QPointF mousePos, Qt::MouseButton 
   case 2:
     if (itemAtPressPos2 != NULL)
     {
-      QPointF pos = toScene(1 - mousePos.y() / LOGICAL_HEIGHT,
-                            (mousePos.x() - GAME2_X_FROM) / GAME2_HEIGHT);
+      QPointF pos = globalToGame2(mousePos);
       if (itemAtPressPos2 == flame2 && flame2->notEmpty())
       {
         int index = gameboardInfo->indexOfPosition(pos);

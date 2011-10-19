@@ -14,6 +14,9 @@
 #define BUTTON_LOGICAL_WIDTH  160
 #define BUTTON_LOGICAL_HEIGHT 60
 
+#define BUTTON_LOGICAL_WIDTH2  33
+#define BUTTON_LOGICAL_HEIGHT2 105
+
 #define HINT 0
 #define EXIT 1
 #define RESET 2
@@ -355,9 +358,9 @@ void ButtonItem::paint(QPainter *painter, int width, int height, int frame)
     // Calculate values to locate
     double x = getPos().x() * width;
     double y = getPos().y() * height;
-    double xRate = 1.0 * width * BUTTON_LOGICAL_WIDTH /
+    double xRate = 1.0 * width * this->width() /
                    LOGICAL_WIDTH / background.width();
-    double yRate = 1.0 * height * BUTTON_LOGICAL_HEIGHT /
+    double yRate = 1.0 * height * this->height() /
                    LOGICAL_HEIGHT / background.height();
 
     // Paint the icon
@@ -390,14 +393,14 @@ double ButtonItem::width()
 {
   if (rotation == 0)
     return BUTTON_LOGICAL_WIDTH;
-  return BUTTON_LOGICAL_HEIGHT;
+  return BUTTON_LOGICAL_WIDTH2;
 }
 
 double ButtonItem::height()
 {
   if (rotation == 0)
     return BUTTON_LOGICAL_HEIGHT;
-  return BUTTON_LOGICAL_WIDTH;
+  return BUTTON_LOGICAL_HEIGHT2;
 }
 
 IntegerItem::IntegerItem()
