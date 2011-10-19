@@ -23,9 +23,7 @@
 #include "ball.h"
 #include "statistic.h"
 
-#include <QDebug>
-
-extern Statistic statistic;
+//extern Statistic statistic;
 
 #define FONT_DIGIT_SIZE       90
 
@@ -734,7 +732,7 @@ void TwoPlayerTimingGameWidget2::dealReleased(QPointF mousePos, Qt::MouseButton 
           // Minus the value of the flame
           flame1->minusOne();
 
-          statistic.changeStatistic(Statistic::FlameUsedCount, 1, true);
+          //statistic.changeStatistic(Statistic::FlameUsedCount, 1, true);
         }
       }
       else if (itemAtPressPos1 == star1 && star1->notEmpty())
@@ -751,7 +749,7 @@ void TwoPlayerTimingGameWidget2::dealReleased(QPointF mousePos, Qt::MouseButton 
           // Minus the value of the flame
           star1->minusOne();
 
-          statistic.changeStatistic(Statistic::StarUsedCount, 1, true);
+          //statistic.changeStatistic(Statistic::StarUsedCount, 1, true);
         }
       }
       else if (itemAtPressPos1 == pauseItem1 &&
@@ -817,7 +815,7 @@ void TwoPlayerTimingGameWidget2::dealReleased(QPointF mousePos, Qt::MouseButton 
           // Minus the value of the flame
           flame2->minusOne();
 
-          statistic.changeStatistic(Statistic::FlameUsedCount, 1, true);
+          //statistic.changeStatistic(Statistic::FlameUsedCount, 1, true);
         }
       }
       else if (itemAtPressPos2 == star2 && star2->notEmpty())
@@ -834,7 +832,7 @@ void TwoPlayerTimingGameWidget2::dealReleased(QPointF mousePos, Qt::MouseButton 
           // Minus the value of the flame
           star2->minusOne();
 
-          statistic.changeStatistic(Statistic::StarUsedCount, 1, true);
+          //statistic.changeStatistic(Statistic::StarUsedCount, 1, true);
         }
       }
       else if (itemAtPressPos2 == pauseItem2 &&
@@ -1136,7 +1134,7 @@ void TwoPlayerTimingGameWidget2::dealStableEliminate1(Connections connections)
         // Get a flame
         flame1->addOne();
 
-        statistic.changeStatistic(Statistic::FlameGetCount, 1, true);
+        //statistic.changeStatistic(Statistic::FlameGetCount, 1, true);
       }
       if (connectionCountOfThePosition >= 3)
       {
@@ -1146,7 +1144,7 @@ void TwoPlayerTimingGameWidget2::dealStableEliminate1(Connections connections)
         // Get a star
         star1->addOne();
 
-        statistic.changeStatistic(Statistic::StarGetCount, 1, true);
+        //statistic.changeStatistic(Statistic::StarGetCount, 1, true);
       }
     }
   }
@@ -1161,7 +1159,7 @@ void TwoPlayerTimingGameWidget2::dealStableEliminate1(Connections connections)
       // Get a flame
       flame1->addOne();
 
-      statistic.changeStatistic(Statistic::FlameGetCount, 1, true);
+      //statistic.changeStatistic(Statistic::FlameGetCount, 1, true);
     }
     if (size >= 5)
     {
@@ -1171,7 +1169,7 @@ void TwoPlayerTimingGameWidget2::dealStableEliminate1(Connections connections)
       // Get a star
       star1->addOne();
 
-      statistic.changeStatistic(Statistic::StarGetCount, 1, true);
+      //statistic.changeStatistic(Statistic::StarGetCount, 1, true);
     }
   }
 }
@@ -1199,7 +1197,7 @@ void TwoPlayerTimingGameWidget2::dealStableEliminate2(Connections connections)
         // Get a flame
         flame2->addOne();
 
-        statistic.changeStatistic(Statistic::FlameGetCount, 1, true);
+        //statistic.changeStatistic(Statistic::FlameGetCount, 1, true);
       }
       if (connectionCountOfThePosition >= 3)
       {
@@ -1209,7 +1207,7 @@ void TwoPlayerTimingGameWidget2::dealStableEliminate2(Connections connections)
         // Get a star
         star2->addOne();
 
-        statistic.changeStatistic(Statistic::StarGetCount, 1, true);
+        //statistic.changeStatistic(Statistic::StarGetCount, 1, true);
       }
     }
   }
@@ -1224,7 +1222,7 @@ void TwoPlayerTimingGameWidget2::dealStableEliminate2(Connections connections)
       // Get a flame
       flame2->addOne();
 
-      statistic.changeStatistic(Statistic::FlameGetCount, 1, true);
+      //statistic.changeStatistic(Statistic::FlameGetCount, 1, true);
     }
     if (size >= 5)
     {
@@ -1234,7 +1232,7 @@ void TwoPlayerTimingGameWidget2::dealStableEliminate2(Connections connections)
       // Get a star
       star2->addOne();
 
-      statistic.changeStatistic(Statistic::StarGetCount, 1, true);
+      //statistic.changeStatistic(Statistic::StarGetCount, 1, true);
     }
   }
 }
@@ -1274,7 +1272,7 @@ void TwoPlayerTimingGameWidget2::goodMove()
   // Add sound effect
   PublicGameSounds::addSound(PublicGameSounds::GoodMove);
 
-  statistic.changeStatistic(Statistic::GoodMoveCount, 1, true);
+  //statistic.changeStatistic(Statistic::GoodMoveCount, 1, true);
 }
 
 void TwoPlayerTimingGameWidget2::badMove()
@@ -1282,5 +1280,5 @@ void TwoPlayerTimingGameWidget2::badMove()
   // Add sound effect
   PublicGameSounds::addSound(PublicGameSounds::BadMove);
 
-  statistic.changeStatistic(Statistic::BadMoveCount, 1, true);
+  //statistic.changeStatistic(Statistic::BadMoveCount, 1, true);
 }
