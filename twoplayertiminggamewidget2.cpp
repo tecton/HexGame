@@ -43,9 +43,9 @@
 #define LOGICAL_WIDTH    1024
 #define LOGICAL_HEIGHT   600
 
-#define GAME1_X_FROM     29
+#define GAME1_X_FROM     20
 #define GAME1_X_TO       460
-#define GAME1_Y_FROM     (-119)
+#define GAME1_Y_FROM     (-133)
 #define GAME1_Y_TO       619
 #define GAME2_X_FROM     (LOGICAL_WIDTH - GAME1_X_TO)
 #define GAME2_X_TO       (LOGICAL_WIDTH - GAME1_X_FROM)
