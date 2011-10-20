@@ -301,7 +301,7 @@ public:
   /**
    * @brief Constructor.
    */
-  IntegerItem();
+  IntegerItem(int preferredWidth);
 
   /**
    * @brief Set the hint of the item.
@@ -360,7 +360,7 @@ public:
   /**
    * @brief Constructor.
    */
-  StringItem();
+  StringItem(int preferredWidth);
 
   /**
    * @brief Set the value of the item.

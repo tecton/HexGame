@@ -429,9 +429,14 @@ double ButtonItem::height()
   return BUTTON_LOGICAL_HEIGHT2;
 }
 
-IntegerItem::IntegerItem()
+IntegerItem::IntegerItem(int preferredWidth)
 {
-  p = QPixmap(":/images/gamecommonitems/label.png");
+  if (preferredWidth <= 182)
+    p = QPixmap(":/images/gamecommonitems/label182.png");
+  else if (preferredWidth <= 280)
+    p = QPixmap(":/images/gamecommonitems/label280.png");
+  else
+    p = QPixmap(":/images/gamecommonitems/label316.png");
 
   rotation = 0;
 }
@@ -470,27 +475,22 @@ void IntegerItem::paint(QPainter *painter,
   // Draw the background
   if (rotation == 0)
   {
-    // Calculate values to locate
-    double totalHeight = 70 * height / LOGICAL_HEIGHT;
-    double width1 = wordWidth(painter, text1);
-    double width2 = wordWidth(painter, hint);
-    double totalWidth = qMax(width1 * 2, width2 * 1.33);
     drawPixmapAt(painter,
                  p,
-                 totalWidth / p.width(),
-                 totalHeight / p.height(),
+                 1.0 * width / LOGICAL_WIDTH,
+                 1.0 * height / LOGICAL_HEIGHT,
                  QPointF(x, y),
                  true,
                  true);
 
-    painter->setPen(QPen(QColor(255, 120, 0, 255)));
+    painter->setPen(QPen(QColor(115,   0,   0)));
     // Draw the text
     drawTextAt(x, y - 10 * width / LOGICAL_WIDTH, painter, text1);
 
     // Set the font and pen
     f.setPixelSize(15 * width / LOGICAL_WIDTH);
     painter->setFont(f);
-    painter->setPen(QPen(QColor(0, 0, 255, 255)));
+    painter->setPen(QPen(QColor(0, 0, 255)));
 
     // Draw the text
     drawTextAt(x, y + 15 * width / LOGICAL_WIDTH, painter, hint);
@@ -514,9 +514,14 @@ void IntegerItem::paint(QPainter *painter,
   painter->setFont(originalFont);
 }
 
-StringItem::StringItem()
+StringItem::StringItem(int preferredWidth)
 {
-  p = QPixmap(":/images/gamecommonitems/label.png");
+  if (preferredWidth <= 182)
+    p = QPixmap(":/images/gamecommonitems/label182.png");
+  else if (preferredWidth <= 280)
+    p = QPixmap(":/images/gamecommonitems/label280.png");
+  else
+    p = QPixmap(":/images/gamecommonitems/label316.png");
 }
 
 void StringItem::paint(QPainter *painter,

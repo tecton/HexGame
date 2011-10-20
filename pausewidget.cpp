@@ -13,7 +13,7 @@
 PauseWidget::PauseWidget()
 {
   // Create the items and initialize them
-  pauseHint = new StringItem();
+  pauseHint = new StringItem(316);
   pauseHint->setPos(QPointF(0.5, 0.5));
   pauseHint->setHint("Press anywhere to continue");
   myItems.push_back(pauseHint);

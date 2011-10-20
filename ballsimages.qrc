@@ -19,5 +19,11 @@
         <file>images/balls/yellow01.png</file>
         <file>images/balls/yellow_left01.png</file>
         <file>images/balls/yellow_right01.png</file>
+        <file>images/balls/blue_small01.png</file>
+        <file>images/balls/green_small02.png</file>
+        <file>images/balls/purple_small01.png</file>
+        <file>images/balls/red_small01.png</file>
+        <file>images/balls/white_small01.png</file>
+        <file>images/balls/yellow_small01.png</file>
     </qresource>
 </RCC>

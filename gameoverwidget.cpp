@@ -14,13 +14,13 @@ GameOverWidget::GameOverWidget(int gameIndex, int score) :
     index(gameIndex)
 {
   // Create the items and initialize them
-  scoreHint = new IntegerItem();
+  scoreHint = new IntegerItem(182);
   scoreHint->setPos(QPointF(0.5, 0.3));
   scoreHint->setHint("Your score is");
   scoreHint->setValue(score);
   myItems.push_back(scoreHint);
 
-  newGameHint = new StringItem();
+  newGameHint = new StringItem(316);
   newGameHint->setPos(QPointF(0.5, 0.5));
   newGameHint->setHint("Restart a game?");
   myItems.push_back(newGameHint);

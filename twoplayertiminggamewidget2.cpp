@@ -171,14 +171,14 @@ TwoPlayerTimingGameWidget2::TwoPlayerTimingGameWidget2(AbstractRule::Gesture ges
                                              controller2,
                                              NULL);
 
-  currentScore1 = new IntegerItem();
+  currentScore1 = new IntegerItem(0);
   currentScore1->setPos(QPointF(0.38, 0.125));
   currentScore1->setValue(0);
   currentScore1->setRotation(90);
   currentScore1->setHint("Current Score");
   myItems.push_back(currentScore1);
 
-  currentScore2 = new IntegerItem();
+  currentScore2 = new IntegerItem(0);
   currentScore2->setPos(QPointF(0.62, 0.875));
   currentScore2->setValue(0);
   currentScore2->setRotation(-90);

@@ -70,13 +70,13 @@ ClassicGameWidget::ClassicGameWidget(AbstractRule::Gesture gesture) :
                                             effectPainter);
 
   // Create the items and initialize them
-  hightestScore = new IntegerItem();
+  hightestScore = new IntegerItem(182);
   hightestScore->setPos(QPointF(0.1, 0.1));
   hightestScore->setValue(record->highestScore);
   hightestScore->setHint("Highest Score");
   myItems.push_back(hightestScore);
 
-  currentLevel = new IntegerItem();
+  currentLevel = new IntegerItem(182);
   currentLevel->setPos(QPointF(0.1, 0.25));
   currentLevel->setValue(record->currentLevel);
   currentLevel->setHint("Current Level");

@@ -98,13 +98,13 @@ TimingGameWidget::TimingGameWidget(AbstractRule::Gesture gesture) :
                                             effectPainter);
 
   // Create the items and initialize them
-  hightestScore = new IntegerItem();
+  hightestScore = new IntegerItem(182);
   hightestScore->setPos(QPointF(0.1, 0.1));
   hightestScore->setValue(OtherGameInit::getHighest(getIndex()));
   hightestScore->setHint("Highest Score");
   myItems.push_back(hightestScore);
 
-  currentScore = new IntegerItem();
+  currentScore = new IntegerItem(182);
   currentScore->setPos(QPointF(0.1, 0.25));
   currentScore->setValue(0);
   currentScore->setHint("Current Score");

@@ -40,6 +40,31 @@ void initBallsPixmaps()
               ballsPixmaps,
               ballsFrameCounts);
 }
+// File path of the balls
+// (The last two are the same as two before them, may make
+//  cause some bug later)
+const static char * kSmallBallsColorPaths[] =
+{":/images/balls/red_small*.png",
+ ":/images/balls/blue_small*.png",
+ ":/images/balls/green_small*.png",
+ ":/images/balls/yellow_small*.png",
+ ":/images/balls/purple_small*.png",
+ ":/images/balls/white_small*.png",
+ ":/images/balls/purple_small*.png",
+ ":/images/balls/white_small*.png"};
+
+// Pixmaps of the balls
+QVector<QVector<QPixmap> > smallBallsPixmaps;
+
+// Total frame count of the balls
+QVector<int> smallBallsFrameCounts;
+void initSmallBallsPixmaps()
+{
+  initPixmaps(kBallsTotalColors,
+              kSmallBallsColorPaths,
+              smallBallsPixmaps,
+              smallBallsFrameCounts);
+}
 
 // Total background number
 const static int kBackgroundTotalColors = 9;
@@ -276,8 +301,8 @@ void BasicPainter::paintPuzzleGameBalls
      int frame,
      int size)
 {
-  if (ballsPixmaps.isEmpty())
-    initBallsPixmaps();
+  if (smallBallsPixmaps.isEmpty())
+    initSmallBallsPixmaps();
 
   // Size of the ball
   double ballSize = gameboard->ballR() * 2;
@@ -306,8 +331,8 @@ void BasicPainter::paintPuzzleGameBalls
       // Get the color
       int color = colorIndex[i] == -1 ? 6 : colorIndex[i];
       // Get the pixmap
-      const QPixmap& p = ballsPixmaps[color]
-          [frame % ballsFrameCounts[color]];
+      const QPixmap& p = smallBallsPixmaps[color]
+          [frame % smallBallsFrameCounts[color]];
       // Calculate the position of the ball
       QPointF pos = gameboard->positionOfIndex(i);
       double dx =(pos.x() - originalCenterPos.x()) *

@@ -61,11 +61,11 @@ RotatePuzzleGame::RotatePuzzleGame(int ballIndex[],
     type = gameType;
 
     // init two hint information
-    currentSteps = new IntegerItem();
+    currentSteps = new IntegerItem(280);
     currentSteps->setValue(0);
     currentSteps->setHint("Current moved steps:");
     currentSteps->setPos(QPointF(0.15, 0.5));
-    minimalSteps = new IntegerItem();
+    minimalSteps = new IntegerItem(280);
     minimalSteps->setHint(" Least moved steps: ");
     minimalSteps->setValue((minSteps != -1) ? minSteps : 99);
     minimalSteps->setPos(QPointF(0.15, 0.65));
