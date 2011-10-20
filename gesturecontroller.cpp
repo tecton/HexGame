@@ -52,6 +52,31 @@ void GestureController::testGesture(const QPointF& pos)
       }
     delete [] connectedCount;
 
+    if (center == -1)
+    {
+      QVector<int> roundIndexes1 = gameboardInfo->
+                                   chainAroundIndex(gestureIndexes[0]);
+      QVector<int> roundIndexes2 = gameboardInfo->
+                                   chainAroundIndex(gestureIndexes[1]);
+      bool next12 = false;
+      bool next13 = false;
+      bool next23 = false;
+      for (int i = 0;i < roundIndexes1.size();++i)
+      {
+        if (roundIndexes1[i] == gestureIndexes[1])
+          next12 = true;
+        else if (roundIndexes1[i] == gestureIndexes[2])
+          next13 = true;
+      }
+      for (int i = 0;i < roundIndexes2.size();++i)
+      {
+        if (roundIndexes2[i] == gestureIndexes[2])
+          next23 = true;
+      }
+      if (next12 && next13 && next23)
+        center = gestureIndexes[2];
+    }
+
     // Clear
     gestureIndexes.clear();
     if (effectPainter)
