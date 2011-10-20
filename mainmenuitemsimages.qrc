@@ -10,5 +10,6 @@
         <file>images/mainmenuitems/swapendlessgame01.png</file>
         <file>images/mainmenuitems/swaptiminggame01.png</file>
         <file>images/mainmenuitems/circle.png</file>
+        <file>images/mainmenuitems/twoplayermenuitem01.png</file>
     </qresource>
 </RCC>

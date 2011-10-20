@@ -28,8 +28,9 @@ public:
                 RotatePuzzleItem,
                 HelpItem,
                 ExitItem,
-                TwoPlayerTimingGame,
-                UnvisibleBig};
+                TwoPlayerGame,
+                UnvisibleBig,
+                };
 
   /**
    * @brief A function returns the pixmap of an item.
@@ -88,7 +89,7 @@ public:
   /**
    * @brief Constructor with the type of the item.
    */
-  RotatingCircleItem();
+  RotatingCircleItem(bool clockwise);
 
   virtual void paint(QPainter *painter, int width, int height, int frame);
   virtual bool in(QPointF mousePos, int width, int height)
@@ -96,6 +97,7 @@ public:
 
 private:
   QPixmap p;
+  bool c;
 };
 
 #endif // MAINMENUITEMS_H

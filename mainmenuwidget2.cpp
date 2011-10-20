@@ -12,7 +12,7 @@
 #include "othergameinit.h"
 #include "helpwidget2.h"
 #include "mainmenuwidget.h"
-#include "twoplayertiminggamewidget2.h"
+#include "twoplayermainmenuwidget.h"
 
 #define LOGICAL_WIDTH  1024
 #define LOGICAL_HEIGHT 600
@@ -156,9 +156,9 @@ void MainMenuWidget2::dealPressed(QPointF mousePos, Qt::MouseButton button)
   // Two players timing game
   else if (multipleItem->in(mousePos, LOGICAL_WIDTH, LOGICAL_HEIGHT))
   {
-    AbstractPixmapWidget *game = new TwoPlayerTimingGameWidget2(AbstractRule::Swap);
-    emit giveControlTo(game, false);
-    return;
+   AbstractPixmapWidget *menu = new TwoPlayerMainMenuWidget();
+   emit giveControlTo(menu, false);
+   return;
   }
 }
 

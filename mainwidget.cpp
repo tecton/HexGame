@@ -71,10 +71,10 @@ void MainWidget::paintEvent(QPaintEvent *event)
     for (int i = 0;i < INTERVAL_EXAMPLE_MAX;++i)
       intervalToSet += intervals[i];
     intervalToSet = intervalToSet / INTERVAL_EXAMPLE_MAX;
-    //qDebug() << intervalToSet;
     if (intervalToSet <= refreshTimer->interval() * 0.9 &&
         intervalToSet >= refreshTimer->interval() * 1.1)
     {
+      qDebug() << "Slow down the refresh interval to:" << intervalToSet;
       refreshTimer->setInterval(intervalToSet);
     }
     intervals.clear();

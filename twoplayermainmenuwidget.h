@@ -1,5 +1,5 @@
-#ifndef MAINMENUWIDGET_H
-#define MAINMENUWIDGET_H
+#ifndef TWOPLAYERMAINMENUWIDGET_H
+#define TWOPLAYERMAINMENUWIDGET_H
 
 #include "abstractpixmapwidget.h"
 
@@ -13,19 +13,19 @@ class AbstractItem;
 /**
  * @brief A class of main menu.
  */
-class MainMenuWidget : public AbstractPixmapWidget
+class TwoPlayerMainMenuWidget : public AbstractPixmapWidget
 {
   Q_OBJECT
 public:
   /**
    * @brief Constructor.
    */
-  MainMenuWidget();
+  TwoPlayerMainMenuWidget();
 
   /**
    * @brief Destructor.
    */
-  ~MainMenuWidget();
+  ~TwoPlayerMainMenuWidget();
 
   virtual void makePixmap(
 #ifdef USE_PIXMAP
@@ -62,7 +62,11 @@ private:
   QTimer *t;
 
   // Items of the game
-  AbstractItem *items[10];
+  AbstractItem *helpItem;
+  AbstractItem *achievementItem;
+  AbstractItem *exitItem;
+  AbstractItem *swapTimingItem;
+  AbstractItem *rotateTimingItem;
   QVector <AbstractItem *> myItems;
   int frameCount;
 
@@ -70,4 +74,4 @@ private slots:
   void advance();
 };
 
-#endif // MAINMENUWIDGET_H
+#endif // TWOPLAYERMAINMENUWIDGET_H

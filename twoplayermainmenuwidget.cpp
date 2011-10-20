@@ -1,4 +1,4 @@
-#include "mainmenuwidget.h"
+#include "twoplayermainmenuwidget.h"
 
 #include <QTimer>
 #include <QPixmap>
@@ -10,47 +10,42 @@
 #include "puzzlemenuwidget.h"
 #include "othergameinit.h"
 #include "helpwidget2.h"
+#include "mainmenuwidget.h"
+#include "twoplayertiminggamewidget2.h"
 
 #define LOGICAL_WIDTH  1024
 #define LOGICAL_HEIGHT 600
 
-MainMenuWidget::MainMenuWidget() :
+TwoPlayerMainMenuWidget::TwoPlayerMainMenuWidget() :
     frameCount(0)
 {
-  // Create the items and initialize them
-  items[0] = new MainMenuGameItem((AbstractMainMenuItem::ItemType)0);
-  items[0]->setPos(QPointF(0.375, 0.5));
-  items[1] = new MainMenuGameItem((AbstractMainMenuItem::ItemType)1);
-  items[1]->setPos(QPointF(0.835, 0.5));
+  achievementItem = new ButtonItem("Achievement");
+  achievementItem->setPos(QPointF(0.1, 0.55));
+  myItems.push_back(achievementItem);
 
-  items[2] = new MainMenuGameItem((AbstractMainMenuItem::ItemType)2);
-  items[2]->setPos(QPointF(0.49, 0.16));
-  items[3] = new MainMenuGameItem((AbstractMainMenuItem::ItemType)3);
-  items[3]->setPos(QPointF(0.72, 0.84));
+  helpItem = new ButtonItem("Help");
+  helpItem->setPos(QPointF(0.1, 0.65));
+  myItems.push_back(helpItem);
 
-  items[4] = new MainMenuGameItem((AbstractMainMenuItem::ItemType)4);
-  items[4]->setPos(QPointF(0.72, 0.16));
-  items[5] = new MainMenuGameItem((AbstractMainMenuItem::ItemType)5);
-  items[5]->setPos(QPointF(0.49, 0.84));
+  exitItem = new ButtonItem("Exit");
+  exitItem->setPos(QPointF(0.1, 0.8));
+  myItems.push_back(exitItem);
 
-  items[6] = new MainMenuGameItem(AbstractMainMenuItem::RotatePuzzleItem);
-  items[6]->setPos(QPointF(0.605, 0.5));
+  swapTimingItem = new MainMenuGameItem(AbstractMainMenuItem::SwapTimingItem);
+  swapTimingItem->setPos(QPointF(0.375, 0.5));
+  myItems.push_back(swapTimingItem);
 
-  items[7] = new ButtonItem("Achievement");
-  items[7]->setPos(QPointF(0.1, 0.55));
+  rotateTimingItem = new MainMenuGameItem(AbstractMainMenuItem::RotateTimingItem);
+  rotateTimingItem->setPos(QPointF(0.835, 0.5));
+  myItems.push_back(rotateTimingItem);
 
-  items[8] = new ButtonItem("Help");
-  items[8]->setPos(QPointF(0.1, 0.65));
-
-  items[9] = new ButtonItem("Exit");
-  items[9]->setPos(QPointF(0.1, 0.8));
-
-  AbstractItem *board = new RotatingCircleItem(false);
-  board->setPos(QPointF(0.600, 0.495));
+  AbstractItem *board = new RotatingCircleItem(true);
+  board->setPos(QPointF(0.6, 0.495));
   myItems.push_back(board);
 
-  for (int i = 0;i < 10;++i)
-    myItems.push_back(items[i]);
+  AbstractItem *boardCenter = new MainMenuGameItem(AbstractMainMenuItem::TwoPlayerGame);
+  boardCenter->setPos(QPointF(0.605, 0.5));
+  myItems.push_back(boardCenter);
 
   // Create the timer and connect signals and slots
   t = new QTimer();
@@ -59,7 +54,7 @@ MainMenuWidget::MainMenuWidget() :
   t->start();
 }
 
-void MainMenuWidget::makePixmap(
+void TwoPlayerMainMenuWidget::makePixmap(
 #ifdef USE_PIXMAP
       QPixmap& pixmap,
 #else
@@ -77,7 +72,7 @@ void MainMenuWidget::makePixmap(
 #endif
 }
 
-void MainMenuWidget::makeBasicPixmap(
+void TwoPlayerMainMenuWidget::makeBasicPixmap(
 #ifdef USE_PIXMAP
       QPixmap& pixmap,
 #else
@@ -117,7 +112,7 @@ void MainMenuWidget::makeBasicPixmap(
 #endif
 }
 
-void MainMenuWidget::addEffect(
+void TwoPlayerMainMenuWidget::addEffect(
 #ifdef USE_PIXMAP
       QPixmap& pixmap,
 #else
@@ -128,13 +123,13 @@ void MainMenuWidget::addEffect(
 {
 }
 
-QPointF MainMenuWidget::toScene(double xRate, double yRate)
+QPointF TwoPlayerMainMenuWidget::toScene(double xRate, double yRate)
 {
   return QPointF(xRate * LOGICAL_WIDTH,
                  yRate * LOGICAL_HEIGHT);
 }
 
-void MainMenuWidget::dealPressed(QPointF mousePos, Qt::MouseButton button)
+void TwoPlayerMainMenuWidget::dealPressed(QPointF mousePos, Qt::MouseButton button)
 {
   // Quit if it's a right button. May be abandoned later
   if (button == Qt::RightButton)
@@ -144,66 +139,58 @@ void MainMenuWidget::dealPressed(QPointF mousePos, Qt::MouseButton button)
     return;
   }
 
-  // Create correct game if neccessary
-  for (int i = 0;i < 6;++i)
-  {
-    if (items[i]->in(mousePos, LOGICAL_WIDTH, LOGICAL_HEIGHT))
-    {
-      AbstractRule::Gesture gesture = (i % 2 == 0) ?
-                                      AbstractRule::Swap :
-                                      AbstractRule::Rotate;
-      AbstractPixmapWidget *game = OtherGameInit::initOtherGame(gesture,
-                                                                i / 2);
-      emit giveControlTo(game, false);
-      return;
-    }
-  }
-
   // Create puzzle game if neccessary
-  if (items[6]->in(mousePos, LOGICAL_WIDTH, LOGICAL_HEIGHT))
+  if (helpItem->in(mousePos, LOGICAL_WIDTH, LOGICAL_HEIGHT))
   {
-    AbstractPixmapWidget *puzzleMenu = new PuzzleMenuWidget();
-    emit giveControlTo(puzzleMenu, false);
+    AbstractPixmapWidget *helpWidget = new HelpWidget2();
+    emit giveControlTo(helpWidget, false);
     return;
   }
   // Go to achievement if neccessary
-  else if (items[7]->in(mousePos, LOGICAL_WIDTH, LOGICAL_HEIGHT))
+  else if (achievementItem->in(mousePos, LOGICAL_WIDTH, LOGICAL_HEIGHT))
   {
     AbstractPixmapWidget *achievementWidget = new AchievementWidget();
     emit giveControlTo(achievementWidget, false);
     return;
   }
   // Go to help if neccessary
-  else if (items[8]->in(mousePos, LOGICAL_WIDTH, LOGICAL_HEIGHT))
-  {
-    AbstractPixmapWidget *helpWidget = new HelpWidget2();
-    emit giveControlTo(helpWidget, false);
-    return;
-  }
-  // Exit if neccessary
-  else if (items[9]->in(mousePos, LOGICAL_WIDTH, LOGICAL_HEIGHT))
+  else if (exitItem->in(mousePos, LOGICAL_WIDTH, LOGICAL_HEIGHT))
   {
     emit giveControlTo(NULL, true);
     delete this;
     return;
   }
+  // Exit if neccessary
+  else if (swapTimingItem->in(mousePos, LOGICAL_WIDTH, LOGICAL_HEIGHT))
+  {
+    AbstractPixmapWidget *game = new TwoPlayerTimingGameWidget2(AbstractRule::Swap);
+    emit giveControlTo(game, false);
+    return;
+  }
+  // Two players timing game
+  else if (rotateTimingItem->in(mousePos, LOGICAL_WIDTH, LOGICAL_HEIGHT))
+  {
+    AbstractPixmapWidget *game = new TwoPlayerTimingGameWidget2(AbstractRule::Rotate);
+    emit giveControlTo(game, false);
+    return;
+  }
 }
 
-void MainMenuWidget::dealMoved(QPointF mousePos, Qt::MouseButton button)
+void TwoPlayerMainMenuWidget::dealMoved(QPointF mousePos, Qt::MouseButton button)
 {
 }
 
-void MainMenuWidget::dealReleased(QPointF mousePos, Qt::MouseButton button)
+void TwoPlayerMainMenuWidget::dealReleased(QPointF mousePos, Qt::MouseButton button)
 {
 }
 
-void MainMenuWidget::advance()
+void TwoPlayerMainMenuWidget::advance()
 {
   ++frameCount;
   frameCount = frameCount;
 }
 
-MainMenuWidget::~MainMenuWidget()
+TwoPlayerMainMenuWidget::~TwoPlayerMainMenuWidget()
 {
   // Stop the timer
   t->stop();

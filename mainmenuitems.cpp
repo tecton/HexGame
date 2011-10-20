@@ -14,7 +14,7 @@
 #define BUTTON_LOGICAL_HEIGHT 60
 
 // Total color number of the items
-const static int kTotalItems = 10;
+const static int kTotalItems = 11;
 
 // File path of the items
 // (The last two are the same as two before them, may make
@@ -29,6 +29,7 @@ const static char * kItemPaths[] =
  ":/images/mainmenuitems/puzzlegame*.png",
  ":/images/mainmenuitems/help*.png",
  ":/images/mainmenuitems/exit*.png",
+ ":/images/mainmenuitems/twoplayermenuitem*.png",
  ":/images/mainmenuitems/swapclassicgame*.png"};
 
 // Pixmaps of the items
@@ -132,7 +133,8 @@ double MainMenuButtonItem::height()
   return BUTTON_LOGICAL_HEIGHT;
 }
 
-RotatingCircleItem::RotatingCircleItem()
+RotatingCircleItem::RotatingCircleItem(bool clockwise) :
+    c(clockwise)
 {
   p = QPixmap(":/images/mainmenuitems/circle.png");
 }
@@ -150,7 +152,7 @@ void RotatingCircleItem::paint(QPainter *painter,
 
   // draw the pixmap
   painter->translate(x, y);
-  painter->rotate(- frame * 3);
+  painter->rotate(frame * 3 * (c ? 1 : -1));
 
   drawPixmapAt(painter,
                p,
@@ -160,6 +162,6 @@ void RotatingCircleItem::paint(QPainter *painter,
                true,
                true);
 
-  painter->rotate(frame * 3);
+  painter->rotate(- frame * 3 * (c ? 1 : -1));
   painter->translate(-x, -y);
 }
