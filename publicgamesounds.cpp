@@ -77,6 +77,8 @@ void PublicGameSounds::init()
 {
 #ifdef GSTREAMER
   gst_init(NULL,NULL);
+  for (int i = 0; i < kSoundCount;++i)
+    SingleSound::cacheSound(kSoundPaths[i]);
 #endif
 
 #ifdef PHONON

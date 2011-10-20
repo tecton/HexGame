@@ -31,6 +31,11 @@ private:
     int timeout;
 public:
     /**
+     * @brief cache the sound that it would not cause a small pause.
+     */
+    static void cacheSound(const char* uri);
+
+    /**
      * @brief Constructor with the path of the sound file and the time of the sound.
      */
     SingleSound(const char* uri, const int outTime);

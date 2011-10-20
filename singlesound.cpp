@@ -26,10 +26,28 @@ gboolean bus_call(GstBus *bus, GstMessage *msg, void *user_data)
   return true;
 }
 
+void SingleSound::cacheSound(const char* uri)
+{
+    // init gstreamer
+    GMainLoop *loop = g_main_loop_new(NULL, FALSE);
+    GstElement *pipeline = gst_element_factory_make("playbin", "player");
+    GstBus *bus = NULL;
+    g_object_set(G_OBJECT(pipeline), "uri", uri, NULL);
+    bus = gst_pipeline_get_bus(GST_PIPELINE(pipeline));
+    gst_bus_add_watch(bus, bus_call, loop);
+    gst_element_set_state(GST_ELEMENT(pipeline), GST_STATE_PLAYING);
+    g_main_loop_run(loop);
+    g_main_loop_quit(loop);
+    // set state
+    gst_element_set_state(GST_ELEMENT(pipeline), GST_STATE_NULL);
+    // unref objects
+    gst_object_unref(bus);
+    gst_object_unref(GST_OBJECT(pipeline));
+}
+
 SingleSound::SingleSound(const char* uri, const int outTime) : songUri(uri), timeout(outTime)
 {
     // init gstreamer
-    gst_init(NULL, NULL);
     loop = g_main_loop_new(NULL, FALSE);
     pipeline = gst_element_factory_make("playbin", "player");
     bus = NULL;
@@ -39,7 +57,7 @@ SingleSound::SingleSound(const char* uri, const int outTime) : songUri(uri), tim
 
 void SingleSound::start()
 {
-    printf("%s\n", songUri);
+    //printf("%s\n", songUri);
     g_object_set(G_OBJECT(pipeline), "uri", songUri, NULL);
     bus = gst_pipeline_get_bus(GST_PIPELINE(pipeline));
     gst_bus_add_watch(bus, bus_call, loop);
