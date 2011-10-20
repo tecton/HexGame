@@ -11,7 +11,7 @@
 #include <QTouchEvent>
 #include <QMouseEvent>
 #include "abstractpixmapwidget.h"
-#include "mainmenuwidget.h"
+#include "mainmenuwidget2.h"
 #include "publicgamesounds.h"
 #include "config.h"
 #include "achievements.h"
@@ -35,7 +35,7 @@ MainWidget::MainWidget(QWidget *parent) :
   // Set the curser(abandoned)
 //  setCursor(QCursor(QPixmap(":/images/cursor.png")));
   // Create the main menu widget and push it into the stack
-  AbstractPixmapWidget *mainMenu = new MainMenuWidget();
+  AbstractPixmapWidget *mainMenu = new MainMenuWidget2();
   widgets.push_back(mainMenu);
 
   // Connect the signal and slot

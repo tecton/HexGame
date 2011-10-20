@@ -31,7 +31,8 @@ public:
                      PuzzleGame=Game61,
                      Help=5,
                      Achievement,
-                     TwoPlayerGame};
+                     TwoPlayerGame,
+                     MainMenu2};
 
   /**
    *@brief Paint the background.

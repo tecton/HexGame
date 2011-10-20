@@ -15,8 +15,8 @@
 #define LOGICAL_WIDTH  1024
 #define LOGICAL_HEIGHT 600
 
-MainMenuWidget::MainMenuWidget()/* :
-    frameCount(0)*/
+MainMenuWidget::MainMenuWidget() :
+    frameCount(0)
 {
   // Create the items and initialize them
   items[0] = new MainMenuGameItem((AbstractMainMenuItem::ItemType)0);
@@ -218,10 +218,10 @@ void MainMenuWidget::advance()
 
 MainMenuWidget::~MainMenuWidget()
 {
-//  // Stop the timer
-//  t->stop();
+  // Stop the timer
+  t->stop();
   // Release the space
-//  delete t;
+  delete t;
   for (int i = 0;i < myItems.size();++i)
     delete myItems[i];
   myItems.clear();

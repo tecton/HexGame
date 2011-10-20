@@ -28,7 +28,8 @@ public:
                 RotatePuzzleItem,
                 HelpItem,
                 ExitItem,
-                TwoPlayerTimingGame};
+                TwoPlayerTimingGame,
+                UnvisibleBig};
 
   /**
    * @brief A function returns the pixmap of an item.
@@ -45,8 +46,7 @@ public:
   /**
    * @brief Constructor with the type of the item.
    */
-  MainMenuGameItem(AbstractMainMenuItem::ItemType theType) :
-      type(theType) {}
+  MainMenuGameItem(AbstractMainMenuItem::ItemType theType);
 
   virtual void paint(QPainter *painter, int width, int height, int frame);
 

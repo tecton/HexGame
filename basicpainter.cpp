@@ -42,7 +42,7 @@ void initBallsPixmaps()
 }
 
 // Total background number
-const static int kBackgroundTotalColors = 8;
+const static int kBackgroundTotalColors = 9;
 const static char * kBackgroundColorPaths[] =
 {":/images/backgrounds/mainmenubackground.png",
  ":/images/backgrounds/puzzlemenubackground.png",
@@ -51,7 +51,8 @@ const static char * kBackgroundColorPaths[] =
  ":/images/backgrounds/61gamebackground.png",
  ":/images/backgrounds/helpbackgroundwithbutton.png",
  ":/images/backgrounds/achievementbackground.png",
- ":/images/backgrounds/37twoplayergamebackground.png"};
+ ":/images/backgrounds/37twoplayergamebackground.png",
+ ":/images/backgrounds/mainselectplayersbackground.png"};
 
 // Pixmaps of the backgrounds
 QVector<QVector<QPixmap> > backgroundPixmaps;

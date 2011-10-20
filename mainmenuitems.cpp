@@ -47,10 +47,15 @@ void initMainMenuItemPixmaps()
 const QPixmap& AbstractMainMenuItem::pixmap(ItemType type,
                                             int frame)
 {
+  return mainMenuItemPixmaps[type][frame % mainMenuItemFrameCounts[type]];
+}
+
+MainMenuGameItem::MainMenuGameItem(AbstractMainMenuItem::ItemType theType) :
+    type(theType)
+{
   // Init pixmaps if neccessary
   if (mainMenuItemPixmaps.isEmpty())
     initMainMenuItemPixmaps();
-  return mainMenuItemPixmaps[type][frame % mainMenuItemFrameCounts[type]];
 }
 
 void MainMenuGameItem::paint(QPainter *painter,
@@ -58,6 +63,12 @@ void MainMenuGameItem::paint(QPainter *painter,
                              int height,
                              int frame)
 {
+  // Init pixmaps if neccessary
+  if (mainMenuItemPixmaps.isEmpty())
+    initMainMenuItemPixmaps();
+  if (type == AbstractMainMenuItem::UnvisibleBig)
+    return;
+
   // Get the pixmap
   const QPixmap& p = AbstractMainMenuItem::pixmap(type, frame);
 
@@ -79,7 +90,9 @@ void MainMenuGameItem::paint(QPainter *painter,
 
 double MainMenuGameItem::r()
 {
-  return 80;
+  if (type != AbstractMainMenuItem::UnvisibleBig)
+    return 80;
+  return 120;
 }
 
 

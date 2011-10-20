@@ -505,7 +505,7 @@ void IntegerItem::paint(QPainter *painter,
                  true,
                  true);
 
-    painter->setPen(QPen(QColor(  0,   0,  0, 255)));
+    painter->setPen(QPen(QColor(  0,   0,   0, 255)));
     // Draw the text
     drawTextAt(x, y, painter, text1, rotation);
   }

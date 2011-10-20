@@ -7,5 +7,6 @@
         <file>images/backgrounds/achievementbackground.png</file>
         <file>images/backgrounds/37gamebackground.png</file>
         <file>images/backgrounds/37twoplayergamebackground.png</file>
+        <file>images/backgrounds/mainselectplayersbackground.png</file>
     </qresource>
 </RCC>
