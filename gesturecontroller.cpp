@@ -163,7 +163,7 @@ void GestureController::dealMoved(const QPointF& pos)
           (gestureIndexes.size() > 0 &&
            gestureIndexes[gestureIndexes.size() - 1] != index))
       {
-        if (controller->balls[index] && !controller->balls[index]->getLocked())
+        if (controller->balls[index])
         {
           gestureIndexes.push_back(index);
           if (effectPainter)
