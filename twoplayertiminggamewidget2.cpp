@@ -710,14 +710,19 @@ void TwoPlayerTimingGameWidget2::dealReleased(QPointF mousePos, Qt::MouseButton 
     return;
 
   if (endAnimCount >= END_ANIM_LAST_TIME)
+  {
     quitGame();
+    return;
+  }
+
+  QPointF pos;
 
   switch (whichGame2(mousePos))
   {
   case 1:
+    pos = globalToGame1(mousePos);
     if (itemAtPressPos1 != NULL)
     {
-      QPointF pos = globalToGame1(mousePos);
       if (itemAtPressPos1 == flame1 && flame1->notEmpty())
       {
         int index = gameboardInfo->indexOfPosition(pos);
@@ -792,15 +797,14 @@ void TwoPlayerTimingGameWidget2::dealReleased(QPointF mousePos, Qt::MouseButton 
       }
 
       itemAtPressPos1 = NULL;
-
-      // Let the gesture controller to deal the release event
-      gestureController1->dealReleased(pos);
-      break;
     }
+    // Let the gesture controller to deal the release event
+    gestureController1->dealReleased(pos);
+    break;
   case 2:
+    pos = globalToGame2(mousePos);
     if (itemAtPressPos2 != NULL)
     {
-      QPointF pos = globalToGame2(mousePos);
       if (itemAtPressPos2 == flame2 && flame2->notEmpty())
       {
         int index = gameboardInfo->indexOfPosition(pos);
@@ -875,11 +879,10 @@ void TwoPlayerTimingGameWidget2::dealReleased(QPointF mousePos, Qt::MouseButton 
       }
 
       itemAtPressPos2 = NULL;
-
-      // Let the gesture controller to deal the release event
-      gestureController2->dealReleased(pos);
-      break;
     }
+    // Let the gesture controller to deal the release event
+    gestureController2->dealReleased(pos);
+    break;
   case 0:
 //    if (itemAtPressPos != NULL)
 //    {
@@ -1257,6 +1260,13 @@ void TwoPlayerTimingGameWidget2::oneSecond()
   {
     timeUp = true;
     oneSecondTimer->stop();
+    for (int i = 0;i < gameboardInfo->totalBallCounts();++i)
+    {
+      if (controller1->balls[i])
+        controller1->balls[i]->moveToStablePos();
+      if (controller2->balls[i])
+        controller2->balls[i]->moveToStablePos();
+    }
   }
 }
 
