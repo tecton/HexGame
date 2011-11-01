@@ -123,6 +123,10 @@ void GestureController::testGesture(const QPointF& pos)
 
 void GestureController::dealPressed(const QPointF& pos)
 {
+  if (gestureState == LocateGesture)
+    if (gesture == AbstractRule::Rotate)
+      dealReleased(pos);
+
   // Clear
   gestureIndexes.clear();
   if (effectPainter)
